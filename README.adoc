@@ -1,0 +1,26 @@
+= Tron 0xF
+:author: Marcos Cruz (programandala.net)
+:revdate: 2016-03-01
+
+// http://programandala.net/en.program.tron_0xf.html
+
+// Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are
+// preserved.  This file is offered as-is, without any
+// warranty.
+
+// This file is written in AsciiDoc/Asciidoctor format
+// (http://asciidoctor.org).
+
+Tron 0xF is a game for ZX Spectrum, written in Abersoft Forth (a
+fig-Forth 1.1 ported to ZX Spectrum by John Jones Steele and published
+by Melbourne House in 1983), using the Afera libray (Marcos Cruz,
+2015).
+
+Home page: http://programandala.net/en.program.tron_0xf.html.
+
+Note: The git repository of Tron 0xF was created in 2016-03 from
+development backups.

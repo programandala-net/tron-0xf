@@ -1,0 +1,171 @@
+\ Tron 
+\ Escrito en Forth para ZX Spectrum
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+  \ -----------------------------------------------------------
+  \ Historia del desarrollo
+  \
+  \ 1985-04: Primera versión en fig-Forth del original en
+  \ Sinclair BASIC publicado en "Mi computer", tomo 5, página
+  \ 1112.
+  \
+  \ 2009-05: Creación de un fichero de texto, a partir del
+  \ fichero TAP original, con algunos cambios, para su
+  \ publicación.
+  \
+  \ 2015-03-21: Conversión al formato fsb
+  \ (http://programandala.net/es.programa.fsb.html), para poder
+  \ crear cómodamente un nuevo TAP.
+
+( Vocabulary, variables and constants)
+
+FORTH DEFINITIONS  : TASK  ;
+VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
+
+\ Player 1            Player 2
+0 VARIABLE SCORE1   0 VARIABLE SCORE2  \ scores
+0 VARIABLE X1       0 VARIABLE X2      \ X coordinate
+0 VARIABLE Y1       0 VARIABLE Y2      \ Y coordinate
+0 VARIABLE XINC1    0 VARIABLE XINC2   \ X increment (-1..1)
+0 VARIABLE YINC1    0 VARIABLE YINC2   \ Y increment (-1..1)
+6 CONSTANT COLOR1   5 CONSTANT COLOR2  \ ink color
+
+-->
+
+( Tools and graphics)
+
+  \ ZX Spectrum system variables:
+
+23677 CONSTANT COORDS
+COORDS CONSTANT X-COORD
+COORDS 1+ CONSTANT Y-COORD
+
+ \ XXX not used yet
+ \ 23670 CONSTANT SEED
+ \ : RND 
+ \ SEED @ 75 U* 75 0 D+ OVER OVER U< - - 1 - DUP
+ \  SEED ! U* SWAP DROP ;
+
+: RDRAW  ( inc-x inc-y -- )
+  \ Draw a line from to the current plot position
+  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW  ;
+
+: PAINT1!  ( n -- )
+  \ Set the color of player 1's current position.
+  175 Y1 @ - 8 / 32 *  X1 @ 8 /  + 22528 + C!  ;
+
+: PAINT2!  ( n -- )
+  \ Set the color of player 2's current position.
+  175 Y2 @ - 8 / 32 *  X2 @ 8 /  + 22528 + C!  ;
+
+: PAGE  ( -- )  0 DUP PAPER BORDER 7 INK CLS  ;
+
+-->
+
+( Init)
+
+: STATUS  ( -- )
+  \ Show the status bar.
+  COLOR1 INK ."  MOTO 1=" SCORE1 ?
+  COLOR2 INK ."         MOTO 2=" SCORE2 ?  ;
+: ARENA  ( -- )
+  \ Draw the arena.
+  PAGE STATUS
+  2 INK 8 DUP PLOT 239 0 RDRAW 0 159 RDRAW
+  -239 0 RDRAW 0 -159 RDRAW  ;
+: INIT  ( -- )
+  \ Init a new game.
+  ARENA
+  40 X1 ! 88 Y1 ! 215 X2 ! 88 Y2 !
+  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !
+  0 SCORE2 ! 0 SCORE1 !
+  7 INK 10 3 AT ." PULSA UNA TECLA PARA EMPEZAR " KEY  ;
+
+-->
+
+( Crash)
+
+: CRASH  ( n -- )
+  \ n = color
+  DUP INK 1 BRIGHT
+  175 Y1 @ - 8 / X1 @ 8 / AT SPACE
+  100 50 DO  11 I BLEEP  LOOP
+  COLOR1 IF  1 SCORE2 +!  ELSE  1 SCORE1 +!  THEN  ;
+
+-->
+
+( Rudders)
+
+: RUDDERS  ( -- )
+  \ Check the keyboard
+  \ and update the increments and the coordinates
+  64510 INP 254 =  IF  0 XINC1 ! 1 YINC1 !  THEN
+  65022 INP 254 =  IF  0 XINC1 ! -1 YINC1 !  THEN
+  65278 INP 251 =  IF  -1 XINC1 ! 0 YINC1 !  THEN
+  65278 INP 247 =  IF  1 XINC1 ! 0 YINC1 !  THEN
+  57342 INP 254 =  IF  0 XINC2 ! 1 YINC2 !  THEN
+  49150 INP 254 =  IF  0 XINC2 ! -1 YINC2 !  THEN
+  32766 INP 251 =  IF  1 XINC2 ! 0 YINC2 !  THEN
+  32766 INP 247 =  IF  -1 XINC2 ! 0 YINC2 !  THEN
+  XINC1 @ X1 +!  YINC1 @ Y1 +!
+  XINC2 @ X2 +!  YINC2 @ Y2 +!  ;
+
+-->
+
+( Instructions)
+
+: CREDITS  ( -- )
+  \  <------------------------------->
+  ." TRON (Forth, ZX Spectrum)" CR
+  ." Copyright (C) 1985,2009,2015 CR
+  ." Marcos Cruz (programandala.net)" CR
+  ." Licencia/License:" CR
+  ." http://programandala.net/license" CR  ;
+
+-->
+
+( Instructions)
+
+: INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Cada jugador tiene una moto que" CR
+  ." corre a velocidad desbocada." CR
+  ." Su único control la hace girar" CR
+  ." 90 grados sin frenar." CR
+  ." Cada moto deja tras de sí una" CR
+  ." pared sólida de luz." CR
+  ." El objetivo del juego es hacer" CR
+  ." estrellarse a la otra moto con" CR
+  ." el laberinto formado." CR
+  ." Teclas:" CR
+  ." Jugador 1: Q A C X" CR
+  ." Jugador 2: P ENTER M N" CR  ;
+
+-->
+
+( Main)
+
+: GAME  ( -- )
+
+  BEGIN
+
+    X1 @ Y1 @ POINT
+    IF  COLOR1 CRASH EXIT  THEN
+
+    X2 @ Y2 @ POINT
+    IF  X2 @ X1 ! Y2 @ Y1 ! COLOR2 CRASH EXIT  THEN
+
+    X1 @ Y1 @ PLOT  COLOR1 PAINT1!  1 000 BLEEP
+    X2 @ Y2 @ PLOT  COLOR2 PAINT2!  1 100 BLEEP
+    RUDDERS
+
+  AGAIN  ;
+
+: TRON  ( -- )
+  BEGIN  INIT CREDITS INSTRUCTIONS GAME  AGAIN  ;
+
+  \ vim: filetype=abersoftforth

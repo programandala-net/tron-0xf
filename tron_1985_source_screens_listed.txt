@@ -1,0 +1,108 @@
+SCR 0
+  0 TRON
+  1 Copyright (C) 1985 Marcos Cruz (http://programandala.net)
+  2 Licencia/License: http://programandala.net/license
+  3 Cada jugador tiene una moto
+  4 a velocidad desbocada.
+  5 Su unico control la hace
+  6 girar 90 grados sin frenar.
+  7 Cada moto deja tras de si
+  8 una pared solida de luz.
+  9 El objetivo del juego es
+ 10 hacer estrellarse a la otra
+ 11 moto con el laberinto hecho.
+ 12 Teclas:
+ 13 Jugador 1: Q A C X
+ 14 Jugador 2: P ENTER M N
+ 15 Para empezar teclea TRON y pulsa la tecla ENTER.
+
+SCR 1
+  0 FORTH DEFINITIONS VOCABULARY TRON TRON DEFINIIONS : TASK ;
+  1 0 VARIABLE Q
+  2 0 VARIABLE P
+  3 0 VARIABLE X
+  4 0 VARIABLE Y
+  5 0 VARIABLE A1
+  6 0 VARIABLE B1
+  7 0 VARIABLE M
+  8 0 VARIABLE N
+  9 0 VARIABLE I1
+ 10 0 VARIABLE J1
+ 11 0 VARIABLE COL
+ 12 : NDRAW 23678 C@ + SWAP 23677 C@ + SWAP DRAW ;
+ 13 : RND 23670 @ 75 U* 75 0 D+ OVER OVER U< - - 1 - DUP
+ 14 23670 ! U* SWAP DROP ;
+ 15 23670 ! U* SWAP DROP ;
+
+SCR 2
+  0 
+  1 : INIC
+  2 0 DUP PAPER BORDER CLS
+  3 6 INK ."  MOTO 1=" Q ?
+  4 5 INK ."         MOTO 2=" P ?
+  5 2 INK 8 DUP PLOT 239 0 NDRAW 0 159 NDRAW
+  6 -239 0 NDRAW 0 -159 NDRAW
+  7 
+  8 40 X ! 88 Y ! 215 M ! 88 N !
+  9 1 A1 ! 0 B1 ! -1 I1 ! 0 J1 !
+ 10 7 INK 10 5 AT ." PULSA 0 PARA JUGAR "
+ 11 KEY 48 = NOT IF 0 P ! 0 Q ! CLS 0 LIST QUIT ENDIF
+ 12 10 5 AT 19 SPACES ;
+ 13 
+ 14 
+ 15 -->
+
+SCR 3
+  0 : CHOQUE
+  1 COL @ INK 1 BRIGHT
+  2 175 Y @ - 8 / X @ 8 / AT ."  "
+  3 100 50 DO
+  4 11 I BLEEP
+  5 LOOP
+  6 COL @ 6 = IF 1 P +! ELSE 1 Q +! THEN INIC ;
+  7 : POKE-XY
+  8 175 Y @ - 8 / 32 *
+  9 X @ 8 /
+ 10 + 22528 + C! ;
+ 11 : POKE-MN
+ 12 175 N @ - 8 / 32 *
+ 13 M @ 8 / + 22528 + C! ;
+ 14 
+ 15 -->
+
+SCR 4
+  0 : BUCLE
+  1 BEGIN
+  2 X @ Y @ POINT IF 6 COL ! CHOQUE ENDIF
+  3 M @ N @ POINT IF 5 COL ! M @ X ! N @ Y ! CHOQUE ENDIF
+  4  X @ Y @ PLOT 6 POKE-XY 1 0 BLEEP
+  5  M @ N @ PLOT 5 POKE-MN 1 100 BLEEP
+  6 64510 INP 254 = IF 0 A1 ! 1 B1 ! ENDIF
+  7 65022 INP 254 = IF 0 A1 ! -1 B1 ! ENDIF
+  8 65278 INP 251 = IF -1 A1 ! 0 B1 ! ENDIF
+  9 65278 INP 247 = IF 1 A1 ! 0 B1 ! ENDIF
+ 10 57342 INP 254 = IF 0 I1 ! 1 J1 ! ENDIF
+ 11 49150 INP 254 = IF 0 I1 ! -1 J1 ! ENDIF
+ 12 32766 INP 251 = IF 1 I1 ! 0 J1 ! ENDIF
+ 13 32766 INP 247 = IF -1 I1 ! 0 J1 ! ENDIF
+ 14 A1 @ X +! B1 @ Y +! I1 @ M +! J1 @ N +!
+ 15 AGAIN ; -->
+
+SCR 5
+  0 : MOTO INIC BUCLE ;
+  1 0 PAPER 0 BORDER 7 INK CLS 0 LIST
+  2 ;S
+  3 
+  4 
+  5 
+  6 
+  7 
+  8 
+  9 
+ 10 
+ 11 
+ 12 
+ 13 
+ 14 
+ 15 
+
