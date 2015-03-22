@@ -1,10 +1,20 @@
-\ Tron 
+\ Tron
+\ Versión 2015-03-23T00:48
 \ Escrito en Forth para ZX Spectrum
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: http://programandala.net/lp
 
 \ http://programandala.net/es.programa.tron.html
+
+  \ -----------------------------------------------------------
+  \ Requisitos
+
+  \ Para convertir este fichero fuente en un fichero TAP
+  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
+  \ se necesita el conversor fsb:
+  \
+  \ http://programandala.net/es.programa.fsb.html
 
   \ -----------------------------------------------------------
   \ Historia del desarrollo
@@ -17,16 +27,11 @@
   \ fichero TAP original, con algunos cambios, para su
   \ publicación.
   \
-  \ 2015-03-21: Conversión al formato fsb
+  \ 2015-03: Conversión al formato fsb
   \ (http://programandala.net/es.programa.fsb.html).
-
-  \ XXX TODO
-  \
-  \ `EXIT` falla:
-  \ Comprobar las condiciones de `EXIT` en Abersoft Forth.
-  \
-  \ Arreglar el orden de presentación de instrucciones,
-  \ espera de tecla, etc.
+  \ Correcciones y mejoras: GDU para los caracteres
+  \ castellanos, instrucciones integradas, créditos, código más
+  \ claro.
 
 ( Tools and system variables )
 
@@ -36,35 +41,46 @@ FORTH DEFINITIONS
   IN @ DUP C/L > IF  B/BUF SWAP MOD  ELSE  C/L SWAP - THEN
   IN +! ; IMMEDIATE
 
-: CHAR  ( "name" -- c )  BL WORD HERE 1+ C@ ;
+: CHAR ( "name" -- c ) BL WORD HERE 1+ C@ ;
 : [CHAR] ( "name" -- c ) CHAR [COMPILE] LITERAL ; IMMEDIATE
 
-  \ ZX Spectrum system variables:
+  \ ZX Spectrum system variables and addresses:
 
+22528 CONSTANT ATTRIBUTES
 23677 CONSTANT COORDS
 COORDS CONSTANT X-COORD
 COORDS 1+ CONSTANT Y-COORD
 
   \ Colors:
 
-0 CONSTANT BLACK
-2 CONSTANT RED
-5 CONSTANT CYAN
-6 CONSTANT YELLOW
-7 CONSTANT WHITE
+0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
+6 CONSTANT YELLOW  7 CONSTANT WHITE
+
+  \ Rename the system word 'MON' to the standard word 'BYE'
+  \ Hack method, no memory waste:
+    \ ' MON NFA 1+
+    \ CHAR B OVER C!
+    \ CHAR Y OVER 1+ C!
+    \ CHAR E 128 + SWAP 2+ C!
+  \ Simpler method:
+    : BYE MON ;
 
 -->
 
 ( Vocabulary, variables and constants)
 
+  \ Game vocabulary:
+
 : TASK ;
 VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
 
+  \ Game variables and constants:
+
      \ Player 1            Player 2
-     1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human?
+ \   1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
      0 VARIABLE SCORE1     0 VARIABLE SCORE2  \ scores
-     0 VARIABLE X1         0 VARIABLE X2      \ X coordinate
-     0 VARIABLE Y1         0 VARIABLE Y2      \ Y coordinate
+     0 VARIABLE XC1        0 VARIABLE XC2     \ X coordinate
+     0 VARIABLE YC1        0 VARIABLE YC2     \ Y coordinate
      0 VARIABLE XINC1      0 VARIABLE XINC2   \ X inc (-1..1)
      0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
 YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
@@ -73,28 +89,32 @@ YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
 
 ( Graphics)
 
-: RDRAW  ( inc-x inc-y -- )
+: RDRAW ( inc-x inc-y -- )
   \ Draw a line from to the current plot position.
   Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW ;
 
-: PAINT1!  ( n -- )
-  \ Set the color of player 1's current position.
-  175 Y1 @ - 8 / 32 *  X1 @ 8 /  + 22528 + C! ;
+: XY>ATTRA ( x y -- a )
+  \ Convert a pixel coordinate to its attribute address.
+  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES + ;
 
-: PAINT2!  ( n -- )
-  \ Set the color of player 2's current position.
-  175 Y2 @ - 8 / 32 *  X2 @ 8 /  + 22528 + C! ;
+: PAINT ( n x y -- )
+  \ Plot at the given coordinates with color n.
+  \ XXX TODO Check this:
+  \ It seems the attribute address is used here
+  \ instead of `INK`, in order to get certain effect
+  \ related with the crashes.
+  2DUP PLOT XY>ATTRA C! ;
 
-: PAGE  ( -- )
+: WIPE ( -- )
   \ Clear the screen with the default colors.
-  BLACK PAPER BLACK BORDER WHITE INK CLS ;
+  BLACK PAPER  BLACK BORDER  WHITE INK  CLS ;
 
 -->
 
 ( User Defined Graphics)
 
  \ Translate the Latin1 Spanish chars in this source file
- \ to ZX Spectrum UDG: 
+ \ to ZX Spectrum UDG:
 
  \ #vim %substitute@á@\=nr2char(144)@g
  \ #vim %substitute@é@\=nr2char(148)@g
@@ -103,7 +123,7 @@ YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
  \ #vim %substitute@ú@\=nr2char(162)@g
  \ #vim %substitute@¿@\=nr2char(153)@g
 
-: UDG!  ( b0..b7 c -- )
+: UDG! ( b0..b7 c -- )
   \ Store the given 8 bytes into the c UDG char
   \ c = 144..164 (144..162 on 128K models)
   \ b0 = first (top) scan
@@ -130,127 +150,155 @@ DECIMAL
 
 -->
 
-( Init)
+( Screen and pause)
 
-: STATUS  ( -- )
+: STATUS ( -- )
   \ Show the status bar at the current cursor position.
-  COLOR1 INK ."  MOTO 1=" SCORE1 ?
-  0 22 AT COLOR2 INK ." MOTO 2=" SCORE2 ? ;
+  COLOR1 INK ."  Moto 1:" SCORE1 ?
+  0 22 AT COLOR2 INK ." Moto 2:" SCORE2 ? ;
 
-: FRAME  ( -- )
+: FRAME ( -- )
   \ Draw the frame.
   RED INK 8 DUP PLOT 239 0 RDRAW 0 159 RDRAW
   -239 0 RDRAW 0 -159 RDRAW ;
 
-: ARENA  ( -- )
   \ Draw the arena.
-  PAGE STATUS FRAME ;
+: ARENA ( -- ) WIPE STATUS FRAME ;
 
-: PAUSE  ( -- )
+: AKEY ( -- c )
+  \ Wait for a key press and return its code.
+  \ This is an alternative to 'KEY', because 'KEY'
+  \ always shows the flashing cursor, even if the
+  \ current attributes are changed.
+  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT ;
+
   \ Wait for a key press.
-  8 SPACES ." PULSA UNA TECLA" KEY DROP ;
+: PAUSE ( -- ) 8 SPACES  ." Pulsa una tecla" AKEY ;
+
+  \ Is the given char a valid answer for a Y/N question?
+: Y/N? ( c -- flag ) 32 OR DUP [CHAR] s = SWAP [CHAR] n = OR ;
+
+  \ Wait for a valid key press for a Yes/No question
+  \ and return its code.
+: Y/N ( -- c ) BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT ;
 
 -->
 
-( RESET INIT CRASH )
+( RESET INIT CRASH , key identifiers)
 
 : RESET ( -- )
   \ Reset the game variables.
-  40 X1 ! 88 Y1 ! 215 X2 ! 88 Y2 !
+  40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
   1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !
   0 SCORE2 ! 0 SCORE1 ! ;
 
-: INIT  ( -- )  ARENA RESET ;
+: INIT ( -- ) ARENA RESET ;
 
-: CRASH  ( n -- )
+: CRASH ( n -- )
+  \ Crash effect.
   \ n = color of the player who crashed
-  INK 1 BRIGHT 175 Y1 @ - 8 / X1 @ 8 / AT SPACE
+  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
   100 50 DO  11 I BLEEP  LOOP ;
+
+  \ Key identifiers (bitmask and port):
+HEX
+  \ Player 1
+1 FBFE 2CONSTANT K-Q   1 FDFE 2CONSTANT K-A
+8 FEFE 2CONSTANT K-C   4 FEFE 2CONSTANT K-X
+  \ Player 2
+1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
+4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
+DECIMAL
 
 -->
 
 ( Rudders)
 
-: RUDDERS  ( -- )
+: PRESSED? ( bitmask port -- flag ) INP AND NOT ;
+
+: RUDDERS ( -- )
   \ Check the keyboard
-  \ and update the increments and the coordinates
-  64510 INP 254 =  IF  0 XINC1 ! 1 YINC1 !  THEN
-  65022 INP 254 =  IF  0 XINC1 ! -1 YINC1 !  THEN
-  65278 INP 251 =  IF  -1 XINC1 ! 0 YINC1 !  THEN
-  65278 INP 247 =  IF  1 XINC1 ! 0 YINC1 !  THEN
-  57342 INP 254 =  IF  0 XINC2 ! 1 YINC2 !  THEN
-  49150 INP 254 =  IF  0 XINC2 ! -1 YINC2 !  THEN
-  32766 INP 251 =  IF  1 XINC2 ! 0 YINC2 !  THEN
-  32766 INP 247 =  IF  -1 XINC2 ! 0 YINC2 !  THEN
-  XINC1 @ X1 +!  YINC1 @ Y1 +!
-  XINC2 @ X2 +!  YINC2 @ Y2 +! ;
-
--->
+  \ and update the increments and the coordinates.
+  K-Q PRESSED?  IF   0 XINC1 !  1 YINC1 !  THEN
+  K-A PRESSED?  IF   0 XINC1 ! -1 YINC1 !  THEN
+  K-C PRESSED?  IF  -1 XINC1 !  0 YINC1 !  THEN
+  K-X PRESSED?  IF   1 XINC1 !  0 YINC1 !  THEN
+  K-P PRESSED?  IF   0 XINC2 !  1 YINC2 !  THEN
+  K-EN PRESSED? IF   0 XINC2 ! -1 YINC2 !  THEN
+  K-M PRESSED?  IF   1 XINC2 !  0 YINC2 !  THEN
+  K-N PRESSED?  IF  -1 XINC2 !  0 YINC2 !  THEN
+  XINC1 @ XC1 +!  YINC1 @ YC1 +!
+  XINC2 @ XC2 +!  YINC2 @ YC2 +! ; -->
 
 ( Instructions)
 
-: CREDITS  ( -- )
+: INSTRUCTIONS ( -- )
   \  <------------------------------->
-  ."               TRON" CR CR
+  1 BRIGHT
+  ." Cada jugador conduce una moto" CR
+  ." cuyo único control la hace girar" CR
+  ." noventa grados sin frenar. Cada" CR
+  ." moto deja tras de sí una pared" CR
+  ." sólida de luz. El objetivo del" CR
+  ." juego es hacer estrellarse al" CR
+  ." contrincante con el laberinto." CR CR 0 BRIGHT ;
+  \  <------------------------------->
+
+: THE-END ( -- )
+       \  <------------------------------->
+  WIPE ." Para jugar otra vez: RUN" CR
+       ." Para salir de Forth: BYE" CR ;
+       \  <------------------------------->
+
+-->
+
+( Instructions, start)
+
+: KEYS ( -- )
+  \  <------------------------------->
+  ." Teclas:" CR
+  ."  Jugador 1:  Q A C X" CR
+  ."  Jugador 2:  P ENTER M N" CR CR ;
+  \  <------------------------------->
+
+: CREDITS ( -- )
+  \  <------------------------------->
+  RED INK
+  ."               TRON" CR CR  WHITE INK
   ." Copyright (C) 1985,2009,2015" CR
-  ."   Marcos Cruz (programandala.net)" CR
+  ."  Marcos Cruz (programandala.net)" CR
   ." Licencia/Permesilo/License:" CR
-  ."   http://programandala.net/lp" CR
-  ." Escrito en/Verkita en/Written in"
-  ."   Abersoft Forth" CR ;
+  ."  http://programandala.net/lp" CR CR ;
   \  <------------------------------->
+
+: START ( -- )
+  WIPE  CREDITS INSTRUCTIONS KEYS PAUSE ;
 
 -->
-
-( Instructions)
-
-: INSTRUCTIONS  ( -- )
-  \  <------------------------------->
-  ." Cada jugador conduce una moto que"
-  ." corre a velocidad desbocada." CR
-  ." Su único control la hace girar" CR
-  ." noventa grados sin frenar." CR CR
-  ." Cada moto deja tras de sí una" CR
-  ." pared sólida de luz." CR CR
-  ." El objetivo del juego es hacer" CR
-  ." estrellarse al contrincante con" CR
-  ." el laberinto formado." CR CR
-  ."              Teclas" CR CR
-  ." Jugador 1:  Q A C X" CR
-  ." Jugador 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
-: OPTION  ( c -- )  1 BRIGHT EMIT 0 BRIGHT ;
-: MENU  ( -- )
-  BEGIN 
-    PAGE CREDITS CR
-    [CHAR] I OPTION ." nstrucciones" CR
-    [CHAR] J OPTION ." ugar"
-    BEGIN KEY CASE
-        [CHAR] I OF  INSTRUCTIONS PAUSE  ENDOF
-        [CHAR] J OF  [COMPILE] ;S  ENDOF
-      ENDCASE
-    REPEAT
-  REPEAT ; -->
 
 ( Main)
 
+: GAME ( -- )
 
-: GAME ( -- ) 
-  INIT BEGIN
+  INIT  BEGIN
 
-    X1 @ Y1 @ POINT \ Is the player 1's next position occupied?
+    XC1 @ YC1 @ POINT \ Is player 1's next position occupied?
     IF  COLOR1 CRASH 1 SCORE2 +! [COMPILE] ;S  THEN
 
-    X2 @ Y2 @ POINT \ Is the player 2's next position occupied?
-    IF  X2 @ X1 ! Y2 @ Y1 !
+    XC2 @ YC2 @ POINT \ Is player 2's next position occupied?
+    IF  XC2 @ XC1 ! YC2 @ YC1 !
         COLOR2 CRASH 1 SCORE1 +! [COMPILE] ;S  THEN
 
-    X1 @ Y1 @ PLOT  COLOR1 PAINT1!  1 000 BLEEP
-    X2 @ Y2 @ PLOT  COLOR2 PAINT2!  1 100 BLEEP
-    RUDDERS KEY DROP \ XXX TMP
+    COLOR1 XC1 @ YC1 @ PAINT  1 000 BLEEP
+    COLOR2 XC2 @ YC2 @ PAINT  1 100 BLEEP
+    RUDDERS
 
   AGAIN ;
 
-: TRON  ( -- )  BEGIN  CREDITS INSTRUCTIONS GAME  AGAIN ;
+: QUIT? ( -- flag )
+  \ Another game?
+  WIPE 12 7 AT ." ¿Otra vez? (S/N)" Y/N [CHAR] N = ;
+
+: RUN ( -- ) START  BEGIN  GAME QUIT?  UNTIL  THE-END ;
 
   \ vim: filetype=abersoftforth:fileencoding=latin1
