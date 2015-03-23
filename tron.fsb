@@ -55,13 +55,22 @@ FORTH DEFINITIONS
   \ Abersoft Forth's `EXIT` just does a `RDROP`, so:
 : RDROP  ( R: x -- )  EXIT  ;
   \ And this is what `EXIT` is supposed to do:
-: EXIT  ( -- )  [COMPILE] ;S  ; IMMEDIATE
+ \ : EXIT  ( -- )  [COMPILE] ;S  ; IMMEDIATE
+: EXIT  ( -- )  COMPILE [COMPILE] ;S  ; IMMEDIATE
 : BYE MON  ;
   \ 'MON' could be actually renamed to 'BYE' this way:
     \ ' MON NFA 1+
     \ CHAR B OVER C!
     \ CHAR Y OVER 1+ C!
     \ CHAR E 128 + SWAP 2+ C!
+
+  \ ----------------------------
+  \ Some Abersoft Forth specific extensions
+
+  \ Load the given block from the next file on the tape:
+: TLOAD  ( n -- )  INIT-DISC LOADT LOAD  ;
+  \ Load block 1 from the next file on the tape:
+: RUNT  ( -- )  1 TLOAD  ;
 
   \ ----------------------------
   \ ZX Spectrum specific
@@ -273,7 +282,8 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
 
   \ ----------------------------
   \ Rudders
-
+0  1 2CONSTANT UP-INC
+0 -1 2CONTANTS
 : RUDDERS  ( -- )
 
   \ Check the keyboard
@@ -348,8 +358,8 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
 : GAME  ( -- )
   INIT  BEGIN
     \ XXX FIXME `[compile] ;s` works, but `exit` doesn't:
-    CRASH1? IF CRASH1 [COMPILE] ;S THEN
-    CRASH2? IF XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 [COMPILE] ;S THEN
+    CRASH1? IF CRASH1 EXIT THEN
+    CRASH2? IF XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 EXIT THEN
     PAINT1 1 0 BLEEP  PAINT2 1 100 BLEEP  RUDDERS
   AGAIN  ;
 
