@@ -1,0 +1,236 @@
+\ Tron
+
+  \ tron.file_0.fsb
+  \ This file is part of Tron (version 2015032315)
+  \ a game written in ZX Spectrum's Abersoft Forth.
+  \ This fiile is the first part of the sources.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+  \ -----------------------------------------------------------
+  \ Requisitos
+
+  \ Para convertir este fichero fuente en un fichero TAP
+  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
+  \ se necesita el conversor fsb:
+  \
+  \ http://programandala.net/es.programa.fsb.html
+
+  \ -----------------------------------------------------------
+  \ Historia del desarrollo
+  \
+  \ 1985-04: Conversión a Abersoft Forth del original en
+  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
+  \ tomo 5, página 1112.
+  \
+  \ 2009-05: Conversión del fichero TAP original en un fichero
+  \ de texto para su publicación, con algunos cambios.
+  \
+  \ 2015-03: Conversión al formato fsb
+  \ (http://programandala.net/es.programa.fsb.html).  Muchas
+  \ mejoras: Textos reescritos usando gráficos para los
+  \ caracteres castellanos; instrucciones integradas en el
+  \ código, no simplemente escritas en un bloque fuente;
+  \ créditos; renombrado general de palabras, factorización y
+  \ uso de constantes para hacer el código más claro; arreglo
+  \ de la lectura de teclado (el método original no funcionaba
+  \ en el emulador); simplificación de algoritmos.
+  \
+  \ 2015-03-23: División del código en dos ficheros.
+
+  \ XXX FIXME -- the system gets corrupted after quitting the
+  \ game, no word is recognized.
+
+( Standard extensions, load)
+
+CR ." Loading Tron..." CR
+
+FORTH DEFINITIONS
+
+2 LOAD  3 LOAD  4 LOAD  5 LOAD 
+6 LOAD  7 LOAD  8 LOAD  9 LOAD  10 LOAD
+ 
+( Standard extensions)
+
+  \ ----------------------------
+  \ Some standard and common usage words Abersoft Forth lacks
+
+: \  ( "ccc<newline>" -- )
+  IN @ DUP C/L > IF  B/BUF SWAP MOD  ELSE  C/L SWAP - THEN
+  IN +!  ; IMMEDIATE
+
+: CHAR  ( "name" -- c )  BL WORD HERE 1+ C@  ;
+: [CHAR]  ( "name" -- c )  CHAR [COMPILE] LITERAL  ; IMMEDIATE
+
+: THRU  ( n1 n2 -- )  1+ SWAP DO  I LOAD  LOOP  ;
+
+  \ Abersoft Forth's `EXIT` just does a `RDROP`, so:
+: RDROP  ( R: x -- )  EXIT  ;
+
+  \ And this is what `EXIT` is supposed to do:
+: EXIT  ( -- )  COMPILE [COMPILE] ;S  ; IMMEDIATE
+
+: BYE MON  ;
+  \ 'MON' could be actually renamed to 'BYE' this way:
+    \ ' MON NFA 1+
+    \ CHAR B OVER C!
+    \ CHAR Y OVER 1+ C!
+    \ CHAR E 128 + SWAP 2+ C!
+
+2 CONSTANT CELL
+: CELL+  ( n1 -- n2 )  2+  ;
+: CELLS ( n1 -- n2 )  CELL *  ;
+
+( Abersoft Forth specific extensions)
+
+  \ ----------------------------
+  \ Some Abersoft Forth specific extensions
+
+  \ Load the given block from the next file on the tape:
+
+: TLOAD  ( n -- )  INIT-DISC LOADT LOAD  ;
+
+  \ Load block 1 from the next file on the tape:
+  \ XXX FIXME -- this causes the interpreter to return
+  \ to the line block where `RUNT` was executed,
+  \ and then the block has a different containt.
+  \ : RUNT  ( -- )  1 TLOAD ;
+
+ \ These alternatives fix the problem:
+
+ : RUNT  ( -- )  1 TLOAD QUIT ;
+
+ \ These alternatives don't fix the problem:
+
+ \ : RUNT  ( -- )  1 TLOAD 0 BLK ! RP! ;
+ \ : RUNT  ( -- )  1 TLOAD 0 BLK !  ;
+ \ : RUNT  ( -- )  1 TLOAD RDROP  ;
+ \ : RUNT  ( -- )  1 TLOAD [COMPILE] ;S  ;
+ \ : RUNT  ( -- )  1 TLOAD R> RDROP RDROP >R ;
+
+( ZX Spectrum specific)
+
+  \ Memory addresses
+
+22528 CONSTANT ATTRIBUTES
+
+  \ System variables
+
+23677 DUP CONSTANT X-COORD  1+ CONSTANT Y-COORD
+
+  \ Color constants
+
+0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
+6 CONSTANT YELLOW  7 CONSTANT WHITE
+
+
+( Vocabulary, variables and constants)
+
+  \ ----------------------------
+  \ Game vocabulary
+
+: TASK  ;
+
+VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
+
+  \ ----------------------------
+  \ Game variables and constants
+
+     \ Player 1            Player 2
+ \   1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
+     0 VARIABLE SCORE1     0 VARIABLE SCORE2  \ scores
+     0 VARIABLE XC1        0 VARIABLE XC2     \ X coordinate
+     0 VARIABLE YC1        0 VARIABLE YC2     \ Y coordinate
+     0 VARIABLE XINC1      0 VARIABLE XINC2   \ X inc (-1..1)
+     0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
+YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
+
+  \ Languages
+
+0 CONSTANT EN
+1 CONSTANT EO
+2 CONSTANT ES
+EN VARIABLE LANG
+
+  \ ----------------------------
+  \ Generic constants
+
+  CHAR n CONSTANT 'n'
+  CHAR s CONSTANT 's'
+
+( Graphics)
+
+: RDRAW  ( inc-x inc-y -- )
+  \ Draw a relative line (from the current plot position).
+  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW  ;
+
+: XY>ATTRA  ( x y -- a )
+  \ Convert a pixel coordinate to its attribute address.
+  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
+
+: PAINT  ( n x y -- )
+  \ Plot at the given coordinates with color n.
+  \ XXX TODO Check this:
+  \ It seems the attribute address is used here
+  \ instead of `INK`, in order to get certain effect
+  \ related with the crashes.
+  2DUP PLOT XY>ATTRA C!  ;
+
+: WIPE  ( -- )
+  \ Clear the screen with the default colors.
+  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
+
+( User Defined Graphics)
+
+: UDG!  ( b0..b7 c -- )
+  \ Store the given 8 bytes into the c UDG char
+  \ c = 144..164 (144..162 on 128K models)
+  \ b0 = first (top) scan
+  \ b7 = last (bottom) scan
+  144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP  ;
+
+  \ ----------------------------
+  \ Spanish characters
+
+HEX
+  08 10 38 04 3C 44 3C 00  90 UDG! \ á
+  \ 04 08 3C 42 7E 42 42 00  00 UDG! \ Á
+  08 10 38 44 78 40 3C 00  94 UDG! \ é
+  \ 04 08 7E 40 7C 40 7E 00  00 UDG! \ É
+  08 10 00 30 10 10 38 00  98 UDG! \ í
+  \ 04 08 3E 08 08 08 3E 00  00 UDG! \ Í
+  08 10 38 44 44 44 38 00  9E UDG! \ ó
+  \ 08 10 3C 42 42 42 3C 00  00 UDG! \ Ó
+  08 10 44 44 44 44 38 00  A2 UDG! \ ú
+  \ 04 4A 42 42 42 42 3C 00  00 UDG! \ Ú
+  \ 00 78 00 78 44 44 44 00  00 UDG! \ ñ
+  \ 3C 00 62 52 4A 46 42 00  00 UDG! \ Ñ
+  \ 44 00 44 44 44 44 38 00  00 UDG! \ ü
+  \ 42 00 42 42 42 42 3C 00  00 UDG! \ Ü
+  00 10 00 10 20 42 3C 00  99 UDG! \ ¿
+DECIMAL
+
+( Screen)
+
+: SCORE. ( n -- )
+  S->D <# # # # #> TYPE  ;
+
+: STATUS  ( -- )
+  \ Show the status bar at the current cursor position.
+  COLOR1 INK SCORE1 @ SCORE.
+  0 29 AT COLOR2 INK SCORE2 @ SCORE.  ;
+
+: FRAME  ( -- )
+  \ Draw the frame.
+  RED INK 8 DUP PLOT 239 0 RDRAW 0 159 RDRAW
+  -239 0 RDRAW 0 -159 RDRAW  ;
+
+  \ Draw the arena.
+: ARENA  ( -- )  WIPE STATUS FRAME  ;
+
+RUNT \ Load the second part of the source
+  
+  \ vim: filetype=abersoftforth:fileencoding=latin1

@@ -1,0 +1,220 @@
+\ Tron
+
+  \ tron.file_2.fsb
+  \ This file is part of Tron (version 2015032315)
+  \ a game written in ZX Spectrum's Abersoft Forth.
+  \ This fiile is the second part of the sources.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+\ tron.file_2.fsb
+\ Tron
+\ File 2
+\ Versión 201503230314
+\ Escrito en Forth para ZX Spectrum
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+  \ -----------------------------------------------------------
+  \ Requisitos
+
+  \ Para convertir este fichero fuente en un fichero TAP
+  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
+  \ se necesita el conversor fsb:
+  \
+  \ http://programandala.net/es.programa.fsb.html
+
+  \ -----------------------------------------------------------
+  \ Historia del desarrollo
+  \
+  \ 1985-04: Conversión a Abersoft Forth del original en
+  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
+  \ tomo 5, página 1112.
+  \
+  \ 2009-05: Conversión del fichero TAP original en un fichero
+  \ de texto para su publicación, con algunos cambios.
+  \
+  \ 2015-03: Conversión al formato fsb
+  \ (http://programandala.net/es.programa.fsb.html).  Muchas
+  \ mejoras: Textos reescritos usando gráficos para los
+  \ caracteres castellanos; instrucciones integradas en el
+  \ código, no simplemente escritas en un bloque fuente;
+  \ créditos; renombrado general de palabras, factorización y
+  \ uso de constantes para hacer el código más claro; arreglo
+  \ de la lectura de teclado (el método original no funcionaba
+  \ en el emulador); simplificación de algoritmos.
+
+  \ XXX FIXME -- the system gets corrupted after quitting the
+  \ game, no word is recognized.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the Latin1 Spanish chars in this source file to
+  \ the ZX Spectrum UDG defined in the first file
+  \ <tron.part_0.fsb>):
+
+  \ #vim %substitute@á@\=nr2char(144)@g
+  \ #vim %substitute@é@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(152)@g
+  \ #vim %substitute@ó@\=nr2char(158)@g
+  \ #vim %substitute@ú@\=nr2char(162)@g
+  \ #vim %substitute@¿@\=nr2char(153)@g
+
+( Load )
+
+2 10 THRU
+
+( Keyboard)
+
+: AKEY  ( -- c )
+  \ Wait for a key press and return its code.  This is an
+  \ alternative to Abersoft Forth's 'KEY', because it always
+  \ shows the flashing cursor, even if the current attributes
+  \ are changed.
+  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT  ;
+
+  \ Wait for a key press.
+: PAUSE  ( -- )  8 SPACES  ." Pulsa una tecla" AKEY  ;
+
+  \ Convert a char in the range A-Z to lowercase
+  \ (Warning: no check!, chars other than A-Z get corrupted):
+: LOWER  ( c -- c' )  32 OR  ;
+
+  \ Is the given char a valid answer for a Y/N question?
+: Y/N?  ( c -- flag )  LOWER DUP 's' = SWAP 'n' = OR  ;
+
+  \ Wait for a valid key press for a Y/N question
+  \ and return its code.
+: Y/N  ( -- c )  BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT  ;
+
+  \ Wait for a valid key press for a Y/N question
+  \ and return a flag: Was it "N" or "n"?
+: NO?  ( -- flag )  Y/N LOWER 'n' =  ;
+
+: PRESSED?  ( bitmask port -- flag )  INP AND NOT  ;
+
+( Game init, crash effect, key identifiers)
+
+  \ ----------------------------
+  \ Game init
+
+: RESET  ( -- )
+  \ Reset the game variables.
+  40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
+  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 ! ;
+
+: INIT  ( -- )  ARENA RESET  ;
+
+  \ ----------------------------
+  \ Crash effect
+
+: CRASH  ( -- )
+  \ Crash effect.
+  \ XXX OLD
+  \ n = color of the player who crashed
+  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
+  100 50 DO  11 I BLEEP  LOOP  ;
+
+  \ Is player 1's next position occupied?
+: CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
+  \ Is player 2's next position occupied?
+: CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
+
+  \ ----------------------------
+  \ Key identifiers (bitmask and port)
+
+HEX   1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
+      4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
+      \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
+      \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
+     10 F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
+      8 EFFE 2CONSTANT K-7  10 EFFE 2CONSTANT K-6   DECIMAL
+
+( Player keys, coordinate increments)
+
+  \ ----------------------------
+  \ Player keys
+
+  \ Player 1's keys (default)
+  \ K-Q 2VARIABLE UP-K1    K-A 2VARIABLE DOWN-K1
+  \ K-X 2VARIABLE LEFT-K1  K-C 2VARIABLE RIGHT-K1
+
+  \ Player 1's keys (debugging)
+K-7 2VARIABLE UP-K1    K-6 2VARIABLE DOWN-K1
+K-5 2VARIABLE LEFT-K1  K-8 2VARIABLE RIGHT-K1
+
+  \ Player 2's keys
+K-P 2VARIABLE UP-K2 K-EN 2VARIABLE DOWN-K2
+K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
+ 
+  \ ----------------------------
+ \ Coordinate increments
+ 
+ 0  1 2CONSTANT UP-INC
+ 0 -1 2CONSTANT DOWN-INC
+-1  0 2CONSTANT LEFT-INC
+ 0 -1 2CONSTANT RIGHT-INC
+
+( Rudders)
+
+  \ XXX TODO make it impossible to go the opposite direction
+
+: RUDDER1  ( -- n1 n2 )
+     UP-K1 2@ PRESSED? IF   0 XINC1 !  1 YINC1 !  THEN
+   DOWN-K1 2@ PRESSED? IF   0 XINC1 ! -1 YINC1 !  THEN
+   LEFT-K1 2@ PRESSED? IF  -1 XINC1 !  0 YINC1 !  THEN
+  RIGHT-K1 2@ PRESSED? IF   1 XINC1 !  0 YINC1 !  THEN  ;
+
+: RUDDER2  ( -- n1 n2 )
+     UP-K2 2@ PRESSED? IF   0 XINC2 !  1 YINC2 !  THEN
+   DOWN-K2 2@ PRESSED? IF   0 XINC2 ! -1 YINC2 !  THEN
+   LEFT-K2 2@ PRESSED? IF  -1 XINC2 !  0 YINC2 !  THEN
+  RIGHT-K2 2@ PRESSED? IF   1 XINC2 !  0 YINC2 !  THEN  ;
+
+: RUDDERS  ( -- )
+
+  \ Check the keyboard
+  \ and update the increments and the coordinates.
+
+  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!
+  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+
+( Game)
+
+: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ PAINT 1 0 BLEEP  ;
+: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ PAINT 1 100 BLEEP  ;
+: CRASH1  ( -- )  PAINT1 CRASH 1 SCORE2 +!  ;
+: CRASH2  ( -- )  PAINT2 CRASH 1 SCORE1 +!  ;
+
+: GAME  ( -- )
+  INIT  BEGIN
+    QUIT?   IF  EXIT  THEN
+    CRASH1? IF  CRASH1 EXIT  THEN
+    CRASH2? IF  XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 EXIT  THEN
+    PAINT1 PAINT2 RUDDERS
+  AGAIN  ;
+
+( Main)
+
+: START  ( -- )
+  WIPE  TITLE CREDITS INSTRUCTIONS KEYS PAUSE
+  0 SCORE1 !  0 SCORE2 !  ;
+
+: ANOTHER?  ( -- flag )
+  \ Another game?
+  WIPE 12 7 AT ." ¿Otra vez? (S/N)" NO?  ;
+
+: RUN  ( -- )  START  BEGIN  GAME QUIT?  UNTIL  THE-END  ;
+
+  \ XXX TMP -- debugging message:
+." Done!" CR ." Type RUN to start." CR
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

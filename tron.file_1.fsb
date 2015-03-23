@@ -1,0 +1,184 @@
+\ Tron
+
+  \ tron.file_1.fsb
+  \ This file is part of Tron (version 2015032315)
+  \ a game written in ZX Spectrum's Abersoft Forth.
+  \ This fiile is the second part of the sources.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+\ tron.file_1.fsb
+\ Tron
+\ File 1
+\ Versión 201503230314
+\ Escrito en Forth para ZX Spectrum
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: http://programandala.net/lp
+
+\ http://programandala.net/es.programa.tron.html
+
+  \ -----------------------------------------------------------
+  \ Requisitos
+
+  \ Para convertir este fichero fuente en un fichero TAP
+  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
+  \ se necesita el conversor fsb:
+  \
+  \ http://programandala.net/es.programa.fsb.html
+
+  \ -----------------------------------------------------------
+  \ Historia del desarrollo
+  \
+  \ 1985-04: Conversión a Abersoft Forth del original en
+  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
+  \ tomo 5, página 1112.
+  \
+  \ 2009-05: Conversión del fichero TAP original en un fichero
+  \ de texto para su publicación, con algunos cambios.
+  \
+  \ 2015-03: Conversión al formato fsb
+  \ (http://programandala.net/es.programa.fsb.html).  Muchas
+  \ mejoras: Textos reescritos usando gráficos para los
+  \ caracteres castellanos; instrucciones integradas en el
+  \ código, no simplemente escritas en un bloque fuente;
+  \ créditos; renombrado general de palabras, factorización y
+  \ uso de constantes para hacer el código más claro; arreglo
+  \ de la lectura de teclado (el método original no funcionaba
+  \ en el emulador); simplificación de algoritmos.
+
+  \ XXX FIXME -- the system gets corrupted after quitting the
+  \ game, no word is recognized.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the Latin1 Spanish chars in this source file to
+  \ the ZX Spectrum UDG defined in the first file
+  \ <tron.part_0.fsb>):
+
+  \ #vim %substitute@á@\=nr2char(144)@g
+  \ #vim %substitute@é@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(152)@g
+  \ #vim %substitute@ó@\=nr2char(158)@g
+  \ #vim %substitute@ú@\=nr2char(162)@g
+  \ #vim %substitute@¿@\=nr2char(153)@g
+
+( Load )
+
+2 10 THRU
+
+( English texts)
+
+: EN-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Every player drives a motorbike" CR
+  ." whose only control makes it turn" CR
+  ." ninety degrees XXX. Every" CR
+  ." motorbike leaves a solid light" CR
+  ." trail behind. The goal of the game" CR
+  ." is to make your adversary to crash" CR
+  ." the labyrinth." CR CR ;
+  \  <------------------------------->
+: EN-KEYS  ( -- )
+  \  <------------------------------->
+  ." Keys:" CR
+  ."  Player 1:  Q A C X" CR
+  ."  Player 2:  P ENTER M N" CR CR  ;
+  \  <------------------------------->
+: THE-END  ( -- )
+  \  <------------------------------->
+  ." Para jugar otra vez: RUN" CR
+  ." Para salir de Forth: BYE" CR  ;
+  \  <------------------------------->
+
+( Esperanto texts)
+
+: EO-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Ĉiu ludanto veturas motorciklon" CR
+  ." kies nura stirilo ĝin ĝiras" CR
+  ." naŭdek gradojn sen malrapidiĝo." CR
+  ." Ĉiu veturilo postlasas solidan" CR
+  ." lumomuron. La ludocelo estas" CR
+  ." frakasigi la kontraŭulon" CR
+  ." en la labirinton." CR CR ;
+  \  <------------------------------->
+: EO-KEYS  ( -- )
+  \  <------------------------------->
+  ." Klavoj:" CR
+  ."  Ludanto 1:  Q A C X" CR
+  ."  Ludanto 2:  P ENTER M N" CR CR  ;
+  \  <------------------------------->
+: EO-THE-END  ( -- )
+  \  <------------------------------->
+  ." Por reludi: RUN" CR
+  ." Por eliri el Fortho: BYE" CR  ;
+  \  <------------------------------->
+
+( Spanish texts)
+
+: ES-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Cada jugador conduce una moto" CR
+  ." cuyo único control la hace girar" CR
+  ." noventa grados sin frenar. Cada" CR
+  ." moto deja tras de sí una pared" CR
+  ." sólida de luz. El objetivo del" CR
+  ." juego es hacer estrellarse al" CR
+  ." contrincante con el laberinto." CR CR ;
+  \  <------------------------------->
+: ES-KEYS  ( -- )
+  \  <------------------------------->
+  ." Teclas:" CR
+  ."  Jugador 1:  Q A C X" CR
+  ."  Jugador 2:  P ENTER M N" CR CR  ;
+  \  <------------------------------->
+: ES-THE-END  ( -- )
+  \  <------------------------------->
+  ." To play again: RUN" CR
+  ." To exit Forth: BYE" CR  ;
+  \  <------------------------------->
+
+( Common texts)
+
+: TITLE  ( -- )
+  RED INK 14 SPACES ." TRON" WHITE INK  ;
+
+: CREDITS  ( -- )
+  \  <------------------------------->
+  ." Copyright (C) 1985,2009,2015" CR
+  ."  Marcos Cruz (programandala.net)" CR
+  ." Licencia/Permesilo/License:" CR
+  ."  http://programandala.net/lp" CR CR  ;
+  \  <------------------------------->
+
+( Localization)
+
+: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
+  \ cfa1 = cfa of the Spanish word
+  \ cfa2 = cfa of the Esperanto word
+  \ cfa3 = cfa of the English word
+  <BUILDS , , , DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
+
+' ES-KEYS ' EO-KEYS ' EN-KEYS
+LOCALIZED KEYS
+
+' ES-THE-END ' EO-THE-END ' EN-THE-END
+LOCALIZED (THE-END)
+
+: THE-END  ( -- )  WIPE (THE-END)  ;
+
+' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
+LOCALIZED (INSTRUCTIONS)
+
+: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) 0 BRIGHT  ;
+
+RUNT \ Load the third part of the source
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8
+
