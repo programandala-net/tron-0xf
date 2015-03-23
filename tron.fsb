@@ -1,5 +1,5 @@
 \ Tron
-\ Versión 2015-03-23T02:02
+\ Versión 201503230314
 \ Escrito en Forth para ZX Spectrum
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
@@ -36,20 +36,27 @@
   \ de la lectura de teclado (el método original no funcionaba
   \ en el emulador); simplificación de algoritmos.
 
+  \ XXX FIXME -- the system gets corrupted after quitting the
+  \ game, no word is recognized.
+
 ( Tools, ZX Spectrum specific; load the rest)
 
 FORTH DEFINITIONS
  
   \ ----------------------------
-  \ Some standard words Abersoft Forth lacks
+  \ Some standard and common usage words Abersoft Forth lacks
 
-: \ ( "ccc<newline>" -- )
+: \  ( "ccc<newline>" -- )
   IN @ DUP C/L > IF  B/BUF SWAP MOD  ELSE  C/L SWAP - THEN
-  IN +! ; IMMEDIATE
-: CHAR ( "name" -- c ) BL WORD HERE 1+ C@ ;
-: [CHAR] ( "name" -- c ) CHAR [COMPILE] LITERAL ; IMMEDIATE
+  IN +!  ; IMMEDIATE
+: CHAR  ( "name" -- c )  BL WORD HERE 1+ C@  ;
+: [CHAR]  ( "name" -- c )  CHAR [COMPILE] LITERAL  ; IMMEDIATE
 : THRU  ( n1 n2 -- )  1+ SWAP DO  I LOAD  LOOP  ;
-: BYE MON ;
+  \ Abersoft Forth's `EXIT` just does a `RDROP`, so:
+: RDROP  ( R: x -- )  EXIT  ;
+  \ And this is what `EXIT` is supposed to do:
+: EXIT  ( -- )  [COMPILE] ;S  ; IMMEDIATE
+: BYE MON  ;
   \ 'MON' could be actually renamed to 'BYE' this way:
     \ ' MON NFA 1+
     \ CHAR B OVER C!
@@ -65,9 +72,7 @@ FORTH DEFINITIONS
 
   \ System variables
 
-23677 CONSTANT COORDS
-COORDS CONSTANT X-COORD
-COORDS 1+ CONSTANT Y-COORD
+23677 DUP CONSTANT X-COORD  1+ CONSTANT Y-COORD
 
   \ Color constants
 
@@ -84,7 +89,7 @@ COORDS 1+ CONSTANT Y-COORD
   \ ----------------------------
   \ Game vocabulary
 
-: TASK ;
+: TASK  ;
 VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
 
   \ ----------------------------
@@ -99,27 +104,33 @@ VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
      0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
 YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
 
+  \ ----------------------------
+  \ Generic constants
+
+  CHAR n CONSTANT 'n'
+  CHAR s CONSTANT 's'
+
 ( Graphics)
 
-: RDRAW ( inc-x inc-y -- )
+: RDRAW  ( inc-x inc-y -- )
   \ Draw a relative line (from the current plot position).
-  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW ;
+  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW  ;
 
-: XY>ATTRA ( x y -- a )
+: XY>ATTRA  ( x y -- a )
   \ Convert a pixel coordinate to its attribute address.
-  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES + ;
+  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
 
-: PAINT ( n x y -- )
+: PAINT  ( n x y -- )
   \ Plot at the given coordinates with color n.
   \ XXX TODO Check this:
   \ It seems the attribute address is used here
   \ instead of `INK`, in order to get certain effect
   \ related with the crashes.
-  2DUP PLOT XY>ATTRA C! ;
+  2DUP PLOT XY>ATTRA C!  ;
 
-: WIPE ( -- )
+: WIPE  ( -- )
   \ Clear the screen with the default colors.
-  BLACK PAPER  BLACK BORDER  WHITE INK  CLS ;
+  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
 ( User Defined Graphics)
 
@@ -133,12 +144,12 @@ YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
  \ #vim %substitute@ú@\=nr2char(162)@g
  \ #vim %substitute@¿@\=nr2char(153)@g
 
-: UDG! ( b0..b7 c -- )
+: UDG!  ( b0..b7 c -- )
   \ Store the given 8 bytes into the c UDG char
   \ c = 144..164 (144..162 on 128K models)
   \ b0 = first (top) scan
   \ b7 = last (bottom) scan
-  144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP ;
+  144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP  ;
 
 HEX
   08 10 38 04 3C 44 3C 00  90 UDG! \ á
@@ -163,73 +174,85 @@ DECIMAL
   \ ----------------------------
   \ Screen
 
-: STATUS ( -- )
+: STATUS  ( -- )
   \ Show the status bar at the current cursor position.
   COLOR1 INK ."  Moto 1:" SCORE1 ?
-  0 22 AT COLOR2 INK ." Moto 2:" SCORE2 ? ;
+  0 22 AT COLOR2 INK ." Moto 2:" SCORE2 ?  ;
 
-: FRAME ( -- )
+: FRAME  ( -- )
   \ Draw the frame.
   RED INK 8 DUP PLOT 239 0 RDRAW 0 159 RDRAW
-  -239 0 RDRAW 0 -159 RDRAW ;
+  -239 0 RDRAW 0 -159 RDRAW  ;
 
   \ Draw the arena.
-: ARENA ( -- ) WIPE STATUS FRAME ;
+: ARENA  ( -- )  WIPE STATUS FRAME  ;
 
   \ ----------------------------
   \ Keyboard
 
-: AKEY ( -- c )
-  \ Wait for a key press and return its code.
-  \ This is an alternative to 'KEY', because 'KEY'
-  \ always shows the flashing cursor, even if the
-  \ current attributes are changed.
-  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT ;
+: AKEY  ( -- c )
+  \ Wait for a key press and return its code.  This is an
+  \ alternative to Abersoft Forth's 'KEY', because it always
+  \ shows the flashing cursor, even if the current attributes
+  \ are changed.
+  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT  ;
 
   \ Wait for a key press.
-: PAUSE ( -- ) 8 SPACES  ." Pulsa una tecla" AKEY ;
+: PAUSE  ( -- )  8 SPACES  ." Pulsa una tecla" AKEY  ;
+
+  \ Convert a char in the range A-Z to lowercase
+  \ (Warning: no check!, chars other than A-Z get corrupted):
+: LOWER  ( c -- c' )  32 OR  ;
 
   \ Is the given char a valid answer for a Y/N question?
-: Y/N? ( c -- flag ) 32 OR DUP [CHAR] s = SWAP [CHAR] n = OR ;
+: Y/N?  ( c -- flag )  LOWER DUP 's' = SWAP 'n' = OR  ;
 
-  \ Wait for a valid key press for a Yes/No question
+  \ Wait for a valid key press for a Y/N question
   \ and return its code.
-: Y/N ( -- c ) BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT ;
+: Y/N  ( -- c )  BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT  ;
 
-: PRESSED? ( bitmask port -- flag ) INP AND NOT ;
+  \ Wait for a valid key press for a Y/N question
+  \ and return a flag: Was it "N" or "n"?
+: NO?  ( -- flag )  Y/N LOWER 'n' =  ;
+
+: PRESSED?  ( bitmask port -- flag )  INP AND NOT  ;
 
 ( Game init, crash effect, key identifiers)
 
   \ ----------------------------
   \ Game init
 
-: RESET ( -- )
+: RESET  ( -- )
   \ Reset the game variables.
   40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
-  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !
-  0 SCORE2 ! 0 SCORE1 ! ;
+  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 ! ;
 
-: INIT ( -- ) ARENA RESET ;
+: INIT  ( -- )  ARENA RESET  ;
 
   \ ----------------------------
   \ Crash effect
 
-: CRASH ( n -- )
+: CRASH  ( -- )
   \ Crash effect.
+  \ XXX OLD
   \ n = color of the player who crashed
-  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
-  100 50 DO  11 I BLEEP  LOOP ;
+  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
+  100 50 DO  11 I BLEEP  LOOP  ;
+
+  \ Is player 1's next position occupied?
+: CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
+  \ Is player 2's next position occupied?
+: CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
 
   \ ----------------------------
   \ Key identifiers (bitmask and port)
 
-HEX  1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
-     4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
-     \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
-     \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
-     \ XXX FIXME K-5 and K-6 are not detected!
-     A F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
-     8 EFFE 2CONSTANT K-7   A EFFE 2CONSTANT K-6   DECIMAL
+HEX   1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
+      4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
+      \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
+      \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
+     10 F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
+      8 EFFE 2CONSTANT K-7  10 EFFE 2CONSTANT K-6   DECIMAL
 
 ( Player keys, rudders)
 
@@ -251,7 +274,7 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
   \ ----------------------------
   \ Rudders
 
-: RUDDERS ( -- )
+: RUDDERS  ( -- )
 
   \ Check the keyboard
   \ and update the increments and the coordinates.
@@ -267,11 +290,11 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
   RIGHT-K2 2@ PRESSED? IF   1 XINC2 !  0 YINC2 !  THEN
 
   XINC1 @ XC1 +!  YINC1 @ YC1 +!
-  XINC2 @ XC2 +!  YINC2 @ YC2 +! ;
+  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
 
 ( Instructions)
 
-: INSTRUCTIONS ( -- )
+: INSTRUCTIONS  ( -- )
   \  <------------------------------->
   1 BRIGHT
   ." Cada jugador conduce una moto" CR
@@ -280,64 +303,63 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
   ." moto deja tras de sí una pared" CR
   ." sólida de luz. El objetivo del" CR
   ." juego es hacer estrellarse al" CR
-  ." contrincante con el laberinto." CR CR 0 BRIGHT ;
+  ." contrincante con el laberinto." CR CR 0 BRIGHT  ;
   \  <------------------------------->
 
-: THE-END ( -- )
+: THE-END  ( -- )
        \  <------------------------------->
   WIPE ." Para jugar otra vez: RUN" CR
-       ." Para salir de Forth: BYE" CR ;
+       ." Para salir de Forth: BYE" CR  ;
        \  <------------------------------->
 
 ( Instructions, start)
 
-: KEYS ( -- )
+: KEYS  ( -- )
   \  <------------------------------->
   ." Teclas:" CR
   ."  Jugador 1:  Q A C X" CR
-  ."  Jugador 2:  P ENTER M N" CR CR ;
+  ."  Jugador 2:  P ENTER M N" CR CR  ;
   \  <------------------------------->
 
-: CREDITS ( -- )
+: CREDITS  ( -- )
   \  <------------------------------->
   RED INK
   ."               TRON" CR CR  WHITE INK
   ." Copyright (C) 1985,2009,2015" CR
   ."  Marcos Cruz (programandala.net)" CR
   ." Licencia/Permesilo/License:" CR
-  ."  http://programandala.net/lp" CR CR ;
+  ."  http://programandala.net/lp" CR CR  ;
   \  <------------------------------->
 
   \ ----------------------------
   \ Start
 
-: START ( -- )
-  WIPE  CREDITS INSTRUCTIONS KEYS PAUSE ;
+: START  ( -- )
+  WIPE  CREDITS INSTRUCTIONS KEYS PAUSE
+  0 SCORE1 !  0 SCORE2 !  ;
 
 ( Main)
 
-: GAME ( -- )
+: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ PAINT  ;
+: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ PAINT  ;
+: CRASH1  ( -- )  PAINT1 CRASH 1 SCORE2 +!  ;
+: CRASH2  ( -- )  PAINT2 CRASH 1 SCORE1 +!  ;
 
+: GAME  ( -- )
   INIT  BEGIN
+    \ XXX FIXME `[compile] ;s` works, but `exit` doesn't:
+    CRASH1? IF CRASH1 [COMPILE] ;S THEN
+    CRASH2? IF XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 [COMPILE] ;S THEN
+    PAINT1 1 0 BLEEP  PAINT2 1 100 BLEEP  RUDDERS
+  AGAIN  ;
 
-    XC1 @ YC1 @ POINT \ Is player 1's next position occupied?
-    IF  COLOR1 CRASH 1 SCORE2 +! [COMPILE] ;S  THEN
-
-    XC2 @ YC2 @ POINT \ Is player 2's next position occupied?
-    IF  XC2 @ XC1 ! YC2 @ YC1 !
-        COLOR2 CRASH 1 SCORE1 +! [COMPILE] ;S  THEN
-
-    COLOR1 XC1 @ YC1 @ PAINT  1 000 BLEEP
-    COLOR2 XC2 @ YC2 @ PAINT  1 100 BLEEP
-
-    RUDDERS
-
-  AGAIN ;
-
-: QUIT? ( -- flag )
+: QUIT?  ( -- flag )
   \ Another game?
-  WIPE 12 7 AT ." ¿Otra vez? (S/N)" Y/N [CHAR] N = ;
+  WIPE 12 7 AT ." ¿Otra vez? (S/N)" NO?  ;
 
-: RUN ( -- ) START  BEGIN  GAME QUIT?  UNTIL  THE-END ;
+: RUN  ( -- )  START  BEGIN  GAME QUIT?  UNTIL  THE-END  ;
+
+  \ XXX TMP Debugging tool:
+  \ : ZX  BEGIN  KEY [CHAR] 0 - WHILE K-5 INP U. DROP REPEAT  ;
 
   \ vim: filetype=abersoftforth:fileencoding=latin1
