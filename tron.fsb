@@ -1,5 +1,5 @@
 \ Tron
-\ Versión 2015-03-23T00:48
+\ Versión 2015-03-23T02:02
 \ Escrito en Forth para ZX Spectrum
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
@@ -19,62 +19,76 @@
   \ -----------------------------------------------------------
   \ Historia del desarrollo
   \
-  \ 1985-04: Primera versión en fig-Forth, conversión del
-  \ original en Sinclair BASIC publicado en la enciclopedia _Mi
-  \ computer_, tomo 5, página 1112.
+  \ 1985-04: Conversión a Abersoft Forth del original en
+  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
+  \ tomo 5, página 1112.
   \
-  \ 2009-05: Creación de un fichero de texto, a partir del
-  \ fichero TAP original, con algunos cambios, para su
-  \ publicación.
+  \ 2009-05: Conversión del fichero TAP original en un fichero
+  \ de texto para su publicación, con algunos cambios.
   \
   \ 2015-03: Conversión al formato fsb
-  \ (http://programandala.net/es.programa.fsb.html).
-  \ Correcciones y mejoras: GDU para los caracteres
-  \ castellanos, instrucciones integradas, créditos, código más
-  \ claro.
+  \ (http://programandala.net/es.programa.fsb.html).  Muchas
+  \ mejoras: Textos reescritos usando gráficos para los
+  \ caracteres castellanos; instrucciones integradas en el
+  \ código, no simplemente escritas en un bloque fuente;
+  \ créditos; renombrado general de palabras, factorización y
+  \ uso de constantes para hacer el código más claro; arreglo
+  \ de la lectura de teclado (el método original no funcionaba
+  \ en el emulador); simplificación de algoritmos.
 
-( Tools and system variables )
+( Tools, ZX Spectrum specific; load the rest)
 
 FORTH DEFINITIONS
+ 
+  \ ----------------------------
+  \ Some standard words Abersoft Forth lacks
 
 : \ ( "ccc<newline>" -- )
   IN @ DUP C/L > IF  B/BUF SWAP MOD  ELSE  C/L SWAP - THEN
   IN +! ; IMMEDIATE
-
 : CHAR ( "name" -- c ) BL WORD HERE 1+ C@ ;
 : [CHAR] ( "name" -- c ) CHAR [COMPILE] LITERAL ; IMMEDIATE
-
-  \ ZX Spectrum system variables and addresses:
-
-22528 CONSTANT ATTRIBUTES
-23677 CONSTANT COORDS
-COORDS CONSTANT X-COORD
-COORDS 1+ CONSTANT Y-COORD
-
-  \ Colors:
-
-0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
-6 CONSTANT YELLOW  7 CONSTANT WHITE
-
-  \ Rename the system word 'MON' to the standard word 'BYE'
-  \ Hack method, no memory waste:
+: THRU  ( n1 n2 -- )  1+ SWAP DO  I LOAD  LOOP  ;
+: BYE MON ;
+  \ 'MON' could be actually renamed to 'BYE' this way:
     \ ' MON NFA 1+
     \ CHAR B OVER C!
     \ CHAR Y OVER 1+ C!
     \ CHAR E 128 + SWAP 2+ C!
-  \ Simpler method:
-    : BYE MON ;
 
--->
+  \ ----------------------------
+  \ ZX Spectrum specific
+
+  \ Memory addresses
+
+22528 CONSTANT ATTRIBUTES
+
+  \ System variables
+
+23677 CONSTANT COORDS
+COORDS CONSTANT X-COORD
+COORDS 1+ CONSTANT Y-COORD
+
+  \ Color constants
+
+0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
+6 CONSTANT YELLOW  7 CONSTANT WHITE
+
+  \ ----------------------------
+  \ Load the rest
+
+2 10 THRU
 
 ( Vocabulary, variables and constants)
 
-  \ Game vocabulary:
+  \ ----------------------------
+  \ Game vocabulary
 
 : TASK ;
 VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
 
-  \ Game variables and constants:
+  \ ----------------------------
+  \ Game variables and constants
 
      \ Player 1            Player 2
  \   1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
@@ -85,12 +99,10 @@ VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
      0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
 YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
 
--->
-
 ( Graphics)
 
 : RDRAW ( inc-x inc-y -- )
-  \ Draw a line from to the current plot position.
+  \ Draw a relative line (from the current plot position).
   Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW ;
 
 : XY>ATTRA ( x y -- a )
@@ -108,8 +120,6 @@ YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
 : WIPE ( -- )
   \ Clear the screen with the default colors.
   BLACK PAPER  BLACK BORDER  WHITE INK  CLS ;
-
--->
 
 ( User Defined Graphics)
 
@@ -148,9 +158,10 @@ HEX
   00 10 00 10 20 42 3C 00  99 UDG! \ ¿
 DECIMAL
 
--->
+( Screen and keyboard)
 
-( Screen and pause)
+  \ ----------------------------
+  \ Screen
 
 : STATUS ( -- )
   \ Show the status bar at the current cursor position.
@@ -164,6 +175,9 @@ DECIMAL
 
   \ Draw the arena.
 : ARENA ( -- ) WIPE STATUS FRAME ;
+
+  \ ----------------------------
+  \ Keyboard
 
 : AKEY ( -- c )
   \ Wait for a key press and return its code.
@@ -182,9 +196,12 @@ DECIMAL
   \ and return its code.
 : Y/N ( -- c ) BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT ;
 
--->
+: PRESSED? ( bitmask port -- flag ) INP AND NOT ;
 
-( RESET INIT CRASH , key identifiers)
+( Game init, crash effect, key identifiers)
+
+  \ ----------------------------
+  \ Game init
 
 : RESET ( -- )
   \ Reset the game variables.
@@ -194,41 +211,63 @@ DECIMAL
 
 : INIT ( -- ) ARENA RESET ;
 
+  \ ----------------------------
+  \ Crash effect
+
 : CRASH ( n -- )
   \ Crash effect.
   \ n = color of the player who crashed
   INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
   100 50 DO  11 I BLEEP  LOOP ;
 
-  \ Key identifiers (bitmask and port):
-HEX
-  \ Player 1
-1 FBFE 2CONSTANT K-Q   1 FDFE 2CONSTANT K-A
-8 FEFE 2CONSTANT K-C   4 FEFE 2CONSTANT K-X
+  \ ----------------------------
+  \ Key identifiers (bitmask and port)
+
+HEX  1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
+     4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
+     \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
+     \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
+     \ XXX FIXME K-5 and K-6 are not detected!
+     A F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
+     8 EFFE 2CONSTANT K-7   A EFFE 2CONSTANT K-6   DECIMAL
+
+( Player keys, rudders)
+
+  \ ----------------------------
+  \ Player keys
+
+  \ Player 1 (default)
+  \ K-Q 2VARIABLE UP-K1    K-A 2VARIABLE DOWN-K1
+  \ K-X 2VARIABLE LEFT-K1  K-C 2VARIABLE RIGHT-K1
+
+  \ Player 1 (debugging)
+K-7 2VARIABLE UP-K1    K-6 2VARIABLE DOWN-K1
+K-5 2VARIABLE LEFT-K1  K-8 2VARIABLE RIGHT-K1
+
   \ Player 2
-1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
-4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
-DECIMAL
+K-P 2VARIABLE UP-K2 K-EN 2VARIABLE DOWN-K2
+K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
 
--->
-
-( Rudders)
-
-: PRESSED? ( bitmask port -- flag ) INP AND NOT ;
+  \ ----------------------------
+  \ Rudders
 
 : RUDDERS ( -- )
+
   \ Check the keyboard
   \ and update the increments and the coordinates.
-  K-Q PRESSED?  IF   0 XINC1 !  1 YINC1 !  THEN
-  K-A PRESSED?  IF   0 XINC1 ! -1 YINC1 !  THEN
-  K-C PRESSED?  IF  -1 XINC1 !  0 YINC1 !  THEN
-  K-X PRESSED?  IF   1 XINC1 !  0 YINC1 !  THEN
-  K-P PRESSED?  IF   0 XINC2 !  1 YINC2 !  THEN
-  K-EN PRESSED? IF   0 XINC2 ! -1 YINC2 !  THEN
-  K-M PRESSED?  IF   1 XINC2 !  0 YINC2 !  THEN
-  K-N PRESSED?  IF  -1 XINC2 !  0 YINC2 !  THEN
+
+     UP-K1 2@ PRESSED? IF   0 XINC1 !  1 YINC1 !  THEN
+   DOWN-K1 2@ PRESSED? IF   0 XINC1 ! -1 YINC1 !  THEN
+   LEFT-K1 2@ PRESSED? IF  -1 XINC1 !  0 YINC1 !  THEN
+  RIGHT-K1 2@ PRESSED? IF   1 XINC1 !  0 YINC1 !  THEN
+
+     UP-K2 2@ PRESSED? IF   0 XINC2 !  1 YINC2 !  THEN
+   DOWN-K2 2@ PRESSED? IF   0 XINC2 ! -1 YINC2 !  THEN
+   LEFT-K2 2@ PRESSED? IF  -1 XINC2 !  0 YINC2 !  THEN
+  RIGHT-K2 2@ PRESSED? IF   1 XINC2 !  0 YINC2 !  THEN
+
   XINC1 @ XC1 +!  YINC1 @ YC1 +!
-  XINC2 @ XC2 +!  YINC2 @ YC2 +! ; -->
+  XINC2 @ XC2 +!  YINC2 @ YC2 +! ;
 
 ( Instructions)
 
@@ -250,8 +289,6 @@ DECIMAL
        ." Para salir de Forth: BYE" CR ;
        \  <------------------------------->
 
--->
-
 ( Instructions, start)
 
 : KEYS ( -- )
@@ -271,10 +308,11 @@ DECIMAL
   ."  http://programandala.net/lp" CR CR ;
   \  <------------------------------->
 
+  \ ----------------------------
+  \ Start
+
 : START ( -- )
   WIPE  CREDITS INSTRUCTIONS KEYS PAUSE ;
-
--->
 
 ( Main)
 
@@ -291,6 +329,7 @@ DECIMAL
 
     COLOR1 XC1 @ YC1 @ PAINT  1 000 BLEEP
     COLOR2 XC2 @ YC2 @ PAINT  1 100 BLEEP
+
     RUDDERS
 
   AGAIN ;
