@@ -1,20 +1,8 @@
 \ Tron
+\ A game written in ZX Spectrum's Abersoft Forth.
 
-  \ tron.file_2.fsb
-  \ This file is part of Tron,
-  \ a game written in ZX Spectrum's Abersoft Forth.
-  \ This fiile is the third part of the sources.
-
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: http://programandala.net/lp
-
-\ http://programandala.net/es.programa.tron.html
-
-\ tron.file_2.fsb
-\ Tron
-\ File 2
-\ Versión 201503230314
-\ Escrito en Forth para ZX Spectrum
+  \ tron.file_0.fsb
+  \ This file is the 3rd part of the source.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: http://programandala.net/lp
@@ -31,180 +19,193 @@
   \ http://programandala.net/es.programa.fsb.html
 
   \ -----------------------------------------------------------
-  \ Historia del desarrollo
-  \
-  \ 1985-04: Conversión a Abersoft Forth del original en
-  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
-  \ tomo 5, página 1112.
-  \
-  \ 2009-05: Conversión del fichero TAP original en un fichero
-  \ de texto para su publicación, con algunos cambios.
-  \
-  \ 2015-03: Conversión al formato fsb
-  \ (http://programandala.net/es.programa.fsb.html).  Muchas
-  \ mejoras: Textos reescritos usando gráficos para los
-  \ caracteres castellanos; instrucciones integradas en el
-  \ código, no simplemente escritas en un bloque fuente;
-  \ créditos; renombrado general de palabras, factorización y
-  \ uso de constantes para hacer el código más claro; arreglo
-  \ de la lectura de teclado (el método original no funcionaba
-  \ en el emulador); simplificación de algoritmos.
+  \ fsb directives
 
-  \ XXX FIXME -- the system gets corrupted after quitting the
-  \ game, no word is recognized.
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to the ZX
+  \ Spectrum UDG defined in <tron.file_1.fsb>):
+
+  \ XXX FIXME this still causes trouble with fsb.
+
+  \ #vim %substitute@á@\=nr2char(144)@g
+  \ #vim %substitute@Ĉ@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(148)@g
+  \ #vim %substitute@ĝ@\=nr2char(150)@g
+  \ #vim %substitute@í@\=nr2char(152)@g
+  \ #vim %substitute@ó@\=nr2char(158)@g
+  \ #vim %substitute@ú@\=nr2char(162)@g
+  \ #vim %substitute@¿@\=nr2char(153)@g
+  \ #vim %substitute@ŭ@\=nr2char(154)@g
 
 ( Load )
 
 2 10 THRU
+RUNT \ Load the next part of the source
 
-( Keyboard)
+( English texts)
 
-: AKEY  ( -- c )
-  \ Wait for a key press and return its code.  This is an
-  \ alternative to Abersoft Forth's 'KEY', because it always
-  \ shows the flashing cursor, even if the current attributes
-  \ are changed.
-  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT  ;
+: EN-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  \  XXX TODO -- complete:
+  ." Every player drives a motorbike" CR
+  ." whose only control makes it turn" CR
+  ." ninety degrees without any speed" CR
+  ." Every motorbike leaves a solid" CR
+  ." light trail behind. The goal of"
+  ." the game is to make your" CR
+  ." adversary crash the labyrinth." CR ;
+  \  <------------------------------->
+: EN-KEYS  ( -- )
+  \ XXX TODO -- keys will be configurable:
+  \  <------------------------------->
+  ." Keys:" CR
+  ."  Player 1:  Q A C X" CR
+  ."  Player 2:  P ENTER M N" CR  ;
+  \  <------------------------------->
 
-: PAUSE  ( -- )
-  \ Wait for a key press.
-  "PRESS-ANY-KEY" <TYPE> AKEY  ;
+( English texts)
 
-: UPPER  ( c -- c' )
-  \ Convert a char in the range a-z to uppercase
-  \ (Warning: no check!, chars other than a-z get corrupted).
-  223 AND  ;
+: EN-THE-END  ( -- )
+  \  <------------------------------->
+  ." To play again: RUN" CR
+  ." To exit Forth: BYE" CR  ;
+  \  <------------------------------->
 
-  \ Is the given char a valid answer for a Y/N question?
-: Y/N?  ( c -- flag )  UPPER DUP 'Y' = SWAP 'N' = OR  ;
+: EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
 
-  \ Wait for a valid key press for a Y/N question
-  \ and return its code.
-: Y/N  ( -- c )  BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT  ;
+: EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
 
-  \ Wait for a valid key press for a Y/N question
-  \ and return a flag: Was it "N" or "n"?
-: NO?  ( -- flag )  Y/N UPPER 'N' =  ;
+CHAR Y CONSTANT EN-'Y'
 
-: PRESSED?  ( bitmask port -- flag )  INP AND NOT  ;
+( Esperanto texts)
 
-( Game init, crash effect, key identifiers)
+: EO-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Ĉiu ludanto veturas motorciklon" CR
+  ." kies nura stirilo ĝin ĝiras" CR
+  ." naŭdek gradojn sen malrapidiĝo." CR
+  ." Ĉiu veturilo postlasas solidan" CR
+  ." lumomuron. La ludocelo estas" CR
+  ." frakasigi la kontraŭulon" CR
+  ." en la labirinton." CR ;
+  \  <------------------------------->
+: EO-KEYS  ( -- )
+  \  <------------------------------->
+  ." Klavoj:" CR
+  \ XXX TODO -- keys will be configurable:
+  ."  Ludanto 1:  Q A C X" CR
+  ."  Ludanto 2:  P ENTER M N" CR  ;
+  \  <------------------------------->
 
-  \ ----------------------------
-  \ Game init
+( Esperanto texts)
 
-: RESET  ( -- )
-  \ Reset the game variables.
-  40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
-  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 ! ;
+: EO-THE-END  ( -- )
+  \  <------------------------------->
+  ." Por reludi: RUN" CR
+  ." Por eliri el Fortho: BYE" CR  ;
+  \  <------------------------------->
 
-: INIT  ( -- )  ARENA RESET  ;
+: EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
 
-  \ ----------------------------
-  \ Crash effect
+: EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
 
-: CRASH  ( -- )
-  \ Crash effect.
-  \ XXX OLD
-  \ n = color of the player who crashed
-  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
-  100 50 DO  11 I BLEEP  LOOP  ;
+CHAR J CONSTANT EO-'Y'
 
-  \ Is player 1's next position occupied?
-: CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
-  \ Is player 2's next position occupied?
-: CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
+( Spanish texts)
 
-  \ ----------------------------
-  \ Key identifiers (bitmask and port)
+: ES-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Cada jugador conduce una moto" CR
+  ." cuyo único control la hace girar" CR
+  ." noventa grados sin frenar. Cada" CR
+  ." moto deja tras de sí una pared" CR
+  ." sólida de luz. El objetivo del" CR
+  ." juego es hacer estrellarse al" CR
+  ." contrincante con el laberinto." CR ;
+  \  <------------------------------->
+: ES-KEYS  ( -- )
+  \  <------------------------------->
+  ." Teclas:" CR
+  \ XXX TODO -- keys will be configurable:
+  ."  Jugador 1:  Q A C X" CR
+  ."  Jugador 2:  P ENTER M N" CR  ;
+  \  <------------------------------->
 
-HEX   1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
-      4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
-      \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
-      \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
-     10 F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
-      8 EFFE 2CONSTANT K-7  10 EFFE 2CONSTANT K-6   DECIMAL
+( Spanish texts)
 
-( Player keys, coordinate increments)
+: ES-THE-END  ( -- )
+  \  <------------------------------->
+  ." Para jugar otra vez: RUN" CR
+  ." Para salir de Forth: BYE" CR  ;
+  \  <------------------------------->
 
-  \ ----------------------------
-  \ Player keys
+: ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
 
-  \ Player 1's keys (default)
-  \ K-Q 2VARIABLE UP-K1    K-A 2VARIABLE DOWN-K1
-  \ K-X 2VARIABLE LEFT-K1  K-C 2VARIABLE RIGHT-K1
+: ES-PRESS-ANY-KEY  ( -- ca len ) S" Pulsa una tecla"  ;
 
-  \ Player 1's keys (debugging)
-K-7 2VARIABLE UP-K1    K-6 2VARIABLE DOWN-K1
-K-5 2VARIABLE LEFT-K1  K-8 2VARIABLE RIGHT-K1
+CHAR S CONSTANT ES-'Y'
 
-  \ Player 2's keys
-K-P 2VARIABLE UP-K2 K-EN 2VARIABLE DOWN-K2
-K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
- 
-  \ ----------------------------
- \ Coordinate increments
- 
- 0  1 2CONSTANT UP-INC
- 0 -1 2CONSTANT DOWN-INC
--1  0 2CONSTANT LEFT-INC
- 0 -1 2CONSTANT RIGHT-INC
+( Localization)
 
-( Rudders)
+: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
 
-  \ XXX TODO make it impossible to go the opposite direction
+  \ Create a word that will execute another word from a list of
+  \ three, depending on the current language.
 
-: RUDDER1  ( -- n1 n2 )
-     UP-K1 2@ PRESSED? IF   0 XINC1 !  1 YINC1 !  THEN
-   DOWN-K1 2@ PRESSED? IF   0 XINC1 ! -1 YINC1 !  THEN
-   LEFT-K1 2@ PRESSED? IF  -1 XINC1 !  0 YINC1 !  THEN
-  RIGHT-K1 2@ PRESSED? IF   1 XINC1 !  0 YINC1 !  THEN  ;
+  \ Parameters are the parameter field addresses of the
+  \ localized versions, in reverse order of ISO language code:
+  \ pfa1 = pfa of the Spanish word (ES)
+  \ pfa2 = pfa of the Esperanto word (EO)
+  \ pfa3 = pfa of the English word (EN)
 
-: RUDDER2  ( -- n1 n2 )
-     UP-K2 2@ PRESSED? IF   0 XINC2 !  1 YINC2 !  THEN
-   DOWN-K2 2@ PRESSED? IF   0 XINC2 ! -1 YINC2 !  THEN
-   LEFT-K2 2@ PRESSED? IF  -1 XINC2 !  0 YINC2 !  THEN
-  RIGHT-K2 2@ PRESSED? IF   1 XINC2 !  0 YINC2 !  THEN  ;
+  \ First, create a new word in the current dictionary with the
+  \ given name, and store the three pfa (parameter field
+  \ addresses) into its own pfa (parameter field address):
 
-: RUDDERS  ( -- )
+  <BUILDS , , ,
 
-  \ Check the keyboard
-  \ and update the increments and the coordinates.
+  \ Second, define what the new word will do when executed:
+  \ fetch from its pfa one of the three stored pfa depending on
+  \ the current language, and execute its word:
 
-  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!
-  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+  DOES>  ( pfa )  LANG @ CELLS + @ CFA EXECUTE  ;
 
-( Game)
+( Localizated texts)
 
-: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ PAINT 1 0 BLEEP  ;
-: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ PAINT 1 100 BLEEP  ;
-: CRASH1  ( -- )  PAINT1 CRASH 1 SCORE2 +!  ;
-: CRASH2  ( -- )  PAINT2 CRASH 1 SCORE1 +!  ;
+' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
+LOCALIZED (INSTRUCTIONS)  ( -- )
+: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
 
-: GAME  ( -- )
-  INIT  BEGIN
-    \ XXX TODO
-    \ QUIT?   IF  EXIT  THEN
-    CRASH1? IF  CRASH1 EXIT  THEN
-    CRASH2? IF  XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 EXIT  THEN
-    PAINT1 PAINT2 RUDDERS
-  AGAIN  ;
+' ES-KEYS ' EO-KEYS ' EN-KEYS
+LOCALIZED (KEYS)  ( -- )
+: KEYS  ( -- )  (KEYS) CR  ;
 
-( Main)
+' ES-PRESS-ANY-KEY ' EO-PRESS-ANY-KEY ' EN-PRESS-ANY-KEY
+LOCALIZED "PRESS-ANY-KEY"  ( -- ca len )
 
-: START  ( -- )
-  WIPE  TITLE CREDITS INSTRUCTIONS KEYS PAUSE
-  0 SCORE1 !  0 SCORE2 !  ;
+' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER?
+LOCALIZED "ANOTHER?"  ( -- ca len )
 
-: ANOTHER?  ( -- flag )
-  \ Another game?
-  WIPE "ANOTHER?" 12 <LINETYPE> NO?  ;
+' ES-'Y' ' EO-'Y' ' EN-'Y'
+LOCALIZED 'Y'  ( -- c )
 
-: GAMING  ( -- )  BEGIN  GAME ANOTHER?  UNTIL  ;
+' ES-THE-END ' EO-THE-END ' EN-THE-END
+LOCALIZED (THE-END)  ( -- )
+: THE-END  ( -- )  WIPE (THE-END)  ;
 
-: RUN  ( -- )  START GAMING THE-END  ;
+( Texts that don't need translation)
 
-  \ XXX TMP -- debugging message:
-." Done!" CR ." Type RUN to start." CR
+: TITLE  ( -- )
+  RED INK 14 SPACES ." TRON" CR WHITE INK  ;
+
+: CREDITS  ( -- )
+  \  <------------------------------->
+  ." Copyright (C) 1985,2009,2015" CR
+  ."  Marcos Cruz (programandala.net)" CR
+  ." Licencia/Permesilo/License:" CR
+  ."  http://programandala.net/lp" CR CR  ;
+  \  <------------------------------->
+
+CHAR N CONSTANT 'N'
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

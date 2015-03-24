@@ -1,20 +1,8 @@
 \ Tron
+\ A game written in ZX Spectrum's Abersoft Forth.
 
   \ tron.file_1.fsb
-  \ This file is part of Tron,
-  \ a game written in ZX Spectrum's Abersoft Forth.
-  \ This fiile is the second part of the sources.
-
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: http://programandala.net/lp
-
-\ http://programandala.net/es.programa.tron.html
-
-\ tron.file_1.fsb
-\ Tron
-\ File 1
-\ Versión 201503230314
-\ Escrito en Forth para ZX Spectrum
+  \ This file is the 2nd part of the source.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: http://programandala.net/lp
@@ -29,32 +17,6 @@
   \ se necesita el conversor fsb:
   \
   \ http://programandala.net/es.programa.fsb.html
-
-  \ -----------------------------------------------------------
-  \ Historia del desarrollo
-  \
-  \ 1985-04: Conversión a Abersoft Forth del original en
-  \ Sinclair BASIC publicado en la enciclopedia _Mi computer_,
-  \ tomo 5, página 1112.
-  \
-  \ 2009-05: Conversión del fichero TAP original en un fichero
-  \ de texto para su publicación, con algunos cambios.
-  \
-  \ 2015-03: Conversión al formato fsb
-  \ (http://programandala.net/es.programa.fsb.html).  Muchas
-  \ mejoras: Textos reescritos usando gráficos para los
-  \ caracteres castellanos; instrucciones integradas en el
-  \ código, no simplemente escritas en un bloque fuente;
-  \ créditos; renombrado general de palabras, factorización y
-  \ uso de constantes para hacer el código más claro; arreglo
-  \ de la lectura de teclado (el método original no funcionaba
-  \ en el emulador); simplificación de algoritmos.
-  \
-  \ 2015-03-24: Textos en tres lenguas. Aún no se pude cambiar
-  \ de lengua.
-
-  \ XXX FIXME -- the system gets corrupted after quitting the
-  \ game, no word is recognized.
 
   \ -----------------------------------------------------------
   \ fsb directives
@@ -78,172 +40,132 @@
 ( Load )
 
 2 10 THRU
-RUNT \ Load the third part of the source
+RUNT \ Load the next part of the source
 
-( English texts)
+( Plot and draw)
 
-: EN-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
-  \  XXX TODO -- complete:
-  ." Every player drives a motorbike" CR
-  ." whose only control makes it turn" CR
-  ." ninety degrees XXX. Every" CR
-  ." motorbike leaves a solid light" CR
-  ." trail behind. The goal of the game" CR
-  ." is to make your adversary to crash" CR
-  ." the labyrinth." CR ;
-  \  <------------------------------->
-: EN-KEYS  ( -- )
-  \ XXX TODO -- keys will be configurable:
-  \  <------------------------------->
-  ." Keys:" CR
-  ."  Player 1:  Q A C X" CR
-  ."  Player 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+: RDRAW  ( inc-x inc-y -- )
+  \ Draw a relative line (from the current plot position).
+  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW  ;
 
-( English texts)
+: XY>ATTRA  ( x y -- a )
+  \ Convert a pixel coordinate to its attribute address.
+  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
 
-: EN-THE-END  ( -- )
-  \  <------------------------------->
-  ." To play again: RUN" CR
-  ." To exit Forth: BYE" CR  ;
-  \  <------------------------------->
+: PAINT  ( n x y -- )
+  \ Plot at the given coordinates with color n.
+  \ XXX TODO Check this:
+  \ It seems the attribute address is used here
+  \ instead of `INK`, in order to get certain effect
+  \ related with the crashes.
+  2DUP PLOT XY>ATTRA C!  ;
 
-: EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
+( User Defined Graphics)
 
-: EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
+: UDG!  ( b0..b7 c -- )
+  \ Store the given 8 bytes into the c UDG char
+  \ c = 144..164 (144..162 on 128K models)
+  \ b0 = first (top) scan
+  \ b7 = last (bottom) scan
+  144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP  ;
 
-CHAR Y CONSTANT EN-'Y'
+  \ ----------------------------
+  \ Spanish characters
 
-( Esperanto texts)
+  \ XXX TODO Esperanto letters
 
-: EO-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
-  ." Ĉiu ludanto veturas motorciklon" CR
-  ." kies nura stirilo ĝin ĝiras" CR
-  ." naŭdek gradojn sen malrapidiĝo." CR
-  ." Ĉiu veturilo postlasas solidan" CR
-  ." lumomuron. La ludocelo estas" CR
-  ." frakasigi la kontraŭulon" CR
-  ." en la labirinton." CR ;
-  \  <------------------------------->
-: EO-KEYS  ( -- )
-  \  <------------------------------->
-  ." Klavoj:" CR
-  \ XXX TODO -- keys will be configurable:
-  ."  Ludanto 1:  Q A C X" CR
-  ."  Ludanto 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+HEX
+  08 10 38 04 3C 44 3C 00  90 UDG! \ á
+  \ 04 08 3C 42 7E 42 42 00  00 UDG! \ Á
+  08 10 38 44 78 40 3C 00  94 UDG! \ é
+  \ 04 08 7E 40 7C 40 7E 00  00 UDG! \ É
+  08 10 00 30 10 10 38 00  98 UDG! \ í
+  \ 04 08 3E 08 08 08 3E 00  00 UDG! \ Í
+  08 10 38 44 44 44 38 00  9E UDG! \ ó
+  \ 08 10 3C 42 42 42 3C 00  00 UDG! \ Ó
+  08 10 44 44 44 44 38 00  A2 UDG! \ ú
+  \ 04 4A 42 42 42 42 3C 00  00 UDG! \ Ú
+  \ 00 78 00 78 44 44 44 00  00 UDG! \ ñ
+  \ 3C 00 62 52 4A 46 42 00  00 UDG! \ Ñ
+  \ 44 00 44 44 44 44 38 00  00 UDG! \ ü
+  \ 42 00 42 42 42 42 3C 00  00 UDG! \ Ü
+  00 10 00 10 20 42 3C 00  99 UDG! \ ¿
+DECIMAL
 
-( Esperanto texts)
+( Screen -- generic)
 
-: EO-THE-END  ( -- )
-  \  <------------------------------->
-  ." Por reludi: RUN" CR
-  ." Por eliri el Fortho: BYE" CR  ;
-  \  <------------------------------->
+: WIPE  ( -- )
+  \ Clear the screen with the default colors.
+  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
-: EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+  \ Size of the screen:
+32 CONSTANT COLS
+24 CONSTANT LINES
 
-: EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
+  \ Attributes address of the frame's bottom line:
+ATTRIBUTES COLS LINES 1 - * COLS - +
+CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
-CHAR J CONSTANT EO-'Y'
+( Center justified texts)
 
-( Spanish texts)
+: CENTERED  ( len -- column )
+  \ Convert a string lenght to the column required
+  \ to print the string centered.
+  COLS SWAP - 2 /  ;
 
-: ES-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
-  ." Cada jugador conduce una moto" CR
-  ." cuyo único control la hace girar" CR
-  ." noventa grados sin frenar. Cada" CR
-  ." moto deja tras de sí una pared" CR
-  ." sólida de luz. El objetivo del" CR
-  ." juego es hacer estrellarse al" CR
-  ." contrincante con el laberinto." CR ;
-  \  <------------------------------->
-: ES-KEYS  ( -- )
-  \  <------------------------------->
-  ." Teclas:" CR
-  \ XXX TODO -- keys will be configurable:
-  ."  Jugador 1:  Q A C X" CR
-  ."  Jugador 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+: <LINETYPE>  ( ca len line -- )
+  \ Type a string centered on a line.
+  OVER CENTERED AT TYPE  ;
 
-( Spanish texts)
+: <TYPE>  ( ca len -- )
+  \ Type a string centered on the current line.
+  DUP CENTERED SPACES TYPE  ;
 
-: ES-THE-END  ( -- )
-  \  <------------------------------->
-  ." Para jugar otra vez: RUN" CR
-  ." Para salir de Forth: BYE" CR  ;
-  \  <------------------------------->
+( Status bar)
 
-: ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
+: SCORE. ( n -- )
+  \ Show a score with 3 digits.
+   S->D <# # # # #> TYPE  ;
 
-: ES-PRESS-ANY-KEY  ( -- ca len ) S" Pulsa una tecla"  ;
+: STATUS  ( -- )
 
-CHAR S CONSTANT ES-'Y'
+  \ Show the status bar at the current cursor position.
 
-( Localization)
+  \ XXX TODO -- Print apart every score, and print also the
+  \ updated one, from the main loop.
 
-: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
+  \ XXX TMP debug version:
+  \ 0 DUP AT
+  \ COLOR1 INK SCORE1 @ SCORE. XINC1 ? YINC1 ?
+  \ ( 0 29 AT ) COLOR2 INK SCORE2 @ SCORE. XINC2 ? YINC2 ?  ;
 
-  \ Create a word that will execute another word from a list of
-  \ three, depending on the current language.
+  COLOR1 INK SCORE1 @ SCORE.
+  0 29 AT COLOR2 INK SCORE2 @ SCORE.  ;
 
-  \ Parameters are the parameter field addresses of the
-  \ localized versions, in reverse order of ISO language code:
-  \ pfa1 = pfa of the Spanish word (ES)
-  \ pfa2 = pfa of the Esperanto word (EO)
-  \ pfa3 = pfa of the English word (EN)
+( Arena)
 
-  \ First, create a new word in the current dictionary with the
-  \ given name, and store the three pfa (parameter field
-  \ addresses) into its own pfa (parameter field address):
+RED RED PAPERY + CONSTANT FRAME-COLOR
 
-  <BUILDS , , ,
+: FRAME-BAR  ( a -- )  COLS FRAME-COLOR FILL  ;
 
-  \ Second, define what the new word will do when executed:
-  \ fetch from its pfa one of the three stored pfa depending on
-  \ the current language, and execute its word:
+: ARENA-BORDER  ( -- )
+  \ Draw the frame.
+  ATTRIBUTES FRAME-BAR  BOTTOM-FRAME-ATTRIBUTES FRAME-BAR
+  BOTTOM-FRAME-ATTRIBUTES ATTRIBUTES DO
+    FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
+  COLS +LOOP  ;
 
-  DOES>  ( pfa )  LANG @ CELLS + @ CFA EXECUTE  ;
+: ARENA-LIMIT  ( -- )
+  \ XXX OLD
+  \ [ FRAME-COLOR 7 AND ] LITERAL INK
+  7 DUP PLOT
+   241 0 RDRAW 0  161 RDRAW
+  -241 0 RDRAW 0 -161 RDRAW  ;
 
-( Localizated texts)
+: FRAME  ( -- )  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
 
-' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
-LOCALIZED (INSTRUCTIONS)  ( -- )
-: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
-
-' ES-KEYS ' EO-KEYS ' EN-KEYS
-LOCALIZED (KEYS)  ( -- )
-: KEYS  ( -- )  (KEYS) CR  ;
-
-' ES-PRESS-ANY-KEY ' EO-PRESS-ANY-KEY ' EN-PRESS-ANY-KEY
-LOCALIZED "PRESS-ANY-KEY"  ( -- ca len )
-
-' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER?
-LOCALIZED "ANOTHER?"  ( -- ca len )
-
-' ES-'Y' ' EO-'Y' ' EN-'Y'
-LOCALIZED 'Y'  ( -- c )
-
-' ES-THE-END ' EO-THE-END ' EN-THE-END
-LOCALIZED (THE-END)  ( -- )
-: THE-END  ( -- )  WIPE (THE-END)  ;
-
-( Texts that don't need translation)
-
-: TITLE  ( -- )
-  RED INK 14 SPACES ." TRON" CR WHITE INK  ;
-
-: CREDITS  ( -- )
-  \  <------------------------------->
-  ." Copyright (C) 1985,2009,2015" CR
-  ."  Marcos Cruz (programandala.net)" CR
-  ." Licencia/Permesilo/License:" CR
-  ."  http://programandala.net/lp" CR CR  ;
-  \  <------------------------------->
-
-CHAR N CONSTANT 'N'
+: ARENA  ( -- )
+  \ Draw the arena.
+  WIPE FRAME STATUS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
