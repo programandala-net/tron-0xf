@@ -49,6 +49,9 @@
   \ uso de constantes para hacer el código más claro; arreglo
   \ de la lectura de teclado (el método original no funcionaba
   \ en el emulador); simplificación de algoritmos.
+  \
+  \ 2015-03-24: Textos en tres lenguas. Aún no se pude cambiar
+  \ de lengua.
 
   \ XXX FIXME -- the system gets corrupted after quitting the
   \ game, no word is recognized.
@@ -81,6 +84,7 @@ RUNT \ Load the third part of the source
 
 : EN-INSTRUCTIONS  ( -- )
   \  <------------------------------->
+  \  XXX TODO -- complete:
   ." Every player drives a motorbike" CR
   ." whose only control makes it turn" CR
   ." ninety degrees XXX. Every" CR
@@ -90,6 +94,7 @@ RUNT \ Load the third part of the source
   ." the labyrinth." CR ;
   \  <------------------------------->
 : EN-KEYS  ( -- )
+  \ XXX TODO -- keys will be configurable:
   \  <------------------------------->
   ." Keys:" CR
   ."  Player 1:  Q A C X" CR
@@ -105,6 +110,8 @@ RUNT \ Load the third part of the source
   \  <------------------------------->
 
 : EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
+
+: EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
 
 CHAR Y CONSTANT EN-'Y'
 
@@ -123,6 +130,7 @@ CHAR Y CONSTANT EN-'Y'
 : EO-KEYS  ( -- )
   \  <------------------------------->
   ." Klavoj:" CR
+  \ XXX TODO -- keys will be configurable:
   ."  Ludanto 1:  Q A C X" CR
   ."  Ludanto 2:  P ENTER M N" CR  ;
   \  <------------------------------->
@@ -136,6 +144,8 @@ CHAR Y CONSTANT EN-'Y'
   \  <------------------------------->
 
 : EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+
+: EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
 
 CHAR J CONSTANT EO-'Y'
 
@@ -154,6 +164,7 @@ CHAR J CONSTANT EO-'Y'
 : ES-KEYS  ( -- )
   \  <------------------------------->
   ." Teclas:" CR
+  \ XXX TODO -- keys will be configurable:
   ."  Jugador 1:  Q A C X" CR
   ."  Jugador 2:  P ENTER M N" CR  ;
   \  <------------------------------->
@@ -168,53 +179,62 @@ CHAR J CONSTANT EO-'Y'
 
 : ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
 
+: ES-PRESS-ANY-KEY  ( -- ca len ) S" Pulsa una tecla"  ;
+
 CHAR S CONSTANT ES-'Y'
 
 ( Localization)
-
-  \ XXX FIXME this word fails:
 
 : LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
 
   \ Create a word that will execute another word from a list of
   \ three, depending on the current language.
 
-  \ cfa1 = cfa of the Spanish word
-  \ cfa2 = cfa of the Esperanto word
-  \ cfa3 = cfa of the English word
+  \ Parameters are the parameter field addresses of the
+  \ localized versions, in reverse order of ISO language code:
+  \ pfa1 = pfa of the Spanish word (ES)
+  \ pfa2 = pfa of the Esperanto word (EO)
+  \ pfa3 = pfa of the English word (EN)
 
-  \ First, create a new word in the current dictionary with
-  \ the given name, and store the three cfa (code field
-  \ addresses) into its pfa (parameter field address):
+  \ First, create a new word in the current dictionary with the
+  \ given name, and store the three pfa (parameter field
+  \ addresses) into its own pfa (parameter field address):
 
   <BUILDS , , ,
 
   \ Second, define what the new word will do when executed:
-  \ fetch from its pfa one of the three stored cfa depending on
-  \ the current language, and execute it:
+  \ fetch from its pfa one of the three stored pfa depending on
+  \ the current language, and execute its word:
 
-  DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
+  DOES>  ( pfa )  LANG @ CELLS + @ CFA EXECUTE  ;
 
 ( Localizated texts)
 
 ' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
-LOCALIZED (INSTRUCTIONS)
+LOCALIZED (INSTRUCTIONS)  ( -- )
 : INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
 
-' ES-KEYS ' EO-KEYS ' EN-KEYS LOCALIZED (KEYS)
+' ES-KEYS ' EO-KEYS ' EN-KEYS
+LOCALIZED (KEYS)  ( -- )
 : KEYS  ( -- )  (KEYS) CR  ;
 
-' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER? LOCALIZED "ANOTHER?"
+' ES-PRESS-ANY-KEY ' EO-PRESS-ANY-KEY ' EN-PRESS-ANY-KEY
+LOCALIZED "PRESS-ANY-KEY"  ( -- ca len )
 
-' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'
+' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER?
+LOCALIZED "ANOTHER?"  ( -- ca len )
 
-' ES-THE-END ' EO-THE-END ' EN-THE-END LOCALIZED (THE-END)
+' ES-'Y' ' EO-'Y' ' EN-'Y'
+LOCALIZED 'Y'  ( -- c )
+
+' ES-THE-END ' EO-THE-END ' EN-THE-END
+LOCALIZED (THE-END)  ( -- )
 : THE-END  ( -- )  WIPE (THE-END)  ;
 
 ( Texts that don't need translation)
 
 : TITLE  ( -- )
-  RED INK 14 SPACES ." TRON" WHITE INK  ;
+  RED INK 14 SPACES ." TRON" CR WHITE INK  ;
 
 : CREDITS  ( -- )
   \  <------------------------------->

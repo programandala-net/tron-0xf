@@ -1,5 +1,5 @@
 \ Tron
-\ Version 2015032315
+\ Version 201503240410
 
   \ tron.file_0.fsb
   \ This file is part of Tron,
@@ -174,10 +174,6 @@ EN VARIABLE LANG
   \ related with the crashes.
   2DUP PLOT XY>ATTRA C!  ;
 
-: WIPE  ( -- )
-  \ Clear the screen with the default colors.
-  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
-
 ( User Defined Graphics)
 
 : UDG!  ( b0..b7 c -- )
@@ -208,10 +204,32 @@ HEX
   00 10 00 10 20 42 3C 00  99 UDG! \ ¿
 DECIMAL
 
-( Screen)
+( Screen -- generic)
+
+: WIPE  ( -- )
+  \ Clear the screen with the default colors.
+  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
+
+32 CONSTANT CPL \ characters per line
+
+: CENTERED  ( len -- column )
+  \ Convert a string lenght to the column required
+  \ to print the string centered.
+  CPL SWAP - 2 /  ;
+
+: <LINETYPE>  ( ca len line -- )
+  \ Type a string centered on a line.
+  OVER CENTERED AT TYPE  ;
+
+: <TYPE>  ( ca len -- )
+  \ Type a string centered on the current line.
+  DUP CENTERED SPACES TYPE  ;
+
+( Screen -- game)
 
 : SCORE. ( n -- )
-  S->D <# # # # #> TYPE  ;
+  \ Show a score with 3 digits.
+   S->D <# # # # #> TYPE  ;
 
 : STATUS  ( -- )
   \ Show the status bar at the current cursor position.
@@ -223,7 +241,8 @@ DECIMAL
   RED INK 8 DUP PLOT 239 0 RDRAW 0 159 RDRAW
   -239 0 RDRAW 0 -159 RDRAW  ;
 
+: ARENA  ( -- )
   \ Draw the arena.
-: ARENA  ( -- )  WIPE STATUS FRAME  ;
+  WIPE STATUS FRAME  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

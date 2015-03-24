@@ -66,12 +66,14 @@
   \ are changed.
   BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT  ;
 
+: PAUSE  ( -- )
   \ Wait for a key press.
-: PAUSE  ( -- )  8 SPACES  ." Pulsa una tecla" AKEY  ;
+  "PRESS-ANY-KEY" <TYPE> AKEY  ;
 
+: UPPER  ( c -- c' )
   \ Convert a char in the range a-z to uppercase
-  \ (Warning: no check!, chars other than a-z get corrupted):
-: UPPER  ( c -- c' )  223 AND  ;
+  \ (Warning: no check!, chars other than a-z get corrupted).
+  223 AND  ;
 
   \ Is the given char a valid answer for a Y/N question?
 : Y/N?  ( c -- flag )  UPPER DUP 'Y' = SWAP 'N' = OR  ;
@@ -194,11 +196,9 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
   WIPE  TITLE CREDITS INSTRUCTIONS KEYS PAUSE
   0 SCORE1 !  0 SCORE2 !  ;
 
-: CENTERED  ( len -- column ) 32 - 2 / ;
-
 : ANOTHER?  ( -- flag )
   \ Another game?
-  WIPE "ANOTHER?" 12 OVER CENTERED TYPE NO?  ;
+  WIPE "ANOTHER?" 12 <LINETYPE> NO?  ;
 
 : GAMING  ( -- )  BEGIN  GAME ANOTHER?  UNTIL  ;
 
