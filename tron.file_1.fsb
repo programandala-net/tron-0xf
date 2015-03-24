@@ -1,7 +1,7 @@
 \ Tron
 
   \ tron.file_1.fsb
-  \ This file is part of Tron (version 2015032315)
+  \ This file is part of Tron,
   \ a game written in ZX Spectrum's Abersoft Forth.
   \ This fiile is the second part of the sources.
 
@@ -57,20 +57,25 @@
   \ fsb directives
 
   \ The following '#vim' directives, processed by fsb,
-  \ translate the Latin1 Spanish chars in this source file to
-  \ the ZX Spectrum UDG defined in the first file
-  \ <tron.part_0.fsb>):
+  \ translate the UTF-8 chars in this source file to the ZX
+  \ Spectrum UDG defined in the first file <tron.part_0.fsb>):
+
+  \ XXX FIXME this still causes trouble with fsb.
 
   \ #vim %substitute@á@\=nr2char(144)@g
+  \ #vim %substitute@Ĉ@\=nr2char(146)@g
   \ #vim %substitute@é@\=nr2char(148)@g
+  \ #vim %substitute@ĝ@\=nr2char(150)@g
   \ #vim %substitute@í@\=nr2char(152)@g
   \ #vim %substitute@ó@\=nr2char(158)@g
   \ #vim %substitute@ú@\=nr2char(162)@g
   \ #vim %substitute@¿@\=nr2char(153)@g
+  \ #vim %substitute@ŭ@\=nr2char(154)@g
 
 ( Load )
 
 2 10 THRU
+RUNT \ Load the third part of the source
 
 ( English texts)
 
@@ -82,19 +87,26 @@
   ." motorbike leaves a solid light" CR
   ." trail behind. The goal of the game" CR
   ." is to make your adversary to crash" CR
-  ." the labyrinth." CR CR ;
+  ." the labyrinth." CR ;
   \  <------------------------------->
 : EN-KEYS  ( -- )
   \  <------------------------------->
   ." Keys:" CR
   ."  Player 1:  Q A C X" CR
-  ."  Player 2:  P ENTER M N" CR CR  ;
+  ."  Player 2:  P ENTER M N" CR  ;
   \  <------------------------------->
-: THE-END  ( -- )
+
+( English texts)
+
+: EN-THE-END  ( -- )
   \  <------------------------------->
-  ." Para jugar otra vez: RUN" CR
-  ." Para salir de Forth: BYE" CR  ;
+  ." To play again: RUN" CR
+  ." To exit Forth: BYE" CR  ;
   \  <------------------------------->
+
+: EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
+
+CHAR Y CONSTANT EN-'Y'
 
 ( Esperanto texts)
 
@@ -106,19 +118,26 @@
   ." Ĉiu veturilo postlasas solidan" CR
   ." lumomuron. La ludocelo estas" CR
   ." frakasigi la kontraŭulon" CR
-  ." en la labirinton." CR CR ;
+  ." en la labirinton." CR ;
   \  <------------------------------->
 : EO-KEYS  ( -- )
   \  <------------------------------->
   ." Klavoj:" CR
   ."  Ludanto 1:  Q A C X" CR
-  ."  Ludanto 2:  P ENTER M N" CR CR  ;
+  ."  Ludanto 2:  P ENTER M N" CR  ;
   \  <------------------------------->
+
+( Esperanto texts)
+
 : EO-THE-END  ( -- )
   \  <------------------------------->
   ." Por reludi: RUN" CR
   ." Por eliri el Fortho: BYE" CR  ;
   \  <------------------------------->
+
+: EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+
+CHAR J CONSTANT EO-'Y'
 
 ( Spanish texts)
 
@@ -130,21 +149,69 @@
   ." moto deja tras de sí una pared" CR
   ." sólida de luz. El objetivo del" CR
   ." juego es hacer estrellarse al" CR
-  ." contrincante con el laberinto." CR CR ;
+  ." contrincante con el laberinto." CR ;
   \  <------------------------------->
 : ES-KEYS  ( -- )
   \  <------------------------------->
   ." Teclas:" CR
   ."  Jugador 1:  Q A C X" CR
-  ."  Jugador 2:  P ENTER M N" CR CR  ;
-  \  <------------------------------->
-: ES-THE-END  ( -- )
-  \  <------------------------------->
-  ." To play again: RUN" CR
-  ." To exit Forth: BYE" CR  ;
+  ."  Jugador 2:  P ENTER M N" CR  ;
   \  <------------------------------->
 
-( Common texts)
+( Spanish texts)
+
+: ES-THE-END  ( -- )
+  \  <------------------------------->
+  ." Para jugar otra vez: RUN" CR
+  ." Para salir de Forth: BYE" CR  ;
+  \  <------------------------------->
+
+: ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
+
+CHAR S CONSTANT ES-'Y'
+
+( Localization)
+
+  \ XXX FIXME this word fails:
+
+: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
+
+  \ Create a word that will execute another word from a list of
+  \ three, depending on the current language.
+
+  \ cfa1 = cfa of the Spanish word
+  \ cfa2 = cfa of the Esperanto word
+  \ cfa3 = cfa of the English word
+
+  \ First, create a new word in the current dictionary with
+  \ the given name, and store the three cfa (code field
+  \ addresses) into its pfa (parameter field address):
+
+  <BUILDS , , ,
+
+  \ Second, define what the new word will do when executed:
+  \ fetch from its pfa one of the three stored cfa depending on
+  \ the current language, and execute it:
+
+  DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
+
+( Localizated texts)
+
+' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
+LOCALIZED (INSTRUCTIONS)
+: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
+
+' ES-KEYS ' EO-KEYS ' EN-KEYS LOCALIZED (KEYS)
+: KEYS  ( -- )  (KEYS) CR  ;
+
+' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER? LOCALIZED "ANOTHER?"
+
+' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'
+
+' ES-THE-END ' EO-THE-END ' EN-THE-END LOCALIZED (THE-END)
+: THE-END  ( -- )  WIPE (THE-END)  ;
+
+( Texts that don't need translation)
 
 : TITLE  ( -- )
   RED INK 14 SPACES ." TRON" WHITE INK  ;
@@ -157,28 +224,6 @@
   ."  http://programandala.net/lp" CR CR  ;
   \  <------------------------------->
 
-( Localization)
-
-: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
-  \ cfa1 = cfa of the Spanish word
-  \ cfa2 = cfa of the Esperanto word
-  \ cfa3 = cfa of the English word
-  <BUILDS , , , DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
-
-' ES-KEYS ' EO-KEYS ' EN-KEYS
-LOCALIZED KEYS
-
-' ES-THE-END ' EO-THE-END ' EN-THE-END
-LOCALIZED (THE-END)
-
-: THE-END  ( -- )  WIPE (THE-END)  ;
-
-' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
-LOCALIZED (INSTRUCTIONS)
-
-: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) 0 BRIGHT  ;
-
-RUNT \ Load the third part of the source
+CHAR N CONSTANT 'N'
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
-

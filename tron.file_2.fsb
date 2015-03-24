@@ -1,9 +1,9 @@
 \ Tron
 
   \ tron.file_2.fsb
-  \ This file is part of Tron (version 2015032315)
+  \ This file is part of Tron,
   \ a game written in ZX Spectrum's Abersoft Forth.
-  \ This fiile is the second part of the sources.
+  \ This fiile is the third part of the sources.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: http://programandala.net/lp
@@ -53,21 +53,6 @@
   \ XXX FIXME -- the system gets corrupted after quitting the
   \ game, no word is recognized.
 
-  \ -----------------------------------------------------------
-  \ fsb directives
-
-  \ The following '#vim' directives, processed by fsb,
-  \ translate the Latin1 Spanish chars in this source file to
-  \ the ZX Spectrum UDG defined in the first file
-  \ <tron.part_0.fsb>):
-
-  \ #vim %substitute@á@\=nr2char(144)@g
-  \ #vim %substitute@é@\=nr2char(148)@g
-  \ #vim %substitute@í@\=nr2char(152)@g
-  \ #vim %substitute@ó@\=nr2char(158)@g
-  \ #vim %substitute@ú@\=nr2char(162)@g
-  \ #vim %substitute@¿@\=nr2char(153)@g
-
 ( Load )
 
 2 10 THRU
@@ -84,12 +69,12 @@
   \ Wait for a key press.
 : PAUSE  ( -- )  8 SPACES  ." Pulsa una tecla" AKEY  ;
 
-  \ Convert a char in the range A-Z to lowercase
-  \ (Warning: no check!, chars other than A-Z get corrupted):
-: LOWER  ( c -- c' )  32 OR  ;
+  \ Convert a char in the range a-z to uppercase
+  \ (Warning: no check!, chars other than a-z get corrupted):
+: UPPER  ( c -- c' )  223 AND  ;
 
   \ Is the given char a valid answer for a Y/N question?
-: Y/N?  ( c -- flag )  LOWER DUP 's' = SWAP 'n' = OR  ;
+: Y/N?  ( c -- flag )  UPPER DUP 'Y' = SWAP 'N' = OR  ;
 
   \ Wait for a valid key press for a Y/N question
   \ and return its code.
@@ -97,7 +82,7 @@
 
   \ Wait for a valid key press for a Y/N question
   \ and return a flag: Was it "N" or "n"?
-: NO?  ( -- flag )  Y/N LOWER 'n' =  ;
+: NO?  ( -- flag )  Y/N UPPER 'N' =  ;
 
 : PRESSED?  ( bitmask port -- flag )  INP AND NOT  ;
 
@@ -196,7 +181,8 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
 
 : GAME  ( -- )
   INIT  BEGIN
-    QUIT?   IF  EXIT  THEN
+    \ XXX TODO
+    \ QUIT?   IF  EXIT  THEN
     CRASH1? IF  CRASH1 EXIT  THEN
     CRASH2? IF  XC2 @ XC1 ! YC2 @ YC1 ! CRASH2 EXIT  THEN
     PAINT1 PAINT2 RUDDERS
@@ -208,11 +194,15 @@ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
   WIPE  TITLE CREDITS INSTRUCTIONS KEYS PAUSE
   0 SCORE1 !  0 SCORE2 !  ;
 
+: CENTERED  ( len -- column ) 32 - 2 / ;
+
 : ANOTHER?  ( -- flag )
   \ Another game?
-  WIPE 12 7 AT ." ¿Otra vez? (S/N)" NO?  ;
+  WIPE "ANOTHER?" 12 OVER CENTERED TYPE NO?  ;
 
-: RUN  ( -- )  START  BEGIN  GAME QUIT?  UNTIL  THE-END  ;
+: GAMING  ( -- )  BEGIN  GAME ANOTHER?  UNTIL  ;
+
+: RUN  ( -- )  START GAMING THE-END  ;
 
   \ XXX TMP -- debugging message:
 ." Done!" CR ." Type RUN to start." CR
