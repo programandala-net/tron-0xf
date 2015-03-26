@@ -1,22 +1,13 @@
 \ Tron (version 201503241634)
 \ A game written in ZX Spectrum's Abersoft Forth.
 
-  \ tron.file_0.fsb
-  \ This file is the 1st part of the source.
+\ tron.file_0.fsb
+\ This file is the 1st part of the source.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: http://programandala.net/lp
+\ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/es.programa.tron.html
-
-  \ -----------------------------------------------------------
-  \ Requisitos
-
-  \ Para convertir este fichero fuente en un fichero TAP
-  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
-  \ se necesita el conversor fsb:
-  \
-  \ http://programandala.net/es.programa.fsb.html
 
 ( Load)
 
@@ -74,6 +65,8 @@ RUNT \ Load the next part of the source
 
 : BOUNDS  ( a1 len -- a2 a1 )  OVER + SWAP  ;
 
+: INVERT  ( n1 -- n2 ) -1 XOR  ;
+
 ( Abersoft Forth specific extensions)
 
 
@@ -87,9 +80,10 @@ RUNT \ Load the next part of the source
 
 ( ZX Spectrum specific)
 
-  \ Memory addresses
+  \ Memory addresses and sizes
 
 22528 CONSTANT ATTRIBUTES
+  768 CONSTANT /ATTRIBUTES
 
   \ System variables
 

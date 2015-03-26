@@ -1,22 +1,13 @@
 \ Tron
 \ A game written in ZX Spectrum's Abersoft Forth.
 
-  \ tron.file_0.fsb
-  \ This file is the 3rd part of the source.
+\ tron.file_2.fsb
+\ This file is the 3rd part of the source.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: http://programandala.net/lp
+\ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/es.programa.tron.html
-
-  \ -----------------------------------------------------------
-  \ Requisitos
-
-  \ Para convertir este fichero fuente en un fichero TAP
-  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
-  \ se necesita el conversor fsb:
-  \
-  \ http://programandala.net/es.programa.fsb.html
 
   \ -----------------------------------------------------------
   \ fsb directives
@@ -65,7 +56,7 @@ RUNT \ Load the next part of the source
 
 ( English texts)
 
-: EN-THE-END  ( -- )
+: EN-FINISH  ( -- )
   \  <------------------------------->
   ." To play again: RUN" CR
   ." To exit Forth: BYE" CR  ;
@@ -99,7 +90,7 @@ CHAR Y CONSTANT EN-'Y'
 
 ( Esperanto texts)
 
-: EO-THE-END  ( -- )
+: EO-FINISH  ( -- )
   \  <------------------------------->
   ." Por reludi: RUN" CR
   ." Por eliri el Fortho: BYE" CR  ;
@@ -133,7 +124,7 @@ CHAR J CONSTANT EO-'Y'
 
 ( Spanish texts)
 
-: ES-THE-END  ( -- )
+: ES-FINISH  ( -- )
   \  <------------------------------->
   ." Para jugar otra vez: RUN" CR
   ." Para salir de Forth: BYE" CR  ;
@@ -189,14 +180,11 @@ LOCALIZED "ANOTHER?"  ( -- ca len )
 ' ES-'Y' ' EO-'Y' ' EN-'Y'
 LOCALIZED 'Y'  ( -- c )
 
-' ES-THE-END ' EO-THE-END ' EN-THE-END
-LOCALIZED (THE-END)  ( -- )
-: THE-END  ( -- )  WIPE (THE-END)  ;
+' ES-FINISH ' EO-FINISH ' EN-FINISH
+LOCALIZED (FINISH)  ( -- )
+: FINISH  ( -- )  WIPE (FINISH)  ;
 
 ( Texts that don't need translation)
-
-: TITLE  ( -- )
-  RED INK 14 SPACES ." TRON" CR WHITE INK  ;
 
 : CREDITS  ( -- )
   \  <------------------------------->

@@ -1,22 +1,13 @@
 \ Tron
 \ A game written in ZX Spectrum's Abersoft Forth.
 
-  \ tron.file_1.fsb
-  \ This file is the 2nd part of the source.
+\ tron.file_1.fsb
+\ This file is the 2nd part of the source.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: http://programandala.net/lp
+\ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/es.programa.tron.html
-
-  \ -----------------------------------------------------------
-  \ Requisitos
-
-  \ Para convertir este fichero fuente en un fichero TAP
-  \ utilizable por Abersoft Forth en un emulador de ZX Spectrum
-  \ se necesita el conversor fsb:
-  \
-  \ http://programandala.net/es.programa.fsb.html
 
   \ -----------------------------------------------------------
   \ fsb directives
@@ -52,12 +43,11 @@ RUNT \ Load the next part of the source
   \ Convert a pixel coordinate to its attribute address.
   175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
 
-: PAINT  ( n x y -- )
-  \ Plot at the given coordinates with color n.
-  \ XXX TODO Check this:
-  \ It seems the attribute address is used here
-  \ instead of `INK`, in order to get certain effect
-  \ related with the crashes.
+: COLORPLOT  ( color x y -- )
+  \ Plot a pixel with the given color.
+  \ There's a bug in Abersoft Forth: `PLOT` does not work
+  \ when `INK` is used before. That's why this word
+  \ is needed.
   2DUP PLOT XY>ATTRA C!  ;
 
 ( User Defined Graphics)
@@ -102,45 +92,65 @@ DECIMAL
 32 CONSTANT COLS
 24 CONSTANT LINES
 
-  \ Attributes address of the frame's bottom line:
-ATTRIBUTES COLS LINES 1 - * COLS - +
-CONSTANT BOTTOM-FRAME-ATTRIBUTES
+  \ Attributes address of the arena frame:
+ATTRIBUTES COLS +
+  CONSTANT TOP-FRAME-ATTRIBUTES
+ATTRIBUTES COLS LINES 2 - * COLS - +
+  CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 ( Center justified texts)
+
+: HOME  ( -- )  0 DUP AT  ;
 
 : CENTERED  ( len -- column )
   \ Convert a string lenght to the column required
   \ to print the string centered.
   COLS SWAP - 2 /  ;
 
+: <AT>  ( line len -- )
+  \ Put the cursor on the given line, on the column
+  \ required to center a text of the given lenght.
+  CENTERED AT  ;
+
+: <LINESPACES>  ( len line -- )
+  \ Type spaces centered on a given line.
+  OVER <AT> SPACES  ;
+
 : <LINETYPE>  ( ca len line -- )
-  \ Type a string centered on a line.
-  OVER CENTERED AT TYPE  ;
+  \ Type a string centered on a given line.
+  OVER <AT> TYPE  ;
 
 : <TYPE>  ( ca len -- )
+
   \ Type a string centered on the current line.
+ 
+  \ Note: the line is supposed to be empty, and it will be
+  \ erased at the left of the text.
+  
+  \ XXX TODO Get the current line and call `<LINETYPE>`instead
+  \ of printing spaces.
+
   DUP CENTERED SPACES TYPE  ;
 
-( Status bar)
+( Title and status bar)
 
-: SCORE. ( n -- )
-  \ Show a score with 3 digits.
-   S->D <# # # # #> TYPE  ;
+: TITLE  ( -- )
+  RED INK S" TRON" <TYPE> CR CR WHITE INK  ;
+
+: SCORE. ( a color line column -- )
+  \ Print the content of a score variable,
+  \ with the given color, at the given position,
+  \ using 3 digits.
+  AT INK @ S->D <# # # # #> TYPE  ;
+
+: .SCORE1  ( -- )  SCORE1 COLOR1 0. SCORE.  ;
+: .SCORE2  ( -- )  SCORE2 COLOR2 0 29 SCORE.  ;
 
 : STATUS  ( -- )
 
   \ Show the status bar at the current cursor position.
 
-  \ XXX TODO -- Print apart every score, and print also the
-  \ updated one, from the main loop.
-
-  \ XXX TMP debug version:
-  \ 0 DUP AT
-  \ COLOR1 INK SCORE1 @ SCORE. XINC1 ? YINC1 ?
-  \ ( 0 29 AT ) COLOR2 INK SCORE2 @ SCORE. XINC2 ? YINC2 ?  ;
-
-  COLOR1 INK SCORE1 @ SCORE.
-  0 29 AT COLOR2 INK SCORE2 @ SCORE.  ;
+  HOME TITLE .SCORE1 .SCORE2 ;
 
 ( Arena)
 
@@ -149,18 +159,30 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
 : FRAME-BAR  ( a -- )  COLS FRAME-COLOR FILL  ;
 
 : ARENA-BORDER  ( -- )
-  \ Draw the frame.
-  ATTRIBUTES FRAME-BAR  BOTTOM-FRAME-ATTRIBUTES FRAME-BAR
-  BOTTOM-FRAME-ATTRIBUTES ATTRIBUTES DO
+
+  \ Draw the arena visible border.
+
+  TOP-FRAME-ATTRIBUTES FRAME-BAR  \ top part
+  BOTTOM-FRAME-ATTRIBUTES FRAME-BAR  \ bottom part
+  \ Left and right parts:
+  BOTTOM-FRAME-ATTRIBUTES TOP-FRAME-ATTRIBUTES DO
     FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
   COLS +LOOP  ;
 
 : ARENA-LIMIT  ( -- )
-  \ XXX OLD
-  \ [ FRAME-COLOR 7 AND ] LITERAL INK
-  7 DUP PLOT
-   241 0 RDRAW 0  161 RDRAW
-  -241 0 RDRAW 0 -161 RDRAW  ;
+
+  \ XXX TODO Change the method:
+  \ Use block graphics to draw a 4-pixel width border,
+  \ and draw the bottom border with 4 lines, directly
+  \ in memory.
+
+  \ Draw the arena invisible limit.
+  \ It's used to detect crashes.
+  7 7 PLOT 0 153 RDRAW 241 0 RDRAW 0 -153 RDRAW -241 0 RDRAW  ;
+  \ XXX OLD -- This draws the pixel line below X coordinate 0,
+  \ but it doesn't work because it can not be detected by
+  \ `PLOT`:
+  \ 20673 [ COLS 2 - ] LITERAL 255 FILL
 
 : FRAME  ( -- )  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
 
