@@ -1,0 +1,189 @@
+\ Tron
+\ A game written in ZX Spectrum's Abersoft Forth.
+
+\ tron.file_5.fsb
+\ This file is the 6th part of the source.
+\ It contains the game kernel.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+( Load )
+
+2 10 THRU
+
+( Motorbikes; collisions )
+
+  \ Plotting
+
+: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ COLORPLOT 1 0 BLEEP  ;
+: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ COLORPLOT 1 100 BLEEP  ;
+
+  \ ----------------------------
+  \ Collisions
+
+: CRASH  ( -- )
+  \ Crash effect.
+  \ XXX OLD
+  \ n = color of the player who crashed
+  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
+  100 50 DO  11 I BLEEP  LOOP  ;
+
+  \ Update the scores
+: +SCORE1  ( -- )  1 SCORE1 +! .SCORE1  ;
+: +SCORE2  ( -- )  1 SCORE2 +! .SCORE2  ;
+
+  \ Collisions
+: CRASH1  ( -- )  CRASH +SCORE2  ;
+: CRASH2  ( -- )  CRASH +SCORE1  ;
+
+  \ Check collisions
+
+  \ XXX abandoned method:
+  \ 0 VARIABLE CRASHED?
+  \ : CRASH?   ( x y -- flag )  POINT DUP CRASHED? !  ;
+  \ : CRASH1?  ( -- flag )  XC1 @ YC1 @ CRASH?  ;
+  \ : CRASH2?  ( -- flag )  XC2 @ YC2 @ CRASH?  ;
+
+ \ : CRASH-WARNING  ( -- )  \ XXX INFORMER
+ \  S" CRASH" 0 <LINETYPE> KEY DROP 5 0 <LINESPACES> ;
+: CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
+: CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
+
+( Key identifiers)
+
+HEX   1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
+      4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
+      \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
+      \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
+     10 F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
+      8 EFFE 2CONSTANT K-7  10 EFFE 2CONSTANT K-6   DECIMAL
+
+( Player keys, coordinate increments)
+
+  \ ----------------------------
+  \ Player keys
+
+  \ Player 1's keys (default)
+  \ K-Q 2VARIABLE UP-K1    K-A 2VARIABLE DOWN-K1
+  \ K-X 2VARIABLE LEFT-K1  K-C 2VARIABLE RIGHT-K1
+
+  \ Player 1's keys (debugging)
+K-7 2VARIABLE UP-K1    K-6 2VARIABLE DOWN-K1
+K-5 2VARIABLE LEFT-K1  K-8 2VARIABLE RIGHT-K1
+
+  \ Player 2's keys
+K-P 2VARIABLE UP-K2 K-EN 2VARIABLE DOWN-K2
+K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
+ 
+  \ ----------------------------
+ \ Coordinate increments
+ 
+ \ XXX -- not used yet
+ \ 0  1 2CONSTANT UP-INC
+ \ 0 -1 2CONSTANT DOWN-INC
+ \ -1  0 2CONSTANT LEFT-INC
+ \ 0 -1 2CONSTANT RIGHT-INC
+
+( Rudder 1)
+
+: RUDDER1  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 1.
+
+  UP-K1 PRESSED?
+  IF   XINC1 @ IF   0 XINC1 !  1 YINC1 !  THEN  EXIT  THEN
+  DOWN-K1 PRESSED?
+  IF   XINC1 @ IF   0 XINC1 ! -1 YINC1 !  THEN  EXIT  THEN
+  LEFT-K1 PRESSED?
+  IF   YINC1 @ IF  -1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN
+  RIGHT-K1 PRESSED?
+  IF   YINC1 @ IF   1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN  ;
+
+: MOVE1  ( -- )
+
+  \ Update the coordinates of player 1.
+
+  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
+
+( Rudder 2)
+
+: RUDDER2  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 2.
+
+  UP-K2 PRESSED?
+  IF   XINC2 @ IF   0 XINC2 !  1 YINC2 !  THEN  EXIT  THEN
+  DOWN-K2 PRESSED?
+  IF   XINC2 @ IF   0 XINC2 ! -1 YINC2 !  THEN  EXIT  THEN
+  LEFT-K2 PRESSED?
+  IF   YINC2 @ IF  -1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN
+  RIGHT-K2 PRESSED?
+  IF   YINC2 @ IF   1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN  ;
+  
+: MOVE2  ( -- ) 
+  
+  \ Update the coordinates of player 2.
+
+  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+
+( Stop)
+
+  \ XXX TODO
+
+: >ATTRIBUTES<  ( -- )
+  \ Invert the screen attributes.
+  ATTRIBUTES /ATTRIBUTES BOUNDS
+  DO  I C@ INVERT 63 AND I C!  LOOP  ;
+: FADE  ( -- )
+  \ Fade the screen attributes by reducting the ink values.
+  [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
+  DO  I C@ DUP 3 AND 1 - SWAP 248 AND OR I C!  LOOP  ;
+: UNFADE  ( -- )
+  \ Unfade the screen attributes by increasing the ink values.
+  [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
+  DO  I C@ DUP 3 AND 1 + SWAP 248 AND OR I C!  LOOP  ;
+: STOP  ( -- )
+  \ Stop the game and ask what to do.
+  >ATTRIBUTES<
+  ;
+
+( Game)
+
+  \ ----------------------------
+  \ Game init
+
+: READY  ( -- )
+  \ Reset the game variables.
+  40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
+  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 ! ;
+
+: GAME-INIT  ( -- )  ARENA READY PAINT1 PAINT2  ;
+
+: GAME  ( -- )
+  GAME-INIT  BEGIN
+    MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1
+    MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2
+    \ XXX OLD -- player 2 commented out:
+\    RUDDER2 CRASH2? IF  ( XC2 @ XC1 ! YC2 @ YC1 ! ) 
+\      CRASH2 EXIT  THEN
+  ?TERMINAL UNTIL ;
+
+( Main)
+
+: START  ( -- )
+  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE
+  0 SCORE1 !  0 SCORE2 !  ;
+
+: ENOUGH?  ( -- flag )
+  \ No more games?
+  WHITE INK  "ANOTHER?" 12 <LINETYPE>  NO?  ;
+
+: GAMING  ( -- )  BEGIN  GAME ENOUGH?  UNTIL  ;
+
+: RUN  ( -- )  START GAMING FINISH  ;
+
+  \ XXX TMP -- debugging message:
+." Done!" CR ." Type RUN to start." CR
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

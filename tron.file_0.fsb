@@ -3,6 +3,7 @@
 
 \ tron.file_0.fsb
 \ This file is the 1st part of the source.
+\ It contains the basic tools, and game variables.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
@@ -15,10 +16,10 @@ CR ." Loading Tron..." CR
 
 FORTH DEFINITIONS
 
-2 LOAD  3 LOAD  4 LOAD  5 LOAD 
+        2 LOAD  3 LOAD  4 LOAD   5 LOAD 
 6 LOAD  7 LOAD  8 LOAD  9 LOAD  10 LOAD
 
-RUNT \ Load the next part of the source
+RUNT \ load the next part of the source
 
 ( Standard extensions: comments and strings)
 
@@ -76,6 +77,7 @@ RUNT \ Load the next part of the source
 
 : RUNT  ( -- )
   \ Load block 1 from the next file on the tape.
+  \ This word is used by every file of the program.
   1 TLOAD QUIT  ;
 
 ( ZX Spectrum specific)
@@ -109,7 +111,7 @@ VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
   \ Game variables and constants
 
      \ Player 1            Player 2
- \   1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
+     1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
      0 VARIABLE SCORE1     0 VARIABLE SCORE2  \ scores
      0 VARIABLE XC1        0 VARIABLE XC2     \ X coordinate
      0 VARIABLE YC1        0 VARIABLE YC2     \ Y coordinate

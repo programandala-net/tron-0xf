@@ -1,0 +1,108 @@
+\ Tron
+\ A game written in ZX Spectrum's Abersoft Forth.
+
+\ tron.file_4.fsb
+\ This file is the 5th part of the source.
+\ It contains the words to redefine the player keys.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+( Load )
+
+2 10 THRU
+RUNT \ load the next part of the source
+
+( Keyboard: redefine keys )
+
+4 CONSTANT KEYS/PLAYER  \ keys defined per player
+
+  \ Every player has a table with her defined keys, in the
+  \ following order: up, down, left, right.  They are the key
+  \ addresses in the `KEYS` table.
+  \ The constants hold the specific addresses in the table
+  \ and thus they work like variables.
+
+KEYS/PLAYER BUFFER: KEYS1
+  KEYS1           CONSTANT UP-K1
+  KEYS1 CELL+     CONSTANT DOWN-K1
+  KEYS1 2 CELLS + CONSTANT LEFT-K1
+  KEYS1 3 CELLS + CONSTANT RIGHT-K1
+KEYS/PLAYER BUFFER: KEYS2
+  KEYS2           CONSTANT UP-K2
+  KEYS2 CELL+     CONSTANT DOWN-K2
+  KEYS2 2 CELLS + CONSTANT LEFT-K2
+  KEYS2 3 CELLS + CONSTANT RIGHT-K2
+
+: PLAYER-KEY.  ( line col a -- )
+  KEY-NAME 2SWAP AT 1 INVERSE TYPE 0 INVERSE  ;
+
+: (REDEFINE)  ( a line col -- )
+  \ XXX TODO
+  ;
+
+: REDEFINE1  ( -- )  KEYS1 (REDEFINE)  ;
+: REDEFINE2  ( -- )  KEYS2 (REDEFINE)  ;
+
+( Keyboard: redefine keys )
+
+: +KEY-DESC-COL  ( ca len line -- ca len line col' )
+  \ Relative column of a key description,
+  \ depending on its lenght; it's relative to
+  \ the absolute column of the key descriptions.
+  OVER /KEY-DESC SWAP -  ;
+
+: KEY-DESC  ( ca len line col -- )
+  \ Print a key description, on the given line,
+  \ col columns from the left margin of its region.
+  KEY-DESC-COL + AT TYPE  ;
+
+: |KEY-DESC|  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ centered on its region.
+  +KEY-DESC-COL 2 / KEY-DESC
+
+: |KEY-DESC  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ at the left of its region.
+  0 KEY-DESC  ;
+
+: KEY-DESC|  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ at the right of its region.
+  KEY-DESC-COL + KEY-DESC  ;
+  
+( Keyboard: redefine keys )
+
+: KEY.  ( a -- )
+  ;
+
+10 CONSTANT REDEFINE-LINE  \ top line of the redefine menu
+
+LABEL KEY-DESCS
+  \  This table contains the cfa of the four texts used
+  \  to describe the player keys. When executed, they
+  \  return a string in the current language.
+  ' "UP" CFA , ' "DOWN" CFA , ' "LEFT" CFA , ' "RIGHT" CFA ,
+
+: REDEFINE-MENU  ( -- )
+  \ Show the menu to redefine the keys.
+  KEYS/PLAYER 0 DO
+    I REDEFINE-LINE +
+    DUP KEYS1-COL    AT I CELLS KEYS1 + @ KEY.
+    DUP KEY_DESC-COL AT I CELLS KEY-DESCS + @ EXECUTE TYPE
+        KEYS1-COL    AT I CELLS KEYS2 + @ KEY.
+  LOOP  ;
+
+: REDEFINED?  ( -- f )
+  \ Ask for confirmation: Are the redefined keys ok?
+  \ XXX TODO
+  TRUE  ;
+
+: REDEFINE  ( -- )
+  \ Redefine the keys.
+  REDEFINE-MENU
+  BEGIN  REDEFINE1 REDEFINE2 REDEFINED?  UNTIL  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8
+

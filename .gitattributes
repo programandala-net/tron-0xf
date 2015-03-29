@@ -1,2 +1,3 @@
 *.fsb linguist-language=Forth
 *.fs linguist-language=Forth
+abersoft_forth.tap linguist-vendored

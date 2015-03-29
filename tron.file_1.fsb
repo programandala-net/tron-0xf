@@ -3,6 +3,7 @@
 
 \ tron.file_1.fsb
 \ This file is the 2nd part of the source.
+\ It contains the graphics words.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
@@ -15,8 +16,6 @@
   \ The following '#vim' directives, processed by fsb,
   \ translate the UTF-8 chars in this source file to the ZX
   \ Spectrum UDG defined in the first file <tron.part_0.fsb>):
-
-  \ XXX FIXME this still causes trouble with fsb.
 
   \ #vim %substitute@á@\=nr2char(144)@g
   \ #vim %substitute@Ĉ@\=nr2char(146)@g
@@ -31,7 +30,7 @@
 ( Load )
 
 2 10 THRU
-RUNT \ Load the next part of the source
+RUNT \ load the next part of the source
 
 ( Plot and draw)
 
@@ -59,27 +58,49 @@ RUNT \ Load the next part of the source
   \ b7 = last (bottom) scan
   144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP  ;
 
-  \ ----------------------------
+HEX
+
   \ Spanish characters
 
-  \ XXX TODO Esperanto letters
+  08 10 38 04 3C 44 3C 00  90 UDG!  \ á
+  08 10 38 44 78 40 3C 00  94 UDG!  \ é
+  08 10 00 30 10 10 38 00  98 UDG!  \ í
+  00 10 00 10 20 42 3C 00  99 UDG!  \ ¿
+  00 78 00 78 44 44 44 00  9D UDG!  \ ñ
+  08 10 38 44 44 44 38 00  9E UDG!  \ ó
+  08 10 44 44 44 44 38 00  A2 UDG!  \ ú
+  
+  \ Not used
 
-HEX
-  08 10 38 04 3C 44 3C 00  90 UDG! \ á
-  \ 04 08 3C 42 7E 42 42 00  00 UDG! \ Á
-  08 10 38 44 78 40 3C 00  94 UDG! \ é
-  \ 04 08 7E 40 7C 40 7E 00  00 UDG! \ É
-  08 10 00 30 10 10 38 00  98 UDG! \ í
-  \ 04 08 3E 08 08 08 3E 00  00 UDG! \ Í
-  08 10 38 44 44 44 38 00  9E UDG! \ ó
-  \ 08 10 3C 42 42 42 3C 00  00 UDG! \ Ó
-  08 10 44 44 44 44 38 00  A2 UDG! \ ú
-  \ 04 4A 42 42 42 42 3C 00  00 UDG! \ Ú
-  \ 00 78 00 78 44 44 44 00  00 UDG! \ ñ
-  \ 3C 00 62 52 4A 46 42 00  00 UDG! \ Ñ
-  \ 44 00 44 44 44 44 38 00  00 UDG! \ ü
-  \ 42 00 42 42 42 42 3C 00  00 UDG! \ Ü
-  00 10 00 10 20 42 3C 00  99 UDG! \ ¿
+  \ 04 4A 42 42 42 42 3C 00  00 UDG!  \ Ú
+  \ 08 10 3C 42 42 42 3C 00  00 UDG!  \ Ó
+  \ 04 08 3E 08 08 08 3E 00  00 UDG!  \ Í
+  \ 04 08 7E 40 7C 40 7E 00  00 UDG!  \ É
+  \ 04 08 3C 42 7E 42 42 00  00 UDG!  \ Á
+  \ 3C 00 62 52 4A 46 42 00  00 UDG!  \ Ñ
+  \ 44 00 44 44 44 44 38 00  00 UDG!  \ ü
+  \ 42 00 42 42 42 42 3C 00  00 UDG!  \ Ü
+
+( User Defined Graphics)
+
+  \ Esperanto letters
+
+  08 14 00 1C 20 20 1C 00  91 UDG!  \ ĉ
+  08 14 3C 42 40 42 3C 00  92 UDG!  \ Ĉ
+  10 28 00 3C 44 3C 04 38  95 UDG!  \ ĝ
+  08 14 3C 40 4E 42 3C 00  96 UDG!  \ Ĝ
+  04 0A 00 04 04 04 24 18  9A UDG!  \ ĵ
+  04 0A 00 02 42 42 3C 00  9B UDG!  \ Ĵ
+  10 28 38 40 38 04 78 00  9C UDG!  \ ŝ
+  08 14 3C 40 3C 02 7C 00  9F UDG!  \ Ŝ
+  28 10 00 44 44 44 38 00  A0 UDG!  \ ŭ
+
+  \ Not used
+
+  \ 08 14 00 42 7E 42 42 00  99 UDG!  \ Ĥ
+  \ 08 54 40 78 44 44 44 00  97 UDG!  \ ĥ
+  \ 14 08 42 42 42 42 3C 00  9F UDG!  \ Ŭ
+
 DECIMAL
 
 ( Screen -- generic)

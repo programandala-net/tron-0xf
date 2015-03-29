@@ -3,6 +3,7 @@
 
 \ tron.file_2.fsb
 \ This file is the 3rd part of the source.
+\ It contains the texts.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
@@ -15,8 +16,6 @@
   \ The following '#vim' directives, processed by fsb,
   \ translate the UTF-8 chars in this source file to the ZX
   \ Spectrum UDG defined in <tron.file_1.fsb>):
-
-  \ XXX FIXME this still causes trouble with fsb.
 
   \ #vim %substitute@á@\=nr2char(144)@g
   \ #vim %substitute@Ĉ@\=nr2char(146)@g
@@ -31,7 +30,7 @@
 ( Load )
 
 2 10 THRU
-RUNT \ Load the next part of the source
+RUNT \ load the next part of the source
 
 ( English texts)
 
@@ -42,17 +41,15 @@ RUNT \ Load the next part of the source
   ." whose only control makes it turn" CR
   ." ninety degrees without any speed" CR
   ." Every motorbike leaves a solid" CR
-  ." light trail behind. The goal of"
+  ." light trail behind. The goal of" CR
   ." the game is to make your" CR
   ." adversary crash the labyrinth." CR ;
   \  <------------------------------->
-: EN-KEYS  ( -- )
-  \ XXX TODO -- keys will be configurable:
-  \  <------------------------------->
-  ." Keys:" CR
-  ."  Player 1:  Q A C X" CR
-  ."  Player 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+
+: EN-UP     ( -- ca len )  S" Up"  ;
+: EN-DOWN   ( -- ca len )  S" Down"  ;
+: EN-LEFT   ( -- ca len )  S" Left"  ;
+: EN-RIGHT  ( -- ca len )  S" Right"  ;
 
 ( English texts)
 
@@ -80,13 +77,11 @@ CHAR Y CONSTANT EN-'Y'
   ." frakasigi la kontraŭulon" CR
   ." en la labirinton." CR ;
   \  <------------------------------->
-: EO-KEYS  ( -- )
-  \  <------------------------------->
-  ." Klavoj:" CR
-  \ XXX TODO -- keys will be configurable:
-  ."  Ludanto 1:  Q A C X" CR
-  ."  Ludanto 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+
+: EO-UP     ( -- ca len )  S" Supren"  ;
+: EO-DOWN   ( -- ca len )  S" Malsupren"  ;
+: EO-LEFT   ( -- ca len )  S" Maldektren"  ;
+: EO-RIGHT  ( -- ca len )  S" Dekstren"  ;
 
 ( Esperanto texts)
 
@@ -114,13 +109,11 @@ CHAR J CONSTANT EO-'Y'
   ." juego es hacer estrellarse al" CR
   ." contrincante con el laberinto." CR ;
   \  <------------------------------->
-: ES-KEYS  ( -- )
-  \  <------------------------------->
-  ." Teclas:" CR
-  \ XXX TODO -- keys will be configurable:
-  ."  Jugador 1:  Q A C X" CR
-  ."  Jugador 2:  P ENTER M N" CR  ;
-  \  <------------------------------->
+
+: ES-UP     ( -- ca len )  S" Arriba"  ;
+: ES-DOWN   ( -- ca len )  S" Abajo"  ;
+: ES-LEFT   ( -- ca len )  S" Izquierda"  ;
+: ES-RIGHT  ( -- ca len )  S" Derecha"  ;
 
 ( Spanish texts)
 
@@ -151,7 +144,7 @@ CHAR S CONSTANT ES-'Y'
 
   \ First, create a new word in the current dictionary with the
   \ given name, and store the three pfa (parameter field
-  \ addresses) into its own pfa (parameter field address):
+  \ addresses) into its own pfa:
 
   <BUILDS , , ,
 
@@ -167,24 +160,29 @@ CHAR S CONSTANT ES-'Y'
 LOCALIZED (INSTRUCTIONS)  ( -- )
 : INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
 
-' ES-KEYS ' EO-KEYS ' EN-KEYS
-LOCALIZED (KEYS)  ( -- )
-: KEYS  ( -- )  (KEYS) CR  ;
+' ES-UP ' EO-UP ' EN-UP
+  LOCALIZED "UP"  ( -- ca len )
+' ES-DOWN ' EO-DOWN ' EN-DOWN
+  LOCALIZED "DOWN"  ( -- ca len )
+' ES-LEFT ' EO-LEFT ' EN-LEFT
+  LOCALIZED "LEFT"  ( -- ca len )
+' ES-RIGHT ' EO-RIGHT ' EN-RIGHT
+  LOCALIZED "RIGHT"  ( -- ca len )
 
 ' ES-PRESS-ANY-KEY ' EO-PRESS-ANY-KEY ' EN-PRESS-ANY-KEY
 LOCALIZED "PRESS-ANY-KEY"  ( -- ca len )
 
+
+( Localized texts, and others that don't need translation)
+
 ' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER?
 LOCALIZED "ANOTHER?"  ( -- ca len )
 
-' ES-'Y' ' EO-'Y' ' EN-'Y'
-LOCALIZED 'Y'  ( -- c )
+' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
 
 ' ES-FINISH ' EO-FINISH ' EN-FINISH
 LOCALIZED (FINISH)  ( -- )
 : FINISH  ( -- )  WIPE (FINISH)  ;
-
-( Texts that don't need translation)
 
 : CREDITS  ( -- )
   \  <------------------------------->
