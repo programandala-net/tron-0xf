@@ -10,7 +10,23 @@
 
 ( Load )
 
-2 10 THRU
+  \ XXX FIXME `THRU` suddenly stopped working in this file, the
+  \ system gets frozen; but it works manually.  I don't
+  \ understand what happens.
+
+\ 2 10 THRU
+\ 2 7 THRU
+
+  \ XXX TMP Alternative:
+
+2 LOAD  3 LOAD  4 LOAD  5 LOAD  6 LOAD  7 LOAD
+  
+  \ Load the font and the UDG sets
+ 
+FONT /FONT 0 0 TAPE>MEM       \ main font
+EO-UDG /EO-UDG 0 0 TAPE>MEM   \ Esperanto characters
+ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
+
 
 ( Motorbikes; collisions )
 
@@ -50,35 +66,8 @@
 : CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
 : CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
 
-( Key identifiers)
+( Rudder 1)
 
-  \ XXX OLD
-  \ HEX   1 DFFE 2CONSTANT K-P   1 BFFE 2CONSTANT K-EN
-  \      4 7FFE 2CONSTANT K-M   8 7FFE 2CONSTANT K-N
-  \      \ 1 FBFE 2CONSTANT K-Q 1 FDFE 2CONSTANT K-A
-  \      \ 4 FEFE 2CONSTANT K-X 8 FEFE 2CONSTANT K-C
-  \     10 F7FE 2CONSTANT K-5   4 EFFE 2CONSTANT K-8
-  \      8 EFFE 2CONSTANT K-7  10 EFFE 2CONSTANT K-6   DECIMAL
-
-( Player keys, coordinate increments)
-
-  \ XXX OLD
-
-  \ ----------------------------
-  \ Player keys
-
-  \ Player 1's keys (default)
-  \ K-Q 2VARIABLE UP-K1    K-A 2VARIABLE DOWN-K1
-  \ K-X 2VARIABLE LEFT-K1  K-C 2VARIABLE RIGHT-K1
-
-  \ Player 1's keys (debugging)
- \ K-7 2VARIABLE UP-K1    K-6 2VARIABLE DOWN-K1
- \ K-5 2VARIABLE LEFT-K1  K-8 2VARIABLE RIGHT-K1
-
-  \ Player 2's keys
- \ K-P 2VARIABLE UP-K2 K-EN 2VARIABLE DOWN-K2
- \ K-M 2VARIABLE LEFT-K2 K-N 2VARIABLE RIGHT-K2
- 
   \ ----------------------------
  \ Coordinate increments
  
@@ -87,8 +76,6 @@
  \ 0 -1 2CONSTANT DOWN-INC
  \ -1  0 2CONSTANT LEFT-INC
  \ 0 -1 2CONSTANT RIGHT-INC
-
-( Rudder 1)
 
 : RUDDER1  ( -- n1 n2 )
 
@@ -153,9 +140,6 @@
 
 ( Game)
 
-  \ ----------------------------
-  \ Game init
-
 : READY  ( -- )
   \ Reset the game variables.
   40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
@@ -172,21 +156,21 @@
 \      CRASH2 EXIT  THEN
   ?TERMINAL UNTIL ;
 
-( Main)
-
-: START  ( -- )
-  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE
-  0 SCORE1 !  0 SCORE2 !  ;
-
 : ENOUGH?  ( -- flag )
   \ No more games?
   WHITE INK  "ANOTHER?" 12 <LINETYPE>  NO?  ;
 
 : GAMING  ( -- )  BEGIN  GAME ENOUGH?  UNTIL  ;
 
+( Boot)
+
+: START  ( -- )
+  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE
+  0 SCORE1 !  0 SCORE2 !  ;
+
 : RUN  ( -- )  START GAMING FINISH  ;
 
   \ XXX TMP -- debugging message:
-." Done!" CR ." Type RUN to start." CR
+CR ." Type RUN to start." CR
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

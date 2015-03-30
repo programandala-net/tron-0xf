@@ -36,7 +36,7 @@ RUNT \ load the next part of the source
 
 : RDRAW  ( inc-x inc-y -- )
   \ Draw a relative line (from the current plot position).
-  Y-COORD C@ + SWAP X-COORD C@ + SWAP DRAW  ;
+  SYS-Y-COORD C@ + SWAP SYS-X-COORD C@ + SWAP DRAW  ;
 
 : XY>ATTRA  ( x y -- a )
   \ Convert a pixel coordinate to its attribute address.
@@ -48,6 +48,33 @@ RUNT \ load the next part of the source
   \ when `INK` is used before. That's why this word
   \ is needed.
   2DUP PLOT XY>ATTRA C!  ;
+
+( Font and UDG)
+
+768 CONSTANT /FONT  \ size in bytes
+/FONT BUFFER: FONT
+
+: +FONT  ( -- )
+  \ Set the game font.
+  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
+
+: -FONT  ( -- )
+  \ Set the ROM font.
+  15360 SYS-CHARS ! ;
+
+12 8 * CONSTANT /EO-UDG  \ size in bytes
+/EO-UDG BUFFER: EO-UDG
+
+: +EO-FONT  ( -- )
+  \ Activate the Esperanto characters.
+  EO-UDG SYS-UDG ! ;
+
+18 8 * CONSTANT /ES-UDG  \ size in bytes
+/ES-UDG BUFFER: ES-UDG
+
+: +ES-FONT  ( -- )
+  \ Activate the Spanish characters.
+  ES-UDG SYS-UDG ! ;
 
 ( User Defined Graphics)
 

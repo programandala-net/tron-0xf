@@ -64,6 +64,7 @@ HERE: KEY-DESCS
   
 : KEY.  ( line col a -- )
   \ Print a key name.
+  \ a = key address in the keys table
   \ line col = screen coordinates
   KEY-NAME 2SWAP AT TYPE  ;
 
@@ -74,12 +75,15 @@ HERE: KEY-DESCS
   \ n = key number in the table 
   CELLS + @ KEY.  ;
 
+( Keyboard: redefine menu )
+
 : REDEFINE-MENU  ( -- )
   \ Show the menu to redefine the keys.
+  CLS
   KEYS/PLAYER 0 DO
     I KEYS-LINE +
     DUP KEYS1-COL KEYS1 I PLAYER-KEY.
-    DUP I KEY-DESC |KEY-DESC|
+    DUP I KEY-DESC ROT |KEY-DESC|
         KEYS2-COL KEYS2 I PLAYER-KEY.
   LOOP  ;
 
@@ -90,16 +94,33 @@ HERE: KEY-DESCS
   \ XXX TODO
   TRUE  ;
 
-: (REDEFINE)  ( a line col -- )
-  \ Redefine the keys of a player.
-  \ a = table of the player keys (`KEYS1` or `KEYS2`)
-  \ line col = coordinate of the first key
-  ROT KEYS/PLAYER BOUNDS DO
-    2DUP  PRESSED DUP I ! KEY.
-  LOOP  2DROP  ;
+0 VARIABLE (COL)
+0 VARIABLE (KEYS)
 
-: REDEFINE1  ( -- )  KEYS1 (REDEFINE)  ;
-: REDEFINE2  ( -- )  KEYS2 (REDEFINE)  ;
+: KEY-PROMPT  ( -- )
+  \ Show a prompt, asking for a key to be pressed.
+  1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
+
+: KEY#>COORDS  ( n -- line col )
+  \ Convert a player key number (0...3)
+  \ to its cursor coordinates.
+  KEYS-LINE + (COL) @ ;
+
+: (REDEFINE)  ( col a -- )
+  \ Redefine the keys of a player.
+  \ col = column (`KEYS1-COL` or `KEYS2-COL`)
+  \ a = player keys table (`KEYS1` or `KEYS2`)
+  (KEYS) !  (COL) !  \ locals
+  KEYS/PLAYER 0 DO
+    I KEY#>COORDS AT KEY-PROMPT
+    1000 MS PRESSED DUP (KEYS) @ I CELLS + !
+    I KEY#>COORDS ROT KEY.
+  LOOP  ;
+
+( Keyboard: redefine keys )
+
+: REDEFINE1  ( -- )  KEYS1-COL KEYS1 (REDEFINE)  ;
+: REDEFINE2  ( -- )  KEYS2-COL KEYS2 (REDEFINE)  ;
 
 : REDEFINE  ( -- )
   \ Redefine the keys.

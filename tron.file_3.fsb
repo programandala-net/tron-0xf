@@ -15,13 +15,6 @@ RUNT \ load the next part of the source
 
 ( Y/N )
 
-: AKEY  ( -- c )
-  \ Wait for a key press and return its code.  This is an
-  \ alternative to Abersoft Forth's 'KEY', because it always
-  \ shows the flashing cursor, even if the current attributes
-  \ are changed.
-  BEGIN  INKEY DUP 255 =  WHILE  DROP  REPEAT  ;
-
 : PAUSE  ( -- )
   \ Wait for a key press.
   "PRESS-ANY-KEY" <TYPE> AKEY  ;
@@ -142,33 +135,49 @@ CHAR B 10 7FFE , , ,
 
 DECIMAL
 
+( K#>A KEY-NAME )
+
 : K#>A  ( n -- a )
   \ Convert a key number to its address in `KEYS`.
   /KEY * KEYS +  ;
 
-( PRESSED? KEY-NAME )
+: C>S  ( c -- ca len )
+  \ Convert a character to a string.
+  PAD C! PAD 1  ;
+
+: 2C>S  ( 16bit -- ca len )
+  \ Convert two characters to a string.
+  \ XXX TODO -- test
+  DUP 00FF AND PAD C!
+      FF00 AND PAD 1+ C!  PAD 2  ;
+
+: KEY-NAME  ( a -- ca len )
+  \ Convert a key identifier to its key name.
+  \ a = key address in the `KEYS` table
+  \ XXX TODO change the long names and the table format:
+  \ use two chars (En for Enter, SS for Symbol Shift,
+  \ CS for Caps Shift, Sp for Space) instead of strings.
+  4 + @ DUP 256 U< IF  C>S  ELSE  EXECUTE  THEN  ;
+
+( PRESSED? PRESSED )
 
 : PRESSED?  ( a -- flag )
   \ Is a key pressed?
   \ a = key address in the `KEYS` table
   2@ INP AND 0=  ;
 
-: C>S  ( c -- ca len )
-  \ Convert a character to a string.
-  PAD C! PAD 1  ;
-
-: KEY-NAME  ( a -- ca len )
-  \ Convert a key identifier to its key name.
+: (PRESSED)  ( -- a true | false )
+  \ Check all keys.
   \ a = key address in the `KEYS` table
-  4 + @ DUP 256 U< IF  C>S  ELSE  EXECUTE  THEN  ;
+  FALSE  \ default
+  [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
+    I PRESSED? IF  DROP I TRUE LEAVE  THEN
+  /KEY +LOOP  ;
 
 : PRESSED  ( -- a )
-  \ Wait for a key to be pressed an return its identifier.
+  \ Check all keys forever until one of them is pressed
+  \ and return its identifier.
   \ a = key address in the `KEYS` table
-  0 BEGIN
-    [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
-      I PRESSED? IF  DROP I TRUE LEAVE  THEN
-    /KEY +LOOP
-  UNTIL  ;
+  BEGIN  (PRESSED) ?EXIT  AGAIN  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

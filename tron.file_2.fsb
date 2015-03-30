@@ -17,15 +17,16 @@
   \ translate the UTF-8 chars in this source file to the ZX
   \ Spectrum UDG defined in <tron.file_1.fsb>):
 
-  \ #vim %substitute@á@\=nr2char(144)@g
-  \ #vim %substitute@Ĉ@\=nr2char(146)@g
-  \ #vim %substitute@é@\=nr2char(148)@g
-  \ #vim %substitute@ĝ@\=nr2char(150)@g
-  \ #vim %substitute@í@\=nr2char(152)@g
-  \ #vim %substitute@ó@\=nr2char(158)@g
-  \ #vim %substitute@ú@\=nr2char(162)@g
-  \ #vim %substitute@¿@\=nr2char(153)@g
-  \ #vim %substitute@ŭ@\=nr2char(154)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+ 
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
 
 ( Load )
 
@@ -39,11 +40,12 @@ RUNT \ load the next part of the source
   \  XXX TODO -- complete:
   ." Every player drives a motorbike" CR
   ." whose only control makes it turn" CR
-  ." ninety degrees without any speed" CR
-  ." Every motorbike leaves a solid" CR
-  ." light trail behind. The goal of" CR
-  ." the game is to make your" CR
-  ." adversary crash the labyrinth." CR ;
+  ." ninety degrees without" CR
+  ." deceleration. Every motorbike" CR
+  ." leaves a solid light trail" CR
+  ." behind. The goal of the game is" CR
+  ." to make your adversary crash the" CR
+  ." labyrinth." CR ;
   \  <------------------------------->
 
 : EN-FINISH  ( -- )
