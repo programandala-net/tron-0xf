@@ -46,13 +46,6 @@ RUNT \ load the next part of the source
   ." adversary crash the labyrinth." CR ;
   \  <------------------------------->
 
-: EN-UP     ( -- ca len )  S" Up"  ;
-: EN-DOWN   ( -- ca len )  S" Down"  ;
-: EN-LEFT   ( -- ca len )  S" Left"  ;
-: EN-RIGHT  ( -- ca len )  S" Right"  ;
-
-( English texts)
-
 : EN-FINISH  ( -- )
   \  <------------------------------->
   ." To play again: RUN" CR
@@ -62,6 +55,13 @@ RUNT \ load the next part of the source
 : EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
 
 : EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
+
+( English keys)
+
+: EN-UP     ( -- ca len )  S" Up"  ;
+: EN-DOWN   ( -- ca len )  S" Down"  ;
+: EN-LEFT   ( -- ca len )  S" Left"  ;
+: EN-RIGHT  ( -- ca len )  S" Right"  ;
 
 CHAR Y CONSTANT EN-'Y'
 
@@ -78,13 +78,6 @@ CHAR Y CONSTANT EN-'Y'
   ." en la labirinton." CR ;
   \  <------------------------------->
 
-: EO-UP     ( -- ca len )  S" Supren"  ;
-: EO-DOWN   ( -- ca len )  S" Malsupren"  ;
-: EO-LEFT   ( -- ca len )  S" Maldektren"  ;
-: EO-RIGHT  ( -- ca len )  S" Dekstren"  ;
-
-( Esperanto texts)
-
 : EO-FINISH  ( -- )
   \  <------------------------------->
   ." Por reludi: RUN" CR
@@ -94,6 +87,13 @@ CHAR Y CONSTANT EN-'Y'
 : EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
 
 : EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
+
+( Esperanto keys)
+
+: EO-UP     ( -- ca len )  S" Supren"  ;
+: EO-DOWN   ( -- ca len )  S" Malsupren"  ;
+: EO-LEFT   ( -- ca len )  S" Maldektren"  ;
+: EO-RIGHT  ( -- ca len )  S" Dekstren"  ;
 
 CHAR J CONSTANT EO-'Y'
 
@@ -110,13 +110,6 @@ CHAR J CONSTANT EO-'Y'
   ." contrincante con el laberinto." CR ;
   \  <------------------------------->
 
-: ES-UP     ( -- ca len )  S" Arriba"  ;
-: ES-DOWN   ( -- ca len )  S" Abajo"  ;
-: ES-LEFT   ( -- ca len )  S" Izquierda"  ;
-: ES-RIGHT  ( -- ca len )  S" Derecha"  ;
-
-( Spanish texts)
-
 : ES-FINISH  ( -- )
   \  <------------------------------->
   ." Para jugar otra vez: RUN" CR
@@ -126,6 +119,13 @@ CHAR J CONSTANT EO-'Y'
 : ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
 
 : ES-PRESS-ANY-KEY  ( -- ca len ) S" Pulsa una tecla"  ;
+
+( Spanish keys)
+
+: ES-UP     ( -- ca len )  S" Arriba"  ;
+: ES-DOWN   ( -- ca len )  S" Abajo"  ;
+: ES-LEFT   ( -- ca len )  S" Izquierda"  ;
+: ES-RIGHT  ( -- ca len )  S" Derecha"  ;
 
 CHAR S CONSTANT ES-'Y'
 
@@ -180,8 +180,7 @@ LOCALIZED "ANOTHER?"  ( -- ca len )
 
 ' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
 
-' ES-FINISH ' EO-FINISH ' EN-FINISH
-LOCALIZED (FINISH)  ( -- )
+' ES-FINISH ' EO-FINISH ' EN-FINISH LOCALIZED (FINISH)  ( -- )
 : FINISH  ( -- )  WIPE (FINISH)  ;
 
 : CREDITS  ( -- )
@@ -193,5 +192,9 @@ LOCALIZED (FINISH)  ( -- )
   \  <------------------------------->
 
 CHAR N CONSTANT 'N'
+: "ENTER"  ( -- ca len )  S" Enter"  ;
+: "SYMBOL-SHIFT"  ( -- ca len )  S" Symbol Shift"  ;
+: "CAPS-SHIFT"  ( -- ca len )  S" Caps Shift"  ;
+: "SPACE"  ( -- ca len )  S" Space"  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

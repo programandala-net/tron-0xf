@@ -15,36 +15,14 @@ RUNT \ load the next part of the source
 
 ( Keyboard: redefine keys )
 
-4 CONSTANT KEYS/PLAYER  \ keys defined per player
+  \ Max lenght of a player key description in any language:
+11 CONSTANT /KEY-DESC
 
-  \ Every player has a table with her defined keys, in the
-  \ following order: up, down, left, right.  They are the key
-  \ addresses in the `KEYS` table.
-  \ The constants hold the specific addresses in the table
-  \ and thus they work like variables.
-
-KEYS/PLAYER BUFFER: KEYS1
-  KEYS1           CONSTANT UP-K1
-  KEYS1 CELL+     CONSTANT DOWN-K1
-  KEYS1 2 CELLS + CONSTANT LEFT-K1
-  KEYS1 3 CELLS + CONSTANT RIGHT-K1
-KEYS/PLAYER BUFFER: KEYS2
-  KEYS2           CONSTANT UP-K2
-  KEYS2 CELL+     CONSTANT DOWN-K2
-  KEYS2 2 CELLS + CONSTANT LEFT-K2
-  KEYS2 3 CELLS + CONSTANT RIGHT-K2
-
-: PLAYER-KEY.  ( line col a -- )
-  KEY-NAME 2SWAP AT 1 INVERSE TYPE 0 INVERSE  ;
-
-: (REDEFINE)  ( a line col -- )
-  \ XXX TODO
-  ;
-
-: REDEFINE1  ( -- )  KEYS1 (REDEFINE)  ;
-: REDEFINE2  ( -- )  KEYS2 (REDEFINE)  ;
-
-( Keyboard: redefine keys )
+  \ Screen coordinates:
+10 CONSTANT KEYS-LINE     \ top line of the redefine menu
+ 0 CONSTANT KEYS1-COL     \ column of player 1's keys
+10 CONSTANT KEY-DESC-COL  \ column of the key description
+20 CONSTANT KEYS2-COL     \ column of player 2's keys
 
 : +KEY-DESC-COL  ( ca len line -- ca len line col' )
   \ Relative column of a key description,
@@ -52,7 +30,7 @@ KEYS/PLAYER BUFFER: KEYS2
   \ the absolute column of the key descriptions.
   OVER /KEY-DESC SWAP -  ;
 
-: KEY-DESC  ( ca len line col -- )
+: (TYPE-KEY-DESC)  ( ca len line col -- )
   \ Print a key description, on the given line,
   \ col columns from the left margin of its region.
   KEY-DESC-COL + AT TYPE  ;
@@ -60,44 +38,68 @@ KEYS/PLAYER BUFFER: KEYS2
 : |KEY-DESC|  ( ca len line -- )
   \ Print a key description, on the given line,
   \ centered on its region.
-  +KEY-DESC-COL 2 / KEY-DESC
+  +KEY-DESC-COL 2 / (TYPE-KEY-DESC)  ;
 
 : |KEY-DESC  ( ca len line -- )
   \ Print a key description, on the given line,
   \ at the left of its region.
-  0 KEY-DESC  ;
+  0 (TYPE-KEY-DESC)  ;
 
 : KEY-DESC|  ( ca len line -- )
   \ Print a key description, on the given line,
   \ at the right of its region.
-  KEY-DESC-COL + KEY-DESC  ;
+  OVER KEY-DESC-COL SWAP - (TYPE-KEY-DESC)  ;
   
 ( Keyboard: redefine keys )
 
-: KEY.  ( a -- )
-  ;
-
-10 CONSTANT REDEFINE-LINE  \ top line of the redefine menu
-
-LABEL KEY-DESCS
+HERE: KEY-DESCS
   \  This table contains the cfa of the four texts used
   \  to describe the player keys. When executed, they
   \  return a string in the current language.
   ' "UP" CFA , ' "DOWN" CFA , ' "LEFT" CFA , ' "RIGHT" CFA ,
 
+: KEY-DESC  ( n -- ca len )
+  \ Get the n element from the `KEY-DESCS` table.
+  CELLS KEY-DESCS + @ EXECUTE  ;
+  
+: KEY.  ( line col a -- )
+  \ Print a key name.
+  \ line col = screen coordinates
+  KEY-NAME 2SWAP AT TYPE  ;
+
+: PLAYER-KEY.  ( line col a n -- )
+  \ Print a player key name.
+  \ line col = screen coordinates
+  \ a = player keys table
+  \ n = key number in the table 
+  CELLS + @ KEY.  ;
+
 : REDEFINE-MENU  ( -- )
   \ Show the menu to redefine the keys.
   KEYS/PLAYER 0 DO
-    I REDEFINE-LINE +
-    DUP KEYS1-COL    AT I CELLS KEYS1 + @ KEY.
-    DUP KEY_DESC-COL AT I CELLS KEY-DESCS + @ EXECUTE TYPE
-        KEYS1-COL    AT I CELLS KEYS2 + @ KEY.
+    I KEYS-LINE +
+    DUP KEYS1-COL KEYS1 I PLAYER-KEY.
+    DUP I KEY-DESC |KEY-DESC|
+        KEYS2-COL KEYS2 I PLAYER-KEY.
   LOOP  ;
+
+( Keyboard: redefine keys )
 
 : REDEFINED?  ( -- f )
   \ Ask for confirmation: Are the redefined keys ok?
   \ XXX TODO
   TRUE  ;
+
+: (REDEFINE)  ( a line col -- )
+  \ Redefine the keys of a player.
+  \ a = table of the player keys (`KEYS1` or `KEYS2`)
+  \ line col = coordinate of the first key
+  ROT KEYS/PLAYER BOUNDS DO
+    2DUP  PRESSED DUP I ! KEY.
+  LOOP  2DROP  ;
+
+: REDEFINE1  ( -- )  KEYS1 (REDEFINE)  ;
+: REDEFINE2  ( -- )  KEYS2 (REDEFINE)  ;
 
 : REDEFINE  ( -- )
   \ Redefine the keys.

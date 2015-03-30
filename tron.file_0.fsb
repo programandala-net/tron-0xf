@@ -12,6 +12,8 @@
 
 ( Load)
 
+4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
+
 CR ." Loading Tron..." CR
 
 FORTH DEFINITIONS
@@ -21,11 +23,19 @@ FORTH DEFINITIONS
 
 RUNT \ load the next part of the source
 
-( Standard extensions: comments and strings)
+( Standard extensions: comments and booleans)
 
 : \  ( "ccc<newline>" -- )
   IN @ DUP C/L > IF  B/BUF SWAP MOD  ELSE  C/L SWAP - THEN
   IN +!  ; IMMEDIATE
+  
+       0 CONSTANT FALSE
+FALSE 0= CONSTANT TRUE
+
+: ON   ( a -- )  TRUE  SWAP !  ;
+: OFF  ( a -- )  FALSE SWAP !  ;
+
+( Standard extensions: strings)
 
 : SLIT  ( -- ca len ) R COUNT DUP 1+ R> + >R  ;
 
@@ -67,6 +77,24 @@ RUNT \ load the next part of the source
 : BOUNDS  ( a1 len -- a2 a1 )  OVER + SWAP  ;
 
 : INVERT  ( n1 -- n2 ) -1 XOR  ;
+
+: NEGATE  ( n1 -- n2 )  -1 *  ;
+
+: DEPTH  ( -- u ) SP@ S0 @ - -2 /  ;
+
+( Other extensions)
+
+: HERE:  ( "name" -- )
+  \ Create a word "name" that will return its pfa, that will be
+  \ empty (no bytes allocated during the definition).  This is
+  \ syntactic sugar for a table definition whose contents will
+  \ be compiled on the fly.
+  0 VARIABLE  CELL NEGATE ALLOT  ;
+
+: BUFFER:  ( u "name" -- )
+  \ Create a word "name" and allocate u bytes in its pfa.
+  \ "name" will return its pfa.
+  HERE: ALLOT  ;
 
 ( Abersoft Forth specific extensions)
 
@@ -132,3 +160,4 @@ EN VARIABLE LANG
   CHAR n CONSTANT 'n'
   CHAR s CONSTANT 's'
 
+  \ vim: filetype=abersoftforth:fileencoding=utf-8
