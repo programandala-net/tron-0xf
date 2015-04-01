@@ -10,6 +10,8 @@
 
 \ http://programandala.net/es.programa.tron.html
 
+  \ XXX TODO uniform notation for strings, with "$".
+
   \ -----------------------------------------------------------
   \ fsb directives
 
@@ -22,6 +24,7 @@
   \ #vim %substitute@í@\=nr2char(149)@g
   \ #vim %substitute@ó@\=nr2char(151)@g
   \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
   \ #vim %substitute@¿@\=nr2char(158)@g
  
   \ #vim %substitute@Ĉ@\=nr2char(144)@g
@@ -48,7 +51,7 @@ RUNT \ load the next part of the source
   ." labyrinth." CR ;
   \  <------------------------------->
 
-: EN-FINISH  ( -- )
+: EN-QUIT-MESSAGE  ( -- )
   \  <------------------------------->
   ." To play again: RUN" CR
   ." To exit Forth: BYE" CR  ;
@@ -58,7 +61,7 @@ RUNT \ load the next part of the source
 
 : EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
 
-( English keys)
+( English keys and menu options)
 
 : EN-UP     ( -- ca len )  S" Up"  ;
 : EN-DOWN   ( -- ca len )  S" Down"  ;
@@ -66,6 +69,12 @@ RUNT \ load the next part of the source
 : EN-RIGHT  ( -- ca len )  S" Right"  ;
 
 CHAR Y CONSTANT EN-'Y'
+
+: EN-OPTION-0$  ( -- ca len )  S" Not in English" ;
+: EN-OPTION-1$  ( -- ca len )  S" Configure" ;
+: EN-OPTION-2$  ( -- ca len )  S" Play" ;
+: EN-OPTION-3$  ( -- ca len )  S" About" ;
+: EN-OPTION-4$  ( -- ca len )  S" Quit" ;
 
 ( Esperanto texts)
 
@@ -80,7 +89,7 @@ CHAR Y CONSTANT EN-'Y'
   ." en la labirinton." CR ;
   \  <------------------------------->
 
-: EO-FINISH  ( -- )
+: EO-QUIT-MESSAGE  ( -- )
   \  <------------------------------->
   ." Por reludi: RUN" CR
   ." Por eliri el Fortho: BYE" CR  ;
@@ -90,7 +99,7 @@ CHAR Y CONSTANT EN-'Y'
 
 : EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
 
-( Esperanto keys)
+( Esperanto keys and menu options)
 
 : EO-UP     ( -- ca len )  S" Supren"  ;
 : EO-DOWN   ( -- ca len )  S" Malsupren"  ;
@@ -98,6 +107,12 @@ CHAR Y CONSTANT EN-'Y'
 : EO-RIGHT  ( -- ca len )  S" Dekstren"  ;
 
 CHAR J CONSTANT EO-'Y'
+
+: EO-OPTION-0$  ( -- ca len )  S" Ne en Esperanto" ;
+: EO-OPTION-1$  ( -- ca len )  S" Konfiguri" ;
+: EO-OPTION-2$  ( -- ca len )  S" Ludi" ;
+: EO-OPTION-3$  ( -- ca len )  S" Prio" ;
+: EO-OPTION-4$  ( -- ca len )  S" Eliri" ;
 
 ( Spanish texts)
 
@@ -112,7 +127,7 @@ CHAR J CONSTANT EO-'Y'
   ." contrincante con el laberinto." CR ;
   \  <------------------------------->
 
-: ES-FINISH  ( -- )
+: ES-QUIT-MESSAGE  ( -- )
   \  <------------------------------->
   ." Para jugar otra vez: RUN" CR
   ." Para salir de Forth: BYE" CR  ;
@@ -130,6 +145,12 @@ CHAR J CONSTANT EO-'Y'
 : ES-RIGHT  ( -- ca len )  S" Derecha"  ;
 
 CHAR S CONSTANT ES-'Y'
+
+: ES-OPTION-0$  ( -- ca len )  S" No en español" ;
+: ES-OPTION-1$  ( -- ca len )  S" Configurar" ;
+: ES-OPTION-2$  ( -- ca len )  S" Jugar" ;
+: ES-OPTION-3$  ( -- ca len )  S" Acerca de" ;
+: ES-OPTION-4$  ( -- ca len )  S" Salir" ;
 
 ( Localization)
 
@@ -155,6 +176,18 @@ CHAR S CONSTANT ES-'Y'
   \ the current language, and execute its word:
 
   DOES>  ( pfa )  LANG @ CELLS + @ CFA EXECUTE  ;
+
+
+' ES-OPTION-0$ ' EO-OPTION-0$ ' EN-OPTION-0$
+  LOCALIZED OPTION-0$  ( -- ca len )
+' ES-OPTION-1$ ' EO-OPTION-1$ ' EN-OPTION-1$
+  LOCALIZED OPTION-1$  ( -- ca len )
+' ES-OPTION-2$ ' EO-OPTION-2$ ' EN-OPTION-2$
+  LOCALIZED OPTION-2$  ( -- ca len )
+' ES-OPTION-3$ ' EO-OPTION-3$ ' EN-OPTION-3$
+  LOCALIZED OPTION-3$  ( -- ca len )
+' ES-OPTION-4$ ' EO-OPTION-4$ ' EN-OPTION-4$
+  LOCALIZED OPTION-4$  ( -- ca len )
 
 ( Localizated texts)
 
@@ -182,8 +215,8 @@ LOCALIZED "ANOTHER?"  ( -- ca len )
 
 ' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
 
-' ES-FINISH ' EO-FINISH ' EN-FINISH LOCALIZED (FINISH)  ( -- )
-: FINISH  ( -- )  WIPE (FINISH)  ;
+' ES-QUIT-MESSAGE ' EO-QUIT-MESSAGE ' EN-QUIT-MESSAGE
+LOCALIZED QUIT-MESSAGE  ( -- )
 
 : CREDITS  ( -- )
   \  <------------------------------->
@@ -194,6 +227,8 @@ LOCALIZED "ANOTHER?"  ( -- ca len )
   \  <------------------------------->
 
 CHAR N CONSTANT 'N'
+
+  \ XXX TODO this system will be changed:
 : "ENTER"  ( -- ca len )  S" Enter"  ;
 : "SYMBOL-SHIFT"  ( -- ca len )  S" Symbol Shift"  ;
 : "CAPS-SHIFT"  ( -- ca len )  S" Caps Shift"  ;

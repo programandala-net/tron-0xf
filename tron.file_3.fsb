@@ -8,6 +8,8 @@
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
+\ http://programandala.net/es.programa.tron.html
+
 ( Load )
 
 2 10 THRU
@@ -62,6 +64,12 @@ KEYS/PLAYER CELLS BUFFER: KEYS2
 
 40 CONSTANT #KEYS  \ number of keys of ZX Spectrum
  6 CONSTANT /KEY  \ bytes per key in the table
+
+: KEY" ( "ccc<quote>" -- n )
+  \ Parse a key name and leave a number ...
+  \ XXX TODO
+  [CHAR] " PARSE-TEXT
+  ;
 
 HERE: KEYS
 
@@ -148,8 +156,11 @@ DECIMAL
 : 2C>S  ( 16bit -- ca len )
   \ Convert two characters to a string.
   \ XXX TODO -- test
-  DUP 00FF AND PAD C!
-      FF00 AND PAD 1+ C!  PAD 2  ;
+  [ HEX ] DUP 00FF AND PAD C!
+              FF00 AND PAD 1+ C!  PAD 2 [ DECIMAL ]  ;
+  \ XXX TODO -- this alternative can work:
+  \ PAD ! PAD 2  ;
+  
 
 : KEY-NAME  ( a -- ca len )
   \ Convert a key identifier to its key name.

@@ -8,6 +8,8 @@
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
+\ http://programandala.net/es.programa.tron.html
+
 ( Load )
 
 2 10 THRU
@@ -122,8 +124,9 @@ HERE: KEY-DESCS
 : REDEFINE1  ( -- )  KEYS1-COL KEYS1 (REDEFINE)  ;
 : REDEFINE2  ( -- )  KEYS2-COL KEYS2 (REDEFINE)  ;
 
-: REDEFINE  ( -- )
+: CONFIGURATION  ( -- )
   \ Redefine the keys.
+  \ XXX TODO -- human/machine options
   REDEFINE-MENU
   BEGIN  REDEFINE1 REDEFINE2 REDEFINED?  UNTIL  ;
 

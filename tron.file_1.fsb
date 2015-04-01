@@ -17,15 +17,17 @@
   \ translate the UTF-8 chars in this source file to the ZX
   \ Spectrum UDG defined in the first file <tron.part_0.fsb>):
 
-  \ #vim %substitute@á@\=nr2char(144)@g
-  \ #vim %substitute@Ĉ@\=nr2char(146)@g
-  \ #vim %substitute@é@\=nr2char(148)@g
-  \ #vim %substitute@ĝ@\=nr2char(150)@g
-  \ #vim %substitute@í@\=nr2char(152)@g
-  \ #vim %substitute@ó@\=nr2char(158)@g
-  \ #vim %substitute@ú@\=nr2char(162)@g
-  \ #vim %substitute@¿@\=nr2char(153)@g
-  \ #vim %substitute@ŭ@\=nr2char(154)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+ 
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
 
 ( Load )
 
@@ -65,16 +67,13 @@ RUNT \ load the next part of the source
 12 8 * CONSTANT /EO-UDG  \ size in bytes
 /EO-UDG BUFFER: EO-UDG
 
-: +EO-FONT  ( -- )
-  \ Activate the Esperanto characters.
-  EO-UDG SYS-UDG ! ;
-
 18 8 * CONSTANT /ES-UDG  \ size in bytes
 /ES-UDG BUFFER: ES-UDG
 
-: +ES-FONT  ( -- )
-  \ Activate the Spanish characters.
-  ES-UDG SYS-UDG ! ;
+HERE: UDG-BANK
+  \ This table holds the addresses of the UDG used in every
+  \ language:
+  UDG , EO-UDG , ES-UDG ,
 
 ( User Defined Graphics)
 

@@ -1,0 +1,139 @@
+\ Tron
+\ A game written in ZX Spectrum's Abersoft Forth.
+
+\ tron.file_6.fsb
+\ This file is the 7th part of the source.
+\ It contains the main menu.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/es.programa.tron.html
+
+( Load )
+
+2 10 THRU
+
+  \ Load the font and the UDG sets
+ 
+FONT /FONT 0 0 TAPE>MEM       \ main font
+EO-UDG /EO-UDG 0 0 TAPE>MEM   \ Esperanto characters
+ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
+
+( Menu -- data )
+
+5 CONSTANT OPTIONS       \ number of menu options
+7 CONSTANT MENU-LINE     \ line of the first menu option
+2 CONSTANT LINES/OPTION  \ lines occupied per menu option
+
+  \ A table to store the menu keys, that change depending
+  \ on the current language. The table is updated every
+  \ time the menu is printed.
+OPTIONS BUFFER: MENU-KEYS
+  
+  \ Table that holds the cfa of the words
+  \ that return the localized texts of the menu options.
+HERE: MENU-OPTIONS
+  ' OPTION-0$ CFA , ' OPTION-1$ CFA , ' OPTION-2$ CFA ,
+  ' OPTION-3$ CFA , ' OPTION-4$ CFA ,
+
+( Menu -- language and commands)
+
+: +UDG  ( n -- )
+  \ Set the UDG bank required by the given language number.
+  CELLS UDG-BANK + @ SYS-UDG !  ;
+
+: -UDG  ( -- )
+  \ Set the default UDG bank.
+  UDG SYS-UDG !  ;
+  
+: LANGUAGE  ( -- )
+  \ Change the current language.
+  LANG @ 1+ DUP LANGS U< *  DUP LANG ! +UDG  ;
+
+: ABOUT  ( -- )
+  \ XXX TMP
+  \ XXX TODO
+  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE  ;
+
+: FINISH  ( -- )  WIPE QUIT-MESSAGE -FONT -UDG QUIT  ;
+
+HERE: MENU-COMMANDS
+  \ This table holds the cfa of the menu options.
+  ' LANGUAGE CFA ,
+  ' CONFIGURATION CFA ,
+  ' GAME CFA ,
+  ' ABOUT CFA ,  \ XXX TODO -- About
+  ' FINISH CFA ,
+
+( Menu -- effect and key)
+
+: MENU-EFFECT  ( -- )
+  \ Do some screen effect on the menu.
+  \ XXX TODO
+  ;
+
+: MENU-KEY  ( -- c )
+  \ Wait until a key to be pressed and return its code.
+  BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
+
+( Menu)
+
+: INITIAL.  ( ca n -- )
+  \ Print the initial of the menu option number n,
+  \ stored in the given address.
+  SWAP C@ DUP  1 INVERSE EMIT 0 INVERSE
+  UPPER SWAP MENU-KEYS + C!  ;
+
+: OPTION>LINE  (  n -- )
+  \ Convert an option number to its line.
+  LINES/OPTION * MENU-LINE +  ;
+
+: OPTION  ( n -- ca len )
+  \ Convert option n to its localized text.
+  CELLS MENU-OPTIONS + @ EXECUTE  ;
+
+: OPTION.  ( n -- )
+  \ Print menu option number n. 
+  DUP >R
+  DUP OPTION>LINE >R OPTION  ( ca len )
+  DUP CENTERED R> SWAP       ( ca len line col )
+  2DUP AT 2OVER DROP R> INITIAL.
+  1+ AT 1 /STRING TYPE  ;
+
+: MENU.  ( -- )
+  \ Print the menu.
+  \ XXX TODO -- graphics
+  WIPE  OPTIONS 0 DO  I OPTION.  LOOP  ;
+
+( Menu )
+
+: VALID-OPTION?  ( c -- cfa true | false )
+  \ Is the given character a valid menu option in the current
+  \ language? If so, return the cfa of its associated command
+  \ and a true flag; otherwise return a false flag.
+  UPPER FALSE SWAP  \ default exit flag
+  OPTIONS 0 DO
+    DUP MENU-KEYS I + C@ =  \ valid key?
+    IF  2DROP MENU-COMMANDS I CELLS + @ TRUE DUP LEAVE  THEN
+  LOOP  DROP  ;
+
+: VALID-OPTION  ( -- cfa )
+  \ Wait until a valid menu option is chosen and then
+  \ return the cfa of its associated command.
+  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  ;
+
+( Boot)
+
+: INIT  ( -- )
+  +FONT  ;
+
+: RUN  ( -- )
+  \ Endless loop: Show the menu and execute the chosen option.
+  INIT BEGIN  MENU. VALID-OPTION EXECUTE  AGAIN  ;
+
+
+  \ XXX TMP -- debugging message:
+CR ." Type RUN to start." CR
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

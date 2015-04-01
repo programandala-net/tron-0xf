@@ -8,26 +8,14 @@
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
+\ http://programandala.net/es.programa.tron.html
+
 ( Load )
 
-  \ XXX FIXME `THRU` suddenly stopped working in this file, the
-  \ system gets frozen; but it works manually.  I don't
-  \ understand what happens.
 
-\ 2 10 THRU
-\ 2 7 THRU
-
-  \ XXX TMP Alternative:
-
-2 LOAD  3 LOAD  4 LOAD  5 LOAD  6 LOAD  7 LOAD
+2 10 THRU
+RUNT \ load the next part of the source
   
-  \ Load the font and the UDG sets
- 
-FONT /FONT 0 0 TAPE>MEM       \ main font
-EO-UDG /EO-UDG 0 0 TAPE>MEM   \ Esperanto characters
-ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
-
-
 ( Motorbikes; collisions )
 
   \ Plotting
@@ -138,17 +126,17 @@ ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
   >ATTRIBUTES<
   ;
 
-( Game)
+( Round)
 
 : READY  ( -- )
-  \ Reset the game variables.
+  \ Set the players positions before a new round.
   40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
-  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 ! ;
+  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !  ;
 
-: GAME-INIT  ( -- )  ARENA READY PAINT1 PAINT2  ;
+: ROUND-INIT  ( -- )  ARENA READY PAINT1 PAINT2  ;
 
-: GAME  ( -- )
-  GAME-INIT  BEGIN
+: ROUND  ( -- )
+  ROUND-INIT  BEGIN
     MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1
     MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2
     \ XXX OLD -- player 2 commented out:
@@ -156,21 +144,16 @@ ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
 \      CRASH2 EXIT  THEN
   ?TERMINAL UNTIL ;
 
+( Game)
+
 : ENOUGH?  ( -- flag )
-  \ No more games?
+  \ No more rounds?
   WHITE INK  "ANOTHER?" 12 <LINETYPE>  NO?  ;
 
-: GAMING  ( -- )  BEGIN  GAME ENOUGH?  UNTIL  ;
-
-( Boot)
-
-: START  ( -- )
-  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE
+: GAME-INIT  ( -- )
   0 SCORE1 !  0 SCORE2 !  ;
 
-: RUN  ( -- )  START GAMING FINISH  ;
-
-  \ XXX TMP -- debugging message:
-CR ." Type RUN to start." CR
+: GAME  ( -- )
+  GAME-INIT BEGIN  ROUND ENOUGH?  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

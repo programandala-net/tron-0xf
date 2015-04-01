@@ -1,4 +1,4 @@
-\ Tron (version 201503241634)
+\ Tron (version 2015040103)
 \ A game written in ZX Spectrum's Abersoft Forth.
 
 \ tron.file_0.fsb
@@ -12,13 +12,15 @@
 
 ( Load)
 
-4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
+\ 4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
 
-CR ." Loading Tron..." CR
+." Loading Tron..." CR
 
 FORTH DEFINITIONS
 
-2 3 THRU
+: BYE  ( -- )  MON  ;
+
+1 4 +THRU
 RUNT \ load the next part of the source
 
 ( ZX Spectrum specific)
@@ -40,19 +42,17 @@ RUNT \ load the next part of the source
 0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
 6 CONSTANT YELLOW  7 CONSTANT WHITE
 
+  \ XXX used?
 : PAPERY  ( color -- paper-attribute )  8 *  ;
 
-( Vocabulary, variables and constants)
-
-  \ ----------------------------
-  \ Game vocabulary
+( Vocabulary)
 
 : TASK  ;
 
-VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
+VOCABULARY TRON IMMEDIATE
+TRON DEFINITIONS
 
-  \ ----------------------------
-  \ Game variables and constants
+( Player configuration)
 
      \ Player 1            Player 2
      1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
@@ -63,17 +63,12 @@ VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
      0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
 YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
 
-  \ Languages
+( Languages)
 
- 0 CONSTANT EN  \ English
- 1 CONSTANT EO  \ Esperanto
- 2 CONSTANT ES  \ Spanish
-EN VARIABLE LANG
-
-  \ ----------------------------
-  \ Generic constants
-
-  CHAR n CONSTANT 'n'
-  CHAR s CONSTANT 's'
+ 3 CONSTANT LANGS  \ number of languages
+ 0 CONSTANT EN     \ English
+ 1 CONSTANT EO     \ Esperanto
+ 2 CONSTANT ES     \ Spanish
+EN VARIABLE LANG   \ current language
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
