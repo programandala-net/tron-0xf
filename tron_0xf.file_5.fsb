@@ -1,4 +1,4 @@
-\ Tron
+\ Tron 0xF
 \ A game written in ZX Spectrum's Abersoft Forth.
 
 \ tron.file_5.fsb
@@ -10,7 +10,7 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-( Load )
+.( Loading Tron: game )
 
 
 2 10 THRU

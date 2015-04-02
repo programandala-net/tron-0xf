@@ -1,4 +1,4 @@
-\ Tron (version 2015040103)
+\ Tron 0xF (version 2015040103)
 \ A game written in ZX Spectrum's Abersoft Forth.
 
 \ tron.file_0.fsb
@@ -10,15 +10,11 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-( Load)
+.( Loading Tron: data )
 
 \ 4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
 
-." Loading Tron..." CR
-
 FORTH DEFINITIONS
-
-: BYE  ( -- )  MON  ;
 
 1 4 +THRU
 RUNT \ load the next part of the source

@@ -1,4 +1,4 @@
-\ Tron
+\ Tron 0xF
 \ A game written in ZX Spectrum's Abersoft Forth.
 
 \ tron.file_1.fsb
@@ -29,7 +29,7 @@
   \ #vim %substitute@ĝ@\=nr2char(147)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-( Load )
+.( Load Tron: graphics )
 
 2 10 THRU
 RUNT \ load the next part of the source
@@ -51,7 +51,10 @@ RUNT \ load the next part of the source
   \ is needed.
   2DUP PLOT XY>ATTRA C!  ;
 
-( Font and UDG)
+( Font)
+
+  \ The game fonts are loaded from tape at the end of the
+  \ compilation.  Words are defined to switch them on and off:
 
 768 CONSTANT /FONT  \ size in bytes
 /FONT BUFFER: FONT
@@ -63,6 +66,34 @@ RUNT \ load the next part of the source
 : -FONT  ( -- )
   \ Set the ROM font.
   15360 SYS-CHARS ! ;
+  
+  \ Double heigth digits are used to print the scores.
+  \ Their top and low parts are switched instead
+  \ of the game font when needed:
+
+10 8 * CONSTANT /DIGITS-UDG  \ size in bytes
+/DIGITS-UDG BUFFER: HI-DIGITS-UDG
+/DIGITS-UDG BUFFER: LO-DIGITS-UDG
+
+: +HI-DIGITS  ( -- )
+  \ Set the high part of the double height digits
+  \ as the current font.
+  [ HI-DIGITS-UDG CHAR 0 BL - 8 * - 256 - ]
+  LITERAL SYS-CHARS ! ;
+
+: +LO-DIGITS  ( -- )
+  \ Set the high part of the double height digits
+  \ as the current font.
+  [ HI-DIGITS-UDG CHAR 0 BL - 8 * - 256 - ]
+  LITERAL SYS-CHARS ! ;
+
+( UDG)
+
+  \ User Defined Graphics are used for the Spanish and
+  \ Esperanto characters. Two bank are used. They are loaded
+  \ from tape at the end of the compilation. The correspondent
+  \ UDG bank is switched when the user changes the language in
+  \ the game menu.
 
 12 8 * CONSTANT /EO-UDG  \ size in bytes
 /EO-UDG BUFFER: EO-UDG
@@ -70,64 +101,10 @@ RUNT \ load the next part of the source
 18 8 * CONSTANT /ES-UDG  \ size in bytes
 /ES-UDG BUFFER: ES-UDG
 
+
 HERE: UDG-BANK
-  \ This table holds the addresses of the UDG used in every
-  \ language:
+  \ Addresses of the UDG banks used for every language:
   UDG , EO-UDG , ES-UDG ,
-
-( User Defined Graphics)
-
-: UDG!  ( b0..b7 c -- )
-  \ Store the given 8 bytes into the c UDG char
-  \ c = 144..164 (144..162 on 128K models)
-  \ b0 = first (top) scan
-  \ b7 = last (bottom) scan
-  144 - 8 * UDG + 1 - DUP 8 + DO  I C!  -1 +LOOP  ;
-
-HEX
-
-  \ Spanish characters
-
-  08 10 38 04 3C 44 3C 00  90 UDG!  \ á
-  08 10 38 44 78 40 3C 00  94 UDG!  \ é
-  08 10 00 30 10 10 38 00  98 UDG!  \ í
-  00 10 00 10 20 42 3C 00  99 UDG!  \ ¿
-  00 78 00 78 44 44 44 00  9D UDG!  \ ñ
-  08 10 38 44 44 44 38 00  9E UDG!  \ ó
-  08 10 44 44 44 44 38 00  A2 UDG!  \ ú
-  
-  \ Not used
-
-  \ 04 4A 42 42 42 42 3C 00  00 UDG!  \ Ú
-  \ 08 10 3C 42 42 42 3C 00  00 UDG!  \ Ó
-  \ 04 08 3E 08 08 08 3E 00  00 UDG!  \ Í
-  \ 04 08 7E 40 7C 40 7E 00  00 UDG!  \ É
-  \ 04 08 3C 42 7E 42 42 00  00 UDG!  \ Á
-  \ 3C 00 62 52 4A 46 42 00  00 UDG!  \ Ñ
-  \ 44 00 44 44 44 44 38 00  00 UDG!  \ ü
-  \ 42 00 42 42 42 42 3C 00  00 UDG!  \ Ü
-
-( User Defined Graphics)
-
-  \ Esperanto letters
-
-  08 14 00 1C 20 20 1C 00  91 UDG!  \ ĉ
-  08 14 3C 42 40 42 3C 00  92 UDG!  \ Ĉ
-  10 28 00 3C 44 3C 04 38  95 UDG!  \ ĝ
-  08 14 3C 40 4E 42 3C 00  96 UDG!  \ Ĝ
-  04 0A 00 04 04 04 24 18  9A UDG!  \ ĵ
-  04 0A 00 02 42 42 3C 00  9B UDG!  \ Ĵ
-  10 28 38 40 38 04 78 00  9C UDG!  \ ŝ
-  08 14 3C 40 3C 02 7C 00  9F UDG!  \ Ŝ
-  28 10 00 44 44 44 38 00  A0 UDG!  \ ŭ
-
-  \ Not used
-
-  \ 08 14 00 42 7E 42 42 00  99 UDG!  \ Ĥ
-  \ 08 54 40 78 44 44 44 00  97 UDG!  \ ĥ
-  \ 14 08 42 42 42 42 3C 00  9F UDG!  \ Ŭ
-
-DECIMAL
 
 ( Screen -- generic)
 
@@ -140,14 +117,14 @@ DECIMAL
 24 CONSTANT LINES
 
   \ Attributes address of the arena frame:
-ATTRIBUTES COLS +
-  CONSTANT TOP-FRAME-ATTRIBUTES
-ATTRIBUTES COLS LINES 2 - * COLS - +
+ATTRIBUTES CONSTANT TOP-FRAME-ATTRIBUTES
+ATTRIBUTES COLS LINES 3 - * +
   CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 ( Center justified texts)
 
-: HOME  ( -- )  0 DUP AT  ;
+  \ XXX OLD
+  \ : HOME  ( -- )  0 DUP AT  ;
 
 : CENTERED  ( len -- column )
   \ Convert a string lenght to the column required
@@ -184,20 +161,31 @@ ATTRIBUTES COLS LINES 2 - * COLS - +
 : TITLE  ( -- )
   RED INK S" TRON" <TYPE> CR CR WHITE INK  ;
 
-: SCORE. ( a color line column -- )
+  \ XXX OLD -- version with normal characters
+  \ : SCORE. ( a color line column -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits.
-  AT INK @ S->D <# # # # #> TYPE  ;
+  \ AT INK @ S->D <# # # # #> TYPE  ;
 
-: .SCORE1  ( -- )  SCORE1 COLOR1 0. SCORE.  ;
-: .SCORE2  ( -- )  SCORE2 COLOR2 0 29 SCORE.  ;
+12 CONSTANT STATUS-LINE
+
+  : SCORE. ( a column color -- )
+  \ Print the content of a score variable,
+  \ with the given color, at the given position,
+  \ using 3 digits and double heigth characters. 
+  INK >R
+  STATUS-LINE R AT  @ S->D <# # # # #> 2DUP TYPE
+  STATUS-LINE 1+ R> AT  TYPE  ;
+
+: .SCORE1  ( -- )  SCORE1 0 COLOR1 SCORE.  ;
+: .SCORE2  ( -- )  SCORE2 29 COLOR2 SCORE.  ;
 
 : STATUS  ( -- )
 
   \ Show the status bar at the current cursor position.
 
-  HOME TITLE .SCORE1 .SCORE2 ;
+  .SCORE1 .SCORE2 ;
 
 ( Arena)
 
@@ -225,11 +213,14 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
 
   \ Draw the arena invisible limit.
   \ It's used to detect crashes.
-  7 7 PLOT 0 153 RDRAW 241 0 RDRAW 0 -153 RDRAW -241 0 RDRAW  ;
+
   \ XXX OLD -- This draws the pixel line below X coordinate 0,
   \ but it doesn't work because it can not be detected by
   \ `PLOT`:
   \ 20673 [ COLS 2 - ] LITERAL 255 FILL
+
+  7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
+  
 
 : FRAME  ( -- )  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
 

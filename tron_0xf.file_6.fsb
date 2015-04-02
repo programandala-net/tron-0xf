@@ -1,4 +1,4 @@
-\ Tron
+\ Tron 0xF
 \ A game written in ZX Spectrum's Abersoft Forth.
 
 \ tron.file_6.fsb
@@ -10,15 +10,18 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-( Load )
+.( Loading Tron: menu )
 
 2 10 THRU
 
-  \ Load the font and the UDG sets
+  .( Loading Tron -- font and UDG)
  
 FONT /FONT 0 0 TAPE>MEM       \ main font
 EO-UDG /EO-UDG 0 0 TAPE>MEM   \ Esperanto characters
 ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
+
+  \ XXX TMP -- debugging message:
+CR ." Type RUN to start." CR
 
 ( Menu -- data )
 
@@ -126,14 +129,10 @@ HERE: MENU-COMMANDS
 ( Boot)
 
 : INIT  ( -- )
-  +FONT  ;
+  WHOLE-SCREEN  +FONT  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
   INIT BEGIN  MENU. VALID-OPTION EXECUTE  AGAIN  ;
-
-
-  \ XXX TMP -- debugging message:
-CR ." Type RUN to start." CR
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
