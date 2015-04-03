@@ -29,9 +29,9 @@
   \ #vim %substitute@ĝ@\=nr2char(147)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-.( Load Tron: graphics )
+.( Loading Tron: graphics )
 
-2 10 THRU
+2 9 THRU
 RUNT \ load the next part of the source
 
 ( Plot and draw)
@@ -168,7 +168,7 @@ ATTRIBUTES COLS LINES 3 - * +
   \ using 3 digits.
   \ AT INK @ S->D <# # # # #> TYPE  ;
 
-12 CONSTANT STATUS-LINE
+22 CONSTANT STATUS-LINE
 
   : SCORE. ( a column color -- )
   \ Print the content of a score variable,

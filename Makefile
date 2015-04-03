@@ -1,11 +1,13 @@
 # Makefile
 #
-# This file is part of Tron
+# This file is part of Tron 0xF
 # (http://programandala.net/es.programa.tron.html)
 #
 # 2015-03-23: Start.
 # 2015-03-24: 4th part of the sources.
 # 2015-03-28: Partial TAPs are hold in the tmp directory. 
+# 2015-03-30: Two recipes only, no individual files specified any more.
+# 2015-04-02: Updated.
 
 ################################################################
 # Requirements
@@ -16,16 +18,18 @@
 ################################################################
 # Config
 
-VPATH = ./:tmp
+VPATH = ./:src:lib:tmp
 MAKEFLAGS = --no-print-directory
+
+.ONESHELL :
 
 .PHONY: all
 all : tron.tap
 
 clean:
-	rm -f tron.tap
-	rm -f tron.file_*.tap
-	rm -f tmp/tron.file_*.tap
+	rm -f tron_0xf.tap
+	rm -f src/*.tap
+	rm -f lib/*.tap
 
 ################################################################
 # XXX TODO
@@ -38,30 +42,64 @@ clean:
 ################################################################
 # XXX TMP -- Temporary method
 
-tron.file_0.tap : tron.file_0.fsb
-	fsb2abersoft tron.file_0.fsb
-	mv -f tron.file_0.tap tmp/
-tron.file_1.tap : tron.file_1.fsb
-	fsb2abersoft tron.file_1.fsb
-	mv -f tron.file_1.tap tmp/
-tron.file_2.tap : tron.file_2.fsb
-	fsb2abersoft tron.file_2.fsb
-	mv -f tron.file_2.tap tmp/
-tron.file_3.tap : tron.file_3.fsb
-	fsb2abersoft tron.file_3.fsb
-	mv -f tron.file_3.tap tmp/
-tron.file_4.tap : tron.file_4.fsb
-	fsb2abersoft tron.file_4.fsb
-	mv -f tron.file_4.tap tmp/
-tron.file_5.tap : tron.file_5.fsb
-	fsb2abersoft tron.file_5.fsb
-	mv -f tron.file_5.tap tmp/
+library_sources=$(wildcard lib/*.fsb)
+library_tapes=$(wildcard lib/*.tap)
+program_sources=$(wildcard src/*.fsb)
+program_tapes=$(wildcard src/*.tap)
+
+# --------------------------------------------------------------
+# XXX When this recipe is used, and tron.tap
+# depends on $(library_tapes) and $(program_tapes),
+# everything works fine BUT only as long as the
+# TAP files already exist. When they exist, they
+# are updated; when they are missing, they are
+# not created.
+
+%.tap : %.fsb
+	fsb2abersoft  $<
+
+# XXX this works too:
+# lib/%.tap : lib/%.fsb
+# 	fsb2abersoft  $<
+
+# XXX This is a temporary solution, required after clean:
+
+remake: $(library_sources) $(program_sources)
+	for source in $$(ls -1 lib/*.fsb) ; do \
+		fsb2abersoft  $$source ; \
+	done ; \
+	for source in $$(ls -1 src/*.fsb) ; do \
+		fsb2abersoft  $$source ; \
+	done
+
+
+# --------------------------------------------------------------
+# XXX When this loop is used, and tron.tap depends
+# on library, all library files are always rebuilt:
+# library: $(library_sources)
+# 	cd lib ; \
+# 	for source in $$(ls -1 *.fsb) ; do \
+# 		fsb2abersoft  $$source ; \
+# 	done ; \
+# 	cd -
+
+
+# --------------------------------------------------------------
+# Main
 
 tron.tap : \
-    tron.file_0.tap \
-    tron.file_1.tap \
-    tron.file_2.tap \
-    tron.file_3.tap \
-    tron.file_4.tap \
-    tron.file_5.tap
-	cat abersoft_forth.tap tmp/tron.file_*.tap > tron.tap
+	$(library_tapes) \
+	$(program_tapes)
+	cat abersoft_forth.tap \
+		lib/extend.tap \
+		lib/strings.tap \
+		lib/time.tap \
+		lib/random.tap \
+		lib/dot-s.tap \
+		lib/dump.tap \
+		lib/tape.tap \
+		src/tron_0xf.file_*.tap \
+		graph/font.tap \
+		graph/font.esperanto_characters.tap \
+		graph/font.spanish_characters.tap \
+		> tron_0xf.tap

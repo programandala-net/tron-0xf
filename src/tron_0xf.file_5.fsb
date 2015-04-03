@@ -34,8 +34,12 @@ RUNT \ load the next part of the source
   100 50 DO  11 I BLEEP  LOOP  ;
 
   \ Update the scores
-: +SCORE1  ( -- )  1 SCORE1 +! .SCORE1  ;
-: +SCORE2  ( -- )  1 SCORE2 +! .SCORE2  ;
+999 CONSTANT MAX-SCORE
+: +SCORE   ( a -- )
+  \ Update the score stored in the given variable.
+  DUP @ 1+ DUP MAX-SCORE > IF  DROP 0  THEN  SWAP !  ;
+: +SCORE1  ( -- )  SCORE1 +SCORE .SCORE1  ;
+: +SCORE2  ( -- )  SCORE2 +SCORE .SCORE2  ;
 
   \ Collisions
 : CRASH1  ( -- )  CRASH +SCORE2  ;
