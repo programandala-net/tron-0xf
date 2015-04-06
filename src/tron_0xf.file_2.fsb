@@ -10,8 +10,6 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-  \ XXX TODO uniform notation for strings, with "$".
-
   \ -----------------------------------------------------------
   \ fsb directives
 
@@ -57,16 +55,18 @@ RUNT \ load the next part of the source
   ." To exit Forth: BYE" CR  ;
   \  <------------------------------->
 
-: EN-ANOTHER?  ( -- ca len )  S" Play again? (Y/N)"  ;
+: EN-ANOTHER?$  ( -- ca len )  S" Play again? (Y/N)"  ;
 
-: EN-PRESS-ANY-KEY  ( -- ca len ) S" Press any key"  ;
+: EN-PRESS-ANY-KEY$  ( -- ca len )  S" Press any key"  ;
+
+: EN-LICENSE$  ( -- ca len )  S" License:"  ;
 
 ( English keys and menu options)
 
-: EN-UP     ( -- ca len )  S" Up"  ;
-: EN-DOWN   ( -- ca len )  S" Down"  ;
-: EN-LEFT   ( -- ca len )  S" Left"  ;
-: EN-RIGHT  ( -- ca len )  S" Right"  ;
+: EN-UP$     ( -- ca len )  S" Up"  ;
+: EN-DOWN$   ( -- ca len )  S" Down"  ;
+: EN-LEFT$   ( -- ca len )  S" Left"  ;
+: EN-RIGHT$  ( -- ca len )  S" Right"  ;
 
 CHAR Y CONSTANT EN-'Y'
 
@@ -95,16 +95,18 @@ CHAR Y CONSTANT EN-'Y'
   ." Por eliri el Fortho: BYE" CR  ;
   \  <------------------------------->
 
-: EO-ANOTHER?  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+: EO-ANOTHER?$  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
 
-: EO-PRESS-ANY-KEY  ( -- ca len ) S" Premu klavon"  ;
+: EO-PRESS-ANY-KEY$  ( -- ca len ) S" Premu klavon"  ;
+
+: EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
 
 ( Esperanto keys and menu options)
 
-: EO-UP     ( -- ca len )  S" Supren"  ;
-: EO-DOWN   ( -- ca len )  S" Malsupren"  ;
-: EO-LEFT   ( -- ca len )  S" Maldektren"  ;
-: EO-RIGHT  ( -- ca len )  S" Dekstren"  ;
+: EO-UP$     ( -- ca len )  S" Supren"  ;
+: EO-DOWN$   ( -- ca len )  S" Malsupren"  ;
+: EO-LEFT$   ( -- ca len )  S" Maldektren"  ;
+: EO-RIGHT$  ( -- ca len )  S" Dekstren"  ;
 
 CHAR J CONSTANT EO-'Y'
 
@@ -133,16 +135,18 @@ CHAR J CONSTANT EO-'Y'
   ." Para salir de Forth: BYE" CR  ;
   \  <------------------------------->
 
-: ES-ANOTHER?  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
+: ES-ANOTHER?$  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
 
-: ES-PRESS-ANY-KEY  ( -- ca len ) S" Pulsa una tecla"  ;
+: ES-PRESS-ANY-KEY$  ( -- ca len ) S" Pulsa una tecla"  ;
+
+: ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
 
 ( Spanish keys)
 
-: ES-UP     ( -- ca len )  S" Arriba"  ;
-: ES-DOWN   ( -- ca len )  S" Abajo"  ;
-: ES-LEFT   ( -- ca len )  S" Izquierda"  ;
-: ES-RIGHT  ( -- ca len )  S" Derecha"  ;
+: ES-UP$     ( -- ca len )  S" Arriba"  ;
+: ES-DOWN$   ( -- ca len )  S" Abajo"  ;
+: ES-LEFT$   ( -- ca len )  S" Izquierda"  ;
+: ES-RIGHT$  ( -- ca len )  S" Derecha"  ;
 
 CHAR S CONSTANT ES-'Y'
 
@@ -195,23 +199,25 @@ CHAR S CONSTANT ES-'Y'
 LOCALIZED (INSTRUCTIONS)  ( -- )
 : INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
 
-' ES-UP ' EO-UP ' EN-UP
-  LOCALIZED "UP"  ( -- ca len )
-' ES-DOWN ' EO-DOWN ' EN-DOWN
-  LOCALIZED "DOWN"  ( -- ca len )
-' ES-LEFT ' EO-LEFT ' EN-LEFT
-  LOCALIZED "LEFT"  ( -- ca len )
-' ES-RIGHT ' EO-RIGHT ' EN-RIGHT
-  LOCALIZED "RIGHT"  ( -- ca len )
+' ES-UP$ ' EO-UP$ ' EN-UP$
+  LOCALIZED UP$  ( -- ca len )
+' ES-DOWN$ ' EO-DOWN$ ' EN-DOWN$
+  LOCALIZED DOWN$  ( -- ca len )
+' ES-LEFT$ ' EO-LEFT$ ' EN-LEFT$
+  LOCALIZED LEFT$  ( -- ca len )
+' ES-RIGHT$ ' EO-RIGHT$ ' EN-RIGHT$
+  LOCALIZED RIGHT$  ( -- ca len )
 
-' ES-PRESS-ANY-KEY ' EO-PRESS-ANY-KEY ' EN-PRESS-ANY-KEY
-LOCALIZED "PRESS-ANY-KEY"  ( -- ca len )
+' ES-PRESS-ANY-KEY$ ' EO-PRESS-ANY-KEY$ ' EN-PRESS-ANY-KEY$
+LOCALIZED PRESS-ANY-KEY$  ( -- ca len )
 
+' ES-LICENSE$ ' EO-LICENSE$ ' EN-LICENSE$
+LOCALIZED LICENSE$  ( -- ca len )
 
 ( Localized texts, and others that don't need translation)
 
-' ES-ANOTHER? ' EO-ANOTHER? ' EN-ANOTHER?
-LOCALIZED "ANOTHER?"  ( -- ca len )
+' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
+LOCALIZED ANOTHER?$  ( -- ca len )
 
 ' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
 
@@ -221,17 +227,16 @@ LOCALIZED QUIT-MESSAGE  ( -- )
 : CREDITS  ( -- )
   \  <------------------------------->
   ." Copyright (C) 1985,2009,2015" CR
-  ."  Marcos Cruz (programandala.net)" CR
-  ." Licencia/Permesilo/License:" CR
-  ."  http://programandala.net/lp" CR CR  ;
+  ." Marcos Cruz (programandala.net)" CR
+  LICENSE$ TYPE ."  GPL 3" CR CR  ;
   \  <------------------------------->
 
 CHAR N CONSTANT 'N'
 
   \ XXX TODO this system will be changed:
-: "ENTER"  ( -- ca len )  S" Enter"  ;
-: "SYMBOL-SHIFT"  ( -- ca len )  S" Symbol Shift"  ;
-: "CAPS-SHIFT"  ( -- ca len )  S" Caps Shift"  ;
-: "SPACE"  ( -- ca len )  S" Space"  ;
+: ENTER$  ( -- ca len )  S" Enter"  ;
+: SYMBOL-SHIFT$  ( -- ca len )  S" Symbol Shift"  ;
+: CAPS-SHIFT$  ( -- ca len )  S" Caps Shift"  ;
+: SPACE$  ( -- ca len )  S" Space"  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

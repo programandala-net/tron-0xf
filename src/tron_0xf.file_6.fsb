@@ -16,9 +16,10 @@
 
   .( Loading Tron -- font and UDG)
  
-FONT /FONT 0 0 TAPE>MEM       \ main font
-EO-UDG /EO-UDG 0 0 TAPE>MEM   \ Esperanto characters
-ES-UDG /ES-UDG 0 0 TAPE>MEM   \ Spanish characters
+FONT /FONT 0 0 TAPE>MEM              \ main font
+EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
+ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
+DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
 
   \ XXX TMP -- debugging message:
 CR ." Type RUN to start." CR
@@ -66,7 +67,7 @@ HERE: MENU-COMMANDS
   ' LANGUAGE CFA ,
   ' CONFIGURATION CFA ,
   ' GAME CFA ,
-  ' ABOUT CFA ,  \ XXX TODO -- About
+  ' ABOUT CFA ,
   ' FINISH CFA ,
 
 ( Menu -- effect and key)
@@ -124,7 +125,7 @@ HERE: MENU-COMMANDS
 : VALID-OPTION  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  ;
+  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  256 MS  ;
 
 ( Boot)
 

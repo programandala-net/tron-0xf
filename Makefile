@@ -12,84 +12,50 @@
 ################################################################
 # Requirements
 
-# fsb
-# (http://programandala.net/en.program.fsb.html)
+# fsb (http://programandala.net/en.program.fsb.html)
+# Gforth
+# bin2code
 
 ################################################################
-# Config
 
 VPATH = ./:src:lib:tmp
 MAKEFLAGS = --no-print-directory
 
 .ONESHELL :
 
-.PHONY: all
-all : tron.tap
+all : tron_0xf.tap
+	for source in $$(ls -1 lib/*.fsb src/*.fsb) ; do
+		@make $${source%%.fsb}.tap ;
+	done ;
+	@make graph/score_digits.tap
+	@make tron_0xf.tap
 
 clean:
 	rm -f tron_0xf.tap
 	rm -f src/*.tap
 	rm -f lib/*.tap
 
-################################################################
-# XXX TODO
-
-#%.tap : %.fsb
-#	fsb2abersoft $< && mv -f $*.tap tmp/
-#tron.tap : $(wildcard tron.file_*.tap)
-#	cat abersoft_forth.tap tmp/tron.file_*.tap > tron.tap
-
-################################################################
-# XXX TMP -- Temporary method
-
-library_sources=$(wildcard lib/*.fsb)
-library_tapes=$(wildcard lib/*.tap)
-program_sources=$(wildcard src/*.fsb)
+# library_sources=$(wildcard lib/*.fsb)
+# program_sources=$(wildcard src/*.fsb)
+# graph_sources=$(wildcard graph/*.fs)
 program_tapes=$(wildcard src/*.tap)
+library_tapes=$(wildcard lib/*.tap)
 
-# --------------------------------------------------------------
-# XXX When this recipe is used, and tron.tap
-# depends on $(library_tapes) and $(program_tapes),
-# everything works fine BUT only as long as the
-# TAP files already exist. When they exist, they
-# are updated; when they are missing, they are
-# not created.
+graph/score_digits.tap : graph/score_digits.fs
+	cd graph ; \
+	gforth score_digits.fs -e bye ; \
+	bin2code score_digits.bin score_digits.tap
 
-%.tap : %.fsb
+lib/%.tap : lib/%.fsb
 	fsb2abersoft  $<
 
-# XXX this works too:
-# lib/%.tap : lib/%.fsb
-# 	fsb2abersoft  $<
+src/%.tap : src/%.fsb
+	fsb2abersoft  $<
 
-# XXX This is a temporary solution, required after clean:
-
-remake: $(library_sources) $(program_sources)
-	for source in $$(ls -1 lib/*.fsb) ; do \
-		fsb2abersoft  $$source ; \
-	done ; \
-	for source in $$(ls -1 src/*.fsb) ; do \
-		fsb2abersoft  $$source ; \
-	done
-
-
-# --------------------------------------------------------------
-# XXX When this loop is used, and tron.tap depends
-# on library, all library files are always rebuilt:
-# library: $(library_sources)
-# 	cd lib ; \
-# 	for source in $$(ls -1 *.fsb) ; do \
-# 		fsb2abersoft  $$source ; \
-# 	done ; \
-# 	cd -
-
-
-# --------------------------------------------------------------
-# Main
-
-tron.tap : \
+tron_0xf.tap : \
 	$(library_tapes) \
-	$(program_tapes)
+	$(program_tapes) \
+	graph/score_digits.tap
 	cat abersoft_forth.tap \
 		lib/extend.tap \
 		lib/strings.tap \
@@ -102,4 +68,5 @@ tron.tap : \
 		graph/font.tap \
 		graph/font.esperanto_characters.tap \
 		graph/font.spanish_characters.tap \
+		graph/score_digits.tap \
 		> tron_0xf.tap

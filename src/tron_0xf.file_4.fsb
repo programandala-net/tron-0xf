@@ -58,7 +58,7 @@ HERE: KEY-DESCS
   \  This table contains the cfa of the four texts used
   \  to describe the player keys. When executed, they
   \  return a string in the current language.
-  ' "UP" CFA , ' "DOWN" CFA , ' "LEFT" CFA , ' "RIGHT" CFA ,
+  ' UP$ CFA , ' DOWN$ CFA , ' LEFT$ CFA , ' RIGHT$ CFA ,
 
 : KEY-DESC  ( n -- ca len )
   \ Get the n element from the `KEY-DESCS` table.

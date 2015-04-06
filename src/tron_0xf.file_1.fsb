@@ -59,33 +59,36 @@ RUNT \ load the next part of the source
 768 CONSTANT /FONT  \ size in bytes
 /FONT BUFFER: FONT
 
-: +FONT  ( -- )
-  \ Set the game font.
-  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
+  \ Set the game font:
+: +FONT  ( -- )  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
 
-: -FONT  ( -- )
-  \ Set the ROM font.
-  15360 SYS-CHARS ! ;
+  \ Set the ROM font:
+: -FONT  ( -- )  15360 SYS-CHARS ! ;
   
-  \ Double heigth digits are used to print the scores.
-  \ Their top and low parts are switched instead
-  \ of the game font when needed:
+  \ Double height digits are used to print the scores.  They
+  \ are hold in a bank of 20 UDG. The first 10 UDG are the top
+  \ halves of the digits, the second 10 UDG are the bottom
+  \ halves.  Every set is switched instead of the game font
+  \ when needed.
 
-10 8 * CONSTANT /DIGITS-UDG  \ size in bytes
-/DIGITS-UDG BUFFER: HI-DIGITS-UDG
-/DIGITS-UDG BUFFER: LO-DIGITS-UDG
+10 2 * 8 * CONSTANT /DIGITS-UDG  \ size in bytes
+/DIGITS-UDG BUFFER: DIGITS-UDG
+
+: DIGITS>CHARS  ( a1 -- a2 )
+  \ Convert the address of UDG digits to the address of a fake
+  \ font that contains those digits.
+  [CHAR] 0 BL - 8 * -  256 -  ;
 
 : +HI-DIGITS  ( -- )
   \ Set the high part of the double height digits
   \ as the current font.
-  [ HI-DIGITS-UDG CHAR 0 BL - 8 * - 256 - ]
-  LITERAL SYS-CHARS ! ;
+  [ DIGITS-UDG DIGITS>CHARS ] LITERAL SYS-CHARS ! ;
 
 : +LO-DIGITS  ( -- )
-  \ Set the high part of the double height digits
+  \ Set the low part of the double height digits
   \ as the current font.
-  [ HI-DIGITS-UDG CHAR 0 BL - 8 * - 256 - ]
-  LITERAL SYS-CHARS ! ;
+  [ DIGITS-UDG /DIGITS-UDG 2 / +  DIGITS>CHARS ] LITERAL
+  SYS-CHARS ! ;
 
 ( UDG)
 
@@ -116,10 +119,13 @@ HERE: UDG-BANK
 32 CONSTANT COLS
 24 CONSTANT LINES
 
-  \ Attributes address of the arena frame:
+  \ Size of the game arena (inside its frame):
+COLS 2 - CONSTANT ARENA-COLS
+LINES 4 - CONSTANT ARENA-LINES
+
+  \ Attributes addresses of the arena frame:
 ATTRIBUTES CONSTANT TOP-FRAME-ATTRIBUTES
-ATTRIBUTES COLS LINES 3 - * +
-  CONSTANT BOTTOM-FRAME-ATTRIBUTES
+ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 ( Center justified texts)
 
@@ -127,13 +133,13 @@ ATTRIBUTES COLS LINES 3 - * +
   \ : HOME  ( -- )  0 DUP AT  ;
 
 : CENTERED  ( len -- column )
-  \ Convert a string lenght to the column required
+  \ Convert a string length to the column required
   \ to print the string centered.
   COLS SWAP - 2 /  ;
 
 : <AT>  ( line len -- )
   \ Put the cursor on the given line, on the column
-  \ required to center a text of the given lenght.
+  \ required to center a text of the given length.
   CENTERED AT  ;
 
 : <LINESPACES>  ( len line -- )
@@ -173,10 +179,10 @@ ATTRIBUTES COLS LINES 3 - * +
   : SCORE. ( a column color -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
-  \ using 3 digits and double heigth characters. 
+  \ using 3 digits and double height characters. 
   INK >R
-  STATUS-LINE R AT  @ S->D <# # # # #> 2DUP TYPE
-  STATUS-LINE 1+ R> AT  TYPE  ;
+  STATUS-LINE R AT  @ S->D <# # # # #> 2DUP +HI-DIGITS TYPE
+  STATUS-LINE 1+ R> AT  +LO-DIGITS TYPE +FONT  ;
 
 : .SCORE1  ( -- )  SCORE1 0 COLOR1 SCORE.  ;
 : .SCORE2  ( -- )  SCORE2 29 COLOR2 SCORE.  ;
@@ -204,6 +210,11 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
     FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
   COLS +LOOP  ;
 
+: CLEAR-ARENA  ( -- )
+  \ Clear only the game arena.
+  BLACK PAPER
+  ARENA-LINES 1+ 1 DO  I 1 AT ARENA-COLS SPACES  LOOP ;
+
 : ARENA-LIMIT  ( -- )
 
   \ XXX TODO Change the method:
@@ -222,10 +233,10 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
   7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
   
 
+  \ Draw the arena frame:
 : FRAME  ( -- )  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
 
-: ARENA  ( -- )
-  \ Draw the arena.
-  WIPE FRAME STATUS  ;
+  \ Draw the arena:
+: ARENA  ( -- )  FRAME STATUS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

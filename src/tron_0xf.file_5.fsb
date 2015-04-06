@@ -137,27 +137,26 @@ RUNT \ load the next part of the source
   40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
   1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !  ;
 
-: ROUND-INIT  ( -- )  ARENA READY PAINT1 PAINT2  ;
+: ROUND-INIT  ( -- )
+  CLEAR-ARENA READY PAINT1 PAINT2  AKEY DROP  ;
 
-: ROUND  ( -- )
-  ROUND-INIT  BEGIN
+: ROUND  ( -- f )
+  \ f = Break key pressed?
+  ROUND-INIT  FALSE  BEGIN
     MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1
     MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2
-    \ XXX OLD -- player 2 commented out:
-\    RUDDER2 CRASH2? IF  ( XC2 @ XC1 ! YC2 @ YC1 ! ) 
-\      CRASH2 EXIT  THEN
-  ?TERMINAL UNTIL ;
+  ?TERMINAL UNTIL  0=  ;
 
 ( Game)
 
 : ENOUGH?  ( -- flag )
   \ No more rounds?
-  WHITE INK  "ANOTHER?" 12 <LINETYPE>  NO?  ;
+  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
 
 : GAME-INIT  ( -- )
-  0 SCORE1 !  0 SCORE2 !  ;
+  0 SCORE1 !  0 SCORE2 !  WIPE ARENA  ;
 
 : GAME  ( -- )
-  GAME-INIT BEGIN  ROUND ENOUGH?  UNTIL  ;
+  GAME-INIT BEGIN  ROUND  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

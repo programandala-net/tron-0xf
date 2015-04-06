@@ -19,7 +19,7 @@ RUNT \ load the next part of the source
 
 : PAUSE  ( -- )
   \ Wait for a key press.
-  "PRESS-ANY-KEY" <TYPE> AKEY  ;
+  PRESS-ANY-KEY$ <TYPE> AKEY  ;
 
 : UPPER  ( c -- c' )
   \ Convert a char in the range a-z to uppercase
@@ -109,7 +109,7 @@ CHAR G 10 FDFE , , ,
 
 ( KEYS table, rows CS-V 0-9 P-Y )
 
-' "CAPS-SHIFT" CFA 01 FEFE , , ,
+' CAPS-SHIFT$ CFA 01 FEFE , , ,
 CHAR Z 02 FEFE , , ,
 CHAR X 04 FEFE , , ,
 CHAR C 08 FEFE , , ,
@@ -129,14 +129,14 @@ CHAR Y 10 DFFE , , ,
 
 ( KEYS table, rows EN-H SP-B )
 
-' "ENTER" CFA 01 BFFE , , ,
+' ENTER$ CFA 01 BFFE , , ,
 CHAR L 02 BFFE , , ,
 CHAR K 04 BFFE , , ,
 CHAR J 08 BFFE , , ,
 CHAR H 10 BFFE , , ,
 
-' "SPACE" CFA 01 7FFE , , ,
-' "SYMBOL-SHIFT" CFA 02 7FFE , , ,
+' SPACE$ CFA 01 7FFE , , ,
+' SYMBOL-SHIFT$ CFA 02 7FFE , , ,
 CHAR M 04 7FFE , , ,
 CHAR N 08 7FFE , , ,
 CHAR B 10 7FFE , , ,

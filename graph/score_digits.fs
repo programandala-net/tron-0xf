@@ -1,0 +1,221 @@
+#! /usr/bin/env gforth
+
+\ score_digits.fs
+
+\ This program creates the double-heigth score digits used in Tron 0xF
+
+\ By Marcos Cruz (programandala.net)
+
+\ 2015-04-02: Start.
+\ 2015-04-05: First working version.
+
+fpath path+ ~/forth
+
+require galope/unslurp-file.fs
+
+10 constant characters  \ characters in the font
+8 constant /character   \ bytes per character
+characters 2 * /character * chars constant /font
+create font /font allot
+font constant top-font
+font characters /character * + constant bottom-font
+
+: (>font)  ( b a n scan -- )
+  \ Save a character scan into the font.
+  \ b = character scan
+  \ a = address of the half font (top or bottom)
+  \ n = position of the character in the font (0 is the first)
+  \ scan = 0..7
+  8 swap -  swap /character * + + c!
+  ;
+: >font  ( b0..b15 n -- )
+  \ Save a character definition into the font.
+  \ b0..b7 = 8 scans of the top half of the character
+  \ b8..b15 = 8 scans of the bottom half of the character
+  \ n = position of the character in the font (0 is the first)
+  { character }
+  9 1 do  bottom-font character i (>font)  loop
+  9 1 do  top-font character i (>font)     loop
+  ;
+
+%11111110
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10111110
+0 >font
+
+%00011110
+%00010010
+%00010010
+%01110010
+%01000010
+%01000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%11111110
+1 >font
+
+%11111110
+%00000010
+%00000010
+%00000010
+%00000010
+%00001110
+%00001000
+%00111000
+%00100000
+%00100000
+%00100000
+%11100000
+%10000000
+%10000000
+%10000000
+%11111110
+2 >font
+
+%11111110
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00011110
+%00010000
+%00011110
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%11111110
+3 >font
+
+%00001110
+%00001010
+%00111010
+%00100010
+%00100010
+%11100010
+%10000010
+%11111010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%11111110
+4 >font
+
+%11111110
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+%11111110
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%11111110
+5 >font
+
+%11111110
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+%10111110
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%11111110
+6 >font
+
+%11111110
+%00000010
+%00000010
+%00001110
+%00001000
+%00001000
+%00111000
+%00100000
+%00100000
+%11100000
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+%10000000
+7 >font
+
+%11111110
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000000
+%11111110
+%00000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%11111110
+8 >font
+
+%11111110
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%10000010
+%11111010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%00000010
+%11111110
+9 >font
+
+font /font s" ~/forth/tron_0xf/graph/score_digits.bin" unslurp-file
