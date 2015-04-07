@@ -64,6 +64,7 @@ HERE: MENU-OPTIONS
 
 HERE: MENU-COMMANDS
   \ This table holds the cfa of the menu options.
+  \ XXX TODO -- sound on and off
   ' LANGUAGE CFA ,
   ' CONFIGURATION CFA ,
   ' GAME CFA ,
@@ -83,32 +84,33 @@ HERE: MENU-COMMANDS
 
 ( Menu)
 
-: INITIAL.  ( ca n -- )
+: OPTION-INITIAL  ( ca n -- )
   \ Print the initial of the menu option number n,
   \ stored in the given address.
   SWAP C@ DUP  1 INVERSE EMIT 0 INVERSE
   UPPER SWAP MENU-KEYS + C!  ;
 
-: OPTION>LINE  (  n -- )
-  \ Convert an option number to its line.
+: OPTION>LINE  (  n -- line )
+  \ Convert a menu option number to its line.
   LINES/OPTION * MENU-LINE +  ;
 
-: OPTION  ( n -- ca len )
-  \ Convert option n to its localized text.
+: OPTION>STRING  ( n -- ca len )
+  \ Convert a menu option number to its localized text.
   CELLS MENU-OPTIONS + @ EXECUTE  ;
 
-: OPTION.  ( n -- )
+: OPTION  ( n -- )
   \ Print menu option number n. 
   DUP >R
-  DUP OPTION>LINE >R OPTION  ( ca len )
-  DUP CENTERED R> SWAP       ( ca len line col )
-  2DUP AT 2OVER DROP R> INITIAL.
+  DUP OPTION>LINE >R OPTION>STRING  ( ca len )
+  DUP CENTERED R> SWAP  ( ca len line col )
+  2DUP AT 2OVER DROP R> OPTION-INITIAL
   1+ AT 1 /STRING TYPE  ;
 
-: MENU.  ( -- )
+: MENU  ( -- )
   \ Print the menu.
   \ XXX TODO -- graphics
-  WIPE  OPTIONS 0 DO  I OPTION.  LOOP  ;
+  \ XXX TODO -- sound on and off
+  WIPE  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
 
 ( Menu )
 
@@ -125,7 +127,7 @@ HERE: MENU-COMMANDS
 : VALID-OPTION  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  256 MS  ;
+  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  ;
 
 ( Boot)
 
@@ -134,6 +136,6 @@ HERE: MENU-COMMANDS
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
-  INIT BEGIN  MENU. VALID-OPTION EXECUTE  AGAIN  ;
+  INIT BEGIN  MENU VALID-OPTION EXECUTE  AGAIN  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

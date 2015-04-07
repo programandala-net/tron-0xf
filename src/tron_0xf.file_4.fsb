@@ -22,9 +22,9 @@ RUNT \ load the next part of the source
 
   \ Screen coordinates:
 10 CONSTANT KEYS-LINE     \ top line of the redefine menu
- 0 CONSTANT KEYS1-COL     \ column of player 1's keys
-10 CONSTANT KEY-DESC-COL  \ column of the key description
-20 CONSTANT KEYS2-COL     \ column of player 2's keys
+ 9 CONSTANT KEYS1-COL     \ column of player 1's keys
+12 CONSTANT KEY-DESC-COL  \ column of the key description
+23 CONSTANT KEYS2-COL     \ column of player 2's keys
 
 : +KEY-DESC-COL  ( ca len line -- ca len line col' )
   \ Relative column of a key description,

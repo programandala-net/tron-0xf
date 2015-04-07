@@ -115,6 +115,13 @@ HERE: UDG-BANK
   \ Clear the screen with the default colors.
   BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
+: WIPE-ARENA  ( -- )
+  \ Set the attributes to zero.
+  \ This is used before drawing the arena,
+  \ in order to make `SAVE-ARENA` and
+  \ `RESTORE-ARENA` work as expected.
+  ATTRIBUTES /ATTRIBUTES ERASE  ;
+
   \ Size of the screen:
 32 CONSTANT COLS
 24 CONSTANT LINES
@@ -193,7 +200,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
   .SCORE1 .SCORE2 ;
 
-( Arena)
+( Arena border, limit, frame)
 
 RED RED PAPERY + CONSTANT FRAME-COLOR
 
@@ -210,11 +217,6 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
     FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
   COLS +LOOP  ;
 
-: CLEAR-ARENA  ( -- )
-  \ Clear only the game arena.
-  BLACK PAPER
-  ARENA-LINES 1+ 1 DO  I 1 AT ARENA-COLS SPACES  LOOP ;
-
 : ARENA-LIMIT  ( -- )
 
   \ XXX TODO Change the method:
@@ -225,18 +227,47 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
   \ Draw the arena invisible limit.
   \ It's used to detect crashes.
 
-  \ XXX OLD -- This draws the pixel line below X coordinate 0,
-  \ but it doesn't work because it can not be detected by
-  \ `PLOT`:
-  \ 20673 [ COLS 2 - ] LITERAL 255 FILL
-
   7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
-  
 
-  \ Draw the arena frame:
-: FRAME  ( -- )  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
+: FRAME  ( -- )
+  \ Draw the arena frame.
+  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
 
-  \ Draw the arena:
-: ARENA  ( -- )  FRAME STATUS  ;
+
+( Arena -- save, restore, clear, draw)
+
+: SAVE-ARENA  ( -- )
+  \ Save the attributes of the central zone of the arena
+  \ (between the horizontal borders) to the first block of
+  \ RAM-disc.
+  [ TOP-FRAME-ATTRIBUTES COLS +
+    BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
+    LITERAL LO LITERAL CMOVE  ;
+
+: RESTORE-ARENA  ( -- )
+  \ Restore the attributes of the central zone of the arena
+  \ (between the horizontal borders) from the first block of
+  \ RAM-disc.
+  LO [ TOP-FRAME-ATTRIBUTES COLS +
+       BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
+       LITERAL LITERAL CMOVE  ;
+
+: CLEAR-ARENA  ( -- )
+
+  \ Clear only the game arena.
+
+  \ First, hide the arena instantaneously by restoring the
+  \ saved attributes:
+  RESTORE-ARENA
+
+  \ Second, a slower process, actually clear the players'
+  \ trails by overwritting the arena with spaces:
+  [ ARENA-LINES 1+ ] LITERAL 1 DO
+    I 1 AT [ COLS 2 - ] LITERAL  SPACES
+  LOOP  ;
+
+: ARENA  ( -- )
+  \ Draw the arena.
+  WIPE-ARENA FRAME SAVE-ARENA STATUS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

@@ -65,11 +65,9 @@ KEYS/PLAYER CELLS BUFFER: KEYS2
 40 CONSTANT #KEYS  \ number of keys of ZX Spectrum
  6 CONSTANT /KEY  \ bytes per key in the table
 
-: KEY" ( "ccc<quote>" -- n )
-  \ Parse a key name and leave a number ...
-  \ XXX TODO
-  [CHAR] " PARSE-TEXT
-  ;
+: SPECIAL-KEY-NAME  ( c1 c2 -- n )
+  \ Convert two characters to a 16-bit number.
+  256 * +  ;
 
 HERE: KEYS
 
@@ -109,7 +107,7 @@ CHAR G 10 FDFE , , ,
 
 ( KEYS table, rows CS-V 0-9 P-Y )
 
-' CAPS-SHIFT$ CFA 01 FEFE , , ,
+CHAR C CHAR S SPECIAL-KEY-NAME 01 FEFE , , ,  \ Caps Shift
 CHAR Z 02 FEFE , , ,
 CHAR X 04 FEFE , , ,
 CHAR C 08 FEFE , , ,
@@ -129,14 +127,14 @@ CHAR Y 10 DFFE , , ,
 
 ( KEYS table, rows EN-H SP-B )
 
-' ENTER$ CFA 01 BFFE , , ,
+CHAR E CHAR n SPECIAL-KEY-NAME 01 BFFE , , ,  \ Enter
 CHAR L 02 BFFE , , ,
 CHAR K 04 BFFE , , ,
 CHAR J 08 BFFE , , ,
 CHAR H 10 BFFE , , ,
 
-' SPACE$ CFA 01 7FFE , , ,
-' SYMBOL-SHIFT$ CFA 02 7FFE , , ,
+CHAR S CHAR p SPECIAL-KEY-NAME 01 7FFE , , ,  \ Space
+CHAR S CHAR S SPECIAL-KEY-NAME 02 7FFE , , ,  \ Symbol Shift
 CHAR M 04 7FFE , , ,
 CHAR N 08 7FFE , , ,
 CHAR B 10 7FFE , , ,
@@ -155,20 +153,15 @@ DECIMAL
 
 : 2C>S  ( 16bit -- ca len )
   \ Convert two characters to a string.
-  \ XXX TODO -- test
-  [ HEX ] DUP 00FF AND PAD C!
-              FF00 AND PAD 1+ C!  PAD 2 [ DECIMAL ]  ;
-  \ XXX TODO -- this alternative can work:
-  \ PAD ! PAD 2  ;
+  \ high byte of n1 = first character
+  \ low byte of n1 = second character
+  PAD ! PAD 2  ;
   
 
 : KEY-NAME  ( a -- ca len )
   \ Convert a key identifier to its key name.
   \ a = key address in the `KEYS` table
-  \ XXX TODO change the long names and the table format:
-  \ use two chars (En for Enter, SS for Symbol Shift,
-  \ CS for Caps Shift, Sp for Space) instead of strings.
-  4 + @ DUP 256 U< IF  C>S  ELSE  EXECUTE  THEN  ;
+  4 + @ DUP 256 U< IF  C>S  ELSE  2C>S  THEN  ;
 
 ( PRESSED? PRESSED )
 

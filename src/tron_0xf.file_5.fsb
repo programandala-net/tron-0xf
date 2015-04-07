@@ -16,22 +16,48 @@
 2 10 THRU
 RUNT \ load the next part of the source
   
-( Motorbikes; collisions )
+( Motorbikes: sound )
 
   \ Plotting
 
-: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ COLORPLOT 1 0 BLEEP  ;
-: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ COLORPLOT 1 100 BLEEP  ;
+DEFER NOISE
+' BLEEP IS NOISE
 
-  \ ----------------------------
-  \ Collisions
-
-: CRASH  ( -- )
-  \ Crash effect.
+: (CRASH)  ( -- )
+  \ Crash sound.
   \ XXX OLD
   \ n = color of the player who crashed
   \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
   100 50 DO  11 I BLEEP  LOOP  ;
+DEFER CRASH
+' (CRASH) IS CRASH
+
+: NOISE1  ( -- )
+  \ Noise of motorbike 1.
+  1 0 NOISE  ;
+
+: NOISE2  ( -- )
+  \ Noise of motorbike 2.
+  1 100 NOISE  ;
+
+: TOGGLE-SOUND  ( -- )
+
+  \ Toggle the sound on and off, by changing
+  \ what the deferred words `NOISE` and `CRASH`must execute.
+
+  ' NOISE DEFER@ [ ' BLEEP CFA ] LITERAL =
+  IF  ' 2DROP  ELSE  ' BLEEP  THEN  ' NOISE DEFER!
+
+  ' CRASH DEFER@ [ ' (CRASH) CFA ] LITERAL =
+  IF  ' NOOP  ELSE  ' (CRASH)  THEN  ' CRASH DEFER!  ;
+
+( Motorbikes; collisions )
+
+: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ COLORPLOT 1 0 NOISE  ;
+: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ COLORPLOT 1 100 NOISE  ;
+
+  \ ----------------------------
+  \ Collisions
 
   \ Update the scores
 999 CONSTANT MAX-SCORE
@@ -143,8 +169,8 @@ RUNT \ load the next part of the source
 : ROUND  ( -- f )
   \ f = Break key pressed?
   ROUND-INIT  FALSE  BEGIN
-    MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1
-    MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2
+    MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1 NOISE1
+    MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2 NOISE2
   ?TERMINAL UNTIL  0=  ;
 
 ( Game)
@@ -154,7 +180,7 @@ RUNT \ load the next part of the source
   WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
 
 : GAME-INIT  ( -- )
-  0 SCORE1 !  0 SCORE2 !  WIPE ARENA  ;
+  0 SCORE1 !  0 SCORE2 !  WIPE ARENA SAVE-ARENA  ;
 
 : GAME  ( -- )
   GAME-INIT BEGIN  ROUND  UNTIL  ;

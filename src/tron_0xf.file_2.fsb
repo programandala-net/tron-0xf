@@ -85,8 +85,8 @@ CHAR Y CONSTANT EN-'Y'
   ." naŭdek gradojn sen malrapidiĝo." CR
   ." Ĉiu veturilo postlasas solidan" CR
   ." lumomuron. La ludocelo estas" CR
-  ." frakasigi la kontraŭulon" CR
-  ." en la labirinton." CR ;
+  ." igi la kontraŭulon frakasi la" CR
+  ." la labirinton." CR ;
   \  <------------------------------->
 
 : EO-QUIT-MESSAGE  ( -- )
@@ -170,16 +170,16 @@ CHAR S CONSTANT ES-'Y'
   \ pfa3 = pfa of the English word (EN)
 
   \ First, create a new word in the current dictionary with the
-  \ given name, and store the three pfa (parameter field
-  \ addresses) into its own pfa:
+  \ given name, and store the three cfa (cofe field
+  \ addresses) of the given words into its own pfa:
 
-  <BUILDS , , ,
+  <BUILDS CFA , CFA , CFA ,
 
   \ Second, define what the new word will do when executed:
-  \ fetch from its pfa one of the three stored pfa depending on
-  \ the current language, and execute its word:
+  \ fetch from its pfa one of the three stored cfa depending on
+  \ the current language, and execute it:
 
-  DOES>  ( pfa )  LANG @ CELLS + @ CFA EXECUTE  ;
+  DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
 
 
 ' ES-OPTION-0$ ' EO-OPTION-0$ ' EN-OPTION-0$
@@ -233,10 +233,12 @@ LOCALIZED QUIT-MESSAGE  ( -- )
 
 CHAR N CONSTANT 'N'
 
-  \ XXX TODO this system will be changed:
-: ENTER$  ( -- ca len )  S" Enter"  ;
-: SYMBOL-SHIFT$  ( -- ca len )  S" Symbol Shift"  ;
-: CAPS-SHIFT$  ( -- ca len )  S" Caps Shift"  ;
-: SPACE$  ( -- ca len )  S" Space"  ;
+  \ 2-char names of special keys
+  \ The low byte of the number is the  first character;
+  \ the high byte of the number is the second character.
+HEX   6E45 CONSTANT ENTER$#
+      5353 CONSTANT SYMBOL-SHIFT$#
+      5343 CONSTANT CAPS-SHIFT$#
+      7053 CONSTANT SPACE$#           DECIMAL
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
