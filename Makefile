@@ -23,12 +23,8 @@ MAKEFLAGS = --no-print-directory
 
 .ONESHELL :
 
+.PHONEY : all
 all : tron_0xf.tap
-	for source in $$(ls -1 lib/*.fsb src/*.fsb) ; do
-		@make $${source%%.fsb}.tap ;
-	done ;
-	@make graph/score_digits.tap
-	@make tron_0xf.tap
 
 clean:
 	rm -f tron_0xf.tap
@@ -44,7 +40,8 @@ library_tapes=$(wildcard lib/*.tap)
 graph/score_digits.tap : graph/score_digits.fs
 	cd graph ; \
 	gforth score_digits.fs -e bye ; \
-	bin2code score_digits.bin score_digits.tap
+	bin2code score_digits.bin score_digits.tap ; \
+	cd -
 
 lib/%.tap : lib/%.fsb
 	fsb2abersoft  $<
@@ -56,7 +53,12 @@ tron_0xf.tap : \
 	$(library_tapes) \
 	$(program_tapes) \
 	graph/score_digits.tap
+	for source in $$(ls -1 lib/*.fsb src/*.fsb) ; do
+		@make $${source%%.fsb}.tap ;
+	done ;
+	@make graph/score_digits.tap
 	cat abersoft_forth.tap \
+		src/tron_0xf.loader.tap \
 		lib/extend.tap \
 		lib/strings.tap \
 		lib/time.tap \
@@ -64,6 +66,7 @@ tron_0xf.tap : \
 		lib/dot-s.tap \
 		lib/dump.tap \
 		lib/tape.tap \
+		lib/defer.tap \
 		src/tron_0xf.file_*.tap \
 		graph/font.tap \
 		graph/font.esperanto_characters.tap \
