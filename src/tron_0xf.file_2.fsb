@@ -29,10 +29,9 @@
   \ #vim %substitute@ĝ@\=nr2char(147)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-.( Loading Tron: texts )
+.( Tron: texts )
 
 2 10 THRU
-RUNT \ load the next part of the source
 
 ( English texts)
 

@@ -1,0 +1,51 @@
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth.
+
+\ tron.loader.fsb
+\ This file loads the library files.
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/es.programa.tron.html
+
+( Tron: loader )
+
+." Tron: loader "
+
+0 VARIABLE LOADED?
+
+  \ XXX INFORMER
+1 BORDER
+
+: LOADER  ( -- )
+  \ Get and compile every source file RAM-disc from tape;
+  \ the last source will load the graphics from tape,
+  \ empty the return stack and run the game.
+
+  \ XXX FIXME -- it seems the problem is not in this loader,
+  \ but in Afera.
+
+  \ Blackout after executing `MENU`:
+  \ BEGIN  FLUSH INIT-DISC LOADT 1 LOAD  LOADED? @  UNTIL
+  \ RP!  LATEST PFA CFA EXECUTE  
+  
+  \ Normal quit, but blackout after executing `MENU`:
+  \ BEGIN  FLUSH INIT-DISC LOADT 1 LOAD  LOADED? @  UNTIL
+  \ QUIT
+
+  \ Blackout after executing `MENU`:
+  \ 19 0 DO  FLUSH INIT-DISC LOADT 1 LOAD  LOOP
+  \ LATEST PFA CFA EXECUTE  
+ 
+  \ Blackout after executing `MENU`:
+  19 0 DO
+  FLUSH INIT-DISC LOADT 1 LOAD
+  \ XXX INFORMER
+  \ CR ." Files loaded: " I 1+ .
+  LOOP
+  ;
+
+LOADER
+  
+  \ vim: filetype=abersoftforth

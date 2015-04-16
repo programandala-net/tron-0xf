@@ -29,10 +29,9 @@
   \ #vim %substitute@ĝ@\=nr2char(147)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-.( Loading Tron: graphics )
+.( Tron: graphics )
 
 2 9 THRU
-RUNT \ load the next part of the source
 
 ( Plot and draw)
 

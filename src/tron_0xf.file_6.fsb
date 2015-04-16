@@ -10,19 +10,21 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-.( Loading Tron: menu )
+.( Tron: menu )
 
 2 10 THRU
 
-  .( Loading Tron -- font and UDG)
- 
+  CR .( Tron -- font and UDG)
+
+CLS
 FONT /FONT 0 0 TAPE>MEM              \ main font
 EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
 ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
 DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
 
-  \ XXX TMP -- debugging message:
-CR ." Type RUN to start." CR
++SCREEN
+QUIT \ XXX TMP
+RUN
 
 ( Menu -- data )
 
@@ -82,8 +84,9 @@ HERE: MENU-COMMANDS
   \ Wait until a key to be pressed and return its code.
   BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
 
-( Menu)
+( Menu options)
 
+: ~~ 2 BORDER .S KEY DROP 0 BORDER 1000 MS ;
 : OPTION-INITIAL  ( ca n -- )
   \ Print the initial of the menu option number n,
   \ stored in the given address.
@@ -98,13 +101,25 @@ HERE: MENU-COMMANDS
   \ Convert a menu option number to its localized text.
   CELLS MENU-OPTIONS + @ EXECUTE  ;
 
+( Option)
+
 : OPTION  ( n -- )
   \ Print menu option number n. 
-  DUP >R
-  DUP OPTION>LINE >R OPTION>STRING  ( ca len )
-  DUP CENTERED R> SWAP  ( ca len line col )
-  2DUP AT 2OVER DROP R> OPTION-INITIAL
-  1+ AT 1 /STRING TYPE  ;
+  DUP >R              ( n ) ( R: n )
+  DUP OPTION>LINE     ( n line ) 
+  >R OPTION>STRING    ( ca len ) ( R: n line )
+  DUP CENTERED        ( ca len col )
+  R> SWAP             ( ca len line col ) ( R: n )
+  2DUP AT
+  \ XXX -- it works at least until here
+  2OVER
+  ~~ \ XXX -- this point is not reached
+  DROP R>    ( ca len line col ca n ) ( R: )
+  OPTION-INITIAL      ( ca len line col )
+  ~~ 1+ AT               ( ca len )
+  1 /STRING TYPE  ;
+
+( Menu)
 
 : MENU  ( -- )
   \ Print the menu.
@@ -112,7 +127,7 @@ HERE: MENU-COMMANDS
   \ XXX TODO -- sound on and off
   WIPE  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
 
-( Menu )
+( Valid option)
 
 : VALID-OPTION?  ( c -- cfa true | false )
   \ Is the given character a valid menu option in the current
@@ -132,7 +147,7 @@ HERE: MENU-COMMANDS
 ( Boot)
 
 : INIT  ( -- )
-  WHOLE-SCREEN  +FONT  ;
+  +SCREEN  +FONT  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.

@@ -10,10 +10,9 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-.( Loading Tron: keyboard )
+.( Tron: keyboard )
 
 2 10 THRU
-RUNT \ load the next part of the source
 
 ( Y/N )
 

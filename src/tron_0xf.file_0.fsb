@@ -10,14 +10,13 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-.( Loading Tron: data )
+.( Tron: data )
 
 \ 4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
 
 FORTH DEFINITIONS
 
 1 4 +THRU
-RUNT \ load the next part of the source
 
 ( ZX Spectrum specific)
 

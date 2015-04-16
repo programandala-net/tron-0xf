@@ -10,11 +10,10 @@
 
 \ http://programandala.net/es.programa.tron.html
 
-.( Loading Tron: game )
+.( Tron: game )
 
 
 2 10 THRU
-RUNT \ load the next part of the source
   
 ( Motorbikes: sound )
 
