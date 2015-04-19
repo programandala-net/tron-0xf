@@ -1,35 +1,37 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_04.yn_input.fsb
 
-\ tron.file_3.fsb
-\ This file is the 4th part of the source.
-\ It contains the some basic words related to the keyboard.
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: Y/N )
-
-: PAUSE  ( -- )
-  \ Wait for a key press.
-  PRESS-ANY-KEY$ <TYPE> AKEY  ;
+.( Tron 0xF: Y/N input )
 
 : UPPER  ( c -- c' )
   \ Convert a char in the range a-z to uppercase
   \ (Warning: no check!, chars other than a-z get corrupted).
   223 AND  ;
 
-  \ Is the given char a valid answer for a Y/N question?
-: Y/N?  ( c -- flag )  UPPER DUP 'Y' = SWAP 'N' = OR  ;
+: PAUSE  ( -- )
+  \ Wait for a key press.
+  PRESS-ANY-KEY$ <TYPE> AKEY  ;
 
+: Y/N?  ( c -- f )
+  \ Is the given char a valid answer for a Y/N question?
+  UPPER DUP 'Y' = SWAP 'N' = OR  ;
+
+: Y/N  ( -- c )
   \ Wait for a valid key press for a Y/N question
   \ and return its code.
-: Y/N  ( -- c )  BEGIN  AKEY DUP Y/N? 0= WHILE DROP REPEAT  ;
+  BEGIN  AKEY DUP Y/N? 0=  WHILE  DROP  REPEAT  ;
 
+: NO?  ( -- f )
   \ Wait for a valid key press for a Y/N question
   \ and return a flag: Was it "N" or "n"?
-: NO?  ( -- flag )  Y/N UPPER 'N' =  ;
+  Y/N UPPER 'N' =  ;
 
 

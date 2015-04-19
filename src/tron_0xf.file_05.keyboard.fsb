@@ -1,9 +1,8 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_05.keyboard.fsb
 
-\ tron.file_4.fsb
-\ This file is the 5th part of the source.
-\ It contains the basic words to manage the keyboard.
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
@@ -150,12 +149,12 @@ DECIMAL
 
 ( PRESSED? PRESSED )
 
-: PRESSED?  ( a -- flag )
+: PRESSED?  ( a -- f )
   \ Is a key pressed?
   \ a = key address in the `KEYS` table
   2@ INP AND 0=  ;
 
-: (PRESSED)  ( -- a true | false )
+: (PRESSED)  ( -- a tf | ff )
   \ Check all keys.
   \ a = key address in the `KEYS` table
   FALSE  \ default

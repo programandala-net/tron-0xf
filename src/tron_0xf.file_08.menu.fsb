@@ -1,16 +1,15 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_08.menu.fsb
 
-\ tron.file_7.fsb
-\ This file is the 8th part of the source.
-\ It contains the main menu.
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: menu )
+.( Tron 0xF: menu )
 
 2 10 THRU
 
@@ -25,7 +24,7 @@ ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
 DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
 -SCROLL
 
-LOADED? ON  \ tell the loader's loop it's finished
+CR .S LOADED? CR .S ON  \ tell the loader's loop it's finished
 
 ( Menu -- data )
 
@@ -124,7 +123,7 @@ HERE: MENU-COMMANDS
 
 ( Valid option)
 
-: VALID-OPTION?  ( c -- cfa true | false )
+: VALID-OPTION?  ( c -- cfa tf | ff )
   \ Is the given character a valid menu option in the current
   \ language? If so, return the cfa of its associated command
   \ and a true flag; otherwise return a false flag.

@@ -1,16 +1,15 @@
-\ Tron 0xF (version 20150406)
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_01.data.fsb
 
-\ tron.file_0.fsb
-\ This file is the 1st part of the source.
-\ It contains the main constants and variables.
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: data )
+.( Tron 0xF: data )
 
 FORTH DEFINITIONS
 
@@ -46,7 +45,7 @@ FORTH DEFINITIONS
 VOCABULARY TRON IMMEDIATE
 TRON DEFINITIONS
 
-2 VALUE PLAYERS  \ default number of players
+3 VALUE PLAYERS  \ default number of players
 
 ( Player 1 data)
 

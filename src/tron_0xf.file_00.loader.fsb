@@ -1,15 +1,15 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron_0xf.file_00.loader.fsb
 
-\ tron.loader.fsb
-\ This file loads the library files.
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-( Tron: loader )
+( Tron 0xF: loader )
 
 0 PAPER 4 INK 0 BORDER CLS
 

@@ -1,16 +1,15 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_06.player_keys.fsb
 
-\ tron.file_5.fsb
-\ This file is the 6th part of the source.
-\ It contains the words to redefine the player keys.
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: player keys )
+.( Tron 0xF: player keys )
 
   \ Max lenght of a player key description in any language:
 11 CONSTANT /KEY-DESC

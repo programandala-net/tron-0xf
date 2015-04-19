@@ -1,9 +1,8 @@
-\ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth.
+\ tron.file_02.graphics.fsb
 
-\ tron.file_1.fsb
-\ This file is the 2nd part of the source.
-\ It contains the graphic words.
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
@@ -29,7 +28,7 @@
   \ #vim %substitute@ĝ@\=nr2char(147)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-.( Tron: graphics )
+.( Tron 0xF: graphics )
 
 2 9 THRU
 
