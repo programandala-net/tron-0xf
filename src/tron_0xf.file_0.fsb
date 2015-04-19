@@ -8,15 +8,13 @@
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
-\ http://programandala.net/es.programa.tron.html
+\ http://programandala.net/en.program.tron_0xf.html
 
 .( Tron: data )
 
-\ 4 INK 0 PAPER 0 BORDER CLS  ( XXX TMP )
-
 FORTH DEFINITIONS
 
-1 4 +THRU
+2 7 THRU
 
 ( ZX Spectrum specific)
 
@@ -34,10 +32,11 @@ FORTH DEFINITIONS
 
   \ Color constants
 
-0 CONSTANT BLACK   2 CONSTANT RED    5 CONSTANT CYAN
-6 CONSTANT YELLOW  7 CONSTANT WHITE
+0 CONSTANT BLACK    1 CONSTANT BLUE
+2 CONSTANT RED      3 CONSTANT MAGENTA
+4 CONSTANT GREEN    5 CONSTANT CYAN
+6 CONSTANT YELLOW   7 CONSTANT WHITE
 
-  \ XXX used?
 : PAPERY  ( color -- paper-attribute )  8 *  ;
 
 ( Vocabulary)
@@ -47,16 +46,37 @@ FORTH DEFINITIONS
 VOCABULARY TRON IMMEDIATE
 TRON DEFINITIONS
 
-( Player configuration)
+2 VALUE PLAYERS  \ default number of players
 
-     \ Player 1            Player 2
-     1 VARIABLE HUMAN1     0 VARIABLE HUMAN2  \ human? XXX TODO
-     0 VARIABLE SCORE1     0 VARIABLE SCORE2  \ scores
-     0 VARIABLE XC1        0 VARIABLE XC2     \ X coordinate
-     0 VARIABLE YC1        0 VARIABLE YC2     \ Y coordinate
-     0 VARIABLE XINC1      0 VARIABLE XINC2   \ X inc (-1..1)
-     0 VARIABLE YINC1      0 VARIABLE YINC2   \ Y inc (-1..1)
-YELLOW CONSTANT COLOR1  CYAN CONSTANT COLOR2  \ ink color
+( Player 1 data)
+
+     1 VARIABLE HUMAN1  \ human? XXX TODO
+     0 VARIABLE SCORE1  \ scores
+     0 VARIABLE XC1     \ X coordinate
+     0 VARIABLE YC1     \ Y coordinate
+     0 VARIABLE XINC1   \ X inc (-1..1)
+     0 VARIABLE YINC1   \ Y inc (-1..1)
+YELLOW CONSTANT COLOR1  \ ink color
+
+( Player 2 data)
+
+     1 VARIABLE HUMAN2  \ human? XXX TODO
+     0 VARIABLE SCORE2  \ scores
+     0 VARIABLE XC2     \ X coordinate
+     0 VARIABLE YC2     \ Y coordinate
+     0 VARIABLE XINC2   \ X inc (-1..1)
+     0 VARIABLE YINC2   \ Y inc (-1..1)
+  CYAN CONSTANT COLOR2  \ ink color
+
+( Player 3 data)
+
+     1 VARIABLE HUMAN3  \ human? XXX TODO
+     0 VARIABLE SCORE3  \ scores
+     0 VARIABLE XC3     \ X coordinate
+     0 VARIABLE YC3     \ Y coordinate
+     0 VARIABLE XINC3   \ X inc (-1..1)
+     0 VARIABLE YINC3   \ Y inc (-1..1)
+ GREEN CONSTANT COLOR3  \ ink color
 
 ( Languages)
 

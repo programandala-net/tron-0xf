@@ -3,154 +3,220 @@
 
 \ tron.file_6.fsb
 \ This file is the 7th part of the source.
-\ It contains the main menu.
+\ It contains the game kernel.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
-\ http://programandala.net/es.programa.tron.html
+\ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: menu )
+.( Tron: game )
+
 
 2 10 THRU
-
-  CR .( Tron -- font and UDG)
-
-CLS
-FONT /FONT 0 0 TAPE>MEM              \ main font
-EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
-ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
-DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
-
-+SCREEN
-QUIT \ XXX TMP
-RUN
-
-( Menu -- data )
-
-5 CONSTANT OPTIONS       \ number of menu options
-7 CONSTANT MENU-LINE     \ line of the first menu option
-2 CONSTANT LINES/OPTION  \ lines occupied per menu option
-
-  \ A table to store the menu keys, that change depending
-  \ on the current language. The table is updated every
-  \ time the menu is printed.
-OPTIONS BUFFER: MENU-KEYS
   
-  \ Table that holds the cfa of the words
-  \ that return the localized texts of the menu options.
-HERE: MENU-OPTIONS
-  ' OPTION-0$ CFA , ' OPTION-1$ CFA , ' OPTION-2$ CFA ,
-  ' OPTION-3$ CFA , ' OPTION-4$ CFA ,
+( Sound )
 
-( Menu -- language and commands)
+  \ Plotting
 
-: +UDG  ( n -- )
-  \ Set the UDG bank required by the given language number.
-  CELLS UDG-BANK + @ SYS-UDG !  ;
+DEFER NOISE  ' BLEEP IS NOISE
 
-: -UDG  ( -- )
-  \ Set the default UDG bank.
-  UDG SYS-UDG !  ;
+: (CRASH)  ( -- )
+  \ Crash sound.
+  \ XXX OLD
+  \ n = color of the player who crashed
+  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
+  100 50 DO  11 I BLEEP  LOOP  ;
+
+DEFER CRASH  ' (CRASH) IS CRASH
+
+: NOISE1  ( -- )  1 0 NOISE  ;
+: NOISE2  ( -- )  1 100 NOISE  ;
+: NOISE3  ( -- )  1 200 NOISE  ;
+
+: TOGGLE-SOUND  ( -- )
+
+  \ Toggle the sound on and off, by changing
+  \ what the deferred words `NOISE` and `CRASH` must execute.
+
+  ' NOISE DEFER@ [ ' BLEEP CFA ] LITERAL =
+  IF  ' 2DROP  ELSE  ' BLEEP  THEN  ' NOISE DEFER!
+
+  ' CRASH DEFER@ [ ' (CRASH) CFA ] LITERAL =
+  IF  ' NOOP  ELSE  ' (CRASH)  THEN  ' CRASH DEFER!  ;
+
+( Collisions )
+
+999 CONSTANT MAX-SCORE
+
+: SCORE!   ( n a -- )
+  \ Update with 'n' the score stored in 'a';
+  \ if the result is greater that the maximum score,
+  \ reset the score to zero.
+  DUP @ ROT + DUP MAX-SCORE > IF  0=  THEN  SWAP !  ;
+
+: SCORE1+  ( n -- )  SCORE1 SCORE! .SCORE1  ;
+: SCORE2+  ( n -- )  SCORE2 SCORE! .SCORE2  ;
+: SCORE3+  ( n -- )  SCORE3 SCORE! .SCORE3  ;
+
+: CRASH1?  ( -- f )
+  XINC1 @ XINC1 @ OR  XC1 @ YC1 @ POINT AND  ;
+: CRASH2?  ( -- f )
+  XINC2 @ XINC2 @ OR  XC2 @ YC2 @ POINT AND  ;
+: CRASH3?  ( -- f )
+  XINC3 @ XINC3 @ OR  XC3 @ YC3 @ POINT AND  ;
+
+: +SCORES  ( -- )
+  \ Increase the score of the players that didn't crash.
+  CRASH1? 0= SCORE1+  CRASH2? 0= SCORE2+  CRASH3? 0= SCORE3+  ;
+
+( Rudder 1)
+
+  \ ----------------------------
+ \ Coordinate increments
+ 
+ \ XXX TODO
+ \ 0  1 2CONSTANT UP-INCS
+ \ 0 -1 2CONSTANT DOWN-INCS
+ \ -1  0 2CONSTANT LEFT-INCS
+ \ 0 -1 2CONSTANT RIGHT-INCS
+
+: RUDDER1  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 1.
+
+  UP-K1 @ PRESSED?
+  IF   XINC1 @ IF   0 XINC1 !  1 YINC1 !  THEN  EXIT  THEN
+  DOWN-K1 @ PRESSED?
+  IF   XINC1 @ IF   0 XINC1 ! -1 YINC1 !  THEN  EXIT  THEN
+  LEFT-K1 @ PRESSED?
+  IF   YINC1 @ IF  -1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN
+  RIGHT-K1 @ PRESSED?
+  IF   YINC1 @ IF   1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN  ;
+
+: MOVE1  ( -- )
+
+  \ Update the coordinates of player 1.
+
+  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
+
+( Rudder 2)
+
+: RUDDER2  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 2.
+
+  UP-K2 @ PRESSED?
+  IF   XINC2 @ IF   0 XINC2 !  1 YINC2 !  THEN  EXIT  THEN
+  DOWN-K2 @ PRESSED?
+  IF   XINC2 @ IF   0 XINC2 ! -1 YINC2 !  THEN  EXIT  THEN
+  LEFT-K2 @ PRESSED?
+  IF   YINC2 @ IF  -1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN
+  RIGHT-K2 @ PRESSED?
+  IF   YINC2 @ IF   1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN  ;
   
-: LANGUAGE  ( -- )
-  \ Change the current language.
-  LANG @ 1+ DUP LANGS U< *  DUP LANG ! +UDG  ;
+: MOVE2  ( -- ) 
+  
+  \ Update the coordinates of player 2.
 
-: ABOUT  ( -- )
-  \ XXX TMP
-  \ XXX TODO
-  WIPE  TITLE CREDITS INSTRUCTIONS PAUSE  ;
+  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
 
-: FINISH  ( -- )  WIPE QUIT-MESSAGE -FONT -UDG QUIT  ;
+( Rudder 3)
 
-HERE: MENU-COMMANDS
-  \ This table holds the cfa of the menu options.
-  \ XXX TODO -- sound on and off
-  ' LANGUAGE CFA ,
-  ' CONFIGURATION CFA ,
-  ' GAME CFA ,
-  ' ABOUT CFA ,
-  ' FINISH CFA ,
+: RUDDER3  ( -- n1 n2 )
 
-( Menu -- effect and key)
+  \ Update the coordinate increments of player 3.
 
-: MENU-EFFECT  ( -- )
-  \ Do some screen effect on the menu.
-  \ XXX TODO
-  ;
+  UP-K3 @ PRESSED?
+  IF   XINC3 @ IF   0 XINC3 !  1 YINC3 !  THEN  EXIT  THEN
+  DOWN-K3 @ PRESSED?
+  IF   XINC3 @ IF   0 XINC3 ! -1 YINC3 !  THEN  EXIT  THEN
+  LEFT-K3 @ PRESSED?
+  IF   YINC3 @ IF  -1 XINC3 !  0 YINC3 !  THEN  EXIT  THEN
+  RIGHT-K3 @ PRESSED?
+  IF   YINC3 @ IF   1 XINC3 !  0 YINC3 !  THEN  EXIT  THEN  ;
+  
+: MOVE3  ( -- ) 
+  
+  \ Update the coordinates of player 3.
 
-: MENU-KEY  ( -- c )
-  \ Wait until a key to be pressed and return its code.
-  BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
+  RUDDER3  XINC3 @ XC3 +!  YINC3 @ YC3 +!  ;
 
-( Menu options)
+  \ ( Stop)
 
-: ~~ 2 BORDER .S KEY DROP 0 BORDER 1000 MS ;
-: OPTION-INITIAL  ( ca n -- )
-  \ Print the initial of the menu option number n,
-  \ stored in the given address.
-  SWAP C@ DUP  1 INVERSE EMIT 0 INVERSE
-  UPPER SWAP MENU-KEYS + C!  ;
+  \ XXX OLD
 
-: OPTION>LINE  (  n -- line )
-  \ Convert a menu option number to its line.
-  LINES/OPTION * MENU-LINE +  ;
+  \ : >ATTRIBUTES<  ( -- )
+  \   \ Invert the screen attributes.
+  \   ATTRIBUTES /ATTRIBUTES BOUNDS
 
-: OPTION>STRING  ( n -- ca len )
-  \ Convert a menu option number to its localized text.
-  CELLS MENU-OPTIONS + @ EXECUTE  ;
+  \   DO  I C@ INVERT 63 AND I C!  LOOP  ;
+  \ : FADE  ( -- )
+  \   \ Fade the screen attributes by reducting the ink values.
+  \   [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
+  \   DO  I C@ DUP 3 AND 1 - SWAP 248 AND OR I C!  LOOP  ;
+  \ : UNFADE  ( -- )
+  \   \ Unfade the screen attributes by increasing the ink values.
+  \   [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
+  \   DO  I C@ DUP 3 AND 1 + SWAP 248 AND OR I C!  LOOP  ;
+  \ : STOP  ( -- )
+  \   \ Stop the game and ask what to do.
+  \   >ATTRIBUTES<
+  \   ;
 
-( Option)
+( READY )
 
-: OPTION  ( n -- )
-  \ Print menu option number n. 
-  DUP >R              ( n ) ( R: n )
-  DUP OPTION>LINE     ( n line ) 
-  >R OPTION>STRING    ( ca len ) ( R: n line )
-  DUP CENTERED        ( ca len col )
-  R> SWAP             ( ca len line col ) ( R: n )
-  2DUP AT
-  \ XXX -- it works at least until here
-  2OVER
-  ~~ \ XXX -- this point is not reached
-  DROP R>    ( ca len line col ca n ) ( R: )
-  OPTION-INITIAL      ( ca len line col )
-  ~~ 1+ AT               ( ca len )
-  1 /STRING TYPE  ;
+: READY2  ( -- )
+  \ Set the players' positions before a new round,
+  \ for two players.
+   40 XC1 ! 88 YC1 !   1 XINC1 ! 0 YINC1 !
+  215 XC2 ! 88 YC2 !  -1 XINC2 ! 0 YINC2 !  ;
 
-( Menu)
+: READY3  ( -- )
+  \ Set the players' positions before a new round,
+  \ for three players.
+   40 XC1 ! 127 YC1 !   1 XINC1 ! 0 YINC1 !
+  215 XC2 ! 127 YC2 !  -0 XINC2 ! 0 YINC2 !
+   83 XC3 !  40 YC3 !   0 XINC3 ! 1 YINC3 !  ;
 
-: MENU  ( -- )
-  \ Print the menu.
-  \ XXX TODO -- graphics
-  \ XXX TODO -- sound on and off
-  WIPE  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
+HERE: (READY)
+  \ Execution table for `READY`.
+  ' READY2 CFA , ' READY3 CFA ,
+  
+: READY  ( -- )
+  \ Set the players' positions before a new round.
+  PLAYERS 2 - CELLS (READY) + @ EXECUTE  ;
 
-( Valid option)
+( Round)
 
-: VALID-OPTION?  ( c -- cfa true | false )
-  \ Is the given character a valid menu option in the current
-  \ language? If so, return the cfa of its associated command
-  \ and a true flag; otherwise return a false flag.
-  UPPER FALSE SWAP  \ default exit flag
-  OPTIONS 0 DO
-    DUP MENU-KEYS I + C@ =  \ valid key?
-    IF  2DROP MENU-COMMANDS I CELLS + @ TRUE DUP LEAVE  THEN
-  LOOP  DROP  ;
+: PAINT1  ( -- )  COLOR1 INK XC1 @ YC1 @ PLOT  ;
+: PAINT2  ( -- )  COLOR2 INK XC2 @ YC2 @ PLOT  ;
+: PAINT3  ( -- )  COLOR3 INK XC3 @ YC3 @ PLOT  ;
 
-: VALID-OPTION  ( -- cfa )
-  \ Wait until a valid menu option is chosen and then
-  \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  ;
+: ROUND-INIT  ( -- )
+  CLEAR-ARENA READY PAINT1 PAINT2 PAINT3  AKEY DROP  ;
 
-( Boot)
+: ROUND  ( -- f )
+  \ f = Break key pressed?
+  ROUND-INIT  FALSE  BEGIN
+    MOVE1 MOVE2 MOVE3
+    CRASH1? IF  CRASH +SCORES EXIT  THEN
+    CRASH2? IF  CRASH +SCORES EXIT  THEN
+    CRASH3? IF  CRASH +SCORES EXIT  THEN
+    PAINT1 NOISE1  PAINT2 NOISE2  PAINT3 NOISE3
+  ?TERMINAL UNTIL  0=  ;
 
-: INIT  ( -- )
-  +SCREEN  +FONT  ;
+( Game)
 
-: RUN  ( -- )
-  \ Endless loop: Show the menu and execute the chosen option.
-  INIT BEGIN  MENU VALID-OPTION EXECUTE  AGAIN  ;
+: ENOUGH?  ( -- flag )
+  \ No more rounds?
+  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+
+: GAME-INIT  ( -- )
+  SCORE1 OFF  SCORE2 OFF  SCORE3 OFF
+  CLS0 ARENA SAVE-ARENA  ;
+
+: GAME  ( -- )
+  GAME-INIT BEGIN  ROUND  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

@@ -3,12 +3,12 @@
 
 \ tron.file_1.fsb
 \ This file is the 2nd part of the source.
-\ It contains the graphics words.
+\ It contains the graphic words.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
-\ http://programandala.net/es.programa.tron.html
+\ http://programandala.net/en.program.tron_0xf.html
 
   \ -----------------------------------------------------------
   \ fsb directives
@@ -39,21 +39,23 @@
   \ Draw a relative line (from the current plot position).
   SYS-Y-COORD C@ + SWAP SYS-X-COORD C@ + SWAP DRAW  ;
 
-: XY>ATTRA  ( x y -- a )
-  \ Convert a pixel coordinate to its attribute address.
-  175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
+  \ XXX OLD
 
-: COLORPLOT  ( color x y -- )
-  \ Plot a pixel with the given color.
-  \ There's a bug in Abersoft Forth: `PLOT` does not work
-  \ when `INK` is used before. That's why this word
-  \ is needed.
-  2DUP PLOT XY>ATTRA C!  ;
+  \ : XY>ATTRA  ( x y -- a )
+  \   \ Convert a pixel coordinate to its attribute address.
+  \   175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
+
+  \ : COLORPLOT  ( color x y -- )
+  \   \ Plot a pixel with the given color.
+  \   \ There's a bug in Abersoft Forth: `PLOT` does not work
+  \   \ when `INK` is used before. That's why this word
+  \   \ is needed.
+  \   2DUP PLOT XY>ATTRA C!  ;
 
 ( Font)
 
   \ The game fonts are loaded from tape at the end of the
-  \ compilation.  Words are defined to switch them on and off:
+  \ compilation. Words are defined to switch them on and off:
 
 768 CONSTANT /FONT  \ size in bytes
 /FONT BUFFER: FONT
@@ -81,7 +83,8 @@
 : +HI-DIGITS  ( -- )
   \ Set the high part of the double height digits
   \ as the current font.
-  [ DIGITS-UDG DIGITS>CHARS ] LITERAL SYS-CHARS ! ;
+  [ DIGITS-UDG DIGITS>CHARS ] LITERAL
+  SYS-CHARS ! ;
 
 : +LO-DIGITS  ( -- )
   \ Set the low part of the double height digits
@@ -110,11 +113,11 @@ HERE: UDG-BANK
 
 ( Screen -- generic)
 
-: WIPE  ( -- )
+: CLS0  ( -- )
   \ Clear the screen with the default colors.
   BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
-: WIPE-ARENA  ( -- )
+: -ATTRIBUTES  ( -- )
   \ Set the attributes to zero.
   \ This is used before drawing the arena,
   \ in order to make `SAVE-ARENA` and
@@ -171,7 +174,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 ( Title and status bar)
 
 : TITLE  ( -- )
-  RED INK S" TRON" <TYPE> CR CR WHITE INK  ;
+  RED INK S" Tron 0xF" <TYPE> CR CR WHITE INK  ;
 
   \ XXX OLD -- version with normal characters
   \ : SCORE. ( a color line column -- )
@@ -182,7 +185,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 22 CONSTANT STATUS-LINE
 
-  : SCORE. ( a column color -- )
+: SCORE. ( a column color -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits and double height characters. 
@@ -192,12 +195,13 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 : .SCORE1  ( -- )  SCORE1 0 COLOR1 SCORE.  ;
 : .SCORE2  ( -- )  SCORE2 29 COLOR2 SCORE.  ;
+: .SCORE3  ( -- )  SCORE3 14 COLOR3 SCORE.  ;
 
 : STATUS  ( -- )
 
   \ Show the status bar at the current cursor position.
 
-  .SCORE1 .SCORE2 ;
+  .SCORE1 .SCORE2 PLAYERS 3 < ?EXIT .SCORE3  ;
 
 ( Arena border, limit, frame)
 
@@ -217,15 +221,7 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
   COLS +LOOP  ;
 
 : ARENA-LIMIT  ( -- )
-
-  \ XXX TODO Change the method:
-  \ Use block graphics to draw a 4-pixel width border,
-  \ and draw the bottom border with 4 lines, directly
-  \ in memory.
-
-  \ Draw the arena invisible limit.
-  \ It's used to detect crashes.
-
+  \ Draw the arena invisible limit, needed to detect crashes.
   7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
 
 : FRAME  ( -- )
@@ -267,6 +263,6 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
 
 : ARENA  ( -- )
   \ Draw the arena.
-  WIPE-ARENA FRAME SAVE-ARENA STATUS  ;
+  -ATTRIBUTES FRAME SAVE-ARENA STATUS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

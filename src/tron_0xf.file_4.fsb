@@ -3,131 +3,170 @@
 
 \ tron.file_4.fsb
 \ This file is the 5th part of the source.
-\ It contains the words to redefine the player keys.
+\ It contains the basic words to manage the keyboard.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
-\ http://programandala.net/es.programa.tron.html
+\ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: player keys )
+.( Tron: keyboard )
 
 2 10 THRU
 
-( Keyboard: redefine keys )
+( Player keys )
 
-  \ Max lenght of a player key description in any language:
-11 CONSTANT /KEY-DESC
+4 CONSTANT KEYS/PLAYER  \ keys defined per player
 
-  \ Screen coordinates:
-10 CONSTANT KEYS-LINE     \ top line of the redefine menu
- 9 CONSTANT KEYS1-COL     \ column of player 1's keys
-12 CONSTANT KEY-DESC-COL  \ column of the key description
-23 CONSTANT KEYS2-COL     \ column of player 2's keys
+  \ Every player has a table with her defined keys, in the
+  \ following order: up, down, left, right.  They are the key
+  \ addresses in the `KEYS` table.
 
-: +KEY-DESC-COL  ( ca len line -- ca len line col' )
-  \ Relative column of a key description,
-  \ depending on its lenght; it's relative to
-  \ the absolute column of the key descriptions.
-  OVER /KEY-DESC SWAP -  ;
+  \ The constants hold the specific addresses in the table
+  \ and thus they work like variables.
 
-: (TYPE-KEY-DESC)  ( ca len line col -- )
-  \ Print a key description, on the given line,
-  \ col columns from the left margin of its region.
-  KEY-DESC-COL + AT TYPE  ;
+KEYS/PLAYER CELLS BUFFER: KEYS1
+  KEYS1           CONSTANT UP-K1
+  KEYS1 CELL+     CONSTANT DOWN-K1
+  KEYS1 2 CELLS + CONSTANT LEFT-K1
+  KEYS1 3 CELLS + CONSTANT RIGHT-K1
 
-: |KEY-DESC|  ( ca len line -- )
-  \ Print a key description, on the given line,
-  \ centered on its region.
-  +KEY-DESC-COL 2 / (TYPE-KEY-DESC)  ;
+( Player keys )
 
-: |KEY-DESC  ( ca len line -- )
-  \ Print a key description, on the given line,
-  \ at the left of its region.
-  0 (TYPE-KEY-DESC)  ;
+KEYS/PLAYER CELLS BUFFER: KEYS2
+  KEYS2           CONSTANT UP-K2
+  KEYS2 CELL+     CONSTANT DOWN-K2
+  KEYS2 2 CELLS + CONSTANT LEFT-K2
+  KEYS2 3 CELLS + CONSTANT RIGHT-K2
 
-: KEY-DESC|  ( ca len line -- )
-  \ Print a key description, on the given line,
-  \ at the right of its region.
-  OVER KEY-DESC-COL SWAP - (TYPE-KEY-DESC)  ;
+KEYS/PLAYER CELLS BUFFER: KEYS3
+  KEYS3           CONSTANT UP-K3
+  KEYS3 CELL+     CONSTANT DOWN-K3
+  KEYS3 2 CELLS + CONSTANT LEFT-K3
+  KEYS3 3 CELLS + CONSTANT RIGHT-K3
+
+( KEYS table )
+
+40 CONSTANT #KEYS  \ number of keys of ZX Spectrum
+ 6 CONSTANT /KEY  \ bytes per key in the table
+
+: SPECIAL-KEY-NAME  ( c1 c2 -- n )
+  \ Convert two characters to a 16-bit number.
+  256 * +  ;
+
+HERE: KEYS
+
+  \ Every element of the `KEYS` table 
+  \ has the following structure:
+
+  \ +0 = port of the keyboard row (2 bytes)
+  \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
+  \ +4 = key name (2 bytes): one letter (the second byte
+  \      will be ignored) or two letters.
   
-( Keyboard: redefine keys )
+  \ Elements are identified by their absolute address in the
+  \ table. The players' default keys are set while the table is
+  \ being compiled.
 
-HERE: KEY-DESCS
-  \  This table contains the cfa of the four texts used
-  \  to describe the player keys. When executed, they
-  \  return a string in the current language.
-  ' UP$ CFA , ' DOWN$ CFA , ' LEFT$ CFA , ' RIGHT$ CFA ,
+HEX
 
-: KEY-DESC  ( n -- ca len )
-  \ Get the n element from the `KEY-DESCS` table.
-  CELLS KEY-DESCS + @ EXECUTE  ;
+( KEYS table, rows 1-5 Q-T A-G )
+
+CHAR 1 01 F7FE , , ,
+CHAR 2 02 F7FE , , ,
+CHAR 3 04 F7FE , , ,
+CHAR 4 08 F7FE , , ,  HERE LEFT-K1 ! \ the "5" key
+CHAR 5 10 F7FE , , , 
+
+CHAR Q 01 FBFE , , ,  HERE UP-K2 !    \ XXX TMP
+CHAR W 02 FBFE , , ,  HERE DOWN-K2 !  \ XXX TMP
+CHAR E 04 FBFE , , ,  HERE LEFT-K2 !  \ XXX TMP
+CHAR R 08 FBFE , , ,  HERE RIGHT-K2 ! \ XXX TMP
+CHAR T 10 FBFE , , ,
+
+CHAR A 01 FDFE , , ,  HERE UP-K3 !    \ XXX TMP
+CHAR S 02 FDFE , , ,  HERE DOWN-K3 !  \ XXX TMP
+CHAR D 04 FDFE , , ,  HERE LEFT-K3 !  \ XXX TMP
+CHAR F 08 FDFE , , ,  HERE RIGHT-K3 ! \ XXX TMP
+CHAR G 10 FDFE , , ,
+
+( KEYS table, rows CS-V 0-9 P-Y )
+
+CHAR C CHAR S SPECIAL-KEY-NAME 01 FEFE , , ,  \ Caps Shift
+CHAR Z 02 FEFE , , ,
+CHAR X 04 FEFE , , ,
+CHAR C 08 FEFE , , ,
+CHAR V 10 FEFE , , ,
+
+CHAR 0 01 EFFE , , ,
+CHAR 9 02 EFFE , , ,  HERE RIGHT-K1 !  \ the "8" key
+CHAR 8 04 EFFE , , ,  HERE UP-K1 !     \ the "7" key
+CHAR 7 08 EFFE , , ,  HERE DOWN-K1 !   \ the "6" key
+CHAR 6 10 EFFE , , ,
+
+CHAR P 01 DFFE , , ,
+CHAR O 02 DFFE , , ,
+CHAR I 04 DFFE , , ,
+CHAR U 08 DFFE , , ,
+CHAR Y 10 DFFE , , ,
+
+( KEYS table, rows EN-H SP-B )
+
+CHAR E CHAR n SPECIAL-KEY-NAME 01 BFFE , , ,  \ Enter
+CHAR L 02 BFFE , , ,
+CHAR K 04 BFFE , , ,
+CHAR J 08 BFFE , , ,
+CHAR H 10 BFFE , , ,
+
+CHAR S CHAR p SPECIAL-KEY-NAME 01 7FFE , , ,  \ Space
+CHAR S CHAR S SPECIAL-KEY-NAME 02 7FFE , , ,  \ Symbol Shift
+CHAR M 04 7FFE , , ,
+CHAR N 08 7FFE , , ,
+CHAR B 10 7FFE , , ,
+
+DECIMAL
+
+( K#>A KEY-NAME )
+
+: K#>A  ( n -- a )
+  \ Convert a key number to its address in `KEYS`.
+  /KEY * KEYS +  ;
+
+: C>S  ( c -- ca len )
+  \ Convert a character to a string.
+  PAD C! PAD 1  ;
+
+: 2C>S  ( 16bit -- ca len )
+  \ Convert two characters to a string.
+  \ high byte of n1 = first character
+  \ low byte of n1 = second character
+  PAD ! PAD 2  ;
   
-: KEY.  ( line col a -- )
-  \ Print a key name.
-  \ a = key address in the keys table
-  \ line col = screen coordinates
-  KEY-NAME 2SWAP AT TYPE  ;
 
-: PLAYER-KEY.  ( line col a n -- )
-  \ Print a player key name.
-  \ line col = screen coordinates
-  \ a = player keys table
-  \ n = key number in the table 
-  CELLS + @ KEY.  ;
+: KEY-NAME  ( a -- ca len )
+  \ Convert a key identifier to its key name.
+  \ a = key address in the `KEYS` table
+  4 + @ DUP 256 U< IF  C>S  ELSE  2C>S  THEN  ;
 
-( Keyboard: redefine menu )
+( PRESSED? PRESSED )
 
-: REDEFINE-MENU  ( -- )
-  \ Show the menu to redefine the keys.
-  CLS
-  KEYS/PLAYER 0 DO
-    I KEYS-LINE +
-    DUP KEYS1-COL KEYS1 I PLAYER-KEY.
-    DUP I KEY-DESC ROT |KEY-DESC|
-        KEYS2-COL KEYS2 I PLAYER-KEY.
-  LOOP  ;
+: PRESSED?  ( a -- flag )
+  \ Is a key pressed?
+  \ a = key address in the `KEYS` table
+  2@ INP AND 0=  ;
 
-( Keyboard: redefine keys )
+: (PRESSED)  ( -- a true | false )
+  \ Check all keys.
+  \ a = key address in the `KEYS` table
+  FALSE  \ default
+  [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
+    I PRESSED? IF  DROP I TRUE LEAVE  THEN
+  /KEY +LOOP  ;
 
-: REDEFINED?  ( -- f )
-  \ Ask for confirmation: Are the redefined keys ok?
-  \ XXX TODO
-  TRUE  ;
-
-0 VARIABLE (COL)
-0 VARIABLE (KEYS)
-
-: KEY-PROMPT  ( -- )
-  \ Show a prompt, asking for a key to be pressed.
-  1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
-
-: KEY#>COORDS  ( n -- line col )
-  \ Convert a player key number (0...3)
-  \ to its cursor coordinates.
-  KEYS-LINE + (COL) @ ;
-
-: (REDEFINE)  ( col a -- )
-  \ Redefine the keys of a player.
-  \ col = column (`KEYS1-COL` or `KEYS2-COL`)
-  \ a = player keys table (`KEYS1` or `KEYS2`)
-  (KEYS) !  (COL) !  \ locals
-  KEYS/PLAYER 0 DO
-    I KEY#>COORDS AT KEY-PROMPT
-    1000 MS PRESSED DUP (KEYS) @ I CELLS + !
-    I KEY#>COORDS ROT KEY.
-  LOOP  ;
-
-( Keyboard: redefine keys )
-
-: REDEFINE1  ( -- )  KEYS1-COL KEYS1 (REDEFINE)  ;
-: REDEFINE2  ( -- )  KEYS2-COL KEYS2 (REDEFINE)  ;
-
-: CONFIGURATION  ( -- )
-  \ Redefine the keys.
-  \ XXX TODO -- human/machine options
-  REDEFINE-MENU
-  BEGIN  REDEFINE1 REDEFINE2 REDEFINED?  UNTIL  ;
+: PRESSED  ( -- a )
+  \ Check all keys forever until one of them is pressed
+  \ and return its identifier.
+  \ a = key address in the `KEYS` table
+  BEGIN  (PRESSED) ?EXIT  AGAIN  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
-

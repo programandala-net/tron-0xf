@@ -3,185 +3,134 @@
 
 \ tron.file_5.fsb
 \ This file is the 6th part of the source.
-\ It contains the game kernel.
+\ It contains the words to redefine the player keys.
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ Licencia/Permesilo/License: GPL 3
 
-\ http://programandala.net/es.programa.tron.html
+\ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron: game )
+.( Tron: player keys )
 
+  \ Max lenght of a player key description in any language:
+11 CONSTANT /KEY-DESC
+
+  \ Screen coordinates:
+10 CONSTANT KEYS-LINE     \ top line of the redefine menu
+ 0 CONSTANT KEY-DESC-COL  \ column of the key description
+15 CONSTANT KEYS1-COL     \ column of player 1's keys
+23 CONSTANT KEYS2-COL     \ column of player 2's keys
+31 CONSTANT KEYS3-COL     \ column of player 3's keys
 
 2 10 THRU
+
+( Print key descriptions )
+
+: +KEY-DESC-COL  ( ca len line -- ca len line col' )
+  \ Relative column of a key description,
+  \ depending on its lenght; it's relative to
+  \ the absolute column of the key descriptions.
+  OVER /KEY-DESC SWAP -  ;
+
+: (TYPE-KEY-DESC)  ( ca len line col -- )
+  \ Print a key description, on the given line,
+  \ col columns from the left margin of its region.
+  KEY-DESC-COL + AT TYPE  ;
+
+: |KEY-DESC|  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ centered on its region.
+  +KEY-DESC-COL 2 / (TYPE-KEY-DESC)  ;
+
+: |KEY-DESC  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ at the left of its region.
+  0 (TYPE-KEY-DESC)  ;
+
+: KEY-DESC|  ( ca len line -- )
+  \ Print a key description, on the given line,
+  \ at the right of its region.
+  OVER KEY-DESC-COL SWAP - (TYPE-KEY-DESC)  ;
   
-( Motorbikes: sound )
+( Keyboard: redefine keys )
 
-  \ Plotting
+HERE: KEY-DESCS
+  \  This table contains the cfa of the four texts used
+  \  to describe the player keys. When executed, they
+  \  return a string in the current language.
+  ' UP$ CFA , ' DOWN$ CFA , ' LEFT$ CFA , ' RIGHT$ CFA ,
 
-DEFER NOISE
-' BLEEP IS NOISE
-
-: (CRASH)  ( -- )
-  \ Crash sound.
-  \ XXX OLD
-  \ n = color of the player who crashed
-  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
-  100 50 DO  11 I BLEEP  LOOP  ;
-DEFER CRASH
-' (CRASH) IS CRASH
-
-: NOISE1  ( -- )
-  \ Noise of motorbike 1.
-  1 0 NOISE  ;
-
-: NOISE2  ( -- )
-  \ Noise of motorbike 2.
-  1 100 NOISE  ;
-
-: TOGGLE-SOUND  ( -- )
-
-  \ Toggle the sound on and off, by changing
-  \ what the deferred words `NOISE` and `CRASH`must execute.
-
-  ' NOISE DEFER@ [ ' BLEEP CFA ] LITERAL =
-  IF  ' 2DROP  ELSE  ' BLEEP  THEN  ' NOISE DEFER!
-
-  ' CRASH DEFER@ [ ' (CRASH) CFA ] LITERAL =
-  IF  ' NOOP  ELSE  ' (CRASH)  THEN  ' CRASH DEFER!  ;
-
-( Motorbikes; collisions )
-
-: PAINT1  ( -- )  COLOR1 XC1 @ YC1 @ COLORPLOT 1 0 NOISE  ;
-: PAINT2  ( -- )  COLOR2 XC2 @ YC2 @ COLORPLOT 1 100 NOISE  ;
-
-  \ ----------------------------
-  \ Collisions
-
-  \ Update the scores
-999 CONSTANT MAX-SCORE
-: +SCORE   ( a -- )
-  \ Update the score stored in the given variable.
-  DUP @ 1+ DUP MAX-SCORE > IF  DROP 0  THEN  SWAP !  ;
-: +SCORE1  ( -- )  SCORE1 +SCORE .SCORE1  ;
-: +SCORE2  ( -- )  SCORE2 +SCORE .SCORE2  ;
-
-  \ Collisions
-: CRASH1  ( -- )  CRASH +SCORE2  ;
-: CRASH2  ( -- )  CRASH +SCORE1  ;
-
-  \ Check collisions
-
-  \ XXX abandoned method:
-  \ 0 VARIABLE CRASHED?
-  \ : CRASH?   ( x y -- flag )  POINT DUP CRASHED? !  ;
-  \ : CRASH1?  ( -- flag )  XC1 @ YC1 @ CRASH?  ;
-  \ : CRASH2?  ( -- flag )  XC2 @ YC2 @ CRASH?  ;
-
- \ : CRASH-WARNING  ( -- )  \ XXX INFORMER
- \  S" CRASH" 0 <LINETYPE> KEY DROP 5 0 <LINESPACES> ;
-: CRASH1?  ( -- flag )  XC1 @ YC1 @ POINT  ;
-: CRASH2?  ( -- flag )  XC2 @ YC2 @ POINT  ;
-
-( Rudder 1)
-
-  \ ----------------------------
- \ Coordinate increments
- 
- \ XXX -- not used yet
- \ 0  1 2CONSTANT UP-INC
- \ 0 -1 2CONSTANT DOWN-INC
- \ -1  0 2CONSTANT LEFT-INC
- \ 0 -1 2CONSTANT RIGHT-INC
-
-: RUDDER1  ( -- n1 n2 )
-
-  \ Update the coordinate increments of player 1.
-
-  UP-K1 @ PRESSED?
-  IF   XINC1 @ IF   0 XINC1 !  1 YINC1 !  THEN  EXIT  THEN
-  DOWN-K1 @ PRESSED?
-  IF   XINC1 @ IF   0 XINC1 ! -1 YINC1 !  THEN  EXIT  THEN
-  LEFT-K1 @ PRESSED?
-  IF   YINC1 @ IF  -1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN
-  RIGHT-K1 @ PRESSED?
-  IF   YINC1 @ IF   1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN  ;
-
-: MOVE1  ( -- )
-
-  \ Update the coordinates of player 1.
-
-  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
-
-( Rudder 2)
-
-: RUDDER2  ( -- n1 n2 )
-
-  \ Update the coordinate increments of player 2.
-
-  UP-K2 @ PRESSED?
-  IF   XINC2 @ IF   0 XINC2 !  1 YINC2 !  THEN  EXIT  THEN
-  DOWN-K2 @ PRESSED?
-  IF   XINC2 @ IF   0 XINC2 ! -1 YINC2 !  THEN  EXIT  THEN
-  LEFT-K2 @ PRESSED?
-  IF   YINC2 @ IF  -1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN
-  RIGHT-K2 @ PRESSED?
-  IF   YINC2 @ IF   1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN  ;
+: KEY-DESC  ( n -- ca len )
+  \ Get the n element from the `KEY-DESCS` table.
+  CELLS KEY-DESCS + @ EXECUTE  ;
   
-: MOVE2  ( -- ) 
-  
-  \ Update the coordinates of player 2.
+: KEY.  ( line col a -- )
+  \ Print a key name.
+  \ a = key address in the keys table
+  \ line col = screen coordinates
+  KEY-NAME 2SWAP AT  TYPE  ;
 
-  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+: PLAYER-KEY.  ( line col a n -- )
+  \ Print a player key name.
+  \ line col = screen coordinates
+  \ a = player keys table
+  \ n = key number in the table 
+  CELLS + @ KEY.  ;
 
-( Stop)
+( Keyboard: redefine keys )
 
+: REDEFINED?  ( -- f )
+  \ Ask for confirmation: Are the redefined keys ok?
   \ XXX TODO
+  TRUE  ;
 
-: >ATTRIBUTES<  ( -- )
-  \ Invert the screen attributes.
-  ATTRIBUTES /ATTRIBUTES BOUNDS
-  DO  I C@ INVERT 63 AND I C!  LOOP  ;
-: FADE  ( -- )
-  \ Fade the screen attributes by reducting the ink values.
-  [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
-  DO  I C@ DUP 3 AND 1 - SWAP 248 AND OR I C!  LOOP  ;
-: UNFADE  ( -- )
-  \ Unfade the screen attributes by increasing the ink values.
-  [ ATTRIBUTES /ATTRIBUTES BOUNDS SWAP ] LITERAL LITERAL
-  DO  I C@ DUP 3 AND 1 + SWAP 248 AND OR I C!  LOOP  ;
-: STOP  ( -- )
-  \ Stop the game and ask what to do.
-  >ATTRIBUTES<
-  ;
+0 VARIABLE (COL)  0 VARIABLE (KEYS)  \ locals
 
-( Round)
+: KEY-PROMPT  ( line col -- )
+  \ Show a prompt, asking for a key to be pressed.
+  2DUP AT 2 SPACES
+  AT 1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
 
-: READY  ( -- )
-  \ Set the players positions before a new round.
-  40 XC1 ! 88 YC1 ! 215 XC2 ! 88 YC2 !
-  1 XINC1 ! 0 YINC1 ! -1 XINC2 ! 0 YINC2 !  ;
+: KEY#>COORDS  ( n -- line col )
+  \ Convert a player key number (0...3)
+  \ to its cursor coordinates.
+  KEYS-LINE + (COL) @ ;
 
-: ROUND-INIT  ( -- )
-  CLEAR-ARENA READY PAINT1 PAINT2  AKEY DROP  ;
+: (REDEFINE)  ( col a -- )
+  \ Redefine the keys of a player.
+  \ col = column (`KEYS1-COL` or `KEYS2-COL`)
+  \ a = player keys table (`KEYS1` or `KEYS2`)
+  (KEYS) !  (COL) !  \ locals
+  KEYS/PLAYER 0 DO
+    I KEY#>COORDS KEY-PROMPT
+    1000 MS PRESSED DUP (KEYS) @ I CELLS + !
+    I KEY#>COORDS ROT KEY.
+  LOOP  ;
 
-: ROUND  ( -- f )
-  \ f = Break key pressed?
-  ROUND-INIT  FALSE  BEGIN
-    MOVE1 CRASH1? IF  CRASH1 EXIT  THEN  PAINT1 NOISE1
-    MOVE2 CRASH2? IF  CRASH2 EXIT  THEN  PAINT2 NOISE2
-  ?TERMINAL UNTIL  0=  ;
+( Keyboard: redefine menu )
 
-( Game)
+: REDEFINE-MENU  ( -- )
+  \ Show the menu to redefine the keys.
+  CLS
+  KEYS/PLAYER 0 DO
+    I KEYS-LINE +
+    DUP I KEY-DESC ROT |KEY-DESC
+    DUP KEYS1-COL KEYS1 I PLAYER-KEY.
+    DUP KEYS2-COL KEYS2 I PLAYER-KEY.
+        KEYS3-COL KEYS3 I PLAYER-KEY.
+  LOOP  ;
 
-: ENOUGH?  ( -- flag )
-  \ No more rounds?
-  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+( Keyboard: redefine keys )
 
-: GAME-INIT  ( -- )
-  0 SCORE1 !  0 SCORE2 !  WIPE ARENA SAVE-ARENA  ;
+: REDEFINE1  ( -- )  KEYS1-COL KEYS1 (REDEFINE)  ;
+: REDEFINE2  ( -- )  KEYS2-COL KEYS2 (REDEFINE)  ;
+: REDEFINE3  ( -- )  KEYS3-COL KEYS3 (REDEFINE)  ;
 
-: GAME  ( -- )
-  GAME-INIT BEGIN  ROUND  UNTIL  ;
+: CONFIGURATION  ( -- )
+  \ Redefine the keys.
+  \ XXX TODO -- human/machine options
+  REDEFINE-MENU
+  BEGIN  REDEFINE1 REDEFINE2 REDEFINE3 REDEFINED?  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
+
