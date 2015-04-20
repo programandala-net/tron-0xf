@@ -13,37 +13,6 @@
 
 2 10 THRU
 
-  \ XXX OLD
-  \ ( Player keys )
-
-
-  \   \ Every player has a table with her defined keys, in the
-  \   \ following order: up, down, left, right.  They are the key
-  \   \ addresses in the `KEYS` table.
-
-  \   \ The constants hold the specific addresses in the table
-  \   \ and thus they work like variables.
-
-  \ KEYS/PLAYER CELLS BUFFER: KEYS1
-  \   KEYS1           CONSTANT UP-K1
-  \   KEYS1 CELL+     CONSTANT DOWN-K1
-  \   KEYS1 2 CELLS + CONSTANT LEFT-K1
-  \   KEYS1 3 CELLS + CONSTANT RIGHT-K1
-
-  \ ( Player keys )
-
-  \ KEYS/PLAYER CELLS BUFFER: KEYS2
-  \   KEYS2           CONSTANT UP-K2
-  \   KEYS2 CELL+     CONSTANT DOWN-K2
-  \   KEYS2 2 CELLS + CONSTANT LEFT-K2
-  \   KEYS2 3 CELLS + CONSTANT RIGHT-K2
-
-  \ KEYS/PLAYER CELLS BUFFER: KEYS3
-  \   KEYS3           CONSTANT UP-K3
-  \   KEYS3 CELL+     CONSTANT DOWN-K3
-  \   KEYS3 2 CELLS + CONSTANT LEFT-K3
-  \   KEYS3 3 CELLS + CONSTANT RIGHT-K3
-
 ( KEYS table )
 
 40 CONSTANT #KEYS   \ number of keys of ZX Spectrum

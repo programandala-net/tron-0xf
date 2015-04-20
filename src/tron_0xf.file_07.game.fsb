@@ -11,7 +11,7 @@
 
 .( Tron 0xF: game )
 
-2 4 THRU
+2 5 THRU
   
 ( Paint )
 
@@ -21,49 +21,58 @@
 
 ( Crash effect )
 
-: (CRASH)  ( x y -- )
-  \ Crash sound.
-  \ XXX OLD
-  \ n = color of the player who crashed
-  \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
-  175 - 8 / SWAP 8 / SWAP  1 GOVER 1 BRIGHT
-  100 50 DO
-    2DUP AT SPACE
-    11 I BLEEP
-  LOOP  2DROP  0 GOVER 0 BRIGHT  ;
+: COORDS>CURSOR  ( x y -- line col )
+  \ Convert graphic coordinates to line and column.
+  175 SWAP - 8 / SWAP 8 /  ;
 
-DEFER CRASH  ( -- )  ' (CRASH) IS CRASH
+: (CRASH-NOISE)  ( -- )
+  \ XXX TODO
+  100 50 DO  11 I BLEEP  LOOP  ;
 
-: CRASH1  ( -- )  PAINT2 PAINT3 XC1 2@ CRASH  ;
-: CRASH2  ( -- )  PAINT1 PAINT3 XC2 2@ CRASH  ;
-: CRASH3  ( -- )  PAINT1 PAINT2 YC3 2@ CRASH  ;
+DEFER CRASH-NOISE  ( -- )  ' (CRASH-NOISE) IS CRASH-NOISE
+
+: CRASH  ( x y -- )
+  \ Crash effect.
+  \ XXX TODO
+  2DROP  \ XXX TMP
+  \ COORDS>CURSOR AT [CHAR] * WHITE INK EMIT  \ XXX TMP
+  (CRASH-NOISE) 
+  \ AKEY DROP  \ XXX TMP
+  ;
+
+  \ XXX TODO paint all?
+: CRASH1  ( -- )  PAINT2 PAINT3 COORDS1 2@ CRASH  ;
+: CRASH2  ( -- )  PAINT1 PAINT3 COORDS2 2@ CRASH  ;
+: CRASH3  ( -- )  PAINT1 PAINT2 COORDS3 2@ CRASH  ;
 
 ( Noise )
 
-DEFER NOISE  ' BLEEP IS NOISE
+DEFER MOTOR-NOISE  ' BLEEP IS MOTOR-NOISE
 
-: NOISE1  ( -- )  1 0 NOISE  ;
-: NOISE2  ( -- )  1 100 NOISE  ;
-: NOISE3  ( -- )  1 200 NOISE  ;
+: MOTOR-NOISE1  ( -- )  1 000 MOTOR-NOISE  ;
+: MOTOR-NOISE2  ( -- )  1 100 MOTOR-NOISE  ;
+: MOTOR-NOISE3  ( -- )  1 200 MOTOR-NOISE  ;
 
 : TOGGLE-SOUND  ( -- )
 
-  \ Toggle the sound on and off, by changing
-  \ what the deferred words `NOISE` and `CRASH` must execute.
+  \ Toggle the sound on and off, by changing what the deferred
+  \ words `MOTOR-NOISE` and `CRASH-NOISE` must execute.
 
-  ' NOISE DEFER@ [ ' BLEEP CFA ] LITERAL =
-  IF  ' 2DROP  ELSE  ' BLEEP  THEN  ' NOISE DEFER!
+  ' MOTOR-NOISE DEFER@ [ ' BLEEP CFA ] LITERAL =
+  IF    ' 2DROP
+  ELSE  ' BLEEP  THEN  ' MOTOR-NOISE DEFER!
 
-  ' CRASH DEFER@ [ ' (CRASH) CFA ] LITERAL =
-  IF  ' NOOP  ELSE  ' (CRASH)  THEN  ' CRASH DEFER!  ;
+  ' CRASH-NOISE DEFER@ [ ' (CRASH-NOISE) CFA ] LITERAL =
+  IF    ' NOOP
+  ELSE  ' (CRASH-NOISE)  THEN  ' CRASH-NOISE DEFER!  ;
 
 ( Collisions )
 
 999 CONSTANT MAX-SCORE
 
 : SCORE!   ( n a -- )
-  \ Update with 'n' the score stored in 'a';
-  \ if the result is greater that the maximum score,
+  \ Update the score stored in 'a' with 'n';
+  \ if the result is greater than the maximum score,
   \ reset the score to zero.
   DUP @ ROT + DUP MAX-SCORE > IF  0=  THEN  SWAP !  ;
 
@@ -73,13 +82,13 @@ DEFER NOISE  ' BLEEP IS NOISE
 
 : CRASH1?  ( -- f )
   \ XINC1 @ XINC1 @ OR  XC1 @ YC1 @ POINT AND  ;
-  XC1 @ YC1 @ POINT  ;
+  COORDS1 2@ POINT  ;
 : CRASH2?  ( -- f )
   \ XINC2 @ XINC2 @ OR  XC2 @ YC2 @ POINT AND  ;
-  XC2 @ YC2 @ POINT  ;
+  COORDS2 2@ POINT  ;
 : CRASH3?  ( -- f )
   \ XINC3 @ XINC3 @ OR  XC3 @ YC3 @ POINT AND  ;
-  XC3 @ YC3 @ POINT  ;
+  COORDS3 2@ POINT  ;
 
 : +SCORES  ( -- )
   \ Increase the score of the players that didn't crash.
