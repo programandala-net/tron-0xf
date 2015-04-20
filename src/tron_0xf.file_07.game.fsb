@@ -1,4 +1,4 @@
-\ tron.file_07.game.fsb
+\ tron_0xf.file_07.game.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -11,23 +11,36 @@
 
 .( Tron 0xF: game )
 
-
-2 10 THRU
+2 4 THRU
   
-( Sound )
+( Paint )
 
-  \ Plotting
+: PAINT1  ( -- )  COLOR1 @ INK XC1 @ YC1 @ PLOT  ;
+: PAINT2  ( -- )  COLOR2 @ INK XC2 @ YC2 @ PLOT  ;
+: PAINT3  ( -- )  COLOR3 @ INK XC3 @ YC3 @ PLOT  ;
 
-DEFER NOISE  ' BLEEP IS NOISE
+( Crash effect )
 
-: (CRASH)  ( -- )
+: (CRASH)  ( x y -- )
   \ Crash sound.
   \ XXX OLD
   \ n = color of the player who crashed
   \  INK 1 BRIGHT 175 YC1 @ - 8 / XC1 @ 8 / AT SPACE
-  100 50 DO  11 I BLEEP  LOOP  ;
+  175 - 8 / SWAP 8 / SWAP  1 GOVER 1 BRIGHT
+  100 50 DO
+    2DUP AT SPACE
+    11 I BLEEP
+  LOOP  2DROP  0 GOVER 0 BRIGHT  ;
 
-DEFER CRASH  ' (CRASH) IS CRASH
+DEFER CRASH  ( -- )  ' (CRASH) IS CRASH
+
+: CRASH1  ( -- )  PAINT2 PAINT3 XC1 2@ CRASH  ;
+: CRASH2  ( -- )  PAINT1 PAINT3 XC2 2@ CRASH  ;
+: CRASH3  ( -- )  PAINT1 PAINT2 YC3 2@ CRASH  ;
+
+( Noise )
+
+DEFER NOISE  ' BLEEP IS NOISE
 
 : NOISE1  ( -- )  1 0 NOISE  ;
 : NOISE2  ( -- )  1 100 NOISE  ;
@@ -59,152 +72,17 @@ DEFER CRASH  ' (CRASH) IS CRASH
 : SCORE3+  ( n -- )  SCORE3 SCORE! .SCORE3  ;
 
 : CRASH1?  ( -- f )
-  XINC1 @ XINC1 @ OR  XC1 @ YC1 @ POINT AND  ;
+  \ XINC1 @ XINC1 @ OR  XC1 @ YC1 @ POINT AND  ;
+  XC1 @ YC1 @ POINT  ;
 : CRASH2?  ( -- f )
-  XINC2 @ XINC2 @ OR  XC2 @ YC2 @ POINT AND  ;
+  \ XINC2 @ XINC2 @ OR  XC2 @ YC2 @ POINT AND  ;
+  XC2 @ YC2 @ POINT  ;
 : CRASH3?  ( -- f )
-  XINC3 @ XINC3 @ OR  XC3 @ YC3 @ POINT AND  ;
+  \ XINC3 @ XINC3 @ OR  XC3 @ YC3 @ POINT AND  ;
+  XC3 @ YC3 @ POINT  ;
 
 : +SCORES  ( -- )
   \ Increase the score of the players that didn't crash.
   CRASH1? 0= SCORE1+  CRASH2? 0= SCORE2+  CRASH3? 0= SCORE3+  ;
-
-( Rudder 1)
-
-  \ ----------------------------
- \ Coordinate increments
- 
- \ XXX TODO
- \ 0  1 2CONSTANT UP-INCS
- \ 0 -1 2CONSTANT DOWN-INCS
- \ -1  0 2CONSTANT LEFT-INCS
- \ 0 -1 2CONSTANT RIGHT-INCS
-
-: HUMAN-RUDDER1  ( -- n1 n2 )
-
-  \ Update the coordinate increments of player 1.
-  \ Human control.
-
-  UP-K1 @ PRESSED?
-  IF   XINC1 @ IF   0 XINC1 !  1 YINC1 !  THEN  EXIT  THEN
-  DOWN-K1 @ PRESSED?
-  IF   XINC1 @ IF   0 XINC1 ! -1 YINC1 !  THEN  EXIT  THEN
-  LEFT-K1 @ PRESSED?
-  IF   YINC1 @ IF  -1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN
-  RIGHT-K1 @ PRESSED?
-  IF   YINC1 @ IF   1 XINC1 !  0 YINC1 !  THEN  EXIT  THEN  ;
-
-DEFER RUDDER1  ( -- )  ' HUMAN-RUDDER1 IS RUDDER1
-
-: MOVE1  ( -- )
-
-  \ Update the coordinates of player 1.
-
-  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
-
-( Rudder 2)
-
-: HUMAN-RUDDER2  ( -- )
-
-  \ Update the coordinate increments of player 2.
-  \ Human control.
-
-  UP-K2 @ PRESSED?
-  IF   XINC2 @ IF   0 XINC2 !  1 YINC2 !  THEN  EXIT  THEN
-  DOWN-K2 @ PRESSED?
-  IF   XINC2 @ IF   0 XINC2 ! -1 YINC2 !  THEN  EXIT  THEN
-  LEFT-K2 @ PRESSED?
-  IF   YINC2 @ IF  -1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN
-  RIGHT-K2 @ PRESSED?
-  IF   YINC2 @ IF   1 XINC2 !  0 YINC2 !  THEN  EXIT  THEN  ;
-  
-DEFER RUDDER2  ( -- )  ' HUMAN-RUDDER2 IS RUDDER2
-
-: MOVE2  ( -- ) 
-  
-  \ Update the coordinates of player 2.
-
-  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
-
-( Rudder 3)
-
-: HUMAN-RUDDER3  ( -- n1 n2 )
-
-  \ Update the coordinate increments of player 3.
-  \ Human control.
-
-  UP-K3 @ PRESSED?
-  IF   XINC3 @ IF   0 XINC3 !  1 YINC3 !  THEN  EXIT  THEN
-  DOWN-K3 @ PRESSED?
-  IF   XINC3 @ IF   0 XINC3 ! -1 YINC3 !  THEN  EXIT  THEN
-  LEFT-K3 @ PRESSED?
-  IF   YINC3 @ IF  -1 XINC3 !  0 YINC3 !  THEN  EXIT  THEN
-  RIGHT-K3 @ PRESSED?
-  IF   YINC3 @ IF   1 XINC3 !  0 YINC3 !  THEN  EXIT  THEN  ;
-  
-DEFER RUDDER3  ( -- )  ' HUMAN-RUDDER3 IS RUDDER3
-
-: MOVE3  ( -- ) 
-  
-  \ Update the coordinates of player 3.
-
-  RUDDER3  XINC3 @ XC3 +!  YINC3 @ YC3 +!  ;
-
-( READY )
-
-: READY2  ( -- )
-  \ Set the players' positions before a new round,
-  \ for two players.
-   40 XC1 ! 88 YC1 !   1 XINC1 ! 0 YINC1 !
-  215 XC2 ! 88 YC2 !  -1 XINC2 ! 0 YINC2 !  ;
-
-: READY3  ( -- )
-  \ Set the players' positions before a new round,
-  \ for three players.
-   40 XC1 ! 127 YC1 !   1 XINC1 ! 0 YINC1 !
-  215 XC2 ! 127 YC2 !  -0 XINC2 ! 0 YINC2 !
-  127 XC3 !  40 YC3 !   0 XINC3 ! 1 YINC3 !  ;
-
-HERE: (READY)
-  \ Execution table for `READY`.
-  ' READY2 CFA , ' READY3 CFA ,
-  
-: READY  ( -- )
-  \ Set the players' positions before a new round.
-  PLAYERS 2 - CELLS (READY) + @ EXECUTE  ;
-
-( Round)
-
-: PAINT1  ( -- )  COLOR1 INK XC1 @ YC1 @ PLOT  ;
-: PAINT2  ( -- )  COLOR2 INK XC2 @ YC2 @ PLOT  ;
-: PAINT3  ( -- )  COLOR3 INK XC3 @ YC3 @ PLOT  ;
-
-: ROUND-INIT  ( -- )
-  CLEAR-ARENA READY PAINT1 PAINT2 PAINT3  AKEY DROP  ;
-
-: ROUND  ( -- f )
-  \ f = Break key pressed?
-  ROUND-INIT
-  FALSE  \ default exit flag
-  BEGIN
-    MOVE1 MOVE2 MOVE3
-    CRASH1? IF  CRASH +SCORES EXIT  THEN
-    CRASH2? IF  CRASH +SCORES EXIT  THEN
-    CRASH3? IF  CRASH +SCORES EXIT  THEN
-    PAINT1 NOISE1  PAINT2 NOISE2  PAINT3 NOISE3
-  ?TERMINAL UNTIL  0=  ;
-
-( Game)
-
-: ENOUGH?  ( -- f )
-  \ No more rounds?
-  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
-
-: GAME-INIT  ( -- )
-  SCORE1 OFF  SCORE2 OFF  SCORE3 OFF
-  CLS0 ARENA SAVE-ARENA  ;
-
-: GAME  ( -- )
-  GAME-INIT BEGIN  ROUND  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

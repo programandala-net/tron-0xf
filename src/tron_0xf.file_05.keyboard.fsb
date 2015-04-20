@@ -1,4 +1,4 @@
-\ tron.file_05.keyboard.fsb
+\ tron_0xf.file_05.keyboard.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -13,41 +13,41 @@
 
 2 10 THRU
 
-( Player keys )
+  \ XXX OLD
+  \ ( Player keys )
 
-4 CONSTANT KEYS/PLAYER  \ keys defined per player
 
-  \ Every player has a table with her defined keys, in the
-  \ following order: up, down, left, right.  They are the key
-  \ addresses in the `KEYS` table.
+  \   \ Every player has a table with her defined keys, in the
+  \   \ following order: up, down, left, right.  They are the key
+  \   \ addresses in the `KEYS` table.
 
-  \ The constants hold the specific addresses in the table
-  \ and thus they work like variables.
+  \   \ The constants hold the specific addresses in the table
+  \   \ and thus they work like variables.
 
-KEYS/PLAYER CELLS BUFFER: KEYS1
-  KEYS1           CONSTANT UP-K1
-  KEYS1 CELL+     CONSTANT DOWN-K1
-  KEYS1 2 CELLS + CONSTANT LEFT-K1
-  KEYS1 3 CELLS + CONSTANT RIGHT-K1
+  \ KEYS/PLAYER CELLS BUFFER: KEYS1
+  \   KEYS1           CONSTANT UP-K1
+  \   KEYS1 CELL+     CONSTANT DOWN-K1
+  \   KEYS1 2 CELLS + CONSTANT LEFT-K1
+  \   KEYS1 3 CELLS + CONSTANT RIGHT-K1
 
-( Player keys )
+  \ ( Player keys )
 
-KEYS/PLAYER CELLS BUFFER: KEYS2
-  KEYS2           CONSTANT UP-K2
-  KEYS2 CELL+     CONSTANT DOWN-K2
-  KEYS2 2 CELLS + CONSTANT LEFT-K2
-  KEYS2 3 CELLS + CONSTANT RIGHT-K2
+  \ KEYS/PLAYER CELLS BUFFER: KEYS2
+  \   KEYS2           CONSTANT UP-K2
+  \   KEYS2 CELL+     CONSTANT DOWN-K2
+  \   KEYS2 2 CELLS + CONSTANT LEFT-K2
+  \   KEYS2 3 CELLS + CONSTANT RIGHT-K2
 
-KEYS/PLAYER CELLS BUFFER: KEYS3
-  KEYS3           CONSTANT UP-K3
-  KEYS3 CELL+     CONSTANT DOWN-K3
-  KEYS3 2 CELLS + CONSTANT LEFT-K3
-  KEYS3 3 CELLS + CONSTANT RIGHT-K3
+  \ KEYS/PLAYER CELLS BUFFER: KEYS3
+  \   KEYS3           CONSTANT UP-K3
+  \   KEYS3 CELL+     CONSTANT DOWN-K3
+  \   KEYS3 2 CELLS + CONSTANT LEFT-K3
+  \   KEYS3 3 CELLS + CONSTANT RIGHT-K3
 
 ( KEYS table )
 
-40 CONSTANT #KEYS  \ number of keys of ZX Spectrum
- 6 CONSTANT /KEY  \ bytes per key in the table
+40 CONSTANT #KEYS   \ number of keys of ZX Spectrum
+ 6 CONSTANT /KEY    \ bytes per key in the table
 
 : SPECIAL-KEY-NAME  ( c1 c2 -- n )
   \ Convert two characters to a 16-bit number.
@@ -60,48 +60,52 @@ HERE: KEYS
 
   \ +0 = port of the keyboard row (2 bytes)
   \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
-  \ +4 = key name (2 bytes): one letter (the second byte
-  \      will be ignored) or two letters.
+  \ +4 = key name (2 bytes): one letter (the second byte is
+  \      zero and will be ignored) or two letters.
   
-  \ Elements are identified by their absolute address in the
-  \ table. The players' default keys are set while the table is
-  \ being compiled.
+  \ Keys are identified by their absolute address in the table.
+  \ The players' default keys are set while the table is being
+  \ compiled, by storing the dictionary pointer into a player
+  \ variable.
 
 HEX
 
-( KEYS table, rows 1-5 Q-T A-G )
+( KEYS table, rows 1-5 Q-T )
 
-CHAR 1 01 F7FE , , ,
-CHAR 2 02 F7FE , , ,
-CHAR 3 04 F7FE , , ,
-CHAR 4 08 F7FE , , ,  HERE LEFT-K1 ! \ the "5" key
+                      HERE LEFT-K1 !   \ "1"
+CHAR 1 01 F7FE , , ,  HERE RIGHT-K1 !  \ "2"
+CHAR 2 02 F7FE , , ,  HERE UP-K1 !     \ "3"
+CHAR 3 04 F7FE , , ,  HERE DOWN-K1 !   \ "4"
+CHAR 4 08 F7FE , , ,
 CHAR 5 10 F7FE , , , 
 
-CHAR Q 01 FBFE , , ,  HERE UP-K2 !    \ XXX TMP
-CHAR W 02 FBFE , , ,  HERE DOWN-K2 !  \ XXX TMP
-CHAR E 04 FBFE , , ,  HERE LEFT-K2 !  \ XXX TMP
-CHAR R 08 FBFE , , ,  HERE RIGHT-K2 ! \ XXX TMP
+CHAR Q 01 FBFE , , ,
+CHAR W 02 FBFE , , ,
+CHAR E 04 FBFE , , ,
+CHAR R 08 FBFE , , ,
 CHAR T 10 FBFE , , ,
 
-CHAR A 01 FDFE , , ,  HERE UP-K3 !    \ XXX TMP
-CHAR S 02 FDFE , , ,  HERE DOWN-K3 !  \ XXX TMP
-CHAR D 04 FDFE , , ,  HERE LEFT-K3 !  \ XXX TMP
-CHAR F 08 FDFE , , ,  HERE RIGHT-K3 ! \ XXX TMP
+( KEYS table, rows A-G CS-V 0-6 )
+
+CHAR A 01 FDFE , , ,
+CHAR S 02 FDFE , , ,
+CHAR D 04 FDFE , , ,
+CHAR F 08 FDFE , , ,
 CHAR G 10 FDFE , , ,
 
-( KEYS table, rows CS-V 0-9 P-Y )
-
 CHAR C CHAR S SPECIAL-KEY-NAME 01 FEFE , , ,  \ Caps Shift
-CHAR Z 02 FEFE , , ,
+CHAR Z 02 FEFE , , ,  HERE RIGHT-K3 ! \ "X"
 CHAR X 04 FEFE , , ,
 CHAR C 08 FEFE , , ,
 CHAR V 10 FEFE , , ,
 
-CHAR 0 01 EFFE , , ,
-CHAR 9 02 EFFE , , ,  HERE RIGHT-K1 !  \ the "8" key
-CHAR 8 04 EFFE , , ,  HERE UP-K1 !     \ the "7" key
-CHAR 7 08 EFFE , , ,  HERE DOWN-K1 !   \ the "6" key
+CHAR 0 01 EFFE , , ,  HERE DOWN-K2 !  \ "9"
+CHAR 9 02 EFFE , , ,  HERE UP-K2 !    \ "8"
+CHAR 8 04 EFFE , , ,  HERE RIGHT-K2 ! \ "7"
+CHAR 7 08 EFFE , , ,  HERE LEFT-K2 !  \ "6"
 CHAR 6 10 EFFE , , ,
+
+( KEYS table, rows P-Y En-H )
 
 CHAR P 01 DFFE , , ,
 CHAR O 02 DFFE , , ,
@@ -109,18 +113,19 @@ CHAR I 04 DFFE , , ,
 CHAR U 08 DFFE , , ,
 CHAR Y 10 DFFE , , ,
 
-( KEYS table, rows EN-H SP-B )
-
 CHAR E CHAR n SPECIAL-KEY-NAME 01 BFFE , , ,  \ Enter
-CHAR L 02 BFFE , , ,
+CHAR L 02 BFFE , , ,  HERE LEFT-K3 !  \ "K"
 CHAR K 04 BFFE , , ,
 CHAR J 08 BFFE , , ,
 CHAR H 10 BFFE , , ,
 
+( KEYS table, row Sp-B )
+
 CHAR S CHAR p SPECIAL-KEY-NAME 01 7FFE , , ,  \ Space
 CHAR S CHAR S SPECIAL-KEY-NAME 02 7FFE , , ,  \ Symbol Shift
+                      HERE DOWN-K3 !  \ "M"
 CHAR M 04 7FFE , , ,
-CHAR N 08 7FFE , , ,
+CHAR N 08 7FFE , , ,  HERE UP-K3 !    \ "B"
 CHAR B 10 7FFE , , ,
 
 DECIMAL
@@ -135,12 +140,11 @@ DECIMAL
   \ Convert a character to a string.
   PAD C! PAD 1  ;
 
-: 2C>S  ( 16bit -- ca len )
+: 2C>S  ( n1 -- ca len )
   \ Convert two characters to a string.
   \ high byte of n1 = first character
   \ low byte of n1 = second character
   PAD ! PAD 2  ;
-  
 
 : KEY-NAME  ( a -- ca len )
   \ Convert a key identifier to its key name.
@@ -156,7 +160,8 @@ DECIMAL
 
 : (PRESSED)  ( -- a tf | ff )
   \ Check all keys.
-  \ a = key address in the `KEYS` table
+  \ If a key is pressed, return its address in the
+  \ `KEYS` table and a true flag, else return a false flag.
   FALSE  \ default
   [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
     I PRESSED? IF  DROP I TRUE LEAVE  THEN

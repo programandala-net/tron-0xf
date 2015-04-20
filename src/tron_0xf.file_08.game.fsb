@@ -1,0 +1,150 @@
+\ tron_0xf.file_08.game.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: game )
+
+2 8 THRU
+
+( Rudder increments)
+
+ \ Coordinate increments.
+ \ Double constants are used to update the coordinate
+ \ increments faster.
+
+  1  0 2CONSTANT UP-INCS
+ -1  0 2CONSTANT DOWN-INCS
+  0 -1 2CONSTANT LEFT-INCS
+  0  1 2CONSTANT RIGHT-INCS
+
+( Rudder 1)
+
+: HUMAN-RUDDER1  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 1.
+  \ Human control.
+
+  UP-K1 @ PRESSED?
+  IF   XINC1 @ IF  UP-INCS XINC1 2!     THEN  EXIT  THEN
+  DOWN-K1 @ PRESSED?
+  IF   XINC1 @ IF  DOWN-INCS XINC1 2!   THEN  EXIT  THEN
+  LEFT-K1 @ PRESSED?
+  IF   YINC1 @ IF  LEFT-INCS XINC1 2!   THEN  EXIT  THEN
+  RIGHT-K1 @ PRESSED?
+  IF   YINC1 @ IF  RIGHT-INCS XINC1 2!  THEN  EXIT  THEN  ;
+
+DEFER RUDDER1  ( -- )  ' HUMAN-RUDDER1 IS RUDDER1
+
+: MOVE1  ( -- )
+
+  \ Update the coordinates of player 1.
+
+  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
+
+( Rudder 2)
+
+: HUMAN-RUDDER2  ( -- )
+
+  \ Update the coordinate increments of player 2.
+  \ Human control.
+
+  UP-K2 @ PRESSED?
+  IF   XINC2 @ IF  UP-INCS XINC2 2!     THEN  EXIT  THEN
+  DOWN-K2 @ PRESSED?
+  IF   XINC2 @ IF  DOWN-INCS XINC2 2!   THEN  EXIT  THEN
+  LEFT-K2 @ PRESSED?
+  IF   YINC2 @ IF  LEFT-INCS XINC2 2!   THEN  EXIT  THEN
+  RIGHT-K2 @ PRESSED?
+  IF   YINC2 @ IF  RIGHT-INCS XINC2 2!  THEN  EXIT  THEN  ;
+  
+DEFER RUDDER2  ( -- )  ' HUMAN-RUDDER2 IS RUDDER2
+
+: MOVE2  ( -- ) 
+  
+  \ Update the coordinates of player 2.
+
+  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+
+( Rudder 3)
+
+: HUMAN-RUDDER3  ( -- n1 n2 )
+
+  \ Update the coordinate increments of player 3.
+  \ Human control.
+  UP-K3 @ PRESSED?
+  IF   XINC3 @ IF  UP-INCS XINC3 2!     THEN  EXIT  THEN
+  DOWN-K3 @ PRESSED?
+  IF   XINC3 @ IF  DOWN-INCS XINC3 2!   THEN  EXIT  THEN
+  LEFT-K3 @ PRESSED?
+  IF   YINC3 @ IF  LEFT-INCS XINC3 2!   THEN  EXIT  THEN
+  RIGHT-K3 @ PRESSED?
+  IF   YINC3 @ IF  RIGHT-INCS XINC3 2!  THEN  EXIT  THEN  ;
+  
+DEFER RUDDER3  ( -- )  ' HUMAN-RUDDER3 IS RUDDER3
+
+: MOVE3  ( -- ) 
+  
+  \ Update the coordinates of player 3.
+
+  RUDDER3  XINC3 @ XC3 +!  YINC3 @ YC3 +!  ;
+
+( READY )
+
+: READY2  ( -- )
+  \ Set the players' positions before a new round,
+  \ for two players.
+   40 XC1 ! 88 YC1 !  RIGHT-INCS XINC1 2!
+  215 XC2 ! 88 YC2 !  LEFT-INCS  XINC1 2!  ;
+
+: READY3  ( -- )
+  \ Set the players' positions before a new round,
+  \ for three players.
+   40 XC1 ! 127 YC1 !  RIGHT-INCS XINC1 2!
+  215 XC2 ! 127 YC2 !  LEFT-INCS  XINC2 2!
+  127 XC3 !  40 YC3 !  UP-INCS    XINC3 2!  ;
+
+HERE: (READY)
+  \ Execution table for `READY`.
+  ' READY2 CFA , ' READY3 CFA ,
+  
+: READY  ( -- )
+  \ Set the players' positions before a new round.
+  PLAYERS 2 - CELLS (READY) + @ EXECUTE  ;
+
+( Round)
+
+: ROUND-INIT  ( -- )
+  CLEAR-ARENA READY PAINT1 PAINT2 PAINT3  AKEY DROP  ;
+
+: ROUND  ( -- f )
+  \ f = Break key pressed?
+  ROUND-INIT
+  FALSE  \ default exit flag
+  BEGIN
+    MOVE1 MOVE2 MOVE3
+    CRASH1? IF  CRASH +SCORES EXIT  THEN  PAINT1 NOISE1
+    CRASH2? IF  CRASH +SCORES EXIT  THEN  PAINT2 NOISE2
+    CRASH3? IF  CRASH +SCORES EXIT  THEN  PAINT3 NOISE3
+  ?TERMINAL UNTIL  0=  ;
+
+( Game)
+
+: ENOUGH?  ( -- f )
+  \ No more rounds?
+  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+
+: GAME-INIT  ( -- )
+  SCORE1 OFF  SCORE2 OFF  SCORE3 OFF
+  CLS0 ARENA SAVE-ARENA  ;
+
+: GAME  ( -- )
+  GAME-INIT BEGIN  ROUND  UNTIL  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

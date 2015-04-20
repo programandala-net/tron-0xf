@@ -1,4 +1,4 @@
-\ tron.file_02.graphics.fsb
+\ tron_0xf.file_02.graphics.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -13,8 +13,8 @@
   \ fsb directives
 
   \ The following '#vim' directives, processed by fsb,
-  \ translate the UTF-8 chars in this source file to the ZX
-  \ Spectrum UDG defined in the first file <tron.part_0.fsb>):
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDG.
 
   \ #vim %substitute@á@\=nr2char(145)@g
   \ #vim %substitute@é@\=nr2char(147)@g
@@ -107,7 +107,7 @@
 
 
 HERE: UDG-BANK
-  \ Addresses of the UDG banks used for every language:
+  \ Addresses of the UDG banks used for every language.
   UDG , EO-UDG , ES-UDG ,
 
 ( Screen -- generic)
@@ -184,15 +184,17 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 22 CONSTANT STATUS-LINE
 
-: SCORE. ( a column color -- )
+: SCORE. ( a1 column a2 -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
-  \ using 3 digits and double height characters. 
-  INK >R
+  \ using 3 digits and double height characters.
+  \ a1 = score
+  \ a2 = color
+  @ INK >R
   STATUS-LINE R AT  @ S->D <# # # # #> 2DUP +HI-DIGITS TYPE
   STATUS-LINE 1+ R> AT  +LO-DIGITS TYPE +FONT  ;
 
-: .SCORE1  ( -- )  SCORE1 0 COLOR1 SCORE.  ;
+: .SCORE1  ( -- )  SCORE1 00 COLOR1 SCORE.  ;
 : .SCORE2  ( -- )  SCORE2 29 COLOR2 SCORE.  ;
 : .SCORE3  ( -- )  SCORE3 14 COLOR3 SCORE.  ;
 
@@ -200,7 +202,9 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
   \ Show the status bar at the current cursor position.
 
-  .SCORE1 .SCORE2 PLAYERS 3 < ?EXIT .SCORE3  ;
+  .SCORE1
+  PLAYERS 2 < ?EXIT .SCORE2
+  PLAYERS 3 < ?EXIT .SCORE3  ;
 
 ( Arena border, limit, frame)
 

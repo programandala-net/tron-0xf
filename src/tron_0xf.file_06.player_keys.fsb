@@ -1,4 +1,4 @@
-\ tron.file_06.player_keys.fsb
+\ tron_0xf.file_06.player_keys.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -17,9 +17,9 @@
   \ Screen coordinates:
 10 CONSTANT KEYS-LINE     \ top line of the redefine menu
  0 CONSTANT KEY-DESC-COL  \ column of the key description
-15 CONSTANT KEYS1-COL     \ column of player 1's keys
-23 CONSTANT KEYS2-COL     \ column of player 2's keys
-31 CONSTANT KEYS3-COL     \ column of player 3's keys
+14 CONSTANT KEYS1-COL     \ column of player 1's keys
+22 CONSTANT KEYS2-COL     \ column of player 2's keys
+30 CONSTANT KEYS3-COL     \ column of player 3's keys
 
 2 10 THRU
 
@@ -85,23 +85,28 @@ HERE: KEY-DESCS
 
 0 VARIABLE (COL)  0 VARIABLE (KEYS)  \ locals
 
-: KEY-PROMPT  ( line col -- )
-  \ Show a prompt, asking for a key to be pressed.
-  2DUP AT 2 SPACES
-  AT 1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
-
 : KEY#>COORDS  ( n -- line col )
-  \ Convert a player key number (0...3)
+  \ Convert a player key number (0..3)
   \ to its cursor coordinates.
   KEYS-LINE + (COL) @ ;
 
-: (REDEFINE)  ( col a -- )
+ \ XXX OLD
+ \ : KEY-PROMPT  ( line col -- )
+ \   \ Show a prompt, asking for a key to be pressed.
+ \   2DUP AT 2 SPACES
+ \   AT 1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
+  : KEY-PROMPT  ( a n -- )
+    \ a = player keys table
+    \ n = key number in the table 
+    DUP KEY#>COORDS 2SWAP 1 INVERSE PLAYER-KEY. 0 INVERSE  ;
+
+: (REDEFINE)  ( column a -- )
   \ Redefine the keys of a player.
-  \ col = column (`KEYS1-COL` or `KEYS2-COL`)
-  \ a = player keys table (`KEYS1` or `KEYS2`)
+  \ a = player keys table (`KEYS1`, `KEYS2` or `KEYS3`)
   (KEYS) !  (COL) !  \ locals
   KEYS/PLAYER 0 DO
-    I KEY#>COORDS KEY-PROMPT
+    \ I KEY#>COORDS KEY-PROMPT \ XXX OLD
+    (KEYS) @ I KEY-PROMPT
     1000 MS PRESSED DUP (KEYS) @ I CELLS + !
     I KEY#>COORDS ROT KEY.
   LOOP  ;

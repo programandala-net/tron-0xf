@@ -1,4 +1,4 @@
-\ tron.file_01.data.fsb
+\ tron_0xf.file_01.data.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -13,7 +13,7 @@
 
 FORTH DEFINITIONS
 
-2 7 THRU
+2 8 THRU
 
 ( ZX Spectrum specific)
 
@@ -45,37 +45,95 @@ FORTH DEFINITIONS
 VOCABULARY TRON IMMEDIATE
 TRON DEFINITIONS
 
-3 VALUE PLAYERS  \ default number of players
+3 CONSTANT MAX-PLAYERS  \ maximum number of players
+3 VALUE PLAYERS         \ number of players
 
-( Player 1 data)
+4 CONSTANT KEYS/PLAYER  \ keys per player
 
-     1 VARIABLE HUMAN1  \ human? XXX TODO
-     0 VARIABLE SCORE1  \ scores
-     0 VARIABLE XC1     \ X coordinate
-     0 VARIABLE YC1     \ Y coordinate
-     0 VARIABLE XINC1   \ X inc (-1..1)
-     0 VARIABLE YINC1   \ Y inc (-1..1)
-YELLOW CONSTANT COLOR1  \ ink color
+  \ Type of players.
 
-( Player 2 data)
+0 CONSTANT MISSING
+1 CONSTANT HUMAN
+2 CONSTANT ROBOT
 
-     1 VARIABLE HUMAN2  \ human? XXX TODO
-     0 VARIABLE SCORE2  \ scores
-     0 VARIABLE XC2     \ X coordinate
-     0 VARIABLE YC2     \ Y coordinate
-     0 VARIABLE XINC2   \ X inc (-1..1)
-     0 VARIABLE YINC2   \ Y inc (-1..1)
-  CYAN CONSTANT COLOR2  \ ink color
+( Players data)
 
-( Player 3 data)
+11 CELLS CONSTANT /PLAYER-DATA \ bytes per player data
 
-     1 VARIABLE HUMAN3  \ human? XXX TODO
-     0 VARIABLE SCORE3  \ scores
-     0 VARIABLE XC3     \ X coordinate
-     0 VARIABLE YC3     \ Y coordinate
-     0 VARIABLE XINC3   \ X inc (-1..1)
-     0 VARIABLE YINC3   \ Y inc (-1..1)
- GREEN CONSTANT COLOR3  \ ink color
+  \ Buffer that holds the data of all players.
+
+/PLAYER-DATA MAX-PLAYERS * CONSTANT /PLAYERS-DATA
+/PLAYERS-DATA BUFFER: PLAYERS-DATA
+PLAYERS-DATA /PLAYERS-DATA ERASE
+
+  \ Pointers to the data of every player.
+
+PLAYERS-DATA                CONSTANT PLAYER1-DATA
+PLAYER1-DATA /PLAYER-DATA + CONSTANT PLAYER2-DATA
+PLAYER2-DATA /PLAYER-DATA + CONSTANT PLAYER3-DATA
+
+
+: PLAYER-VARIABLE  ( value field player "name" -- )
+
+  \ Create a player variable.
+
+  \ A player variable is a constant that points into the
+  \ players data field. This way they work like ordinary
+  \ variables, but the data can be manipulated also as a whole
+  \ (e.g. store and fetch the coordinates with double numbers,
+  \ for speed; erase the whole zone, etc.).
+
+  1 - /PLAYER-DATA * PLAYERS-DATA +  \ player data address
+  SWAP CELLS +                       \ field address
+  DUP CONSTANT !  ;                  \ do it
+
+( Player 1 data fields)
+
+ HUMAN  0 1 PLAYER-VARIABLE PLAYER1   \ type
+     0  1 1 PLAYER-VARIABLE SCORE1    \ score
+     0  2 1 PLAYER-VARIABLE XC1       \ X coordinate
+     0  3 1 PLAYER-VARIABLE YC1       \ Y coordinate
+     0  4 1 PLAYER-VARIABLE XINC1     \ X inc (-1..1)
+     0  5 1 PLAYER-VARIABLE YINC1     \ Y inc (-1..1)
+YELLOW  6 1 PLAYER-VARIABLE COLOR1    \ ink color
+     0  7 1 PLAYER-VARIABLE UP-K1     \ up key
+     0  8 1 PLAYER-VARIABLE DOWN-K1   \ down key
+     0  9 1 PLAYER-VARIABLE LEFT-K1   \ left key
+     0 10 1 PLAYER-VARIABLE RIGHT-K1  \ right key
+
+UP-K1 CONSTANT KEYS1
+
+( Player 2 data fields)
+
+ HUMAN  0 2 PLAYER-VARIABLE PLAYER2   \ type
+     0  1 2 PLAYER-VARIABLE SCORE2    \ score
+     0  2 2 PLAYER-VARIABLE XC2       \ X coordinate
+     0  3 2 PLAYER-VARIABLE YC2       \ Y coordinate
+     0  4 2 PLAYER-VARIABLE XINC2     \ X inc (-1..1)
+     0  5 2 PLAYER-VARIABLE YINC2     \ Y inc (-1..1)
+  CYAN  6 2 PLAYER-VARIABLE COLOR2    \ ink color
+     0  7 2 PLAYER-VARIABLE UP-K2     \ up key
+     0  8 2 PLAYER-VARIABLE DOWN-K2   \ down key
+     0  9 2 PLAYER-VARIABLE LEFT-K2   \ left key
+     0 10 2 PLAYER-VARIABLE RIGHT-K2  \ right key
+
+UP-K2 CONSTANT KEYS2
+
+( Player 3 data fields)
+
+ HUMAN  0 3 PLAYER-VARIABLE PLAYER3   \ type
+     0  1 3 PLAYER-VARIABLE SCORE3    \ score
+     0  2 3 PLAYER-VARIABLE XC3       \ X coordinate
+     0  3 3 PLAYER-VARIABLE YC3       \ Y coordinate
+     0  4 3 PLAYER-VARIABLE XINC3     \ X inc (-1..1)
+     0  5 3 PLAYER-VARIABLE YINC3     \ Y inc (-1..1)
+ GREEN  6 3 PLAYER-VARIABLE COLOR3    \ ink color
+     0  7 3 PLAYER-VARIABLE UP-K3     \ up key
+     0  8 3 PLAYER-VARIABLE DOWN-K3   \ down key
+     0  9 3 PLAYER-VARIABLE LEFT-K3   \ left key
+     0 10 3 PLAYER-VARIABLE RIGHT-K3  \ right key
+
+UP-K3 CONSTANT KEYS3
 
 ( Languages)
 

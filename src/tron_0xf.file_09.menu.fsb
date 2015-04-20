@@ -1,4 +1,4 @@
-\ tron.file_08.menu.fsb
+\ tron_0xf.file_09.menu.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -15,6 +15,7 @@
 
   CR .( Tron -- font and UDG)
 
+-SCROLL
 FONT /FONT 0 0 TAPE>MEM              \ main font
 -SCROLL
 EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
@@ -24,7 +25,10 @@ ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
 DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
 -SCROLL
 
-CR .S LOADED? CR .S ON  \ tell the loader's loop it's finished
+  \ XXX FIXME something strange happens here,
+  \ a word is not found
+  \ CR .S LOADED? CR .S ON  \ tell the loader's loop it's finished
+LOADED? ON  \ tell the loader's loop it's finished
 
 ( Menu -- data )
 
@@ -65,7 +69,7 @@ HERE: MENU-OPTIONS
 : FINISH  ( -- )  CLS0 -FONT -UDG QUIT-MESSAGE QUIT  ;
 
 HERE: MENU-COMMANDS
-  \ This table holds the cfa of the menu options.
+  \ Execution table of the menu options.
   \ XXX TODO -- sound on and off
   ' LANGUAGE CFA ,
   ' CONFIGURATION CFA ,

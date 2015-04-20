@@ -1,4 +1,4 @@
-\ tron.file_03.texts.fsb
+\ tron_0xf.file_03.texts.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -13,8 +13,8 @@
   \ fsb directives
 
   \ The following '#vim' directives, processed by fsb,
-  \ translate the UTF-8 chars in this source file to the ZX
-  \ Spectrum UDG defined in <tron.file_1.fsb>):
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDG.
 
   \ #vim %substitute@á@\=nr2char(145)@g
   \ #vim %substitute@é@\=nr2char(147)@g
