@@ -1,4 +1,4 @@
-\ tron_0xf.file_05.keyboard.fsb
+\ tron_0xf.file_06.keyboard.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -41,10 +41,10 @@ HEX
 
 ( KEYS table, rows 1-5 Q-T )
 
-                      HERE LEFT-K1 !   \ "1"
-CHAR 1 01 F7FE , , ,  HERE RIGHT-K1 !  \ "2"
-CHAR 2 02 F7FE , , ,  HERE UP-K1 !     \ "3"
-CHAR 3 04 F7FE , , ,  HERE DOWN-K1 !   \ "4"
+                      HERE LEFT-K0 !   \ "1"
+CHAR 1 01 F7FE , , ,  HERE RIGHT-K0 !  \ "2"
+CHAR 2 02 F7FE , , ,  HERE UP-K0 !     \ "3"
+CHAR 3 04 F7FE , , ,  HERE DOWN-K0 !   \ "4"
 CHAR 4 08 F7FE , , ,
 CHAR 5 10 F7FE , , , 
 
@@ -63,15 +63,15 @@ CHAR F 08 FDFE , , ,
 CHAR G 10 FDFE , , ,
 
 CHAR C CHAR S SPECIAL-KEY-NAME 01 FEFE , , ,  \ Caps Shift
-CHAR Z 02 FEFE , , ,  HERE RIGHT-K3 ! \ "X"
+CHAR Z 02 FEFE , , ,  HERE RIGHT-K2 ! \ "X"
 CHAR X 04 FEFE , , ,
 CHAR C 08 FEFE , , ,
 CHAR V 10 FEFE , , ,
 
-CHAR 0 01 EFFE , , ,  HERE DOWN-K2 !  \ "9"
-CHAR 9 02 EFFE , , ,  HERE UP-K2 !    \ "8"
-CHAR 8 04 EFFE , , ,  HERE RIGHT-K2 ! \ "7"
-CHAR 7 08 EFFE , , ,  HERE LEFT-K2 !  \ "6"
+CHAR 0 01 EFFE , , ,  HERE DOWN-K1 !  \ "9"
+CHAR 9 02 EFFE , , ,  HERE UP-K1 !    \ "8"
+CHAR 8 04 EFFE , , ,  HERE RIGHT-K1 ! \ "7"
+CHAR 7 08 EFFE , , ,  HERE LEFT-K1 !  \ "6"
 CHAR 6 10 EFFE , , ,
 
 ( KEYS table, rows P-Y En-H )
@@ -83,7 +83,7 @@ CHAR U 08 DFFE , , ,
 CHAR Y 10 DFFE , , ,
 
 CHAR E CHAR n SPECIAL-KEY-NAME 01 BFFE , , ,  \ Enter
-CHAR L 02 BFFE , , ,  HERE LEFT-K3 !  \ "K"
+CHAR L 02 BFFE , , ,  HERE LEFT-K2 !  \ "K"
 CHAR K 04 BFFE , , ,
 CHAR J 08 BFFE , , ,
 CHAR H 10 BFFE , , ,
@@ -92,9 +92,9 @@ CHAR H 10 BFFE , , ,
 
 CHAR S CHAR p SPECIAL-KEY-NAME 01 7FFE , , ,  \ Space
 CHAR S CHAR S SPECIAL-KEY-NAME 02 7FFE , , ,  \ Symbol Shift
-                      HERE DOWN-K3 !  \ "M"
+                      HERE DOWN-K2 !  \ "M"
 CHAR M 04 7FFE , , ,
-CHAR N 08 7FFE , , ,  HERE UP-K3 !    \ "B"
+CHAR N 08 7FFE , , ,  HERE UP-K2 !    \ "B"
 CHAR B 10 7FFE , , ,
 
 DECIMAL

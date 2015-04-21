@@ -1,4 +1,4 @@
-\ tron_0xf.file_06.player_keys.fsb
+\ tron_0xf.file_07.configuration.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -9,7 +9,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron 0xF: player keys )
+.( Tron 0xF: configuration )
 
   \ Max lenght of a player key description in any language:
 11 CONSTANT /KEY-DESC
@@ -17,13 +17,10 @@
   \ Screen coordinates:
 10 CONSTANT KEYS-LINE     \ top line of the redefine menu
  0 CONSTANT KEY-DESC-COL  \ column of the key description
-14 CONSTANT KEYS1-COL     \ column of player 1's keys
-22 CONSTANT KEYS2-COL     \ column of player 2's keys
-30 CONSTANT KEYS3-COL     \ column of player 3's keys
 
 2 10 THRU
 
-( Print key descriptions )
+( Key descriptions )
 
 : +KEY-DESC-COL  ( ca len line -- ca len line col' )
   \ Relative column of a key description,
@@ -37,6 +34,7 @@
   KEY-DESC-COL + AT TYPE  ;
 
 : |KEY-DESC|  ( ca len line -- )
+  \ XXX OLD -- not used
   \ Print a key description, on the given line,
   \ centered on its region.
   +KEY-DESC-COL 2 / (TYPE-KEY-DESC)  ;
@@ -47,11 +45,12 @@
   0 (TYPE-KEY-DESC)  ;
 
 : KEY-DESC|  ( ca len line -- )
+  \ XXX OLD -- not used
   \ Print a key description, on the given line,
   \ at the right of its region.
   OVER KEY-DESC-COL SWAP - (TYPE-KEY-DESC)  ;
   
-( Keyboard: redefine keys )
+( Key descriptions )
 
 HERE: KEY-DESCS
   \  This table contains the cfa of the four texts used
@@ -76,19 +75,20 @@ HERE: KEY-DESCS
   \ n = key number in the table 
   CELLS + @ KEY.  ;
 
-( Keyboard: redefine keys )
+( Redefine keys )
 
-: REDEFINED?  ( -- f )
-  \ Ask for confirmation: Are the redefined keys ok?
-  \ XXX TODO
-  TRUE  ;
+HERE: KEYS-COL-TABLE
+  \ Table of keys columns for every player.
+  14 C, 22 C, 30 C,
 
-0 VARIABLE (COL)  0 VARIABLE (KEYS)  \ locals
+: KEYS-COL  ( n -- column )
+  \ Keys column of the current player.
+  CURRENT-PLAYER KEYS-COL-TABLE + C@  ;
 
 : KEY#>COORDS  ( n -- line col )
-  \ Convert a player key number (0..3)
-  \ to its cursor coordinates.
-  KEYS-LINE + (COL) @ ;
+  \ Convert a key number (0..3) of the current player
+  \ to the cursor coordinates.
+  KEYS-LINE + KEYS-COL @ ;
 
  \ XXX OLD
  \ : KEY-PROMPT  ( line col -- )
@@ -100,41 +100,43 @@ HERE: KEY-DESCS
     \ n = key number in the table 
     DUP KEY#>COORDS 2SWAP 1 INVERSE PLAYER-KEY. 0 INVERSE  ;
 
-: (REDEFINE)  ( column a -- )
-  \ Redefine the keys of a player.
-  \ a = player keys table (`KEYS1`, `KEYS2` or `KEYS3`)
-  (KEYS) !  (COL) !  \ locals
+: (REDEFINE)  ( -- )
+  \ Redefine the keys of the current player.
   KEYS/PLAYER 0 DO
-    \ I KEY#>COORDS KEY-PROMPT \ XXX OLD
-    (KEYS) @ I KEY-PROMPT
-    1000 MS PRESSED DUP (KEYS) @ I CELLS + !
+    CURRENT-KEYS @ I KEY-PROMPT
+    1000 MS PRESSED DUP CURRENT-KEYS @ I CELLS + !
     I KEY#>COORDS ROT KEY.
   LOOP  ;
 
-( Keyboard: redefine menu )
+( Redefine keys menu )
 
 : REDEFINE-MENU  ( -- )
-  \ Show the menu to redefine the keys.
+  \ Show the redefine keys menu.
   CLS
   KEYS/PLAYER 0 DO
-    I KEYS-LINE +
-    DUP I KEY-DESC ROT |KEY-DESC
-    DUP KEYS1-COL KEYS1 I PLAYER-KEY.
-    DUP KEYS2-COL KEYS2 I PLAYER-KEY.
-        KEYS3-COL KEYS3 I PLAYER-KEY.
+    I KEY-DESC I KEYS-LINE + |KEY-DESC
+    PLAYERS 0 DO
+      I CURRENT-PLAYER!
+      J KEYS-LINE + KEYS-COL KEYS J PLAYER-KEY.
+    LOOP
   LOOP  ;
 
-( Keyboard: redefine keys )
+( Redefine keys )
 
-: REDEFINE1  ( -- )  KEYS1-COL KEYS1 (REDEFINE)  ;
-: REDEFINE2  ( -- )  KEYS2-COL KEYS2 (REDEFINE)  ;
-: REDEFINE3  ( -- )  KEYS3-COL KEYS3 (REDEFINE)  ;
+: REDEFINE  ( -- )
+  \ Redefine the keys of all players.
+  PLAYERS 0 DO  I CURRENT-PLAYER! (REDEFINE)  LOOP  ;
+
+: REDEFINED?  ( -- f )
+  \ Ask for confirmation: Are the redefined keys ok?
+  \ XXX TODO
+  TRUE  ;
 
 : CONFIGURATION  ( -- )
   \ Redefine the keys.
   \ XXX TODO -- human/machine options
   REDEFINE-MENU
-  BEGIN  REDEFINE1 REDEFINE2 REDEFINE3 REDEFINED?  UNTIL  ;
+  BEGIN  REDEFINE REDEFINED?  UNTIL  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
 

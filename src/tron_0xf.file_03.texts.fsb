@@ -59,6 +59,11 @@
 
 : EN-LICENSE$  ( -- ca len )  S" License:"  ;
 
+( English texts)
+
+: EN-HUMAN$  ( -- ca len )  S" Human"  ;
+: EN-ROBOT$  ( -- ca len )  S" Robot"  ;
+
 ( English keys and menu options)
 
 : EN-UP$     ( -- ca len )  S" Up"  ;
@@ -98,6 +103,11 @@ CHAR Y CONSTANT EN-'Y'
 : EO-PRESS-ANY-KEY$  ( -- ca len ) S" Premu klavon"  ;
 
 : EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
+
+( Esperanto texts)
+
+: EO-HUMAN$  ( -- ca len )  S" Homo"  ;
+: EO-ROBOT$  ( -- ca len )  S" Roboto"  ;
 
 ( Esperanto keys and menu options)
 
@@ -139,6 +149,11 @@ CHAR J CONSTANT EO-'Y'
 
 : ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
 
+( Spanish texts)
+
+: ES-HUMAN$  ( -- ca len )  S" Humano"  ;
+: ES-ROBOT$  ( -- ca len )  S" Robot"  ;
+
 ( Spanish keys)
 
 : ES-UP$     ( -- ca len )  S" Arriba"  ;
@@ -153,90 +168,5 @@ CHAR S CONSTANT ES-'Y'
 : ES-OPTION-2$  ( -- ca len )  S" Jugar" ;
 : ES-OPTION-3$  ( -- ca len )  S" Acerca de" ;
 : ES-OPTION-4$  ( -- ca len )  S" Salir" ;
-
-( Localization)
-
-: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
-
-  \ Create a word that will execute another word from a list of
-  \ three, depending on the current language.
-
-  \ Parameters are the parameter field addresses of the
-  \ localized versions, in reverse order of ISO language code:
-  \ pfa1 = pfa of the Spanish word (ES)
-  \ pfa2 = pfa of the Esperanto word (EO)
-  \ pfa3 = pfa of the English word (EN)
-
-  \ First, create a new word in the current dictionary with the
-  \ given name, and store the three cfa (cofe field
-  \ addresses) of the given words into its own pfa:
-
-  <BUILDS CFA , CFA , CFA ,
-
-  \ Second, define what the new word will do when executed:
-  \ fetch from its pfa one of the three stored cfa depending on
-  \ the current language, and execute it:
-
-  DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
-
-
-' ES-OPTION-0$ ' EO-OPTION-0$ ' EN-OPTION-0$
-  LOCALIZED OPTION-0$  ( -- ca len )
-' ES-OPTION-1$ ' EO-OPTION-1$ ' EN-OPTION-1$
-  LOCALIZED OPTION-1$  ( -- ca len )
-' ES-OPTION-2$ ' EO-OPTION-2$ ' EN-OPTION-2$
-  LOCALIZED OPTION-2$  ( -- ca len )
-' ES-OPTION-3$ ' EO-OPTION-3$ ' EN-OPTION-3$
-  LOCALIZED OPTION-3$  ( -- ca len )
-' ES-OPTION-4$ ' EO-OPTION-4$ ' EN-OPTION-4$
-  LOCALIZED OPTION-4$  ( -- ca len )
-
-( Localizated texts)
-
-' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
-LOCALIZED (INSTRUCTIONS)  ( -- )
-: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
-
-' ES-UP$ ' EO-UP$ ' EN-UP$
-  LOCALIZED UP$  ( -- ca len )
-' ES-DOWN$ ' EO-DOWN$ ' EN-DOWN$
-  LOCALIZED DOWN$  ( -- ca len )
-' ES-LEFT$ ' EO-LEFT$ ' EN-LEFT$
-  LOCALIZED LEFT$  ( -- ca len )
-' ES-RIGHT$ ' EO-RIGHT$ ' EN-RIGHT$
-  LOCALIZED RIGHT$  ( -- ca len )
-
-' ES-PRESS-ANY-KEY$ ' EO-PRESS-ANY-KEY$ ' EN-PRESS-ANY-KEY$
-LOCALIZED PRESS-ANY-KEY$  ( -- ca len )
-
-' ES-LICENSE$ ' EO-LICENSE$ ' EN-LICENSE$
-LOCALIZED LICENSE$  ( -- ca len )
-
-( Localized texts, and others that don't need translation)
-
-' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
-LOCALIZED ANOTHER?$  ( -- ca len )
-
-' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
-
-' ES-QUIT-MESSAGE ' EO-QUIT-MESSAGE ' EN-QUIT-MESSAGE
-LOCALIZED QUIT-MESSAGE  ( -- )
-
-: CREDITS  ( -- )
-  \  <------------------------------->
-  ." Copyright (C) 1985,2009,2015" CR
-  ." Marcos Cruz (programandala.net)" CR
-  LICENSE$ TYPE ."  GPL 3" CR CR  ;
-  \  <------------------------------->
-
-CHAR N CONSTANT 'N'
-
-  \ 2-char names of special keys
-  \ The low byte of the number is the  first character;
-  \ the high byte of the number is the second character.
-HEX   6E45 CONSTANT ENTER$#
-      5353 CONSTANT SYMBOL-SHIFT$#
-      5343 CONSTANT CAPS-SHIFT$#
-      7053 CONSTANT SPACE$#           DECIMAL
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

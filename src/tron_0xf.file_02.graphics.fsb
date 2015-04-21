@@ -184,7 +184,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 22 CONSTANT STATUS-LINE
 
-: SCORE. ( a1 column a2 -- )
+: (.SCORE) ( a1 column a2 -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits and double height characters.
@@ -194,17 +194,20 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   STATUS-LINE R AT  @ S->D <# # # # #> 2DUP +HI-DIGITS TYPE
   STATUS-LINE 1+ R> AT  +LO-DIGITS TYPE +FONT  ;
 
-: .SCORE1  ( -- )  SCORE1 00 COLOR1 SCORE.  ;
-: .SCORE2  ( -- )  SCORE2 29 COLOR2 SCORE.  ;
-: .SCORE3  ( -- )  SCORE3 14 COLOR3 SCORE.  ;
+HERE: SCORE-COLUMN-TABLE
+  0 C, 29 C, 14 C,
+
+: SCORE-COLUMN  ( -- column )
+  \ Score column for the current player.
+  CURRENT-PLAYER SCORE-COLUMN-TABLE + C@  ;
+
+: .SCORE  ( -- )
+  \ Print the score of the current player.
+  CURRENT-SCORE SCORE-COLUMN CURRENT-COLOR (.SCORE)  ;
 
 : STATUS  ( -- )
-
-  \ Show the status bar at the current cursor position.
-
-  .SCORE1
-  PLAYERS 2 < ?EXIT .SCORE2
-  PLAYERS 3 < ?EXIT .SCORE3  ;
+  \ Show the status bar.
+  PLAYERS 0 DO  I CURRENT-PLAYER! .SCORE  LOOP  ;
 
 ( Arena border, limit, frame)
 

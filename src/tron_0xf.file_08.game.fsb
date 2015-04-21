@@ -11,160 +11,72 @@
 
 .( Tron 0xF: game )
 
-2 10 THRU
-
-( Rudder increments)
-
- \ Coordinate increments.
- \ Double constants are used to update the coordinate
- \ increments faster.
-
- \ X  Y 
-   0  1 2CONSTANT UP-INCS
-   0 -1 2CONSTANT DOWN-INCS
-  -1  0 2CONSTANT LEFT-INCS
-   1  0 2CONSTANT RIGHT-INCS
-
-( Autopilot )
-
-: -1..1  ( -- -1 | 0 | 1 )
-  \ Return a random increment for a graphic coordinate.
-  \ XXX TODO Rewrite in assembler.
-  3 RND 1-  ;
-
-: AUTOPILOT2  ( -- )
-  2 RND ?EXIT \ 50% times, do nothing
-  XINC2 @ 2* XC2 @ + YINC2 @ 2* YC2 @ + POINT \ about to crash?
-  IF  \ random dodge
-    XINC2 @  \ moving on the X axis?
-    IF    -1..1 0 \ change the Y increment
-    ELSE  0 -1..1 \ change the X increment
-    THEN  INCS2 2!
-  THEN
-  ;
-
-( Rudder 1)
-
-: HUMAN-RUDDER1  ( -- )
-
-  \ Update the coordinate increments of player 1.
-  \ Human control.
-
-  UP-K1 @ PRESSED?
-  IF   XINC1 @ IF  UP-INCS INCS1 2!     THEN  EXIT  THEN
-  DOWN-K1 @ PRESSED?
-  IF   XINC1 @ IF  DOWN-INCS INCS1 2!   THEN  EXIT  THEN
-  LEFT-K1 @ PRESSED?
-  IF   YINC1 @ IF  LEFT-INCS INCS1 2!   THEN  EXIT  THEN
-  RIGHT-K1 @ PRESSED?
-  IF   YINC1 @ IF  RIGHT-INCS INCS1 2!  THEN  EXIT  THEN  ;
-
-DEFER RUDDER1  ( -- )  ' HUMAN-RUDDER1 IS RUDDER1
-
-: MOVE1  ( -- )
-
-  \ Update the coordinates of player 1.
-
-  RUDDER1  XINC1 @ XC1 +!  YINC1 @ YC1 +!  ;
-
-( Rudder 2)
-
-: HUMAN-RUDDER2  ( -- )
-
-  \ Update the coordinate increments of player 2.
-  \ Human control.
-
-  UP-K2 @ PRESSED?
-  IF   XINC2 @ IF  UP-INCS INCS2 2!     THEN  EXIT  THEN
-  DOWN-K2 @ PRESSED?
-  IF   XINC2 @ IF  DOWN-INCS INCS2 2!   THEN  EXIT  THEN
-  LEFT-K2 @ PRESSED?
-  IF   YINC2 @ IF  LEFT-INCS INCS2 2!   THEN  EXIT  THEN
-  RIGHT-K2 @ PRESSED?
-  IF   YINC2 @ IF  RIGHT-INCS INCS2 2!  THEN  EXIT  THEN  ;
- 
-  \ XXX TMP -- first try 
-DEFER RUDDER2  ( -- )  ' AUTOPILOT2 IS RUDDER2
-
-: MOVE2  ( -- ) 
+2 5 THRU
   
-  \ Update the coordinates of player 2.
+( Paint )
 
-  RUDDER2  XINC2 @ XC2 +!  YINC2 @ YC2 +!  ;
+: PAINT  ( -- )
+  CURRENT-COLOR @ INK CURRENT-XC @ CURRENT-YC @ PLOT  ;
 
-( Rudder 3)
+( Crash effect )
 
-: HUMAN-RUDDER3  ( -- )
+: COORDS>CURSOR  ( x y -- line col )
+  \ Convert graphic coordinates to line and column.
+  175 SWAP - 8 / SWAP 8 /  ;
 
-  \ Update the coordinate increments of player 3.
-  \ Human control.
-  UP-K3 @ PRESSED?
-  IF   XINC3 @ IF  UP-INCS INCS3 2!     THEN  EXIT  THEN
-  DOWN-K3 @ PRESSED?
-  IF   XINC3 @ IF  DOWN-INCS INCS3 2!   THEN  EXIT  THEN
-  LEFT-K3 @ PRESSED?
-  IF   YINC3 @ IF  LEFT-INCS INCS3 2!   THEN  EXIT  THEN
-  RIGHT-K3 @ PRESSED?
-  IF   YINC3 @ IF  RIGHT-INCS INCS3 2!  THEN  EXIT  THEN  ;
-  
-DEFER RUDDER3  ( -- )  ' HUMAN-RUDDER3 IS RUDDER3
+: (CRASH-NOISE)  ( -- )
+  \ XXX TODO
+  100 50 DO  11 I BLEEP  LOOP  ;
 
-: MOVE3  ( -- ) 
-  
-  \ Update the coordinates of player 3.
+DEFER CRASH-NOISE  ( -- )  ' (CRASH-NOISE) IS CRASH-NOISE
 
-  RUDDER3  XINC3 @ XC3 +!  YINC3 @ YC3 +!  ;
+  \ XXX TODO
+: CRASH  ( -- )  CRASH-NOISE  ;
 
-( READY )
+( Noise )
 
-: READY2  ( -- )
-  \ Set the players' positions before a new round,
-  \ for two players.
-   40 XC1 ! 88 YC1 !  RIGHT-INCS INCS1 2!
-  215 XC2 ! 88 YC2 !  LEFT-INCS  INCS2 2!  ;
+HERE: MOTOR-NOISES
+  \ Table of `BLEEP` parameters for every player.
+  0 1 , ,  100 1 , ,  200 1 , ,
 
-: READY3  ( -- )
-  \ Set the players' positions before a new round,
-  \ for three players.
-   40 XC1 ! 127 YC1 !  RIGHT-INCS INCS1 2!
-  215 XC2 ! 127 YC2 !  LEFT-INCS  INCS2 2!
-  127 XC3 !  40 YC3 !  UP-INCS    INCS3 2!  ;
+: (MOTOR-NOISE)  ( -- )
+  \ Do the motor noise of the current player.
+  CURRENT-PLAYER [ 2 CELLS ] LITERAL * MOTOR-NOISES + 2@
+  BLEEP  ;
 
-HERE: (READY)
-  \ Execution table for `READY`.
-  ' READY2 CFA , ' READY3 CFA ,
-  
-: READY  ( -- )
-  \ Set the players' positions before a new round.
-  PLAYERS 2 - CELLS (READY) + @ EXECUTE  ;
+DEFER MOTOR-NOISE  ' (MOTOR-NOISE) IS MOTOR-NOISE
 
-( Round)
+: TOGGLE-SOUND  ( -- )
 
-: ROUND-INIT  ( -- )
-  CLEAR-ARENA READY PAINT1 PAINT2 PAINT3  AKEY DROP  ;
+  \ Toggle the sound on and off, by changing what the deferred
+  \ words `MOTOR-NOISE` and `CRASH-NOISE` execute.
 
-: ROUND  ( -- f )
-  \ f = Break key pressed?
-  ROUND-INIT
-  FALSE  \ default exit flag
-  BEGIN
-    MOVE1 MOVE2 MOVE3
-    CRASH1? IF  CRASH1 +SCORES EXIT  THEN  PAINT1 MOTOR-NOISE1
-    CRASH2? IF  CRASH2 +SCORES EXIT  THEN  PAINT2 MOTOR-NOISE2
-    CRASH3? IF  CRASH3 +SCORES EXIT  THEN  PAINT3 MOTOR-NOISE3
-  ?TERMINAL UNTIL  0=  ;
+  ' MOTOR-NOISE DEFER@ [ ' (MOTOR-NOISE) CFA ] LITERAL =
+  IF    ' NOOP
+  ELSE  ' (MOTOR-NOISE)  THEN  ' MOTOR-NOISE DEFER!
 
-( Game)
+  ' CRASH-NOISE DEFER@ [ ' (CRASH-NOISE) CFA ] LITERAL =
+  IF    ' NOOP
+  ELSE  ' (CRASH-NOISE)  THEN  ' CRASH-NOISE DEFER!  ;
 
-: ENOUGH?  ( -- f )
-  \ No more rounds?
-  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+( Collisions )
 
-: GAME-INIT  ( -- )
-  SCORE1 OFF  SCORE2 OFF  SCORE3 OFF
-  CLS0 ARENA SAVE-ARENA  ;
+999 CONSTANT MAX-SCORE
 
-: GAME  ( -- )
-  GAME-INIT BEGIN  ROUND  UNTIL  ;
+: SCORE!   ( n a -- )
+  \ Update the score stored in 'a' with 'n';
+  \ if the result is greater than the maximum score,
+  \ reset the score to zero.
+  DUP @ ROT + DUP MAX-SCORE > IF  0=  THEN  SWAP !  ;
+
+: SCORE+  ( n -- )
+  CURRENT-SCORE SCORE! .SCORE  ;
+
+: CRASH?  ( -- f )  CURRENT-COORDS 2@ POINT  ;
+
+: +SCORES  ( -- )
+  \ Increase the score of the players that didn't crash.
+  \ CRASH1? 0= SCORE1+  CRASH2? 0= SCORE2+  CRASH3? 0= SCORE3+  ;
+  PLAYERS 0 DO  I CURRENT-PLAYER! CRASH? 0= SCORE+  LOOP  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

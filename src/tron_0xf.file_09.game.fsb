@@ -1,0 +1,150 @@
+\ tron_0xf.file_09.game.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: game )
+
+2 10 THRU
+
+( Rudder increments)
+
+ \ Coordinate increments.
+ \ Double constants are used to update the coordinate
+ \ increments faster.
+
+ \ X  Y 
+   0  1 2CONSTANT UP-INCS
+   0 -1 2CONSTANT DOWN-INCS
+  -1  0 2CONSTANT LEFT-INCS
+   1  0 2CONSTANT RIGHT-INCS
+
+( Autopilot )
+
+: -1..1  ( -- -1 | 0 | 1 )
+  \ Return a random increment for a graphic coordinate.
+  \ XXX TODO Rewrite in assembler.
+  3 RND 1-  ;
+
+: ABOUT-TO-CRASH?  ( -- f )
+  CURRENT-XINC @ 2* CURRENT-XC @ +
+  CURRENT-YINC @ 2* CURRENT-YC @ + POINT  ;
+
+: AUTOPILOT  ( -- )
+  \ 2 RND ?EXIT \ 50% times, do nothing
+  ABOUT-TO-CRASH? IF  \ random dodge
+    CURRENT-XINC @  \ moving on the X axis?
+    IF    0 -1..1 \ move on the Y axis
+    ELSE  -1..1 0 \ move on the X axis
+    THEN  CURRENT-INCS 2!
+  THEN  ;
+
+( HUMAN-RUDDER )
+
+: HUMAN-RUDDER  ( -- )
+
+  \ Update the coordinate increments of the current (human)
+  \ player.
+
+  CURRENT-UP-K @ PRESSED? IF
+    CURRENT-XINC @ IF  UP-INCS CURRENT-INCS 2!  THEN  EXIT
+  THEN
+  CURRENT-DOWN-K @ PRESSED? IF
+    CURRENT-XINC @ IF  DOWN-INCS CURRENT-INCS 2!  THEN  EXIT
+  THEN
+  CURRENT-LEFT-K @ PRESSED? IF
+    CURRENT-YINC @ IF  LEFT-INCS CURRENT-INCS 2!  THEN  EXIT
+  THEN
+  CURRENT-RIGHT-K @ PRESSED? IF
+    CURRENT-YINC @ IF  RIGHT-INCS CURRENT-INCS 2!  THEN  EXIT
+  THEN  ;
+
+DEFER RUDDER  ( -- )  ' HUMAN-RUDDER IS RUDDER
+
+( FORWARD )
+
+: FORWARD  ( -- )
+
+  \ Update the coordinates of the current player.
+
+  RUDDER
+  CURRENT-XINC @ CURRENT-XC +!
+  CURRENT-YINC @ CURRENT-YC +!  ;
+
+( POSITIONS READY )
+
+: POSITIONS1  ( -- )
+  \ Set the player's position before a new round,
+  \ for one player.
+  127 XC0 ! 88 YC0 !  UP-INCS INCS0 2!  ;
+
+: POSITIONS2  ( -- )
+  \ Set the players' positions before a new round,
+  \ for two players.
+   40 XC0 ! 88 YC0 !  RIGHT-INCS INCS0 2!
+  215 XC1 ! 88 YC1 !  LEFT-INCS  INCS1 2!  ;
+
+: POSITIONS3  ( -- )
+  \ Set the players' positions before a new round,
+  \ for three players.
+   40 XC0 ! 127 YC0 !  RIGHT-INCS INCS0 2!
+  215 XC1 ! 127 YC1 !  LEFT-INCS  INCS1 2!
+  127 XC2 !  40 YC2 !  UP-INCS    INCS2 2!  ;
+
+HERE: POSITIONS-TABLE
+  \ Execution table for `POSITIONS`.
+  ' POSITIONS1 CFA , ' POSITIONS2 CFA , ' POSITIONS3 CFA ,
+ 
+: POSITIONS  ( -- )
+  \ Set the players' start positions.
+  PLAYERS 1- CELLS POSITIONS-TABLE + @ EXECUTE  ;
+
+: READY  ( -- )
+  \ Show all players at their start positions.
+  POSITIONS  PLAYERS 0 DO  I CURRENT-PLAYER! PAINT  LOOP  ;
+
+( ROUND )
+
+: ROUND-INIT  ( -- )
+  CLEAR-ARENA READY AKEY DROP  ;
+
+: ROUND  ( -- f )
+  \ f = Break key pressed?
+  ROUND-INIT  FALSE
+  BEGIN
+    PLAYERS 0 DO
+      I CURRENT-PLAYER!
+      FORWARD CRASH? IF  CRASH +SCORES UNLOOP EXIT  THEN
+    LOOP
+    PLAYERS 0 DO
+      PAINT MOTOR-NOISE
+    LOOP
+  ?TERMINAL UNTIL  0=  ;
+
+( GAME )
+
+: ENOUGH?  ( -- f )
+  \ No more rounds?
+  WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+
+: -SCORES  ( -- )
+  \ Reset all scores.
+  PLAYERS 0 DO  I CURRENT-PLAYER!  CURRENT-SCORE OFF  LOOP  ;
+
+: GAME-INIT  ( -- )
+  CLS0 ARENA -SCORES SAVE-ARENA  ;
+
+: ?ROUND-END  ( f -- )
+  \ XXX TMP
+  ?EXIT  AKEY DROP  ;
+
+: GAME  ( -- )
+  GAME-INIT BEGIN  ROUND DUP 0= ?ROUND-END  UNTIL  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

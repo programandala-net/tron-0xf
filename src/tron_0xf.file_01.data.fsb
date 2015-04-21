@@ -31,7 +31,7 @@ FORTH DEFINITIONS
 
 : PAPERY  ( color -- paper-attribute )  8 *  ;
 
-2 9 THRU
+2 10 THRU
 
 ( Vocabulary)
 
@@ -58,7 +58,7 @@ EN VARIABLE LANG   \ current language
 
 ( Players data)
 
-11 CELLS CONSTANT /PLAYER-DATA \ bytes per player data
+12 CELLS CONSTANT /PLAYER-DATA \ bytes per player data
 
   \ Buffer that holds the data of all players.
 
@@ -68,9 +68,13 @@ PLAYERS-DATA /PLAYERS-DATA ERASE
 
   \ Pointers to the data of every player.
 
-PLAYERS-DATA                CONSTANT PLAYER1-DATA
+PLAYERS-DATA CONSTANT PLAYER0-DATA
+PLAYER0-DATA /PLAYER-DATA + CONSTANT PLAYER1-DATA
 PLAYER1-DATA /PLAYER-DATA + CONSTANT PLAYER2-DATA
-PLAYER2-DATA /PLAYER-DATA + CONSTANT PLAYER3-DATA
+
+HERE: PLAYER-DATA
+  \ Table to access the players' data addresses.
+  PLAYER0-DATA , PLAYER1-DATA , PLAYER2-DATA ,
 
 ( Specific player data fields )
 
@@ -84,9 +88,30 @@ PLAYER2-DATA /PLAYER-DATA + CONSTANT PLAYER3-DATA
   \ whole (e.g. store and fetch the coordinates with double
   \ numbers, for speed; erase the whole zone, etc.).
 
-  1 - /PLAYER-DATA * PLAYERS-DATA +  \ player data address
-  SWAP CELLS +                       \ field address
-  DUP CONSTANT !  ;                  \ do it
+  /PLAYER-DATA * PLAYERS-DATA +  \ player data address
+  SWAP CELLS +                   \ field address
+  DUP CONSTANT !  ;              \ do it
+
+( Player 0 data fields)
+
+ HUMAN  0 0 PLAYER-VARIABLE PLAYER0   \ human or robot
+     0  1 0 PLAYER-VARIABLE SCORE0    \ score
+     0  2 0 PLAYER-VARIABLE YC0       \ Y coordinate
+     0  3 0 PLAYER-VARIABLE XC0       \ X coordinate
+     0  4 0 PLAYER-VARIABLE YINC0     \ Y inc (-1..1)
+     0  5 0 PLAYER-VARIABLE XINC0     \ X inc (-1..1)
+YELLOW  6 0 PLAYER-VARIABLE COLOR0    \ ink color
+     0  7 0 PLAYER-VARIABLE UP-K0     \ up key
+     0  8 0 PLAYER-VARIABLE DOWN-K0   \ down key
+     0  9 0 PLAYER-VARIABLE LEFT-K0   \ left key
+     0 10 0 PLAYER-VARIABLE RIGHT-K0  \ right key
+     0 11 0 PLAYER-VARIABLE CONTROL0  \ manual or automatic
+
+  \ Double data fields:
+YC0   CONSTANT COORDS0
+YINC0 CONSTANT INCS0
+  \ Player keys table:
+UP-K0 CONSTANT KEYS0
 
 ( Player 1 data fields)
 
@@ -96,11 +121,12 @@ PLAYER2-DATA /PLAYER-DATA + CONSTANT PLAYER3-DATA
      0  3 1 PLAYER-VARIABLE XC1       \ X coordinate
      0  4 1 PLAYER-VARIABLE YINC1     \ Y inc (-1..1)
      0  5 1 PLAYER-VARIABLE XINC1     \ X inc (-1..1)
-YELLOW  6 1 PLAYER-VARIABLE COLOR1    \ ink color
+  CYAN  6 1 PLAYER-VARIABLE COLOR1    \ ink color
      0  7 1 PLAYER-VARIABLE UP-K1     \ up key
      0  8 1 PLAYER-VARIABLE DOWN-K1   \ down key
      0  9 1 PLAYER-VARIABLE LEFT-K1   \ left key
      0 10 1 PLAYER-VARIABLE RIGHT-K1  \ right key
+     0 11 1 PLAYER-VARIABLE CONTROL1  \ manual or automatic
 
   \ Double data fields:
 YC1   CONSTANT COORDS1
@@ -116,11 +142,13 @@ UP-K1 CONSTANT KEYS1
      0  3 2 PLAYER-VARIABLE XC2       \ X coordinate
      0  4 2 PLAYER-VARIABLE YINC2     \ Y inc (-1..1)
      0  5 2 PLAYER-VARIABLE XINC2     \ X inc (-1..1)
-  CYAN  6 2 PLAYER-VARIABLE COLOR2    \ ink color
+ GREEN  6 2 PLAYER-VARIABLE COLOR2    \ ink color
+( XXX )
      0  7 2 PLAYER-VARIABLE UP-K2     \ up key
      0  8 2 PLAYER-VARIABLE DOWN-K2   \ down key
      0  9 2 PLAYER-VARIABLE LEFT-K2   \ left key
      0 10 2 PLAYER-VARIABLE RIGHT-K2  \ right key
+     0 11 2 PLAYER-VARIABLE CONTROL2  \ manual or automatic
 
   \ Double data fields:
 YC2   CONSTANT COORDS2
@@ -128,29 +156,16 @@ YINC2 CONSTANT INCS2
   \ Player keys table:
 UP-K2 CONSTANT KEYS2
 
-( Player 3 data fields)
+( Current player data fields )
 
- HUMAN  0 3 PLAYER-VARIABLE PLAYER3   \ type
-     0  1 3 PLAYER-VARIABLE SCORE3    \ score
-     0  2 3 PLAYER-VARIABLE YC3       \ Y coordinate
-     0  3 3 PLAYER-VARIABLE XC3       \ X coordinate
-     0  4 3 PLAYER-VARIABLE YINC3     \ Y inc (-1..1)
-     0  5 3 PLAYER-VARIABLE XINC3     \ X inc (-1..1)
- GREEN  6 3 PLAYER-VARIABLE COLOR3    \ ink color
-     0  7 3 PLAYER-VARIABLE UP-K3     \ up key
-     0  8 3 PLAYER-VARIABLE DOWN-K3   \ down key
-     0  9 3 PLAYER-VARIABLE LEFT-K3   \ left key
-     0 10 3 PLAYER-VARIABLE RIGHT-K3  \ right key
+           0 VALUE CURRENT-PLAYER
+PLAYER0-DATA VALUE CURRENT-PLAYER-DATA
 
-  \ Double data fields:
-YC3   CONSTANT COORDS3
-YINC3 CONSTANT INCS3
-  \ Player keys table:
-UP-K3 CONSTANT KEYS3
-
-( Generic player data fields )
-
-PLAYER1-DATA VARIABLE CURRENT-PLAYER-DATA
+: CURRENT-PLAYER!  ( n -- )
+  \ Set the current player to 'n'.
+  \ n = 0..2
+  DUP TO CURRENT-PLAYER
+  CELLS PLAYER-DATA + @ TO CURRENT-PLAYER-DATA ;
 
 : CURRENT-PLAYER-VARIABLE  ( field "name" -- )
 
@@ -161,22 +176,26 @@ PLAYER1-DATA VARIABLE CURRENT-PLAYER-DATA
   \ `CURRENT-PLAYER-DATA`. This way one single word can be used
   \ to manage any player.
 
-  <BUILDS   ( n "name" )  C,
+  <BUILDS   ( n "name" )  CELLS C,
   DOES>     ( -- a ) ( pfa )
-    C@ CELLS CURRENT-PLAYER-DATA @ +  ;
+    C@ CURRENT-PLAYER-DATA +  ;
 
-( Generic player data fields )
+( Current player data fields )
 
- 0 CURRENT-PLAYER-VARIABLE PLAYERx   \ type
- 1 CURRENT-PLAYER-VARIABLE SCOREx    \ score
- 2 CURRENT-PLAYER-VARIABLE YCx       \ Y coordinate
- 3 CURRENT-PLAYER-VARIABLE XCx       \ X coordinate
- 4 CURRENT-PLAYER-VARIABLE YINCx     \ Y inc (-1..1)
- 5 CURRENT-PLAYER-VARIABLE XINCx     \ X inc (-1..1)
- 6 CURRENT-PLAYER-VARIABLE COLORx    \ ink color
- 7 CURRENT-PLAYER-VARIABLE UP-Kx     \ up key
- 8 CURRENT-PLAYER-VARIABLE DOWN-Kx   \ down key
- 9 CURRENT-PLAYER-VARIABLE LEFT-Kx   \ left key
-10 CURRENT-PLAYER-VARIABLE RIGHT-Kx  \ right key
+ 0 CURRENT-PLAYER-VARIABLE CURRENT-TYPE     \ human, robot
+ 1 CURRENT-PLAYER-VARIABLE CURRENT-SCORE    \ score
+ 2 CURRENT-PLAYER-VARIABLE CURRENT-COORDS   \ both coordinates
+ 2 CURRENT-PLAYER-VARIABLE CURRENT-YC       \ Y coordinate
+ 3 CURRENT-PLAYER-VARIABLE CURRENT-XC       \ X coordinate
+ 4 CURRENT-PLAYER-VARIABLE CURRENT-INCS     \ both incs
+ 4 CURRENT-PLAYER-VARIABLE CURRENT-YINC     \ Y inc (-1..1)
+ 5 CURRENT-PLAYER-VARIABLE CURRENT-XINC     \ X inc (-1..1)
+ 6 CURRENT-PLAYER-VARIABLE CURRENT-COLOR    \ ink color
+ 7 CURRENT-PLAYER-VARIABLE CURRENT-KEYS     \ keys table
+ 7 CURRENT-PLAYER-VARIABLE CURRENT-UP-K     \ up key
+ 8 CURRENT-PLAYER-VARIABLE CURRENT-DOWN-K   \ down key
+ 9 CURRENT-PLAYER-VARIABLE CURRENT-LEFT-K   \ left key
+10 CURRENT-PLAYER-VARIABLE CURRENT-RIGHT-K  \ right key
+11 CURRENT-PLAYER-VARIABLE CURRENT-CONTROL  \ manual, autopilot
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
