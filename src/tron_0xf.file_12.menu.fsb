@@ -1,4 +1,4 @@
-\ tron_0xf.file_10.menu.fsb
+\ tron_0xf.file_12.menu.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -13,7 +13,7 @@
 
 2 10 THRU
 
-  CR .( Tron -- font and UDG)
+CR .( Tron 0xF: fonts)
 
 -SCROLL
 FONT /FONT 0 0 TAPE>MEM              \ main font
@@ -29,61 +29,87 @@ LOADED? ON  \ tell the loader's loop it's finished
 
 ( Menu -- data )
 
-5 CONSTANT OPTIONS       \ number of menu options
+8 CONSTANT OPTIONS       \ number of menu options
 7 CONSTANT MENU-LINE     \ line of the first menu option
 2 CONSTANT LINES/OPTION  \ lines occupied per menu option
+
+TRUE VARIABLE CLEAR-MENU?  \ clear the menu?
+  \ This flag is needed because some menu options need the menu
+  \ not to be cleared after execution.
 
   \ A table to store the menu keys, that change depending
   \ on the current language. The table is updated every
   \ time the menu is printed.
 OPTIONS BUFFER: MENU-KEYS
+
+: OPTION-2#$  ( -- ca len )
+  \ Menu option 2 with the number of players.
+  \ XXX FIXME the line must be readjusted
+  OPTION-2$ PLAYERS S->D <# #S #> S+  ;
+  
+: OPTION-3#$  ( -- ca len )
+  \ Menu option 3 with the status of the sound.
+  \ XXX FIXME the line must be readjusted
+  OPTION-3$ SOUND? @ ON/OFF$ S+  ;
+  
+HERE: MENU-OPTIONS
   
   \ Table that holds the cfa of the words
   \ that return the localized texts of the menu options.
-HERE: MENU-OPTIONS
-  ' OPTION-0$ CFA , ' OPTION-1$ CFA , ' OPTION-2$ CFA ,
-  ' OPTION-3$ CFA , ' OPTION-4$ CFA ,
+
+  ' OPTION-0$ CFA ,   ' OPTION-1$ CFA ,  ' OPTION-2#$ CFA ,
+  ' OPTION-3#$ CFA ,  ' OPTION-4$ CFA ,  ' OPTION-5$ CFA ,
+  ' OPTION-6$ CFA ,   ' OPTION-7$ CFA ,
 
 ( Menu -- language and commands)
 
-: +UDG  ( n -- )
-  \ Set the UDG bank required by the given language number.
-  CELLS UDG-BANK + @ SYS-UDG !  ;
-
-: -UDG  ( -- )
-  \ Set the default UDG bank.
-  UDG SYS-UDG !  ;
-  
-: LANGUAGE  ( -- )
+: CHANGE-LANGUAGE  ( -- )
   \ Change the current language.
-  LANG @ 1+ DUP LANGS U< *  DUP LANG ! +UDG  ;
+  LANG @ 1+ DUP LANGS < *  DUP LANG ! +UDG  ;
+
+: CHANGE-PLAYERS  ( -- )
+  \ Change the number of players.
+  PLAYERS 1+ DUP [ MAX-PLAYERS 1+ ] LITERAL < * 1 MAX
+  TO PLAYERS  CLEAR-MENU? OFF  ;
+
+: TOGGLE-SOUND  ( -- )
+  \ Toggle the game sounds.
+  SOUND? @ 0= DUP SOUND? ! SOUND  CLEAR-MENU? OFF  ;
 
 : ABOUT  ( -- )
   \ XXX TMP
   \ XXX TODO
-  CLS0 TITLE CREDITS INSTRUCTIONS PAUSE  ;
+  CLS0 TITLE CREDITS PAUSE  ;
 
-: FINISH  ( -- )  CLS0 -FONT -UDG QUIT-MESSAGE QUIT  ;
+: INSTRUCTIONS  ( -- )
+  \ XXX TMP
+  \ XXX TODO
+  CLS0 TITLE (INSTRUCTIONS) PAUSE  ;
+
+: FINISH  ( -- )
+  CLS0 -FONT -UDG QUIT-MESSAGE QUIT  ;
+
+( Menu commands table)
 
 HERE: MENU-COMMANDS
+
   \ Execution table of the menu options.
-  \ XXX TODO -- sound on and off
-  ' LANGUAGE CFA ,
+
+  ' CHANGE-LANGUAGE CFA ,
+  ' INSTRUCTIONS CFA ,
+  ' CHANGE-PLAYERS CFA ,
+  ' TOGGLE-SOUND CFA ,
   ' CONFIGURATION CFA ,
   ' GAME CFA ,
   ' ABOUT CFA ,
   ' FINISH CFA ,
 
-( Menu -- effect and key)
+( Menu effect)
 
 : MENU-EFFECT  ( -- )
   \ Do some screen effect on the menu.
   \ XXX TODO
   ;
-
-: MENU-KEY  ( -- c )
-  \ Wait until a key to be pressed and return its code.
-  BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
 
 ( Menu options)
 
@@ -116,11 +142,15 @@ HERE: MENU-COMMANDS
 
 ( Menu)
 
+: CLEAR-MENU  ( -- )
+  CLEAR-MENU? @ IF  CLS0  THEN  CLEAR-MENU? ON  ;
+
 : MENU  ( -- )
   \ Print the menu.
   \ XXX TODO -- graphics
   \ XXX TODO -- sound on and off
-  CLS0 OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
+  CLEAR-MENU
+  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
 
 ( Valid option)
 
@@ -135,15 +165,23 @@ HERE: MENU-COMMANDS
     IF  2DROP MENU-COMMANDS I CELLS + @ TRUE DUP LEAVE  THEN
   LOOP  DROP  ;
 
+: MENU-KEY  ( -- c )
+  \ Wait until a key to be pressed and return its code.
+  BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
+
+: VALID-OPTION-SOUND  ( -- )
+  \ XXX TODO
+  100 50 DO  11 I ?BLEEP  LOOP  ;
+
 : VALID-OPTION  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  ;
+  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  VALID-OPTION-SOUND  ;
 
 ( Boot)
 
 : INIT  ( -- )
-  +SCREEN  +FONT  ;
+  +SCREEN +FONT  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.

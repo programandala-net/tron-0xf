@@ -1,0 +1,88 @@
+\ tron_0xf.file_05.spanish_texts.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDG.
+
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+
+.( Tron 0xF: Spanish texts )
+
+2 6 THRU
+
+( Instructions )
+
+: ES-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Cada jugador conduce una moto" CR
+  ." cuyo único control la hace girar" CR
+  ." noventa grados sin frenar." CR CR
+  ." Cada moto deja tras de sí una" CR
+  ." pared sólida de luz." CR CR
+  ." El objetivo del juego es hacer" CR
+  ." estrellarse al contrincante con" CR
+  ." el laberinto." CR  ;
+  \  <------------------------------->
+
+( Quit )
+
+: ES-QUIT-MESSAGE  ( -- )
+  \  <------------------------------->
+  ." Para jugar otra vez: RUN" CR
+  ." Para salir de Forth: BYE" CR  ;
+  \  <------------------------------->
+
+( Keys )
+
+: ES-UP$     ( -- ca len )  S" Arriba"  ;
+: ES-DOWN$   ( -- ca len )  S" Abajo"  ;
+: ES-LEFT$   ( -- ca len )  S" Izquierda"  ;
+: ES-RIGHT$  ( -- ca len )  S" Derecha"  ;
+
+CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
+
+( Menu options )
+
+: ES-OPTION-0$  ( -- ca len )  S" No en español"  ;
+: ES-OPTION-1$  ( -- ca len )  S" Instrucciones"  ;
+: ES-OPTION-2$  ( -- ca len )  S" Motos: "  ;
+: ES-OPTION-3$  ( -- ca len )  S" Sonido: "  ;
+: ES-OPTION-4$  ( -- ca len )  S" Configurar"  ;
+: ES-OPTION-5$  ( -- ca len )  S" Jugar"  ;
+: ES-OPTION-6$  ( -- ca len )  S" Acerca de"  ;
+: ES-OPTION-7$  ( -- ca len )  S" Terminar"  ;
+
+( Other )
+
+  \ XXX OLD
+  \ : ES-ANOTHER?$  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
+
+: ES-PRESS-ANY-KEY$  ( -- ca len ) S" Pulsa una tecla"  ;
+
+: ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
+
+: ES-HUMAN$  ( -- ca len )  S" Humano"  ;
+: ES-ROBOT$  ( -- ca len )  S" Robot "  ;
+
+: ES-ON$   ( -- ca len )  S" Sí"  ;
+: ES-OFF$  ( -- ca len )  S" No"  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

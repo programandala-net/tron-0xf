@@ -1,4 +1,4 @@
-\ tron_0xf.file_04.localization.fsb
+\ tron_0xf.file_06.localization.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -70,11 +70,19 @@
 ' ES-OPTION-4$ ' EO-OPTION-4$ ' EN-OPTION-4$
   LOCALIZED OPTION-4$  ( -- ca len )
 
+( Localized menu options)
+
+' ES-OPTION-5$ ' EO-OPTION-5$ ' EN-OPTION-5$
+  LOCALIZED OPTION-5$  ( -- ca len )
+' ES-OPTION-6$ ' EO-OPTION-6$ ' EN-OPTION-6$
+  LOCALIZED OPTION-6$  ( -- ca len )
+' ES-OPTION-7$ ' EO-OPTION-7$ ' EN-OPTION-7$
+  LOCALIZED OPTION-7$  ( -- ca len )
+
 ( Localized texts)
 
 ' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
 LOCALIZED (INSTRUCTIONS)  ( -- )
-: INSTRUCTIONS  ( -- )  1 BRIGHT (INSTRUCTIONS) CR 0 BRIGHT  ;
 
 ' ES-UP$ ' EO-UP$ ' EN-UP$
   LOCALIZED UP$  ( -- ca len )
@@ -93,22 +101,28 @@ LOCALIZED LICENSE$  ( -- ca len )
 
 ( Localized texts) 
 
-' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
-LOCALIZED ANOTHER?$  ( -- ca len )
+  \ XXX OLD
+  \ ' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
+  \ LOCALIZED ANOTHER?$  ( -- ca len )
 
 ' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
 
 ' ES-QUIT-MESSAGE ' EO-QUIT-MESSAGE ' EN-QUIT-MESSAGE
 LOCALIZED QUIT-MESSAGE  ( -- )
 
-' ES-HUMAN$ ' EO-HUMAN$ ' EN-HUMAN$
-LOCALIZED HUMAN$  ( -- )
+' ES-HUMAN$ ' EO-HUMAN$ ' EN-HUMAN$ LOCALIZED HUMAN$  ( -- )
 
-' ES-ROBOT$ ' EO-ROBOT$ ' EN-ROBOT$
-LOCALIZED ROBOT$  ( -- )
+' ES-ROBOT$ ' EO-ROBOT$ ' EN-ROBOT$ LOCALIZED ROBOT$  ( -- )
 
-( Texts that don't need translation)
+' ES-ON$ ' EO-ON$ ' EN-ON$ LOCALIZED ON$  ( -- )
 
+' ES-OFF$ ' EO-OFF$ ' EN-OFF$ LOCALIZED OFF$  ( -- )
+
+( Special texts and texts that don't need translation)
+
+: ON/OFF$  ( f -- ca len )
+  IF  ON$  ELSE  OFF$  THEN  ;
+  
 : CREDITS  ( -- )
   \  <------------------------------->
   ." Copyright (C) 1985,2009,2015" CR

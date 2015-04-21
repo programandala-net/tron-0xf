@@ -1,0 +1,85 @@
+\ tron_0xf.file_04.esperanto_texts.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDG.
+
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+.( Tron 0xF: Esperanto texts )
+
+2 6 THRU
+
+( Instructions )
+
+: EO-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  ." Ĉiu ludanto veturas motorciklon" CR
+  ." kies nura stirilo ĝin ĝiras" CR
+  ." naŭdek gradojn sen malrapidiĝo." CR CR
+  ." Ĉiu veturilo postlasas solidan" CR
+  ." lumo-muron." CR CR
+  ." La ludocelo estas igi la kon-" CR
+  ." traŭulon frakasi la labirinton." CR  ;
+  \  <------------------------------->
+
+( Quit )
+
+: EO-QUIT-MESSAGE  ( -- )
+  \  <------------------------------->
+  ." Por reludi: RUN" CR
+  ." Por eliri el Fortho: BYE" CR  ;
+  \  <------------------------------->
+
+( Keys )
+
+: EO-UP$     ( -- ca len )  S" Supren"  ;
+: EO-DOWN$   ( -- ca len )  S" Malsupren"  ;
+: EO-LEFT$   ( -- ca len )  S" Maldektren"  ;
+: EO-RIGHT$  ( -- ca len )  S" Dekstren"  ;
+
+CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
+
+( Menu options )
+
+: EO-OPTION-0$  ( -- ca len )  S" Ne en Esperanto"  ;
+: EO-OPTION-1$  ( -- ca len )  S" Instrukcioj"  ;
+: EO-OPTION-2$  ( -- ca len )  S" Motorcikloj: "  ;
+: EO-OPTION-3$  ( -- ca len )  S" Sono: "  ;
+: EO-OPTION-4$  ( -- ca len )  S" Konfiguri"  ;
+: EO-OPTION-5$  ( -- ca len )  S" Ludi"  ;
+: EO-OPTION-6$  ( -- ca len )  S" Prio"  ;
+: EO-OPTION-7$  ( -- ca len )  S" Eliri"  ;
+
+( Other )
+
+  \ XXX OLD
+  \ : EO-ANOTHER?$  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+
+: EO-PRESS-ANY-KEY$  ( -- ca len ) S" Premu klavon"  ;
+
+: EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
+
+: EO-HUMAN$  ( -- ca len )  S" Homo  "  ;
+: EO-ROBOT$  ( -- ca len )  S" Roboto"  ;
+
+: EO-ON$   ( -- ca len )  S" Jes"  ;
+: EO-OFF$  ( -- ca len )  S" Ne "  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

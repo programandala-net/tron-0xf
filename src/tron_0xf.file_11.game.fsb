@@ -1,0 +1,189 @@
+\ tron_0xf.file_11.game.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: game )
+
+2 10 THRU
+
+( Rudder increments)
+
+ \ Coordinate increments.
+ \ Double constants are used to update the coordinate
+ \ increments faster.
+
+ \ X  Y 
+   0  1 2CONSTANT UP-INCS
+   0 -1 2CONSTANT DOWN-INCS
+  -1  0 2CONSTANT LEFT-INCS
+   1  0 2CONSTANT RIGHT-INCS
+
+: -1..1  ( -- -1 | 0 | 1 )
+  \ Return a random increment for a graphic coordinate.
+  \ XXX TODO Rewrite in assembler.
+  3 RND 1-  ;
+
+( Autopilot )
+
+  \ XXX TODO -- not finished
+
+: DODGE  ( -- )
+  \ Change the direction of the current player.
+  PLAYER-XINC @   \ moving on the X axis?
+  IF    0 -1..1   \ move on the Y axis
+  ELSE  -1..1 0   \ move on the X axis
+  THEN  PLAYER-INCS 2!  ;
+
+: +POINT?  ( xinc yinc -- f )
+  \ Is there's a pixel on the current
+  \ player's coordinates plus the given increments?
+  PLAYER-YC @ + SWAP PLAYER-XC @ + SWAP POINT  ;
+
+: (DODGE)  ( xinc yinc -- )
+  \ If there's a pixel on the current
+  \ player's coordinates plus the given increments,
+  \ change the direction.
+  2DUP +POINT? IF  PLAYER-INCS 2!  ELSE  2DROP  THEN  ;
+
+: X-DODGE  ( -- )
+  \ Moving on the X asis, check a random side.
+  -1..1 -DUP IF  0 SWAP (DODGE)  THEN  ;
+
+: Y-DODGE  ( -- )
+  \ Moving on the Y asis, check a random side.
+  -1..1 -DUP IF  0 (DODGE)  THEN  ;
+
+HERE: DODGINGS
+  ' X-DODGE CFA , ' Y-DODGE CFA ,
+
+( Autopilot )
+
+: AVOIDABLE-CRASH?  ( -- f )
+  \ Is the second next position occupied?
+  PLAYER-XINC @ 2* PLAYER-XC @ +
+  PLAYER-YINC @ 2* PLAYER-YC @ + POINT  ;
+
+: AUTOPILOT  ( -- )
+  \ Update the coordinate increments of the current (robot)
+  \ player.
+  \ 2 RND ?EXIT \ 50% times, do nothing  \ XXX TMP
+  \ If there's something ahead, change the direction.
+  AVOIDABLE-CRASH? IF  DODGE EXIT  THEN
+  \ Otherwise, check the sides.
+  PLAYER-XINC @ ABS CELLS DODGINGS + @ EXECUTE  ;
+
+( RUDDER )
+
+: RUDDER  ( -- )
+  \ Update the coordinate increments of the current (human)
+  \ player.
+  PLAYER-UP-K @ PRESSED? IF
+    PLAYER-XINC @ IF  UP-INCS PLAYER-INCS 2!  THEN  EXIT
+  THEN
+  PLAYER-DOWN-K @ PRESSED? IF
+    PLAYER-XINC @ IF  DOWN-INCS PLAYER-INCS 2!  THEN  EXIT
+  THEN
+  PLAYER-LEFT-K @ PRESSED? IF
+    PLAYER-YINC @ IF  LEFT-INCS PLAYER-INCS 2!  THEN  EXIT
+  THEN
+  PLAYER-RIGHT-K @ PRESSED? IF
+    PLAYER-YINC @ IF  RIGHT-INCS PLAYER-INCS 2!  THEN  EXIT
+  THEN  ;
+
+( FORWARD )
+
+: FORWARD  ( -- )
+  \ Update the coordinates of the current player.
+  PLAYER-XINC @ PLAYER-XC +!
+  PLAYER-YINC @ PLAYER-YC +!  ;
+
+( POSITIONS READY )
+
+: POSITIONS1  ( -- )
+  \ Set the player's position before a new round,
+  \ for one player.
+  127 XC0 ! 88 YC0 !  UP-INCS INCS0 2!  ;
+
+: POSITIONS2  ( -- )
+  \ Set the players' positions before a new round,
+  \ for two players.
+   40 XC0 ! 88 YC0 !  RIGHT-INCS INCS0 2!
+  215 XC1 ! 88 YC1 !  LEFT-INCS  INCS1 2!  ;
+
+: POSITIONS3  ( -- )
+  \ Set the players' positions before a new round,
+  \ for three players.
+   40 XC0 ! 127 YC0 !  RIGHT-INCS INCS0 2!
+  215 XC1 ! 127 YC1 !  LEFT-INCS  INCS1 2!
+  127 XC2 !  40 YC2 !  UP-INCS    INCS2 2!  ;
+
+HERE: POSITIONS-TABLE
+  \ Execution table for `POSITIONS`.
+  ' POSITIONS1 CFA , ' POSITIONS2 CFA , ' POSITIONS3 CFA ,
+ 
+: POSITIONS  ( -- )
+  \ Set the players' start positions.
+  PLAYERS 1- CELLS POSITIONS-TABLE + @ EXECUTE  ;
+
+: READY  ( -- )
+  \ Show all players at their start positions.
+  POSITIONS  PLAYERS 0 DO  I PLAYER! PAINT  LOOP  ;
+
+( ROUND )
+
+: ROUND-INIT  ( -- )
+  \ Init a game round.
+  \ XXX TODO message
+  CLEAR-ARENA READY AKEY DROP  ;
+
+: ROUND  ( -- f )
+  \ Game round, until a crash or the break key is pressed.
+  \ f = Break key pressed?
+  ROUND-INIT  FALSE
+  BEGIN
+    PLAYERS 0 DO
+      I PLAYER!  PLAYER-CONTROL @ EXECUTE
+      CRASH? IF  CRASH +SCORES UNLOOP EXIT  THEN
+      FORWARD PAINT MOTOR-NOISE
+    LOOP
+  ?TERMINAL UNTIL  0=  ;
+
+( GAME )
+
+  \ : ENOUGH?  ( -- f )  \ XXX OLD -- not used
+  \   \ No more rounds?
+  \   WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+
+: -SCORES  ( -- )
+  \ Reset all scores.
+  PLAYERS 0 DO  I PLAYER!  PLAYER-SCORE OFF  LOOP  ;
+
+: GAME-INIT  ( -- )
+  \ Init the game.
+  CLS0 ARENA -SCORES SAVE-ARENA  SOUND? @ SOUND  ;
+
+: ?ROUND-END  ( f -- )
+  \ XXX TMP
+  ?EXIT  AKEY DROP  ;
+
+: GAME  ( -- )
+  \ Game loop.
+  GAME-INIT BEGIN  ROUND DUP 0= ?ROUND-END  UNTIL  ;
+
+  \ Init the players' controls. By default, only player 0 is
+  \ human. Their type (human or robot) is already set in the
+  \ data module, but their controls have to be init here,
+  \ when `RUDDER` and `AUTOPILOT` have been defined.
+
+   ' RUDDER CFA CONTROL0 !
+' AUTOPILOT CFA CONTROL1 !
+' AUTOPILOT CFA CONTROL2 !
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

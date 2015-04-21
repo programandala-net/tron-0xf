@@ -1,0 +1,80 @@
+\ tron_0xf.file_10.game.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: game )
+
+2 6 THRU
+  
+( Paint )
+
+: PAINT  ( -- )
+  PLAYER-COLOR @ INK PLAYER-XC @ PLAYER-YC @ PLOT  ;
+
+( Sound )
+
+DEFER ?BLEEP  ( n1 n2 -- )
+
+: SOUND  ( f -- )
+  \ Turn the sound on or off, depending on 'f'.
+  IF  ' BLEEP ELSE  ' 2DROP  THEN  ' ?BLEEP DEFER!  ;
+
+TRUE VARIABLE SOUND?  \ status of the sound, on or off
+SOUND? @ SOUND        \ default
+
+( Crash effect )
+
+: COORDS>CURSOR  ( x y -- line col )  \ XXX OLD -- not used
+  \ Convert graphic coordinates to line and column.
+  175 SWAP - 8 / SWAP 8 /  ;
+
+: CRASH-NOISE  ( -- )
+  \ XXX TODO
+  100 50 DO  11 I ?BLEEP  LOOP  ;
+
+: CRASH  ( -- )
+  \ XXX TODO
+  CRASH-NOISE  ;
+
+( Noise )
+
+  \ XXX OLD
+\ HERE: MOTOR-NOISES
+\  \ Table of `BLEEP` parameters for every player.
+\  0 1 , ,  100 1 , ,  200 1 , ,
+
+: MOTOR-NOISE  ( -- )
+  \ Do the motor noise of the current player.
+  \ PLAYER [ 2 CELLS ] LITERAL * MOTOR-NOISES + 2@
+  1 0 ?BLEEP  ;
+
+( Collisions )
+
+999 CONSTANT MAX-SCORE
+
+: SCORE!   ( n a -- )
+  \ Update the score stored in 'a' with 'n';
+  \ if the result is greater than the maximum score,
+  \ reset the score to zero.
+  DUP @ ROT + DUP MAX-SCORE > IF  0=  THEN  SWAP !  ;
+
+: SCORE+  ( n -- )
+  PLAYER-SCORE SCORE! .SCORE  ;
+
+: CRASH?  ( -- f )
+  \ Is the next position occupied?
+  PLAYER-XINC @ PLAYER-XC @ +
+  PLAYER-YINC @ PLAYER-YC @ + POINT  ;
+
+: +SCORES  ( -- )
+  \ Increase the score of the players that didn't crash.
+  PLAYERS 0 DO  I PLAYER! CRASH? 0= SCORE+  LOOP  ;
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

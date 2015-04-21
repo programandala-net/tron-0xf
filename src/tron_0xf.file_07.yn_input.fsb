@@ -1,4 +1,4 @@
-\ tron_0xf.file_05.yn_input.fsb
+\ tron_0xf.file_07.yn_input.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -12,8 +12,8 @@
 .( Tron 0xF: Y/N input )
 
 : UPPER  ( c -- c' )
-  \ Convert a char in the range a-z to uppercase
-  \ (Warning: no check!, chars other than a-z get corrupted).
+  \ Convert a char in the range a-z to uppercase.
+  \ Warning: no check!, chars other than a-z get corrupted.
   223 AND  ;
 
 : PAUSE  ( -- )

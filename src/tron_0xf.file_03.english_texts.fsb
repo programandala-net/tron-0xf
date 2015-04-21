@@ -1,0 +1,76 @@
+\ tron_0xf.file_03.english_texts.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A game written in ZX Spectrum's Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: English texts )
+
+2 6 THRU
+
+( Instructions )
+
+: EN-INSTRUCTIONS  ( -- )
+  \  <------------------------------->
+  \  XXX TODO -- complete:
+  ." Every player drives a motorbike" CR
+  ." whose only control makes it turn" CR
+  ." ninety degrees without" CR
+  ." deceleration." CR CR
+  ." Every motorbike leaves a solid" CR
+  ." light trail behind." CR CR
+  ." The goal of the game is to make" CR
+  ." your adversary crash the" CR
+  ." labyrinth." CR  ;
+  \  <------------------------------->
+
+( Quit )
+
+: EN-QUIT-MESSAGE  ( -- )
+  \  <------------------------------->
+  ." To play again: RUN" CR
+  ." To exit Forth: BYE" CR  ;
+  \  <------------------------------->
+
+( Keys ) 
+
+: EN-UP$     ( -- ca len )  S" Up"  ;
+: EN-DOWN$   ( -- ca len )  S" Down"  ;
+: EN-LEFT$   ( -- ca len )  S" Left"  ;
+: EN-RIGHT$  ( -- ca len )  S" Right"  ;
+
+CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
+
+( Menu options )
+
+: EN-OPTION-0$  ( -- ca len )  S" Not in English"  ;
+: EN-OPTION-1$  ( -- ca len )  S" Instructions"  ;
+: EN-OPTION-2$  ( -- ca len )  S" Motorbikes: "  ;
+: EN-OPTION-3$  ( -- ca len )  S" Sound: "  ;
+: EN-OPTION-4$  ( -- ca len )  S" Configure"  ;
+: EN-OPTION-5$  ( -- ca len )  S" Play"  ;
+: EN-OPTION-6$  ( -- ca len )  S" About"  ;
+: EN-OPTION-7$  ( -- ca len )  S" Quit"  ;
+
+( Other )
+
+  \ XXX OLD
+  \ : EN-ANOTHER?$  ( -- ca len )  S" Play again? (Y/N)"  ;
+
+: EN-PRESS-ANY-KEY$  ( -- ca len )  S" Press any key"  ;
+
+: EN-LICENSE$  ( -- ca len )  S" License:"  ;
+
+: EN-HUMAN$  ( -- ca len )  S" Human"  ;
+: EN-ROBOT$  ( -- ca len )  S" Robot"  ;
+
+: EN-ON$   ( -- ca len )  S" Yes"  ;
+: EN-OFF$  ( -- ca len )  S" No "  ;
+
+  
+  \ vim: filetype=abersoftforth

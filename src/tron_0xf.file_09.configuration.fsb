@@ -1,4 +1,4 @@
-\ tron_0xf.file_07.configuration.fsb
+\ tron_0xf.file_09.configuration.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -83,7 +83,7 @@ HERE: KEYS-COL-TABLE
 
 : KEYS-COL  ( n -- column )
   \ Keys column of the current player.
-  CURRENT-PLAYER KEYS-COL-TABLE + C@  ;
+  PLAYER KEYS-COL-TABLE + C@  ;
 
 : KEY#>COORDS  ( n -- line col )
   \ Convert a key number (0..3) of the current player
@@ -103,8 +103,8 @@ HERE: KEYS-COL-TABLE
 : (REDEFINE)  ( -- )
   \ Redefine the keys of the current player.
   KEYS/PLAYER 0 DO
-    CURRENT-KEYS @ I KEY-PROMPT
-    1000 MS PRESSED DUP CURRENT-KEYS @ I CELLS + !
+    PLAYER-KEYS @ I KEY-PROMPT
+    1000 MS PRESSED DUP PLAYER-KEYS @ I CELLS + !
     I KEY#>COORDS ROT KEY.
   LOOP  ;
 
@@ -116,7 +116,7 @@ HERE: KEYS-COL-TABLE
   KEYS/PLAYER 0 DO
     I KEY-DESC I KEYS-LINE + |KEY-DESC
     PLAYERS 0 DO
-      I CURRENT-PLAYER!
+      I PLAYER!
       J KEYS-LINE + KEYS-COL KEYS J PLAYER-KEY.
     LOOP
   LOOP  ;
@@ -125,7 +125,7 @@ HERE: KEYS-COL-TABLE
 
 : REDEFINE  ( -- )
   \ Redefine the keys of all players.
-  PLAYERS 0 DO  I CURRENT-PLAYER! (REDEFINE)  LOOP  ;
+  PLAYERS 0 DO  I PLAYER! (REDEFINE)  LOOP  ;
 
 : REDEFINED?  ( -- f )
   \ Ask for confirmation: Are the redefined keys ok?

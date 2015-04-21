@@ -110,6 +110,14 @@ HERE: UDG-BANK
   \ Addresses of the UDG banks used for every language.
   UDG , EO-UDG , ES-UDG ,
 
+: +UDG  ( n -- )
+  \ Set the UDG bank required by the given language number.
+  CELLS UDG-BANK + @ SYS-UDG !  ;
+
+: -UDG  ( -- )
+  \ Set the default UDG bank.
+  UDG SYS-UDG !  ;
+  
 ( Screen -- generic)
 
 : CLS0  ( -- )
@@ -199,15 +207,15 @@ HERE: SCORE-COLUMN-TABLE
 
 : SCORE-COLUMN  ( -- column )
   \ Score column for the current player.
-  CURRENT-PLAYER SCORE-COLUMN-TABLE + C@  ;
+  PLAYER SCORE-COLUMN-TABLE + C@  ;
 
 : .SCORE  ( -- )
   \ Print the score of the current player.
-  CURRENT-SCORE SCORE-COLUMN CURRENT-COLOR (.SCORE)  ;
+  PLAYER-SCORE SCORE-COLUMN PLAYER-COLOR (.SCORE)  ;
 
 : STATUS  ( -- )
   \ Show the status bar.
-  PLAYERS 0 DO  I CURRENT-PLAYER! .SCORE  LOOP  ;
+  PLAYERS 0 DO  I PLAYER! .SCORE  LOOP  ;
 
 ( Arena border, limit, frame)
 
