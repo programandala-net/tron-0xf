@@ -18,7 +18,7 @@
 
 : PAUSE  ( -- )
   \ Wait for a key press.
-  PRESS-ANY-KEY$ <TYPE> AKEY  ;
+  CR PRESS-ANY-KEY$ |TYPE|  500 MS  AKEY DROP  ;
 
 : Y/N?  ( c -- f )
   \ Is the given char a valid answer for a Y/N question?

@@ -110,13 +110,18 @@ LOCALIZED LICENSE$  ( -- ca len )
 ' ES-QUIT-MESSAGE ' EO-QUIT-MESSAGE ' EN-QUIT-MESSAGE
 LOCALIZED QUIT-MESSAGE  ( -- )
 
-' ES-HUMAN$ ' EO-HUMAN$ ' EN-HUMAN$ LOCALIZED HUMAN$  ( -- )
+' ES-PLAYER$ ' EO-PLAYER$ ' EN-PLAYER$
+LOCALIZED PLAYER$  ( -- ca len )
 
-' ES-ROBOT$ ' EO-ROBOT$ ' EN-ROBOT$ LOCALIZED ROBOT$  ( -- )
+' ES-HUMAN$ ' EO-HUMAN$ ' EN-HUMAN$
+LOCALIZED HUMAN$  ( -- ca len )
 
-' ES-ON$ ' EO-ON$ ' EN-ON$ LOCALIZED ON$  ( -- )
+' ES-ROBOT$ ' EO-ROBOT$ ' EN-ROBOT$
+LOCALIZED ROBOT$  ( -- ca len )
 
-' ES-OFF$ ' EO-OFF$ ' EN-OFF$ LOCALIZED OFF$  ( -- )
+' ES-ON$ ' EO-ON$ ' EN-ON$ LOCALIZED ON$  ( -- ca len )
+
+' ES-OFF$ ' EO-OFF$ ' EN-OFF$ LOCALIZED OFF$  ( -- ca len )
 
 ( Special texts and texts that don't need translation)
 

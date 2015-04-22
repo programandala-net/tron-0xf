@@ -76,6 +76,10 @@ CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
 
 : EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
 
+  \ : EO-KEY$  ( -- ca len )  S" Klavo"  ;
+
+: EO-PLAYER$  ( -- ca len )  S" Ludanto "  ;
+
 : EO-HUMAN$  ( -- ca len )  S" Homo  "  ;
 : EO-ROBOT$  ( -- ca len )  S" Roboto"  ;
 

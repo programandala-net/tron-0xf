@@ -66,11 +66,14 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
 
 : EN-LICENSE$  ( -- ca len )  S" License:"  ;
 
+  \ : EN-KEY$  ( -- ca len )  S" Key"  ;
+
+: EN-PLAYER$  ( -- ca len )  S" Player "  ;
+
 : EN-HUMAN$  ( -- ca len )  S" Human"  ;
 : EN-ROBOT$  ( -- ca len )  S" Robot"  ;
 
 : EN-ON$   ( -- ca len )  S" Yes"  ;
 : EN-OFF$  ( -- ca len )  S" No "  ;
-
   
   \ vim: filetype=abersoftforth

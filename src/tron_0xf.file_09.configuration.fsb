@@ -11,7 +11,7 @@
 
 .( Tron 0xF: configuration )
 
-  \ Max lenght of a player key description in any language:
+  \ Max length of a player key description in any language:
 11 CONSTANT /KEY-DESC
 
   \ Screen coordinates:
@@ -24,7 +24,7 @@
 
 : +KEY-DESC-COL  ( ca len line -- ca len line col' )
   \ Relative column of a key description,
-  \ depending on its lenght; it's relative to
+  \ depending on its length; it's relative to
   \ the absolute column of the key descriptions.
   OVER /KEY-DESC SWAP -  ;
 
@@ -66,7 +66,8 @@ HERE: KEY-DESCS
   \ Print a key name.
   \ a = key address in the keys table
   \ line col = screen coordinates
-  KEY-NAME 2SWAP AT  TYPE  ;
+  \ 0 0 AT .S  \ XXX INFORMER
+  KEY-NAME 2SWAP AT TYPE  ;
 
 : PLAYER-KEY.  ( line col a n -- )
   \ Print a player key name.
@@ -79,53 +80,75 @@ HERE: KEY-DESCS
 
 HERE: KEYS-COL-TABLE
   \ Table of keys columns for every player.
-  14 C, 22 C, 30 C,
+  8 C, 18 C, 28 C,
 
-: KEYS-COL  ( n -- column )
+: KEYS-COL  ( -- column )
   \ Keys column of the current player.
   PLAYER KEYS-COL-TABLE + C@  ;
 
 : KEY#>COORDS  ( n -- line col )
   \ Convert a key number (0..3) of the current player
-  \ to the cursor coordinates.
-  KEYS-LINE + KEYS-COL @ ;
+  \ to the key's cursor coordinates in the redefine menu.
+  KEYS-LINE + KEYS-COL ;
 
- \ XXX OLD
- \ : KEY-PROMPT  ( line col -- )
- \   \ Show a prompt, asking for a key to be pressed.
- \   2DUP AT 2 SPACES
- \   AT 1 INVERSE [CHAR] ? EMIT 0 INVERSE  ;
-  : KEY-PROMPT  ( a n -- )
-    \ a = player keys table
-    \ n = key number in the table 
-    DUP KEY#>COORDS 2SWAP 1 INVERSE PLAYER-KEY. 0 INVERSE  ;
+: KEY-PROMPT  ( a n -- )
+  \ a = player keys table
+  \ n = key number in the table 
+  DUP KEY#>COORDS 2SWAP 1 FLASH PLAYER-KEY. 0 FLASH  ;
 
-: (REDEFINE)  ( -- )
+: (REDEFINE)  ( -- f )
   \ Redefine the keys of the current player.
+  \ f = quit redefining?
+  FALSE  \ default return flag
   KEYS/PLAYER 0 DO
-    PLAYER-KEYS @ I KEY-PROMPT
-    1000 MS PRESSED DUP PLAYER-KEYS @ I CELLS + !
-    I KEY#>COORDS ROT KEY.
+    PLAYER-KEYS I KEY-PROMPT  1000 MS PRESSED  ( a | ff )
+    -DUP 0= IF  UNLOOP 0= EXIT  THEN
+    DUP PLAYER-KEYS I CELLS + !  I KEY#>COORDS ROT KEY.
   LOOP  ;
 
 ( Redefine keys menu )
 
+  \ XXX TODO faster; less factoring; no "player" on every
+  \ column, just the number.
+
+: PLAYER#$  ( -- ca len )
+  \ The word "Player" in the current language,
+  \ with the current player number.
+  PLAYER$ PLAYER 1+ S->D <# #S #> S+  ;
+
+: .PLAYER  ( -- )
+  \ Print the current player, centered over the keys column.
+  PLAYER#$ KEYS-COL OVER 2 / - KEYS-LINE 2- SWAP AT TYPE  ;
+
+: .PLAYER#  ( -- )
+  \ Print the current player.
+  KEYS-LINE 2- KEYS-COL AT PLAYER 1+ .  ;
+
+0 VALUE KEY#  \ local
+
+: REDEFINE-MENU-KEY  ( n -- )
+  \ Show a key of the redefine keys menu, for the 'n' player.
+  \ XXX TODO do not call `.PLAYER#` for every key
+  PLAYER!  .PLAYER#
+  KEYS-LINE KEY# + KEYS-COL PLAYER-KEYS KEY# PLAYER-KEY.  ;
+
+: REDEFINE-MENU-ROW  ( n -- )
+  \ Show a row of the redefine keys menu, for the 'n' key.
+  TO KEY#
+  KEY# KEY-DESC KEYS-LINE KEY# + |KEY-DESC
+  PLAYERS 0 DO  I REDEFINE-MENU-KEY  LOOP  ;
+
 : REDEFINE-MENU  ( -- )
   \ Show the redefine keys menu.
-  CLS
-  KEYS/PLAYER 0 DO
-    I KEY-DESC I KEYS-LINE + |KEY-DESC
-    PLAYERS 0 DO
-      I PLAYER!
-      J KEYS-LINE + KEYS-COL KEYS J PLAYER-KEY.
-    LOOP
-  LOOP  ;
+  CLS  KEYS/PLAYER 0 DO  I REDEFINE-MENU-ROW  LOOP  ;
 
 ( Redefine keys )
 
 : REDEFINE  ( -- )
   \ Redefine the keys of all players.
-  PLAYERS 0 DO  I PLAYER! (REDEFINE)  LOOP  ;
+  PLAYERS 0 DO
+    I PLAYER! (REDEFINE) IF  LEAVE  THEN
+  LOOP  ;
 
 : REDEFINED?  ( -- f )
   \ Ask for confirmation: Are the redefined keys ok?

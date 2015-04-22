@@ -79,6 +79,10 @@ CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
 
 : ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
 
+  \ : EN-KEY$  ( -- ca len )  S" Tecla"  ;
+
+: ES-PLAYER$  ( -- ca len )  S" Jugador "  ;
+
 : ES-HUMAN$  ( -- ca len )  S" Humano"  ;
 : ES-ROBOT$  ( -- ca len )  S" Robot "  ;
 

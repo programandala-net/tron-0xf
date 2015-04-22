@@ -1,0 +1,33 @@
+\ tron_0xf.file_13.load_graphics.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+.( Tron 0xF: fonts and UDG)
+
+-SCROLL
+FONT /FONT 0 0 TAPE>MEM              \ main font
+-SCROLL
+EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
+-SCROLL
+ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
+-SCROLL
+DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
+-SCROLL
+  \ XXX FIXME this doesn't work:
+UDG 0 0 0 TAPE>MEM                   \ frame graphs
+  \ XXX FIXME this doesn't work:
+  \ UDG 64 0 0 TAPE>MEM                   \ frame graphs
+-SCROLL
+
+\ CR .S
+LOADED? ON  \ tell the loader's loop it's finished
+
+  \ vim: filetype=abersoftforth:fileencoding=utf-8
+

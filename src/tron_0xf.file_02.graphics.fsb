@@ -30,26 +30,7 @@
 
 .( Tron 0xF: graphics )
 
-2 9 THRU
-
-( Plot and draw)
-
-: RDRAW  ( inc-x inc-y -- )
-  \ Draw a relative line (from the current plot position).
-  SYS-Y-COORD C@ + SWAP SYS-X-COORD C@ + SWAP DRAW  ;
-
-  \ XXX OLD
-
-  \ : XY>ATTRA  ( x y -- a )
-  \   \ Convert a pixel coordinate to its attribute address.
-  \   175 SWAP - 8 / 32 *  SWAP 8 /  + ATTRIBUTES +  ;
-
-  \ : COLORPLOT  ( color x y -- )
-  \   \ Plot a pixel with the given color.
-  \   \ There's a bug in Abersoft Forth: `PLOT` does not work
-  \   \ when `INK` is used before. That's why this word
-  \   \ is needed.
-  \   2DUP PLOT XY>ATTRA C!  ;
+2 10 THRU
 
 ( Font)
 
@@ -91,10 +72,10 @@
   [ DIGITS-UDG /DIGITS-UDG 2 / +  DIGITS>CHARS ] LITERAL
   SYS-CHARS ! ;
 
-( UDG)
+( UDG fonts)
 
   \ User Defined Graphics are used for the Spanish and
-  \ Esperanto characters. Two bank are used. They are loaded
+  \ Esperanto characters. Two banks are used. They are loaded
   \ from tape at the end of the compilation. The correspondent
   \ UDG bank is switched when the user changes the language in
   \ the game menu.
@@ -104,7 +85,6 @@
 
 18 8 * CONSTANT /ES-UDG  \ size in bytes
 /ES-UDG BUFFER: ES-UDG
-
 
 HERE: UDG-BANK
   \ Addresses of the UDG banks used for every language.
@@ -116,6 +96,7 @@ HERE: UDG-BANK
 
 : -UDG  ( -- )
   \ Set the default UDG bank.
+  \ It contains the frame graphs.
   UDG SYS-UDG !  ;
   
 ( Screen -- generic)
@@ -153,20 +134,20 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ to print the string centered.
   COLS SWAP - 2 /  ;
 
-: <AT>  ( line len -- )
+: |AT|  ( line len -- )
   \ Put the cursor on the given line, on the column
   \ required to center a text of the given length.
   CENTERED AT  ;
 
-: <LINESPACES>  ( len line -- )
+: |LINESPACES|  ( len line -- )
   \ Type spaces centered on a given line.
-  OVER <AT> SPACES  ;
+  OVER |AT| SPACES  ;
 
-: <LINETYPE>  ( ca len line -- )
+: |LINETYPE|  ( ca len line -- )
   \ Type a string centered on a given line.
-  OVER <AT> TYPE  ;
+  OVER |AT| TYPE  ;
 
-: <TYPE>  ( ca len -- )
+: |TYPE|  ( ca len -- )
 
   \ Type a string centered on the current line.
  
@@ -181,7 +162,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 ( Title and status bar)
 
 : TITLE  ( -- )
-  RED INK S" Tron 0xF" <TYPE> CR CR WHITE INK  ;
+  RED INK S" Tron 0xF" |TYPE| CR CR WHITE INK  ;
 
   \ XXX OLD -- version with normal characters
   \ : SCORE. ( a color line column -- )
@@ -203,27 +184,29 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   STATUS-LINE 1+ R> AT  +LO-DIGITS TYPE +FONT  ;
 
 HERE: SCORE-COLUMN-TABLE
-  0 C, 29 C, 14 C,
+  \ Columns of the scores on the status bar.
+  1 C, 28 C, 14 C,
 
 : SCORE-COLUMN  ( -- column )
-  \ Score column for the current player.
+  \ Column of the current player's score.
   PLAYER SCORE-COLUMN-TABLE + C@  ;
 
 : .SCORE  ( -- )
-  \ Print the score of the current player.
+  \ Print the the current player's score.
   PLAYER-SCORE SCORE-COLUMN PLAYER-COLOR (.SCORE)  ;
 
 : STATUS  ( -- )
   \ Show the status bar.
+  \ XXX TODO improve (now it shows only the scores)
   PLAYERS 0 DO  I PLAYER! .SCORE  LOOP  ;
 
-( Arena border, limit, frame)
+( COLOR-FRAME )
 
-RED RED PAPERY + CONSTANT FRAME-COLOR
+RED BLACK PAPERY + CONSTANT FRAME-COLOR
 
 : FRAME-BAR  ( a -- )  COLS FRAME-COLOR FILL  ;
 
-: ARENA-BORDER  ( -- )
+: COLOR-FRAME  ( -- )
 
   \ Draw the arena visible border.
 
@@ -234,21 +217,30 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
     FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
   COLS +LOOP  ;
 
-: ARENA-LIMIT  ( -- )
+( DRAW-FRAME FRAME )
+
+: DRAW-FRAME  ( -- )
   \ Draw the arena invisible limit, needed to detect crashes.
-  7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
+  \ XXX OLD
+  \ 7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
+  \ Corners.
+  0  0 AT 145 EMIT   0 31 AT 146 EMIT
+  21 0 AT 144 EMIT  21 31 AT 147 EMIT
+  \ Horizontal sides.
+  31 1 DO  0 I AT 149 EMIT  21 I AT 151 EMIT  LOOP
+  \ Vertical sides.
+  21 1 DO  I 0 AT 148 EMIT  I 31 AT 150 EMIT  LOOP  ;
 
 : FRAME  ( -- )
   \ Draw the arena frame.
-  BLACK INK ARENA-LIMIT ARENA-BORDER  ;
-
+  -UDG BLACK INK DRAW-FRAME COLOR-FRAME  LANG @ +UDG  ;
 
 ( Arena -- save, restore, clear, draw)
 
 : SAVE-ARENA  ( -- )
   \ Save the attributes of the central zone of the arena
   \ (between the horizontal borders) to the first block of
-  \ RAM-disc.
+  \ the Forth RAM-disc.
   [ TOP-FRAME-ATTRIBUTES COLS +
     BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
     LITERAL LO LITERAL CMOVE  ;
@@ -256,7 +248,7 @@ RED RED PAPERY + CONSTANT FRAME-COLOR
 : RESTORE-ARENA  ( -- )
   \ Restore the attributes of the central zone of the arena
   \ (between the horizontal borders) from the first block of
-  \ RAM-disc.
+  \ the Forth RAM-disc.
   LO [ TOP-FRAME-ATTRIBUTES COLS +
        BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
        LITERAL LITERAL CMOVE  ;

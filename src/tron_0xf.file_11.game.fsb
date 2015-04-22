@@ -27,7 +27,7 @@
 
 : -1..1  ( -- -1 | 0 | 1 )
   \ Return a random increment for a graphic coordinate.
-  \ XXX TODO Rewrite in assembler.
+  \ XXX TODO Rewrite in Z80.
   3 RND 1-  ;
 
 ( Autopilot )
@@ -77,7 +77,10 @@ HERE: DODGINGS
   \ If there's something ahead, change the direction.
   AVOIDABLE-CRASH? IF  DODGE EXIT  THEN
   \ Otherwise, check the sides.
-  PLAYER-XINC @ ABS CELLS DODGINGS + @ EXECUTE  ;
+  \ XXX FIXME the player crashes itself
+  \ XXX TODO
+  \ PLAYER-XINC @ ABS CELLS DODGINGS + @ EXECUTE
+  ;
 
 ( RUDDER )
 
@@ -159,7 +162,7 @@ HERE: POSITIONS-TABLE
 
   \ : ENOUGH?  ( -- f )  \ XXX OLD -- not used
   \   \ No more rounds?
-  \   WHITE INK  ANOTHER?$ 12 <LINETYPE>  NO?  ;
+  \   WHITE INK  ANOTHER?$ 12 |LINETYPE|  NO?  ;
 
 : -SCORES  ( -- )
   \ Reset all scores.

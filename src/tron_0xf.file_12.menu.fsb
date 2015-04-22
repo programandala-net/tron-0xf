@@ -13,20 +13,6 @@
 
 2 10 THRU
 
-CR .( Tron 0xF: fonts)
-
--SCROLL
-FONT /FONT 0 0 TAPE>MEM              \ main font
--SCROLL
-EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
--SCROLL
-ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
--SCROLL
-DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
--SCROLL
-
-LOADED? ON  \ tell the loader's loop it's finished
-
 ( Menu -- data )
 
 8 CONSTANT OPTIONS       \ number of menu options
@@ -34,13 +20,14 @@ LOADED? ON  \ tell the loader's loop it's finished
 2 CONSTANT LINES/OPTION  \ lines occupied per menu option
 
 TRUE VARIABLE CLEAR-MENU?  \ clear the menu?
-  \ This flag is needed because some menu options need the menu
-  \ not to be cleared after execution.
+  \ Some menu options need the menu not to be cleared after
+  \ execution. They reset this flag. The menu sets it to its
+  \ default value.
 
-  \ A table to store the menu keys, that change depending
-  \ on the current language. The table is updated every
-  \ time the menu is printed.
 OPTIONS BUFFER: MENU-KEYS
+  \ A table to store the menu keys. They change depending on
+  \ the current language. This table is updated every time the
+  \ menu is printed, using the initials of the menu options.
 
 : OPTION-2#$  ( -- ca len )
   \ Menu option 2 with the number of players.
@@ -54,8 +41,8 @@ OPTIONS BUFFER: MENU-KEYS
   
 HERE: MENU-OPTIONS
   
-  \ Table that holds the cfa of the words
-  \ that return the localized texts of the menu options.
+  \ Table that holds the cfa of the words that return the
+  \ localized texts of the menu options.
 
   ' OPTION-0$ CFA ,   ' OPTION-1$ CFA ,  ' OPTION-2#$ CFA ,
   ' OPTION-3#$ CFA ,  ' OPTION-4$ CFA ,  ' OPTION-5$ CFA ,
@@ -113,11 +100,20 @@ HERE: MENU-COMMANDS
 
 ( Menu options)
 
+: INITIAL.  ( c -- )
+  \ Print the given char as a menu option initial.
+  1 INVERSE EMIT 0 INVERSE  ;
+
+: INITIAL!  ( n c -- )
+  \ Store char 'c' into the 'n' position of the
+  \ `MENU-KEYS` table.
+  SWAP MENU-KEYS + C!  ;
+
 : OPTION-INITIAL  ( ca n -- )
   \ Print the initial of the menu option number n,
-  \ stored in the given address.
-  SWAP C@ DUP  1 INVERSE EMIT 0 INVERSE
-  UPPER SWAP MENU-KEYS + C!  ;
+  \ stored in the given address, and also store it
+  \ into the `MENU-KEYS` table.
+  SWAP C@ UPPER DUP INITIAL. INITIAL!  ;
 
 : OPTION>LINE  (  n -- line )
   \ Convert a menu option number to its line.

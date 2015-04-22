@@ -127,19 +127,27 @@ DECIMAL
   \ a = key address in the `KEYS` table
   2@ INP AND 0=  ;
 
-: (PRESSED)  ( -- a tf | ff )
+  \ XXX TODO
+  \ make it possible to escape with Break
+
+: (PRESSED)  ( -- a tf | ff tf | ff )
   \ Check all keys.
-  \ If a key is pressed, return its address in the
-  \ `KEYS` table and a true flag, else return a false flag.
+  \ If a key is pressed, return its address in the `KEYS` table
+  \ and a true flag; if Break is pressed, return a false flag
+  \ and a true flag; else return a false flag.
   FALSE  \ default
   [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
-    I PRESSED? IF  DROP I TRUE LEAVE  THEN
+    ?TERMINAL IF  UNLOOP TRUE EXIT  THEN
+    I PRESSED? IF  UNLOOP DROP I TRUE EXIT  THEN
   /KEY +LOOP  ;
 
-: PRESSED  ( -- a )
+: PRESSED  ( -- a | ff )
   \ Check all keys forever until one of them is pressed
   \ and return its identifier.
-  \ a = key address in the `KEYS` table
+  \ If a valid key was pressed, return its address
+  \ in the `KEYS` table; if "Break" was pressed,
+  \ return a false flag.
+  \ a = address in the `KEYS` table
   BEGIN  (PRESSED) ?EXIT  AGAIN  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
