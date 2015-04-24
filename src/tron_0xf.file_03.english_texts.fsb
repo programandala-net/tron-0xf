@@ -2,10 +2,10 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -68,7 +68,7 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
 
   \ : EN-KEY$  ( -- ca len )  S" Key"  ;
 
-: EN-PLAYER$  ( -- ca len )  S" Player "  ;
+: EN-PLAYER$  ( -- ca len )  S" Player"  ;
 
 : EN-HUMAN$  ( -- ca len )  S" Human"  ;
 : EN-ROBOT$  ( -- ca len )  S" Robot"  ;
@@ -76,4 +76,4 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
 : EN-ON$   ( -- ca len )  S" Yes"  ;
 : EN-OFF$  ( -- ca len )  S" No "  ;
   
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

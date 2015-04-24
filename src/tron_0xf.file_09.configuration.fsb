@@ -5,7 +5,7 @@
 \ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -14,9 +14,11 @@
   \ Max length of a player key description in any language:
 11 CONSTANT /KEY-DESC
 
-  \ Screen coordinates:
-10 CONSTANT KEYS-LINE     \ top line of the redefine menu
- 0 CONSTANT KEY-DESC-COL  \ column of the key description
+  \ Line of the top keys row in the redefine menu:
+CONTENTS-LINE 3 + CONSTANT KEYS-LINE
+
+  \ Column of the key description:
+0 CONSTANT KEY-DESC-COL
 
 2 10 THRU
 
@@ -29,8 +31,8 @@
   OVER /KEY-DESC SWAP -  ;
 
 : (TYPE-KEY-DESC)  ( ca len line col -- )
-  \ Print a key description, on the given line,
-  \ col columns from the left margin of its region.
+  \ Print a key description, on the given line.
+  \ col = columns from the left margin of its region.
   KEY-DESC-COL + AT TYPE  ;
 
 : |KEY-DESC|  ( ca len line -- )
@@ -64,9 +66,8 @@ HERE: KEY-DESCS
   
 : KEY.  ( line col a -- )
   \ Print a key name.
-  \ a = key address in the keys table
   \ line col = screen coordinates
-  \ 0 0 AT .S  \ XXX INFORMER
+  \ a = key address in the keys table
   KEY-NAME 2SWAP AT TYPE  ;
 
 : PLAYER-KEY.  ( line col a n -- )
@@ -76,14 +77,14 @@ HERE: KEY-DESCS
   \ n = key number in the table 
   CELLS + @ KEY.  ;
 
-( Redefine keys )
+( Keys position)
 
 HERE: KEYS-COL-TABLE
-  \ Table of keys columns for every player.
-  8 C, 18 C, 28 C,
+  \ Columns of the player keys.
+  12 C, 20 C, 28 C,
 
-: KEYS-COL  ( -- column )
-  \ Keys column of the current player.
+: KEYS-COL  ( -- col )
+  \ Column of the current player's keys.
   PLAYER KEYS-COL-TABLE + C@  ;
 
 : KEY#>COORDS  ( n -- line col )
@@ -96,6 +97,8 @@ HERE: KEYS-COL-TABLE
   \ n = key number in the table 
   DUP KEY#>COORDS 2SWAP 1 FLASH PLAYER-KEY. 0 FLASH  ;
 
+( Redefine keys )
+
 : (REDEFINE)  ( -- f )
   \ Redefine the keys of the current player.
   \ f = quit redefining?
@@ -103,52 +106,58 @@ HERE: KEYS-COL-TABLE
   KEYS/PLAYER 0 DO
     PLAYER-KEYS I KEY-PROMPT  1000 MS PRESSED  ( a | ff )
     -DUP 0= IF  UNLOOP 0= EXIT  THEN
-    DUP PLAYER-KEYS I CELLS + !  I KEY#>COORDS ROT KEY.
+    DUP PLAYER-KEYS I CELLS + !  I KEY#>COORDS ROT KEY. SPACE
   LOOP  ;
 
-( Redefine keys menu )
+( Print current player )
 
-  \ XXX TODO faster; less factoring; no "player" on every
-  \ column, just the number.
-
-: PLAYER#$  ( -- ca len )
-  \ The word "Player" in the current language,
-  \ with the current player number.
-  PLAYER$ PLAYER 1+ S->D <# #S #> S+  ;
+  \ XXX OLD
+  \ : PLAYER#$  ( -- ca len )
+  \   \ The word "Player" in the current language,
+  \   \ with the current player number added.
+  \   PLAYER$ S"  " S+ PLAYER 1+ S->D <# #S #> S+  ;
 
 : .PLAYER  ( -- )
   \ Print the current player, centered over the keys column.
-  PLAYER#$ KEYS-COL OVER 2 / - KEYS-LINE 2- SWAP AT TYPE  ;
-
-: .PLAYER#  ( -- )
-  \ Print the current player.
+  \ First the word "Player" in the current language:
+  PLAYER$ KEYS-COL OVER 2 / - KEYS-LINE 3 - SWAP AT TYPE
+  \ Then the player number, one line above:
   KEYS-LINE 2- KEYS-COL AT PLAYER 1+ .  ;
 
-0 VALUE KEY#  \ local
+( Redefine keys menu )
 
 : REDEFINE-MENU-KEY  ( n -- )
-  \ Show a key of the redefine keys menu, for the 'n' player.
-  \ XXX TODO do not call `.PLAYER#` for every key
-  PLAYER!  .PLAYER#
-  KEYS-LINE KEY# + KEYS-COL PLAYER-KEYS KEY# PLAYER-KEY.  ;
+  \ Show a key of the redefine keys menu, for the 'n' key of
+  \ the current player.
+  DUP >R KEYS-LINE + KEYS-COL PLAYER-KEYS R> PLAYER-KEY.  ;
 
-: REDEFINE-MENU-ROW  ( n -- )
-  \ Show a row of the redefine keys menu, for the 'n' key.
-  TO KEY#
-  KEY# KEY-DESC KEYS-LINE KEY# + |KEY-DESC
-  PLAYERS 0 DO  I REDEFINE-MENU-KEY  LOOP  ;
+: REDEFINE-MENU-COLUMN  ( n -- )
+  \ Show a column of the redefine keys menu, for the player
+  \ number 'n'.
+  \ Blue color is used for inactive players, if any.
+  DUP PLAYER!  
+  DUP PLAYERS < 1 + INK .PLAYER  \ active: red; else, blue
+  PLAYERS < WHITE * BLUE MAX INK  \ active: white; else, blue
+  KEYS/PLAYER 0 DO  I REDEFINE-MENU-KEY  LOOP  ;
 
 : REDEFINE-MENU  ( -- )
   \ Show the redefine keys menu.
-  CLS  KEYS/PLAYER 0 DO  I REDEFINE-MENU-ROW  LOOP  ;
+  WIPE-CONTENTS  RED INK
+  \ Names of the keys at the left.
+  KEYS/PLAYER 0 DO  I KEY-DESC KEYS-LINE I + |KEY-DESC  LOOP
+  \ A column for every active player.
+  PLAYERS 0 DO  I REDEFINE-MENU-COLUMN  LOOP
+  \ A column for every inactive player.
+  MAX-PLAYERS PLAYERS 2DUP - IF
+    DO  I REDEFINE-MENU-COLUMN  LOOP
+  ELSE  2DROP  THEN  ;
 
 ( Redefine keys )
 
 : REDEFINE  ( -- )
-  \ Redefine the keys of all players.
-  PLAYERS 0 DO
-    I PLAYER! (REDEFINE) IF  LEAVE  THEN
-  LOOP  ;
+  \ Redefine the keys of all active players.
+  WHITE INK
+  PLAYERS 0 DO  I PLAYER! (REDEFINE) IF  LEAVE  THEN  LOOP  ;
 
 : REDEFINED?  ( -- f )
   \ Ask for confirmation: Are the redefined keys ok?
@@ -159,7 +168,7 @@ HERE: KEYS-COL-TABLE
   \ Redefine the keys.
   \ XXX TODO -- human/machine options
   REDEFINE-MENU
-  BEGIN  REDEFINE REDEFINED?  UNTIL  ;
+  BEGIN  REDEFINE REDEFINED?  UNTIL  WIPE-CONTENTS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
 

@@ -5,29 +5,18 @@
 \ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
 .( Tron 0xF: game )
 
-2 6 THRU
+2 5 THRU
   
 ( Paint )
 
 : PAINT  ( -- )
   PLAYER-COLOR @ INK PLAYER-XC @ PLAYER-YC @ PLOT  ;
-
-( Sound )
-
-DEFER ?BLEEP  ( n1 n2 -- )
-
-: SOUND  ( f -- )
-  \ Turn the sound on or off, depending on 'f'.
-  IF  ' BLEEP ELSE  ' 2DROP  THEN  ' ?BLEEP DEFER!  ;
-
-TRUE VARIABLE SOUND?  \ status of the sound, on or off
-SOUND? @ SOUND        \ default
 
 ( Crash effect )
 

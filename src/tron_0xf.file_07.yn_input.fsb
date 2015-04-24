@@ -2,36 +2,52 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-.( Tron 0xF: Y/N input )
+.( Tron 0xF: Sound and Y/N input )
 
-: UPPER  ( c -- c' )
-  \ Convert a char in the range a-z to uppercase.
-  \ Warning: no check!, chars other than a-z get corrupted.
-  223 AND  ;
+2 3 THRU
 
-: PAUSE  ( -- )
+( Sound )
+
+DEFER ?BLEEP  ( n1 n2 -- )
+
+: SOUND  ( f -- )
+  \ Turn the sound on or off, depending on the 'f' flag.
+  IF  ' BLEEP ELSE  ' 2DROP  THEN  ' ?BLEEP DEFER!  ;
+
+TRUE VARIABLE SOUND?  \ status of the sound, on or off
+SOUND? @ SOUND        \ set default
+
+: KEY-SOUND  ( -- )
+  \ Sound used when a key is pressed, except during the game.
+  \ XXX TODO
+  100 50 DO  11 I ?BLEEP  LOOP  ;
+
+( Y/N input )
+
+: PRESS-ANY-KEY  ( -- )
   \ Wait for a key press.
-  CR PRESS-ANY-KEY$ |TYPE|  500 MS  AKEY DROP  ;
+  CR PRESS-ANY-KEY$ 23 |LINETYPE|
+  500 MS  AKEY DROP KEY-SOUND  ;
 
 : Y/N?  ( c -- f )
   \ Is the given char a valid answer for a Y/N question?
-  UPPER DUP 'Y' = SWAP 'N' = OR  ;
+  UPPERC DUP 'Y' = SWAP 'N' = OR  ;
 
 : Y/N  ( -- c )
   \ Wait for a valid key press for a Y/N question
   \ and return its code.
-  BEGIN  AKEY DUP Y/N? 0=  WHILE  DROP  REPEAT  ;
+  BEGIN  AKEY DUP Y/N? 0=  WHILE  DROP  REPEAT  KEY-SOUND  ;
 
 : NO?  ( -- f )
   \ Wait for a valid key press for a Y/N question
   \ and return a flag: Was it "N" or "n"?
-  Y/N UPPER 'N' =  ;
+  Y/N UPPERC 'N' =  ;
 
-
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

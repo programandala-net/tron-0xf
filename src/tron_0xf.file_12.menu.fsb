@@ -5,7 +5,7 @@
 \ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -16,13 +16,7 @@
 ( Menu -- data )
 
 8 CONSTANT OPTIONS       \ number of menu options
-7 CONSTANT MENU-LINE     \ line of the first menu option
 2 CONSTANT LINES/OPTION  \ lines occupied per menu option
-
-TRUE VARIABLE CLEAR-MENU?  \ clear the menu?
-  \ Some menu options need the menu not to be cleared after
-  \ execution. They reset this flag. The menu sets it to its
-  \ default value.
 
 OPTIONS BUFFER: MENU-KEYS
   \ A table to store the menu keys. They change depending on
@@ -31,12 +25,10 @@ OPTIONS BUFFER: MENU-KEYS
 
 : OPTION-2#$  ( -- ca len )
   \ Menu option 2 with the number of players.
-  \ XXX FIXME the line must be readjusted
   OPTION-2$ PLAYERS S->D <# #S #> S+  ;
   
 : OPTION-3#$  ( -- ca len )
   \ Menu option 3 with the status of the sound.
-  \ XXX FIXME the line must be readjusted
   OPTION-3$ SOUND? @ ON/OFF$ S+  ;
   
 HERE: MENU-OPTIONS
@@ -52,26 +44,22 @@ HERE: MENU-OPTIONS
 
 : CHANGE-LANGUAGE  ( -- )
   \ Change the current language.
-  LANG @ 1+ DUP LANGS < *  DUP LANG ! +UDG  ;
+  LANG @ 1+ DUP LANGS < *  DUP LANG ! +UDG WIPE-CONTENTS  ;
 
 : CHANGE-PLAYERS  ( -- )
   \ Change the number of players.
   PLAYERS 1+ DUP [ MAX-PLAYERS 1+ ] LITERAL < * 1 MAX
-  TO PLAYERS  CLEAR-MENU? OFF  ;
+  TO PLAYERS  ;
 
 : TOGGLE-SOUND  ( -- )
   \ Toggle the game sounds.
-  SOUND? @ 0= DUP SOUND? ! SOUND  CLEAR-MENU? OFF  ;
+  SOUND? @ 0= DUP SOUND? ! SOUND  ;
 
 : ABOUT  ( -- )
-  \ XXX TMP
-  \ XXX TODO
-  CLS0 TITLE CREDITS PAUSE  ;
+  WIPE-CONTENTS CREDITS PRESS-ANY-KEY WIPE-CONTENTS  ;
 
 : INSTRUCTIONS  ( -- )
-  \ XXX TMP
-  \ XXX TODO
-  CLS0 TITLE (INSTRUCTIONS) PAUSE  ;
+  WIPE-CONTENTS (INSTRUCTIONS) PRESS-ANY-KEY WIPE-CONTENTS  ;
 
 : FINISH  ( -- )
   CLS0 -FONT -UDG QUIT-MESSAGE QUIT  ;
@@ -80,7 +68,14 @@ HERE: MENU-OPTIONS
 
 HERE: MENU-COMMANDS
 
-  \ Execution table of the menu options.
+  \ Execution table of the menu commands.
+  \
+  \ Every command must leave the screen ready to print the
+  \ menu, except the ink color: commands that use the whole
+  \ screen must do `PAGE` at the end; commands that use only
+  \ the contents zone must do `WIPE-CONTENTS` at the end;
+  \ commands that change only their own menu option must do
+  \ nothing.
 
   ' CHANGE-LANGUAGE CFA ,
   ' INSTRUCTIONS CFA ,
@@ -113,11 +108,11 @@ HERE: MENU-COMMANDS
   \ Print the initial of the menu option number n,
   \ stored in the given address, and also store it
   \ into the `MENU-KEYS` table.
-  SWAP C@ UPPER DUP INITIAL. INITIAL!  ;
+  SWAP C@ UPPERC DUP INITIAL. INITIAL!  ;
 
 : OPTION>LINE  (  n -- line )
   \ Convert a menu option number to its line.
-  LINES/OPTION * MENU-LINE +  ;
+  LINES/OPTION * CONTENTS-LINE +  ;
 
 : OPTION>STRING  ( n -- ca len )
   \ Convert a menu option number to its localized text.
@@ -127,6 +122,9 @@ HERE: MENU-COMMANDS
 
 : OPTION  ( n -- )
   \ Print menu option number n. 
+  \ XXX TODO make it much faster: calculate
+  \ the coordinates when the strings are created, and
+  \ store them in a table.
   DUP >R                  ( n ) ( R: n )
   DUP OPTION>LINE         ( n line ) 
   >R OPTION>STRING        ( ca len ) ( R: n line )
@@ -138,15 +136,9 @@ HERE: MENU-COMMANDS
 
 ( Menu)
 
-: CLEAR-MENU  ( -- )
-  CLEAR-MENU? @ IF  CLS0  THEN  CLEAR-MENU? ON  ;
-
 : MENU  ( -- )
   \ Print the menu.
-  \ XXX TODO -- graphics
-  \ XXX TODO -- sound on and off
-  CLEAR-MENU
-  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
+  WHITE INK  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
 
 ( Valid option)
 
@@ -154,7 +146,7 @@ HERE: MENU-COMMANDS
   \ Is the given character a valid menu option in the current
   \ language? If so, return the cfa of its associated command
   \ and a true flag; otherwise return a false flag.
-  UPPER
+  UPPERC
   FALSE SWAP  \ default exit flag
   OPTIONS 0 DO
     DUP MENU-KEYS I + C@ =  \ valid key?
@@ -165,19 +157,15 @@ HERE: MENU-COMMANDS
   \ Wait until a key to be pressed and return its code.
   BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
 
-: VALID-OPTION-SOUND  ( -- )
-  \ XXX TODO
-  100 50 DO  11 I ?BLEEP  LOOP  ;
-
 : VALID-OPTION  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  VALID-OPTION-SOUND  ;
+  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  KEY-SOUND  ;
 
 ( Boot)
 
 : INIT  ( -- )
-  +SCREEN +FONT  ;
+  +SCREEN +FONT PAGE  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.

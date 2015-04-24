@@ -2,10 +2,10 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -17,21 +17,19 @@
 
 FORTH DEFINITIONS
 
-  \ `LOADED?` is set in the last source file,
-  \ meaning all source files have been loaded.
-
 0 VARIABLE LOADED?
+  \ Flag: Have all sources been loaded?
+  \ It's set in the last source file.
 
 : LOADER  ( -- )
   \ Get and compile every source file RAM-disc from tape,
   \ and then execute the latest word defined.
   BEGIN  LOADED? @ 0=  WHILE
-    255 23692 C!  ( no scroll message)
+    255 23692 C!  ( avoid the "scroll?" prompt)
     FLUSH INIT-DISC LOADT 1 LOAD
   REPEAT
-  \ LATEST PFA CFA EXECUTE
-  ;
+  LATEST PFA CFA EXECUTE  ;
 
 LOADER
   
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforth:fileencoding=utf-8

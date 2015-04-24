@@ -5,7 +5,7 @@
 \ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -178,7 +178,7 @@ HERE: POSITIONS-TABLE
 
 : GAME  ( -- )
   \ Game loop.
-  GAME-INIT BEGIN  ROUND DUP 0= ?ROUND-END  UNTIL  ;
+  GAME-INIT BEGIN  ROUND DUP 0= ?ROUND-END  UNTIL  PAGE   ;
 
   \ Init the players' controls. By default, only player 0 is
   \ human. Their type (human or robot) is already set in the

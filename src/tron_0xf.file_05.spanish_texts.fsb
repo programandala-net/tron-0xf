@@ -2,10 +2,10 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -16,13 +16,37 @@
   \ translate the UTF-8 chars in this source file to ZX
   \ Spectrum UDG.
 
+  \ Esperanto letters:
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ Spanish letters and signs:
+  \ #vim %substitute@Á@\=nr2char(144)@g
   \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
   \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
   \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
   \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
   \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
   \ #vim %substitute@ñ@\=nr2char(157)@g
   \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
 
 .( Tron 0xF: Spanish texts )
 
@@ -81,7 +105,7 @@ CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
 
   \ : EN-KEY$  ( -- ca len )  S" Tecla"  ;
 
-: ES-PLAYER$  ( -- ca len )  S" Jugador "  ;
+: ES-PLAYER$  ( -- ca len )  S" Jugador"  ;
 
 : ES-HUMAN$  ( -- ca len )  S" Humano"  ;
 : ES-ROBOT$  ( -- ca len )  S" Robot "  ;

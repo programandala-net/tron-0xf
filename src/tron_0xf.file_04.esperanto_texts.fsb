@@ -2,10 +2,10 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -16,10 +16,18 @@
   \ translate the UTF-8 chars in this source file to ZX
   \ Spectrum UDG.
 
+  \ Esperanto letters:
   \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
   \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
   \ #vim %substitute@Ŝ@\=nr2char(152)@g
   \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
 .( Tron 0xF: Esperanto texts )
@@ -31,7 +39,7 @@
 : EO-INSTRUCTIONS  ( -- )
   \  <------------------------------->
   ." Ĉiu ludanto veturas motorciklon" CR
-  ." kies nura stirilo ĝin ĝiras" CR
+  ." kies nura stirilo ĝin turnas" CR
   ." naŭdek gradojn sen malrapidiĝo." CR CR
   ." Ĉiu veturilo postlasas solidan" CR
   ." lumo-muron." CR CR
@@ -78,7 +86,7 @@ CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
 
   \ : EO-KEY$  ( -- ca len )  S" Klavo"  ;
 
-: EO-PLAYER$  ( -- ca len )  S" Ludanto "  ;
+: EO-PLAYER$  ( -- ca len )  S" Ludanto"  ;
 
 : EO-HUMAN$  ( -- ca len )  S" Homo  "  ;
 : EO-ROBOT$  ( -- ca len )  S" Roboto"  ;

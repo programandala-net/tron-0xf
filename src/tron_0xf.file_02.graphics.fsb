@@ -2,31 +2,12 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
-
-  \ -----------------------------------------------------------
-  \ fsb directives
-
-  \ The following '#vim' directives, processed by fsb,
-  \ translate the UTF-8 chars in this source file to ZX
-  \ Spectrum UDG.
-
-  \ #vim %substitute@á@\=nr2char(145)@g
-  \ #vim %substitute@é@\=nr2char(147)@g
-  \ #vim %substitute@í@\=nr2char(149)@g
-  \ #vim %substitute@ó@\=nr2char(151)@g
-  \ #vim %substitute@ú@\=nr2char(153)@g
-  \ #vim %substitute@ñ@\=nr2char(157)@g
-  \ #vim %substitute@¿@\=nr2char(158)@g
- 
-  \ #vim %substitute@Ĉ@\=nr2char(144)@g
-  \ #vim %substitute@ĝ@\=nr2char(147)@g
-  \ #vim %substitute@ŭ@\=nr2char(155)@g
 
 .( Tron 0xF: graphics )
 
@@ -80,15 +61,19 @@
   \ UDG bank is switched when the user changes the language in
   \ the game menu.
 
+SYS-UDG @ CONSTANT UDG0  \ address of the default UDG bank
+
+  \ UDG bank for the Esperanto letters.
 12 8 * CONSTANT /EO-UDG  \ size in bytes
 /EO-UDG BUFFER: EO-UDG
 
+  \ UDG bank for the Spanish letters and characters.
 18 8 * CONSTANT /ES-UDG  \ size in bytes
 /ES-UDG BUFFER: ES-UDG
 
 HERE: UDG-BANK
   \ Addresses of the UDG banks used for every language.
-  UDG , EO-UDG , ES-UDG ,
+  UDG0 , EO-UDG , ES-UDG ,
 
 : +UDG  ( n -- )
   \ Set the UDG bank required by the given language number.
@@ -97,7 +82,7 @@ HERE: UDG-BANK
 : -UDG  ( -- )
   \ Set the default UDG bank.
   \ It contains the frame graphs.
-  UDG SYS-UDG !  ;
+  UDG0 SYS-UDG !  ;
   
 ( Screen -- generic)
 
@@ -105,8 +90,8 @@ HERE: UDG-BANK
   \ Clear the screen with the default colors.
   BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
-: -ATTRIBUTES  ( -- )
-  \ Set the attributes to zero.
+: BLACKOUT  ( -- )
+  \ Set the screen attributes to zero.
   \ This is used before drawing the arena,
   \ in order to make `SAVE-ARENA` and
   \ `RESTORE-ARENA` work as expected.
@@ -159,10 +144,30 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
   DUP CENTERED SPACES TYPE  ;
 
-( Title and status bar)
+( Title )
 
 : TITLE  ( -- )
-  RED INK S" Tron 0xF" |TYPE| CR CR WHITE INK  ;
+  RED INK 0 12 AT ." Tron 0xF" WHITE INK  ;
+
+8 CONSTANT CONTENTS-LINE  \ first line above the title header
+
+: PAGE  ( -- )
+  \ Start a new contents page.
+  BLACKOUT TITLE CONTENTS-LINE 0 AT  ;
+
+: WIPE-CONTENTS  ( -- )
+  \ Set the screen attributes of the contents zone to zero
+  \ and position the cursor at the start of the zone.
+  \ This is used to clear the menu and other pages
+  \ without deleting the title header.
+  [ CONTENTS-LINE 32 *    \ bytes to preserve (32 chars/line)
+    ATTRIBUTES OVER +
+    /ATTRIBUTES ROT -  SWAP ] LITERAL LITERAL ERASE
+  CONTENTS-LINE 0 AT  ;
+
+( Status bar)
+
+22 CONSTANT STATUS-LINE
 
   \ XXX OLD -- version with normal characters
   \ : SCORE. ( a color line column -- )
@@ -170,9 +175,6 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ with the given color, at the given position,
   \ using 3 digits.
   \ AT INK @ S->D <# # # # #> TYPE  ;
-
-22 CONSTANT STATUS-LINE
-
 : (.SCORE) ( a1 column a2 -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
@@ -208,7 +210,7 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
 
 : COLOR-FRAME  ( -- )
 
-  \ Draw the arena visible border.
+  \ Color the arena frame.
 
   TOP-FRAME-ATTRIBUTES FRAME-BAR  \ top part
   BOTTOM-FRAME-ATTRIBUTES FRAME-BAR  \ bottom part
@@ -220,14 +222,16 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
 ( DRAW-FRAME FRAME )
 
 : DRAW-FRAME  ( -- )
-  \ Draw the arena invisible limit, needed to detect crashes.
-  \ XXX OLD
-  \ 7 7 PLOT 0 161 RDRAW 241 0 RDRAW 0 -161 RDRAW -241 0 RDRAW  ;
+
+  \ Draw the arena frame.
+
   \ Corners.
   0  0 AT 145 EMIT   0 31 AT 146 EMIT
   21 0 AT 144 EMIT  21 31 AT 147 EMIT
+
   \ Horizontal sides.
   31 1 DO  0 I AT 149 EMIT  21 I AT 151 EMIT  LOOP
+
   \ Vertical sides.
   21 1 DO  I 0 AT 148 EMIT  I 31 AT 150 EMIT  LOOP  ;
 
@@ -269,6 +273,6 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
 
 : ARENA  ( -- )
   \ Draw the arena.
-  -ATTRIBUTES FRAME SAVE-ARENA STATUS  ;
+  BLACKOUT FRAME SAVE-ARENA STATUS  ;
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

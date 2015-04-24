@@ -5,7 +5,7 @@
 \ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -30,4 +30,3 @@ UDG 0 0 0 TAPE>MEM                   \ frame graphs
 LOADED? ON  \ tell the loader's loop it's finished
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8
-

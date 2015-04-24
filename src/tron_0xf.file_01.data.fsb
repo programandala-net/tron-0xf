@@ -2,10 +2,10 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A game written in ZX Spectrum's Abersoft Forth
+\ A ZX Spectrum game written in Abersoft Forth
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
-\ Licencia/Permesilo/License: GPL 3
+\ License: GPL 3
 
 \ http://programandala.net/en.program.tron_0xf.html
 
@@ -43,6 +43,7 @@ FORTH DEFINITIONS
  0 CONSTANT EN     \ English
  1 CONSTANT EO     \ Esperanto
  2 CONSTANT ES     \ Spanish
+ \ XXX TODO convert `LANG` to a value:
 EN VARIABLE LANG   \ current language
 
 3 CONSTANT MAX-PLAYERS  \ maximum number of players
