@@ -2,16 +2,53 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
-.( Tron: keyboard )
+.( Tron 0xF: keyboard )
 
 2 10 THRU
+
+( Y/N input )
+
+: PRESS-ANY-KEY  ( -- )
+  \ Wait for a key press.
+  CR PRESS-ANY-KEY$ 23 |LINETYPE|
+  500 MS  AKEY DROP KEY-SOUND  ;
+
+: Y/N?  ( c -- f )
+  \ Is the given char a valid answer for a Y/N question?
+  UPPERC DUP 'Y' = SWAP 'N' = OR  ;
+
+: Y/N  ( -- c )
+  \ Wait for a valid key press for a Y/N question
+  \ and return its code.
+  BEGIN  AKEY DUP Y/N? 0=  WHILE  DROP  REPEAT  KEY-SOUND  ;
+
+: NO?  ( -- f )
+  \ Wait for a valid key press for a Y/N question
+  \ and return a flag: Was it "N" or "n"?
+  Y/N UPPERC 'N' =  ;
 
 ( KEYS table )
 
@@ -33,9 +70,15 @@ HERE: KEYS
   \      zero and will be ignored) or two letters.
   
   \ Keys are identified by their absolute address in the table.
+  \
   \ The players' default keys are set while the table is being
   \ compiled, by storing the dictionary pointer into a player
   \ variable.
+  \
+  \ The default keys of players 1 and 3 correspond to the
+  \ Sinclair joysticks (keys 1-4 and 6-9); the default keys of
+  \ player 2 are suitable for the Dvorak keyboard layout (keys
+  \ K, X, B, M).
 
 HEX
 
@@ -147,4 +190,4 @@ DECIMAL
   \ a = address in the `KEYS` table
   BEGIN  (PRESSED)  UNTIL  ;
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforth

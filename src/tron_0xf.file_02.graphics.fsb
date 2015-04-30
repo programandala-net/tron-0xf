@@ -2,12 +2,28 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
 .( Tron 0xF: graphics )
 
@@ -18,8 +34,13 @@
   \ The game fonts are loaded from tape at the end of the
   \ compilation. Words are defined to switch them on and off:
 
-768 CONSTANT /FONT  \ size in bytes
-/FONT BUFFER: FONT
+  768 CONSTANT /FONT  \ size in bytes
+  \ XXX OLD
+  \ /FONT BUFFER: FONT
+  \ XXX NEW
+  \ Blocks 8 of the Forth RAM disk
+  \ is used to store the font.
+8 'BLOCK CONSTANT FONT
 
   \ Set the game font:
 : +FONT  ( -- )  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
@@ -146,10 +167,20 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 ( Title )
 
-: TITLE  ( -- )
-  RED INK 0 12 AT ." Tron 0xF" WHITE INK  ;
+  \ The last two blocks (9..10) of the Forth RAM disk
+  \ are used to store the graphic of the title, that 
+  \ ocuppies 2 KiB:
+9 'BLOCK CONSTANT TITLE-ADDRESS
 
-8 CONSTANT CONTENTS-LINE  \ first line above the title header
+: TITLE  ( -- )
+  \ Show the main title, copying its graphic to the screen
+  \ and setting its color attributes.
+  \ The graphic ocuppies the first third of the screen
+  \ (2048 bytes of bitmap and 256 bytes of color attributes).
+  TITLE-ADDRESS 16384 2048 CMOVE
+  22528 256 RED FILL  ;
+
+9 CONSTANT CONTENTS-LINE  \ first usable line above the header
 
 : PAGE  ( -- )
   \ Start a new contents page.
@@ -275,4 +306,4 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
   \ Draw the arena.
   BLACKOUT FRAME SAVE-ARENA STATUS  ;
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforth

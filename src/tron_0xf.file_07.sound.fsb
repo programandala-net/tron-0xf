@@ -1,4 +1,4 @@
-\ tron_0xf.file_00.loader.fsb
+\ tron_0xf.file_07.sound.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -25,27 +25,20 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-( Tron 0xF: loader )
+.( Tron 0xF: sound )
 
-0 PAPER 4 INK 0 BORDER CLS
+DEFER ?BLEEP  ( n1 n2 -- )
 
-." Tron 0xF: loader "
+: SOUND  ( f -- )
+  \ Turn the sound on or off, depending on the 'f' flag.
+  IF  ' BLEEP ELSE  ' 2DROP  THEN  ' ?BLEEP DEFER!  ;
 
-FORTH DEFINITIONS
+TRUE VARIABLE SOUND?  \ status of the sound, on or off
+SOUND? @ SOUND        \ set default
 
-0 VARIABLE LOADED?
-  \ Flag: Have all sources been loaded?
-  \ It's set in the last source file.
+: KEY-SOUND  ( -- )
+  \ Sound used when a key is pressed, except during the game.
+  \ XXX TODO
+  100 50 DO  11 I ?BLEEP  LOOP  ;
 
-: LOADER  ( -- )
-  \ Get and compile every source file RAM-disc from tape,
-  \ and then execute the latest word defined.
-  BEGIN  LOADED? @ 0=  WHILE
-    255 23692 C!  ( avoid the "scroll?" prompt)
-    FLUSH INIT-DISC LOADT 1 LOAD
-  REPEAT
-  RP! LATEST PFA CFA EXECUTE  ;
-
-LOADER
-  
   \ vim: filetype=abersoftforth

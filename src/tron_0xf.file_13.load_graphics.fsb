@@ -2,31 +2,193 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
-.( Tron 0xF: fonts and UDG)
+  \ -----------------------------------------------------------
+
+  \ In order to save dictionary space, this last RAM disk
+  \ loaded from tape is used to store the license information
+  \ in the three languages, and graphic data.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDG.
+
+  \ Esperanto letters:
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ Spanish letters and signs:
+  \ #vim %substitute@Á@\=nr2char(144)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
+
+.( Tron 0xF: fonts, UDG, license )
 
 -SCROLL
-FONT /FONT 0 0 TAPE>MEM              \ main font
+FONT /FONT 0 0 TAPE>MEM               \ main font
 -SCROLL
-EO-UDG /EO-UDG 0 0 TAPE>MEM          \ Esperanto characters
+EO-UDG /EO-UDG 0 0 TAPE>MEM           \ Esperanto characters
 -SCROLL
-ES-UDG /ES-UDG 0 0 TAPE>MEM          \ Spanish characters
+ES-UDG /ES-UDG 0 0 TAPE>MEM           \ Spanish characters
 -SCROLL
-DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM  \ double heigth digits
+DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM   \ double heigth digits
 -SCROLL
-  \ XXX FIXME this doesn't work:
-UDG 0 0 0 TAPE>MEM                   \ frame graphs
-  \ XXX FIXME this doesn't work:
-  \ UDG 64 0 0 TAPE>MEM                   \ frame graphs
+UDG 0 0 0 TAPE>MEM                    \ frame graphs
+-SCROLL
+TITLE-ADDRESS 0 0 0 TAPE>MEM       \ title banner
 -SCROLL
 
-\ CR .S
 LOADED? ON  \ tell the loader's loop it's finished
+
+( License in English -- part 1 )
+
+." This program is free software;" CR
+." you can redistribute it and/or" CR
+." modify it under the terms of the" CR
+." GNU General Public License as" CR
+." published by the Free Software" CR
+." Foundation; either version 3 of" CR
+." the License, or (at your option)" CR
+." any later version."
+PRESS-ANY-KEY -->
+
+( License in English -- part 2 )
+
+WIPE-CONTENTS
+." This program is distributed in" CR
+." the hope that it will be useful," CR
+." but WITHOUT ANY WARRANTY;" CR
+." without even the implied" CR
+." warranty of MERCHANTABILITY or" CR
+." FITNESS FOR A PARTICULAR" CR
+." PURPOSE.  See the GNU General" CR
+." Public License for more details." CR CR
+." You should have received a copy" CR
+." of the GNU General Public" CR
+." License along with this program;" CR
+." if not, see" CR
+." <http://gnu.org/licenses>."
+
+( License in Esperanto -- part 1 )
+
+." Ĉi tiu programo estas libera; vi" CR
+." rajtas reliveri kaŭ modifi ĝin" CR
+." sub la kondiĉoj de la GNU-a" CR
+." Ĝenerala Publika Permesilo, tia" CR
+." kiun publikigas Free Software" CR
+." Foundation (Liber-Programara" CR
+." Fondaĵo), ĉu versio 3 de la" CR
+." permesilo aŭ, je via prefero, iu" CR
+." posta versio." CR
+PRESS-ANY-KEY -->
+
+( License in Esperanto -- part 2 )
+
+WIPE-CONTENTS
+." Ĉi tiu programo estas" CR
+." distribuita kun la espero ke ĝi" CR
+." utilu, sed SEN AJNA GARANTIO; eĉ" CR
+." sen implicita garantio de" CR
+." KOMERCEBLECO or TAŬGECO POR" CR
+." PARTIKULARA CELO.  Vidu la" CR
+." GNU-an Publikan Permesilon por" CR
+." pliaj detaloj." CR CR
+." Vi devintus ricevi kopion de la" CR
+." GNU-a Ĝenerala Publika Permesilo" CR
+." kun ĉi tiu programo; alikaze" CR
+." vidu <http://gnu.org/licenses>."
+
+( License in Spanish -- part 1 )
+
+." Este programa es libre; puedes" CR
+." redistribuirlo y modificarlo" CR
+." bajo los términos de la Licencia" CR
+." Pública General GNU, publicada" CR
+." por Free Software Foundation" CR
+." (Fundación para los programas" CR
+." libres), bien su versión 3 o, a" CR
+." tu criterio, otra posterior." 
+PRESS-ANY-KEY -->
+
+( License in Spanish -- part 2 )
+
+WIPE-CONTENTS
+." Este programa se distribuye con" CR
+." la esperanza de ser útil, pero" CR
+." SIN GARANTÍA ALGUNA; sin tan" CR
+." siquiera la garantía implícita" CR
+." de ser ADECUADO PARA SU" CR
+." COMERCIALIZACIÓN O UN PROPÓSITO" CR
+." PARTICULAR. Para más información"
+." lee la Licencia Pública general" CR
+." GNU." CR CR
+." Deberías haber recibido una" CR
+." copia de la Licencia Pública" CR
+." General GNU junto con este" CR
+." programa; si no es así, léela en" CR
+." <http://gnu.org/licenses>"
+
+( block #8: the font )
+
+  \ This RAM disk block will be overwritten with binary data
+  \ loaded from tape.
+
+( block #9: first half of the title graphic )
+
+  \ This RAM disk block will be overwritten with binary data
+  \ loaded from tape.
+
+( block #10: second half of the title graphic )
+
+  \ This RAM disk block will be overwritten with binary data
+  \ loaded from tape.
 
   \ vim: filetype=abersoftforth:fileencoding=utf-8

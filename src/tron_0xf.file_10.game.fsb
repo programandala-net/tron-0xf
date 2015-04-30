@@ -2,12 +2,28 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
 .( Tron 0xF: game )
 
@@ -66,4 +82,4 @@
   \ Increase the score of the players that didn't crash.
   PLAYERS 0 DO  I PLAYER! CRASH? 0= SCORE+  LOOP  ;
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforth

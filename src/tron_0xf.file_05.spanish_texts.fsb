@@ -2,12 +2,28 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
   \ -----------------------------------------------------------
   \ fsb directives
@@ -15,20 +31,6 @@
   \ The following '#vim' directives, processed by fsb,
   \ translate the UTF-8 chars in this source file to ZX
   \ Spectrum UDG.
-
-  \ Esperanto letters:
-  \ #vim %substitute@Ĉ@\=nr2char(144)@g
-  \ #vim %substitute@ĉ@\=nr2char(145)@g
-  \ #vim %substitute@Ĝ@\=nr2char(146)@g
-  \ #vim %substitute@ĝ@\=nr2char(147)@g
-  \ #vim %substitute@Ĥ@\=nr2char(148)@g
-  \ #vim %substitute@ĥ@\=nr2char(149)@g
-  \ #vim %substitute@Ĵ@\=nr2char(150)@g
-  \ #vim %substitute@ĵ@\=nr2char(151)@g
-  \ #vim %substitute@Ŝ@\=nr2char(152)@g
-  \ #vim %substitute@ŝ@\=nr2char(153)@g
-  \ #vim %substitute@Ŭ@\=nr2char(154)@g
-  \ #vim %substitute@ŭ@\=nr2char(155)@g
 
   \ Spanish letters and signs:
   \ #vim %substitute@Á@\=nr2char(144)@g
@@ -50,7 +52,7 @@
 
 .( Tron 0xF: Spanish texts )
 
-2 6 THRU
+2 7 THRU
 
 ( Instructions )
 
@@ -73,6 +75,21 @@
   ." Para jugar otra vez: RUN" CR
   ." Para salir de Forth: BYE" CR  ;
   \  <------------------------------->
+
+( Authors and license )
+
+: ES-AUTHORS  ( -- )
+  ." <http://programandala.net/en.program.tron_0xf.html>" CR CR
+  ." Escrito en fig-Forth con" CR
+  ." Abersoft Forth (Melbourne House," CR
+  ." 1983.)" CR CR
+  ." Código y gráficos:" CR
+  ."   Marcos Cruz" CR
+  ." Pruebas y sugerencias:" CR
+  ."   Teo e Irene"  ;
+
+: ES-LICENSE  ( -- )
+  6 LOAD  ;
 
 ( Keys )
 

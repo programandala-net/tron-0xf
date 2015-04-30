@@ -2,41 +2,32 @@
 
 \ This file is part of
 \ Tron 0xF
-\ A ZX Spectrum game written in Abersoft Forth
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
 
 \ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
-
-  \ -----------------------------------------------------------
-  \ fsb directives
-
-  \ The following '#vim' directives, processed by fsb,
-  \ translate the UTF-8 chars in this source file to ZX
-  \ Spectrum UDG.
-
-  \ Spanish letters and signs:
-  \ #vim %substitute@Á@\=nr2char(144)@g
-  \ #vim %substitute@á@\=nr2char(145)@g
-  \ #vim %substitute@É@\=nr2char(146)@g
-  \ #vim %substitute@é@\=nr2char(147)@g
-  \ #vim %substitute@Í@\=nr2char(148)@g
-  \ #vim %substitute@í@\=nr2char(149)@g
-  \ #vim %substitute@Ó@\=nr2char(150)@g
-  \ #vim %substitute@ó@\=nr2char(151)@g
-  \ #vim %substitute@Ú@\=nr2char(152)@g
-  \ #vim %substitute@ú@\=nr2char(153)@g
-  \ #vim %substitute@Ü@\=nr2char(154)@g
-  \ #vim %substitute@ü@\=nr2char(155)@g
-  \ #vim %substitute@Ñ@\=nr2char(156)@g
-  \ #vim %substitute@ñ@\=nr2char(157)@g
-  \ #vim %substitute@¿@\=nr2char(158)@g
-  \ #vim %substitute@¡@\=nr2char(159)@g
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
 
 .( Tron 0xF: localization )
 
-2 10 THRU
+2 7 THRU
 
 ( LOCALIZED )
 
@@ -137,15 +128,17 @@ LOCALIZED ROBOT$  ( -- ca len )
 
 : ON/OFF$  ( f -- ca len )
   IF  ON$  ELSE  OFF$  THEN  ;
+
+' ES-LICENSE ' EO-LICENSE ' EN-LICENSE
+LOCALIZED LICENSE  ( -- )
+
+' ES-AUTHORS ' EO-AUTHORS ' EN-AUTHORS
+LOCALIZED AUTHORS  ( -- )
   
-: CREDITS  ( -- )
-  \ XXX TODO
-  \  <------------------------------->
+: COPYRIGHT  ( -- )
   ." Copyright (C) 1985,2009,2015" CR
-  ." Marcos Cruz (programandala.net)" CR
-  LICENSE$ TYPE ."  GPL 3" CR CR  ;
-  \  <------------------------------->
+  ." Marcos Cruz (programandala.net)"  ;
 
 CHAR N CONSTANT 'N'  \ the letter used to say "no"
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforth
