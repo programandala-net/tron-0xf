@@ -153,17 +153,14 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ Type a string centered on a given line.
   OVER |AT| TYPE  ;
 
+: AT-COL  ( col -- )
+  \ Move the cursor position to the given column
+  \ of the current line.
+  AT@ DROP SWAP AT  ;
+
 : |TYPE|  ( ca len -- )
-
   \ Type a string centered on the current line.
- 
-  \ Note: the line is supposed to be empty, and it will be
-  \ erased at the left of the text.
-  
-  \ XXX TODO Get the current line and call `<LINETYPE>`instead
-  \ of printing spaces.
-
-  DUP CENTERED SPACES TYPE  ;
+  DUP CENTERED AT-COL TYPE  ;
 
 ( Title )
 
@@ -180,7 +177,7 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   TITLE-ADDRESS 16384 2048 CMOVE
   22528 256 RED FILL  ;
 
-9 CONSTANT CONTENTS-LINE  \ first usable line above the header
+8 CONSTANT CONTENTS-LINE  \ first usable line above the header
 
 : PAGE  ( -- )
   \ Start a new contents page.

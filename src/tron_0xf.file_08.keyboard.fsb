@@ -36,6 +36,9 @@
   CR PRESS-ANY-KEY$ 23 |LINETYPE|
   500 MS  AKEY DROP KEY-SOUND  ;
 
+: MORE  ( -- )
+  PRESS-ANY-KEY WIPE-CONTENTS  ;
+
 : Y/N?  ( c -- f )
   \ Is the given char a valid answer for a Y/N question?
   UPPERC DUP 'Y' = SWAP 'N' = OR  ;

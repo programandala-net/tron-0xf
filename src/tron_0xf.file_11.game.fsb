@@ -41,68 +41,55 @@
   -1  0 2CONSTANT LEFT-INCS
    1  0 2CONSTANT RIGHT-INCS
 
-: -1..1  ( -- -1 | 0 | 1 )
+  \ XXX OLD
+  \ : -1..1  ( -- -1 | 0 | 1 )
+  \   \ Return a random increment for a graphic coordinate.
+  \   \ XXX TODO Rewrite in Z80.
+  \   3 RND 1-  ;
+
+: -1|1  ( -- -1 | 1 )
   \ Return a random increment for a graphic coordinate.
   \ XXX TODO Rewrite in Z80.
-  3 RND 1-  ;
+  SYS-FRAMES C@ 1 AND DUP ?EXIT 1-  ;
 
-( Autopilot )
+( DODGE )
 
-  \ XXX TODO -- not finished
+: DODGED?  ( xinc yinc -- f )
+  \ Considering the given increments for the current player,
+  \ is the second next position free?
+  2* PLAYER-YC @ + SWAP 2* PLAYER-XC @ + SWAP POINT 0=  ;
+
+: DODGE-Y  ( -- 0 yinc )
+  \ Choose increments to start moving on the Y axis.
+  0 -1|1 2DUP DODGED? ?EXIT  MINUS  ;
+
+: DODGE-X  ( -- xinc 0 )
+  \ Choose increments to start moving on the X axis.
+  -1|1 0 2DUP DODGED? ?EXIT  SWAP MINUS SWAP  ;
 
 : DODGE  ( -- )
   \ Change the direction of the current player.
   PLAYER-XINC @   \ moving on the X axis?
-  IF    0 -1..1   \ move on the Y axis
-  ELSE  -1..1 0   \ move on the X axis
-  THEN  PLAYER-INCS 2!  ;
+  IF  DODGE-Y  ELSE  DODGE-X  THEN  PLAYER-INCS 2!  ;
 
-: +POINT?  ( xinc yinc -- f )
-  \ Is there's a pixel on the current
-  \ player's coordinates plus the given increments?
-  PLAYER-YC @ + SWAP PLAYER-XC @ + SWAP POINT  ;
+( AUTOPILOT )
 
-: (DODGE)  ( xinc yinc -- )
-  \ If there's a pixel on the current
-  \ player's coordinates plus the given increments,
-  \ change the direction.
-  2DUP +POINT? IF  PLAYER-INCS 2!  ELSE  2DROP  THEN  ;
-
-: X-DODGE  ( -- )
-  \ Moving on the X asis, check a random side.
-  -1..1 -DUP IF  0 SWAP (DODGE)  THEN  ;
-
-: Y-DODGE  ( -- )
-  \ Moving on the Y asis, check a random side.
-  -1..1 -DUP IF  0 (DODGE)  THEN  ;
-
-HERE: DODGINGS
-  ' X-DODGE CFA , ' Y-DODGE CFA ,
-
-( Autopilot )
-
-: AVOIDABLE-CRASH?  ( -- f )
+: CRASH-BOUND?  ( -- f )
   \ Is the second next position occupied?
   PLAYER-XINC @ 2* PLAYER-XC @ +
   PLAYER-YINC @ 2* PLAYER-YC @ + POINT  ;
 
 : AUTOPILOT  ( -- )
-  \ Update the coordinate increments of the current (robot)
-  \ player.
-  \ 2 RND ?EXIT \ 50% times, do nothing  \ XXX TMP
+  \ Update the coordinate increments
+  \ of the current (robot) player:
   \ If there's something ahead, change the direction.
-  AVOIDABLE-CRASH? IF  DODGE EXIT  THEN
-  \ Otherwise, check the sides.
-  \ XXX FIXME the player crashes itself
-  \ XXX TODO
-  \ PLAYER-XINC @ ABS CELLS DODGINGS + @ EXECUTE
-  ;
+  CRASH-BOUND? IF  DODGE EXIT  THEN  ;
 
 ( RUDDER )
 
 : RUDDER  ( -- )
-  \ Update the coordinate increments of the current (human)
-  \ player.
+  \ Update the coordinate increments
+  \ of the current (human) player.
   PLAYER-UP-K @ PRESSED? IF
     PLAYER-XINC @ IF  UP-INCS PLAYER-INCS 2!  THEN  EXIT
   THEN
@@ -115,13 +102,6 @@ HERE: DODGINGS
   PLAYER-RIGHT-K @ PRESSED? IF
     PLAYER-YINC @ IF  RIGHT-INCS PLAYER-INCS 2!  THEN  EXIT
   THEN  ;
-
-( FORWARD )
-
-: FORWARD  ( -- )
-  \ Update the coordinates of the current player.
-  PLAYER-XINC @ PLAYER-XC +!
-  PLAYER-YINC @ PLAYER-YC +!  ;
 
 ( POSITIONS READY )
 
@@ -162,6 +142,11 @@ HERE: POSITIONS-TABLE
   \ XXX TODO message
   CLEAR-ARENA READY AKEY DROP  ;
 
+: FORWARD  ( -- )
+  \ Update the coordinates of the current player.
+  PLAYER-XINC @ PLAYER-XC +!
+  PLAYER-YINC @ PLAYER-YC +!  ;
+
 : ROUND  ( -- f )
   \ Game round, until a crash or the break key is pressed.
   \ f = Break key pressed?
@@ -186,7 +171,7 @@ HERE: POSITIONS-TABLE
 
 : GAME-INIT  ( -- )
   \ Init the game.
-  CLS0 ARENA -SCORES SAVE-ARENA  SOUND? @ SOUND  ;
+  CLS0 -SCORES ARENA SAVE-ARENA  SOUND? @ SOUND  ;
 
 : ?ROUND-END  ( f -- )
   \ XXX TMP

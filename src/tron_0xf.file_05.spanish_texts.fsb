@@ -52,12 +52,12 @@
 
 .( Tron 0xF: Spanish texts )
 
-2 7 THRU
+2 8 THRU
 
 ( Instructions )
 
 : ES-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   ." Cada jugador conduce una moto" CR
   ." cuyo único control la hace girar" CR
   ." noventa grados sin frenar." CR CR
@@ -66,30 +66,62 @@
   ." El objetivo del juego es hacer" CR
   ." estrellarse al contrincante con" CR
   ." el laberinto." CR  ;
-  \  <------------------------------->
+  \  <------------------------------>
 
-( Quit )
+( Quit and authors )
 
 : ES-QUIT-MESSAGE  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   ." Para jugar otra vez: RUN" CR
   ." Para salir de Forth: BYE" CR  ;
-  \  <------------------------------->
-
-( Authors and license )
+  \  <------------------------------>
 
 : ES-AUTHORS  ( -- )
-  ." <http://programandala.net/en.program.tron_0xf.html>" CR CR
+  \  <------------------------------>
+  ." <http://programandala.net/es.programa.tron_0xf.html>" CR
+  CR
+  ." Código y gráficos: Marcos Cruz" CR
+  10 AT-COL ." Pruebas: Teo e Irene" CR CR
   ." Escrito en fig-Forth con" CR
   ." Abersoft Forth (Melbourne House," CR
-  ." 1983.)" CR CR
-  ." Código y gráficos:" CR
-  ."   Marcos Cruz" CR
-  ." Pruebas y sugerencias:" CR
-  ."   Teo e Irene"  ;
+  ." 1983)."  ;
+  \  <------------------------------>
 
-: ES-LICENSE  ( -- )
-  6 LOAD  ;
+( License -- part 1 )
+
+: ES-LICENSE-1  ( -- )
+
+  \  <------------------------------>
+  ." Este programa es libre; puedes" CR
+  ." redistribuirlo y modificarlo" CR
+  ." bajo los términos de la Licencia" CR
+  ." Pública General GNU, publicada" CR
+  ." por Free Software Foundation" CR
+  ." (Fundación para los programas" CR
+  ." libres), bien su versión 3 o, a" CR
+  ." tu criterio, otra posterior."  ;
+  \  <------------------------------>
+
+( License -- part 2 )
+
+: ES-LICENSE-2  ( -- )
+
+  \  <------------------------------>
+  ." Este programa se distribuye con" CR
+  ." la esperanza de que sea útil," CR
+  ." pero SIN GARANTÍA ALGUNA; ni" CR
+  ." siquiera la garantía implícita" CR
+  ." de ser COMERCIALIZABLE o APTO" CR
+  ." PARA UN OBJETIVO PARTICULAR" CR
+  ." Para más detalles lee la"
+  ." Licencia Pública General GNU." CR CR
+  \  <------------------------------>
+  ." Deberías haber recibido una" CR
+  ." copia de la Licencia Pública" CR
+  ." General GNU junto con este" CR
+  ." programa; si no es así, léela en" CR
+  ." <http://gnu.org/licenses>."  ;
+  \  <------------------------------>
 
 ( Keys )
 

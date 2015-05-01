@@ -27,12 +27,12 @@
 
 .( Tron 0xF: English texts )
 
-2 7 THRU
+2 8 THRU
 
 ( Instructions )
 
 : EN-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   \  XXX TODO -- complete:
   ." Every player drives a motorbike" CR
   ." whose only control makes it turn" CR
@@ -43,32 +43,64 @@
   ." The goal of the game is to make" CR
   ." your adversary crash the" CR
   ." labyrinth." CR  ;
-  \  <------------------------------->
+  \  <------------------------------>
 
-( Quit )
+( Quit and authors )
 
 : EN-QUIT-MESSAGE  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   ." To play again: RUN" CR
   ." To exit Forth: BYE" CR  ;
-  \  <------------------------------->
-
-( Authors and license )
+  \  <------------------------------>
 
 : EN-AUTHORS  ( -- )
-  ." <http://programandala.net/en.program.tron_0xf.html>" CR CR
+  \  <------------------------------>
+  ." <http://programandala.net/en.program.tron_0xf.html>" CR
+  CR
+  ." Code and graphics: Marcos Cruz" CR
+  12 AT-COL ." Tests: Teo and Irene" CR CR
   ." Written in fig-Forth with" CR
   ." Abersoft Forth (Melbourne House," CR
-  ." 1983.)" CR CR
-  ." Code and graphics:" CR
-  ."   Marcos Cruz" CR
-  ." Tests and suggestions:" CR
-  ."   Teo and Irene"  ;
+  ." 1983)."  ;
+  \  <------------------------------>
 
-: EN-LICENSE  ( -- )
-  2 LOAD  ;
+( License -- part 1 )
 
-( Keys ) 
+: EN-LICENSE-1  ( -- )
+
+  \  <------------------------------>
+  ." This program is free software;" CR
+  ." you can redistribute it and/or" CR
+  ." modify it under the terms of the" CR
+  ." GNU General Public License as" CR
+  ." published by the Free Software" CR
+  ." Foundation; either version 3 of" CR
+  ." the License, or (at your option)" CR
+  ." any later version."  ;
+  \  <------------------------------>
+
+( License -- part 2 )
+
+: EN-LICENSE-2  ( -- )
+
+  \  <------------------------------>
+  ." This program is distributed in" CR
+  ." the hope that it will be useful," CR
+  ." but WITHOUT ANY WARRANTY; with-" CR
+  ." out even the implied warranty" CR
+  ." of MERCHANTABILITY or FITNESS" CR
+  ." FOR A PARTICULAR PURPOSE. See" CR
+  ." the GNU General Public License" CR
+  ." for more details." CR CR
+  \  <------------------------------>
+  ." You should have received a copy" CR
+  ." of the GNU General Public" CR
+  ." License along with this program;"
+  ." if not, see:" CR
+  ." <http://gnu.org/licenses>."  ;
+  \  <------------------------------>
+
+( Keys )
 
 : EN-UP$     ( -- ca len )  S" Up"  ;
 : EN-DOWN$   ( -- ca len )  S" Down"  ;

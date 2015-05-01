@@ -48,12 +48,12 @@
 
 .( Tron 0xF: Esperanto texts )
 
-2 7 THRU
+2 8 THRU
 
 ( Instructions )
 
 : EO-INSTRUCTIONS  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   ." Ĉiu ludanto veturas motorciklon" CR
   ." kies nura stirilo ĝin turnas" CR
   ." naŭdek gradojn sen malrapidiĝo." CR CR
@@ -61,31 +61,63 @@
   ." lumo-muron." CR CR
   ." La ludocelo estas igi la kon-" CR
   ." traŭulon frakasi la labirinton." CR  ;
-  \  <------------------------------->
+  \  <------------------------------>
 
-( Quit )
+( Quit and authors )
 
 : EO-QUIT-MESSAGE  ( -- )
-  \  <------------------------------->
+  \  <------------------------------>
   ." Por reludi: RUN" CR
   ." Por eliri el Fortho: BYE" CR  ;
-  \  <------------------------------->
-
-( Authors and license )
+  \  <------------------------------>
 
 : EO-AUTHORS  ( -- )
-  ." <http://programandala.net/en.program.tron_0xf.html>" CR CR
+  \  <------------------------------>
+  ." <http://programandala.net/eo.programo.tron_0xf.html>" CR
+  CR
+  ." Kodo kaj grafikoj: Marcos Cruz" CR
+  10 AT-COL ." Provado: Teo kaj Irene"  CR CR
   ." Verkita en fig-Forth per" CR
   ." Abersoft Forth (Melbourne House," CR
-  ." 1983.)" CR CR
-  ." Kodo kaj grafikoj:" CR
-  ."   Marcos Cruz" CR
-  ." Provado kaj sugestoj:" CR
-  ."   Teo kaj Irene"  ;
+  ." 1983)."  ;
+  \  <------------------------------>
 
-: EO-LICENSE  ( -- )
-  4 LOAD  ;
- 
+( License -- part 1 )
+
+: EO-LICENSE-1  ( -- )
+
+  \  <------------------------------>
+  ." Ĉi tiu programo estas libera; vi" CR
+  ." rajtas reliveri kaŭ modifi ĝin" CR
+  ." sub la kondiĉoj de la GNU-a" CR
+  ." Ĝenerala Publika Permesilo, tia" CR
+  ." kiun publikigas Free Software" CR
+  ." Foundation (Liber-Programara" CR
+  ." Fondaĵo), ĉu versio 3 de la" CR
+  ." permesilo aŭ, je via prefero, iu" CR
+  ." posta versio."  ;
+  \  <------------------------------>
+
+( License -- part 2 )
+
+: EO-LICENSE-2  ( -- )
+
+  \  <------------------------------>
+  ." Ĉi tiu programo estas" CR
+  ." distribuita kun espero ke ĝi" CR
+  ." utilu, sed SEN AJNA GARANTIO; eĉ" CR
+  ." sen implicita garantio de" CR
+  ." KOMERCEBLECO or TAŬGECO POR" CR
+  ." PARTIKULARA CELO. Vidu la GNU-an"
+  ." Ĝeneralan Publikan Permesilon" CR
+  ." por pliaj detaloj." CR CR
+  \  <------------------------------>
+  ." Vi devintus ricevi kopion de la" CR
+  ." GNU-a Ĝenerala Publika Permesilo" CR
+  ." kun ĉi tiu programo; alikaze" CR
+  ." vidu <http://gnu.org/licenses>."  ;
+  \  <------------------------------>
+
 ( Keys )
 
 : EO-UP$     ( -- ca len )  S" Supren"  ;

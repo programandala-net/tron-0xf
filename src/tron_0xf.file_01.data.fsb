@@ -111,7 +111,11 @@ HERE: PLAYER#-DATA
 
 ( Player 0 data fields)
 
- HUMAN  0 0 PLAYER#-VARIABLE PLAYER0   \ human or robot
+  \ XXX TODO simplify:
+  \ the PLAYERx and CONTROLx fields are redundant,
+  \ the PLAYERx and PLAYER-TYPE are not used.
+
+ ROBOT  0 0 PLAYER#-VARIABLE PLAYER0   \ human or robot
      0  1 0 PLAYER#-VARIABLE SCORE0    \ score
      0  2 0 PLAYER#-VARIABLE YC0       \ Y coordinate
      0  3 0 PLAYER#-VARIABLE XC0       \ X coordinate
@@ -157,7 +161,7 @@ UP-K1 CONSTANT KEYS1
 
 ( Player 2 data fields)
 
- ROBOT  0 2 PLAYER#-VARIABLE PLAYER2   \ type
+ HUMAN  0 2 PLAYER#-VARIABLE PLAYER2   \ type
      0  1 2 PLAYER#-VARIABLE SCORE2    \ score
      0  2 2 PLAYER#-VARIABLE YC2       \ Y coordinate
      0  3 2 PLAYER#-VARIABLE XC2       \ X coordinate
