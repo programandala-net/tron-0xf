@@ -50,9 +50,11 @@
   \ #vim %substitute@¿@\=nr2char(158)@g
   \ #vim %substitute@¡@\=nr2char(159)@g
 
+-->
+
 .( Tron 0xF: Spanish texts )
 
-2 8 THRU
+3 9 THRU
 
 ( Instructions )
 

@@ -25,9 +25,11 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+-->
+
 .( Tron 0xF: localization )
 
-2 7 THRU
+3 8 THRU
 
 ( LOCALIZED )
 

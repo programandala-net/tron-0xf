@@ -24,6 +24,7 @@ Home page: http://programandala.net/en.program.tron_0xf.html.
 
 Note: The git repository of Tron 0xF was created in 2016-03 from
 development backups, in order to make the evolution of the sources
-easier to browse. Binary and library files were not added to the
+easier to browse.  Binary and library files were not added to the
 commits created from backups. They are included only in the most
 recent commits.
+

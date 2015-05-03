@@ -25,6 +25,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+-->
+
 .( Tron 0xF: data )
 
 FORTH DEFINITIONS
@@ -47,7 +49,7 @@ FORTH DEFINITIONS
 
 : PAPERY  ( color -- paper-attribute )  8 *  ;
 
-2 10 THRU
+3 11 THRU
 
 ( Vocabulary)
 

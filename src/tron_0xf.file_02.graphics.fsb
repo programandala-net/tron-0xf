@@ -25,6 +25,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+-->
+
 .( Tron 0xF: graphics )
 
 16384 CONSTANT SYS-SCREEN  \ address of the screen
@@ -41,7 +43,7 @@
   \ from block 1 of the Forth RAM disk.
   [ 1 'BLOCK ] LITERAL SYS-SCREEN /SYS-SCREEN CMOVE  ;
 
-2 10 THRU
+3 11 THRU
 
 ( Font)
 

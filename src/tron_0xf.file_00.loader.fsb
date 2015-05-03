@@ -1,4 +1,4 @@
-\ tron_0xf.file_00.loader.fsb
+--> \ tron_0xf.file_00.loader.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -27,6 +27,9 @@
 
 ( Tron 0xF: loader )
 
+  \ This file is the first one to be loaded.  That's why it can
+  \ not use any word of defined by the Afera library.
+
 0 PAPER 4 INK 0 BORDER CLS
 
 ." Tron 0xF: loader "
@@ -38,8 +41,8 @@ FORTH DEFINITIONS
   \ It's set in the last source file.
 
 : LOADER  ( -- )
-  \ Get and compile every source file RAM-disc from tape,
-  \ and then execute the latest word defined.
+  \ Get and compile every RAM disk from tape, until `LOADED?`
+  \ is on, and then execute the latest word defined.
   BEGIN  LOADED? @ 0=  WHILE
     255 23692 C!  ( avoid the "scroll?" prompt)
     FLUSH INIT-DISC LOADT 1 LOAD

@@ -25,9 +25,11 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+-->
+
 .( Tron 0xF: keyboard )
 
-2 10 THRU
+3 11 THRU
 
 ( Y/N input )
 

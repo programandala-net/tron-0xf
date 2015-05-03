@@ -46,9 +46,11 @@
   \ #vim %substitute@Ŭ@\=nr2char(154)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
+-->
+
 .( Tron 0xF: Esperanto texts )
 
-2 8 THRU
+3 9 THRU
 
 ( Instructions )
 

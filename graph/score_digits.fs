@@ -2,16 +2,43 @@
 
 \ score_digits.fs
 
-\ This program creates the double-heigth score digits used in Tron 0xF
+\ This program, written in Forth for Gforth, creates the double-heigth
+\ score digits used in Tron 0xF.
 
-\ By Marcos Cruz (programandala.net)
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in Abersoft Forth
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Licencia/Permesilo/License: GPL 3
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ --------------------------------------------------------------
+\ History of this file
 
 \ 2015-04-02: Start.
 \ 2015-04-05: First working version.
+\ 2015-04-27: Relative path for the output file. `unslurp-file` is
+\ pasted instead of required.
 
-fpath path+ ~/forth
+\ --------------------------------------------------------------
+\ Requirements
 
-require galope/unslurp-file.fs
+\ From the Galope library
+\ (http://programandala.net/en.program.galope.html):
+
+: unslurp-file  ( ca1 len1 ca2 len2 -- )
+  \ Save a memory region to a file.
+  \ ca1 len1 = content to write to the file
+  \ ca2 len2 = filename
+  w/o create-file throw >r
+  r@ write-file throw
+  r> close-file throw
+  ;
+
+\ --------------------------------------------------------------
+\ Main
 
 10 constant characters  \ characters in the font
 8 constant /character   \ bytes per character
@@ -38,8 +65,11 @@ font characters /character * + constant bottom-font
   9 1 do  top-font character i (>font)     loop
   ;
 
+\ --------------------------------------------------------------
+\ Graphics
+
+%00000000
 %11111110
-%10000010
 %10000010
 %10000010
 %10000010
@@ -56,6 +86,7 @@ font characters /character * + constant bottom-font
 %10111110
 0 >font
 
+%00000000
 %00011110
 %00010010
 %00010010
@@ -70,10 +101,10 @@ font characters /character * + constant bottom-font
 %00000010
 %00000010
 %00000010
-%00000010
 %11111110
 1 >font
 
+%00000000
 %11111110
 %00000010
 %00000010
@@ -84,7 +115,6 @@ font characters /character * + constant bottom-font
 %00111000
 %00100000
 %00100000
-%00100000
 %11100000
 %10000000
 %10000000
@@ -92,8 +122,8 @@ font characters /character * + constant bottom-font
 %11111110
 2 >font
 
+%00000000
 %11111110
-%00000010
 %00000010
 %00000010
 %00000010
@@ -110,13 +140,13 @@ font characters /character * + constant bottom-font
 %11111110
 3 >font
 
-%00001110
-%00001010
-%00111010
-%00100010
-%00100010
-%11100010
-%10000010
+%00000000
+%10001110
+%10001010
+%10001010
+%10001010
+%10001010
+%10001010
 %11111010
 %00000010
 %00000010
@@ -128,8 +158,8 @@ font characters /character * + constant bottom-font
 %11111110
 4 >font
 
+%00000000
 %11111110
-%10000000
 %10000000
 %10000000
 %10000000
@@ -146,8 +176,8 @@ font characters /character * + constant bottom-font
 %11111110
 5 >font
 
+%00000000
 %11111110
-%10000000
 %10000000
 %10000000
 %10000000
@@ -164,6 +194,7 @@ font characters /character * + constant bottom-font
 %11111110
 6 >font
 
+%00000000
 %11111110
 %00000010
 %00000010
@@ -179,11 +210,10 @@ font characters /character * + constant bottom-font
 %10000000
 %10000000
 %10000000
-%10000000
 7 >font
 
+%00000000
 %11111110
-%10000010
 %10000010
 %10000010
 %10000010
@@ -200,8 +230,8 @@ font characters /character * + constant bottom-font
 %11111110
 8 >font
 
+%00000000
 %11111110
-%10000010
 %10000010
 %10000010
 %10000010
@@ -218,4 +248,5 @@ font characters /character * + constant bottom-font
 %11111110
 9 >font
 
-font /font s" ~/forth/tron_0xf/graph/score_digits.bin" unslurp-file
+font /font s" ./score_digits.bin" unslurp-file
+bye
