@@ -34,6 +34,7 @@
 : EN-INSTRUCTIONS  ( -- )
   \  <------------------------------>
   \  XXX TODO -- complete:
+  \  The aim of the game is to be the last player riding.
   ." Every player drives a motorbike" CR
   ." whose only control makes it turn" CR
   ." ninety degrees without" CR
@@ -126,6 +127,8 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
   \ : EN-ANOTHER?$  ( -- ca len )  S" Play again? (Y/N)"  ;
 
 : EN-PRESS-ANY-KEY$  ( -- ca len )  S" Press any key"  ;
+
+: EN-DO-STOP$  ( -- ca len )  S" Do you want to stop?"  ;
 
 : EN-LICENSE$  ( -- ca len )  S" License:"  ;
 

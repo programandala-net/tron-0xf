@@ -37,10 +37,6 @@
   \ instead ROM 22DF, but it's not enough:
   \ 22E5 7F7F !
 
-  \ `POINT` calls two ROM routines:
-  \ 22CE ; POINT-SUB
-  \ 1E94 ; FIND-INT to fetch the result from the calculator!
-
 : PAINT  ( -- )
   PLAYER-COLOR @ INK PLAYER-XC @ PLAYER-YC @ PLOT  ;
 

@@ -64,12 +64,20 @@ HERE: MENU-OPTIONS
 
 : CHANGE-PLAYERS  ( -- )
   \ Change the number of players.
+  \ White ink has to be set at the end in order to
+  \ prevent flickering when updating the menu,
+  \ because the way the screen is uptaded sets black ink
+  \ as default.
   PLAYERS 1+ DUP [ MAX-PLAYERS 1+ ] LITERAL < * 1 MAX
-  TO PLAYERS  ;
+  TO PLAYERS  WHITE INK  ;
 
 : TOGGLE-SOUND  ( -- )
   \ Toggle the game sounds.
-  SOUND? @ 0= DUP SOUND? ! SOUND  ;
+  \ White ink has to be set at the end in order to
+  \ prevent flickering when updating the menu,
+  \ because the way the screen is uptaded sets black ink
+  \ as default.
+  SOUND? DUP 1 TOGGLE @ SOUND  WHITE INK  ;
 
 : ABOUT  ( -- )
   WIPE-CONTENTS COPYRIGHT CR CR
@@ -88,11 +96,10 @@ HERE: MENU-COMMANDS
   \ Execution table of the menu commands.
   \
   \ Every command must leave the screen ready to print the
-  \ menu, except the ink color: commands that use the whole
-  \ screen must do `PAGE` at the end; commands that use only
-  \ the contents zone must do `WIPE-CONTENTS` at the end;
-  \ commands that change only their own menu option must do
-  \ nothing.
+  \ menu: commands that use the whole screen must call `PAGE`;
+  \ commands that use only the contents zone must call
+  \ `WIPE-CONTENTS` (or `MORE`, that calls it); commands that
+  \ change only their own menu option must set ink to white.
 
   ' CHANGE-LANGUAGE CFA ,
   ' INSTRUCTIONS CFA ,
@@ -155,7 +162,7 @@ HERE: MENU-COMMANDS
 
 : MENU  ( -- )
   \ Print the menu.
-  WHITE INK  OPTIONS 0 DO  I OPTION  LOOP  256 MS  ;
+  OPTIONS 0 DO  I OPTION  LOOP  REVEAL-CONTENTS 256 MS  ;
 
 ( Valid option)
 

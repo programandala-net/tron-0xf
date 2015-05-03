@@ -145,6 +145,8 @@ CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
 
 : EO-PRESS-ANY-KEY$  ( -- ca len ) S" Premu klavon"  ;
 
+: EO-DO-STOP$  ( -- ca len )  S" Ĉu vi volas fini?"  ;
+
 : EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
 
   \ : EO-KEY$  ( -- ca len )  S" Klavo"  ;

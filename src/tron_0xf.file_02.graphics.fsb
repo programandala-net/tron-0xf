@@ -27,6 +27,20 @@
 
 .( Tron 0xF: graphics )
 
+16384 CONSTANT SYS-SCREEN  \ address of the screen
+6912 CONSTANT /SYS-SCREEN  \ bytes of the screen
+6144 CONSTANT /SYS-SCREEN-BITMAP  \ bytes of the screen bitmap
+
+: SAVE-DISPLAY  ( -- )
+  \ Save a copy of the whole display image
+  \ to block 1 of the Forth RAM disk.
+  SYS-SCREEN [ 1 'BLOCK ] LITERAL /SYS-SCREEN CMOVE  ;
+
+: RESTORE-DISPLAY  ( -- )
+  \ Save the copy of the whole display image
+  \ from block 1 of the Forth RAM disk.
+  [ 1 'BLOCK ] LITERAL SYS-SCREEN /SYS-SCREEN CMOVE  ;
+
 2 10 THRU
 
 ( Font)
@@ -35,11 +49,7 @@
   \ compilation. Words are defined to switch them on and off:
 
   768 CONSTANT /FONT  \ size in bytes
-  \ XXX OLD
-  \ /FONT BUFFER: FONT
-  \ XXX NEW
-  \ Blocks 8 of the Forth RAM disk
-  \ is used to store the font.
+  \ Block 8 of the Forth RAM disk is used to store the font.
 8 'BLOCK CONSTANT FONT
 
   \ Set the game font:
@@ -112,11 +122,10 @@ HERE: UDG-BANK
   BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
 
 : BLACKOUT  ( -- )
-  \ Set the screen attributes to zero.
-  \ This is used before drawing the arena,
-  \ in order to make `SAVE-ARENA` and
-  \ `RESTORE-ARENA` work as expected.
-  ATTRIBUTES /ATTRIBUTES ERASE  ;
+  \ Erase the whole display,
+  \ both the bitmap and the attributes
+  \ (what means black ink and black paper).
+  SYS-SCREEN /SYS-SCREEN ERASE  ;
 
   \ Size of the screen:
 32 CONSTANT COLS
@@ -130,7 +139,7 @@ LINES 4 - CONSTANT ARENA-LINES
 ATTRIBUTES CONSTANT TOP-FRAME-ATTRIBUTES
 ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
-( Center justified texts)
+( Center justified texts and title )
 
   \ XXX OLD
   \ : HOME  ( -- )  0 DUP AT  ;
@@ -145,9 +154,10 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ required to center a text of the given length.
   CENTERED AT  ;
 
-: |LINESPACES|  ( len line -- )
-  \ Type spaces centered on a given line.
-  OVER |AT| SPACES  ;
+  \ XXX OLD
+  \ : |LINESPACES|  ( len line -- )
+  \   \ Type spaces centered on a given line.
+  \   OVER |AT| SPACES  ;
 
 : |LINETYPE|  ( ca len line -- )
   \ Type a string centered on a given line.
@@ -158,11 +168,10 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ of the current line.
   AT@ DROP SWAP AT  ;
 
-: |TYPE|  ( ca len -- )
-  \ Type a string centered on the current line.
-  DUP CENTERED AT-COL TYPE  ;
-
-( Title )
+  \ XXX OLD
+  \ : |TYPE|  ( ca len -- )
+  \   \ Type a string centered on the current line.
+  \   DUP CENTERED AT-COL TYPE  ;
 
   \ The last two blocks (9..10) of the Forth RAM disk
   \ are used to store the graphic of the title, that 
@@ -174,24 +183,46 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ and setting its color attributes.
   \ The graphic ocuppies the first third of the screen
   \ (2048 bytes of bitmap and 256 bytes of color attributes).
-  TITLE-ADDRESS 16384 2048 CMOVE
+  TITLE-ADDRESS SYS-SCREEN 2048 CMOVE
   22528 256 RED FILL  ;
 
-8 CONSTANT CONTENTS-LINE  \ first usable line above the header
+( Contents zone )
+
+  \ The zone above the title is called the contents zone.  It
+  \ is used for menus, configuration and information
+  \ (instructions, about, etc.).
+
+8 CONSTANT CONTENTS-LINE  \ first usable line
 
 : PAGE  ( -- )
   \ Start a new contents page.
-  BLACKOUT TITLE CONTENTS-LINE 0 AT  ;
+  BLACKOUT TITLE  CONTENTS-LINE 0 AT  BLACK INK  ;
+
+  \ Calculate the screen attributes zone of the contents zone.
+CONTENTS-LINE COLS *  \ bytes to skip
+ATTRIBUTES OVER +  /ATTRIBUTES ROT -  ( a len )
+  2CONSTANT CONTENTS-ATTRIBUTES
+
+  \ Calculate the screen bitmap zone of the contents zone.
+CONTENTS-LINE COLS * 8 *  \ bytes to skip (8 scans/char)
+SYS-SCREEN OVER +  /SYS-SCREEN-BITMAP ROT - ( a len )
+  2CONSTANT CONTENTS-BITMAP
 
 : WIPE-CONTENTS  ( -- )
-  \ Set the screen attributes of the contents zone to zero
-  \ and position the cursor at the start of the zone.
-  \ This is used to clear the menu and other pages
-  \ without deleting the title header.
-  [ CONTENTS-LINE 32 *    \ bytes to preserve (32 chars/line)
-    ATTRIBUTES OVER +
-    /ATTRIBUTES ROT -  SWAP ] LITERAL LITERAL ERASE
-  CONTENTS-LINE 0 AT  ;
+  \ Erase the screen attributes of the contents zone (what
+  \ equals black ink and black paper), position the cursor at
+  \ the start of the zone and set black ink for the text to be
+  \ printed.  This is used to clear the menu and other pages
+  \ without deleting the title header, and hidding the new
+  \ contents until they are fully printed.
+  CONTENTS-ATTRIBUTES ERASE  CONTENTS-BITMAP ERASE
+  CONTENTS-LINE 0 AT  BLACK INK  ;
+
+: REVEAL-CONTENTS  ( -- )
+  \ Set the screen attributes of the contents zone to the
+  \ normal values (white ink).  This is used to show the menu
+  \ and other pages instantaneously after updating them.
+  CONTENTS-ATTRIBUTES WHITE FILL  ;
 
 ( Status bar)
 

@@ -150,6 +150,8 @@ CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
 
 : ES-PRESS-ANY-KEY$  ( -- ca len ) S" Pulsa una tecla"  ;
 
+: ES-DO-STOP$  ( -- ca len )  S" ¿Quieres terminar?"  ;
+
 : ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
 
   \ : EN-KEY$  ( -- ca len )  S" Tecla"  ;

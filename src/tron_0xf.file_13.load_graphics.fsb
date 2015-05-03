@@ -70,20 +70,29 @@
   \ #vim %substitute@¿@\=nr2char(158)@g
   \ #vim %substitute@¡@\=nr2char(159)@g
 
+  \ This is the last RAM-disc loaded from tape during the
+  \ compilation of the game. Its space is used to store some
+  \ binary data, with the folling structure:
+  \
+  \ block 0:          copy of the arena attributes (<768 bytes)
+  \ blocks 1-7:       copy of the whole screen (6912 bytes)
+  \ block 8:          game font (768 bytes)
+  \ blocks 9 and 10:  graphic title (2048 bytes)
+
 .( Tron 0xF: fonts, UDG, license )
 
 -SCROLL
-FONT /FONT 0 0 TAPE>MEM               \ main font
+FONT /FONT 0 0 TAPE>                  \ main font
 -SCROLL
-EO-UDG /EO-UDG 0 0 TAPE>MEM           \ Esperanto characters
+EO-UDG /EO-UDG 0 0 TAPE>              \ Esperanto characters
 -SCROLL
-ES-UDG /ES-UDG 0 0 TAPE>MEM           \ Spanish characters
+ES-UDG /ES-UDG 0 0 TAPE>              \ Spanish characters
 -SCROLL
-DIGITS-UDG /DIGITS-UDG 0 0 TAPE>MEM   \ double heigth digits
+DIGITS-UDG /DIGITS-UDG 0 0 TAPE>      \ double heigth digits
 -SCROLL
-UDG 0 0 0 TAPE>MEM                    \ frame graphs
+UDG 0 0 0 TAPE>                       \ frame graphs
 -SCROLL
-TITLE-ADDRESS 0 0 0 TAPE>MEM          \ graphic title
+TITLE-ADDRESS 0 0 0 TAPE>             \ graphic title
 -SCROLL
 
 LOADED? ON  \ tell the loader's loop it's finished
