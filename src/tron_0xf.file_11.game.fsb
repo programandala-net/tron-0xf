@@ -53,7 +53,7 @@ CREATE -1|1  ( -- -1 | 1 )
   \ Return a random increment for a graphic coordinate.
   HEX
   3A C, 5C78 ,        \ ld a,(FRAMES)
-  E6 C, 01 C,         \ and 1
+  E6 C, 01 C,         \ and 1 ; bit 0 only
   26 C, 00 C,         \ ld h,0
   68 07 + C,          \ ld l,a
   C2 C, PUSHHL ,      \ jp nz,PUSHHL ; return 1
@@ -63,11 +63,11 @@ CREATE -1|1  ( -- -1 | 1 )
 
 ( INCS2* )
 
-CREATE INCS2*  ( n1 n2 -- n1' n2' )  HEX
+CREATE INCS2*  ( b1 b2 -- b1' b2' )  HEX
   \ Double the coordinate increments b1 and b2
-  \ by shifting left their low bytes directly on the stack.
-  \ n1' = n1 2*
-  \ n2' = n2 2*
+  \ by shifting them left directly on the stack.
+  \ b1' = b1 2*
+  \ b2' = b2 2*
   21 C, 0 ,       \ ld hl,0
   39 C,           \ add hl,sp ; low byte of TOS
   CB C, 26 C,     \ sla (hl)
@@ -83,8 +83,9 @@ CREATE INCS2*  ( n1 n2 -- n1' n2' )  HEX
   \ Considering the given coordinate increments
   \ for the current player,
   \ is the second next position occupied?
+  \ XXX TODO faster in Z80
   INCS2* PLAYER-YC @ + SWAP PLAYER-XC @ + SWAP POINT  ;
-  \ XXX TODO check if this is slower:
+  \ XXX TODO check if this is slower or faster:
   \ INCS2* PLAYER-YC @ + >R PLAYER-XC @ + R> POINT  ;
 
 : DODGED?  ( xinc yinc -- f )
@@ -132,27 +133,27 @@ CREATE INCS2*  ( n1 n2 -- n1' n2' )  HEX
 
 ( POSITIONS READY )
 
-: POSITIONS1  ( -- )
-  \ Set the player's position before a new round,
-  \ for one player.
-  127 XC0 ! 88 YC0 !  UP-INCS INCS0 2!  ;
+:NONAME  ( -- )
+  \ Set the players' positions before a new round,
+  \ for three players.
+   40 XC0 ! 127 YC0 !  RIGHT-INCS INCS0 2!
+  215 XC1 ! 127 YC1 !  LEFT-INCS  INCS1 2!
+  126 XC2 !  40 YC2 !  UP-INCS    INCS2 2!  ;
 
-: POSITIONS2  ( -- )
+:NONAME  ( -- )
   \ Set the players' positions before a new round,
   \ for two players.
    40 XC0 ! 88 YC0 !  RIGHT-INCS INCS0 2!
   215 XC1 ! 88 YC1 !  LEFT-INCS  INCS1 2!  ;
 
-: POSITIONS3  ( -- )
-  \ Set the players' positions before a new round,
-  \ for three players.
-   40 XC0 ! 127 YC0 !  RIGHT-INCS INCS0 2!
-  215 XC1 ! 127 YC1 !  LEFT-INCS  INCS1 2!
-  127 XC2 !  40 YC2 !  UP-INCS    INCS2 2!  ;
+:NONAME  ( -- )
+  \ Set the player's position before a new round,
+  \ for one player.
+  127 XC0 ! 88 YC0 !  UP-INCS INCS0 2!  ;
 
-HERE: POSITIONS-TABLE
+HERE: POSITIONS-TABLE  ( cfa3 cfa2 cfa1 )
   \ Execution table for `POSITIONS`.
-  ' POSITIONS1 CFA , ' POSITIONS2 CFA , ' POSITIONS3 CFA ,
+  , , ,
  
 : POSITIONS  ( -- )
   \ Set the players' start positions.
@@ -172,21 +173,42 @@ HERE: POSITIONS-TABLE
   \ Update the coordinates of the current player.
   PLAYER-XINC @ PLAYER-XC +!  PLAYER-YINC @ PLAYER-YC +!  ;
 
-: BREAK?  ( -- f )
+: STOP?  ( -- f )
   FALSE  ?TERMINAL 0= ?EXIT  DROP SAVE-DISPLAY DO-STOP?
   DUP 0= IF  RESTORE-DISPLAY  THEN  ;
 
+( ROUND )
+
+0 VARIABLE CRASHES
+
 : ROUND  ( -- f )
-  \ Game round, until a crash or the break key is pressed.
+  \ Game round, until a crash happens
+  \ or the break key is pressed and confirmed.
   \ f = Break key pressed?
   ROUND-INIT
   BEGIN
+
+    \ XXX NEW method
+    \ CRASHES OFF
+
     PLAYERS 0 DO
       I PLAYER!  PLAYER-CONTROL @ EXECUTE
-      CRASH? IF  CRASH +SCORES UNLOOP FALSE EXIT  THEN
+
+      \ XXX OLD method
+      \ XXX FIXME when 2 robots play, they crash
+      CRASH? IF
+        \ I QUIT \ XXX TMP
+        CRASH +SCORES UNLOOP FALSE EXIT  THEN
       FORWARD PAINT MOTOR-NOISE
-    LOOP
-  BREAK? UNTIL  TRUE  ;
+     LOOP
+
+      \ XXX NEW method -- doesn't makes any difference
+      \ XXX FIXME when 2 robots play, they crash
+      \ CRASH? DUP CRASHES +!
+      \ 0= IF  FORWARD PAINT MOTOR-NOISE  THEN
+    \ LOOP  CRASHES @ IF  CRASH +SCORES FALSE EXIT  THEN
+
+  STOP? UNTIL  TRUE  ;
 
 ( GAME )
 

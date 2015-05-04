@@ -165,6 +165,10 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ Type a string centered on a given line.
   OVER |AT| TYPE  ;
 
+: REMARK  ( ca len -- )
+  \ Type a string centered on the last line.
+  [ LINES 1- ] LITERAL |LINETYPE|  ;
+
 : AT-COL  ( col -- )
   \ Move the cursor position to the given column
   \ of the current line.

@@ -60,7 +60,7 @@
 
 : .PRESS-ANY-KEY  ( -- )
   \ Print "press any key" in the current language.
-  PRESS-ANY-KEY$ 23 |LINETYPE| REVEAL-CONTENTS  ;
+  PRESS-ANY-KEY$ REMARK REVEAL-CONTENTS  ;
 
 : WAIT-ANY-KEY  ( -- )
   500 MS  AKEY DROP KEY-SOUND  ;
@@ -201,7 +201,7 @@ DECIMAL
 : (PRESSED)  ( -- a tf | ff tf | ff )
   \ Check all keys.
   \ If a key is pressed, return its address in the `KEYS` table
-  \ and a true flag; if Break is pressed, return a false flag
+  \ and a true flag; if "Break" is pressed, return a false flag
   \ and a true flag; else return a false flag.
   FALSE  \ default
   [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
@@ -210,8 +210,8 @@ DECIMAL
   /KEY +LOOP  ;
 
 : PRESSED  ( -- a | ff )
-  \ Check all keys forever until one of them is pressed
-  \ and return its identifier.
+  \ Check all keys forever until one of them,
+  \ or the "Break" key, is pressed.
   \ If a valid key was pressed, return its address
   \ in the `KEYS` table; if the "Break" key was pressed,
   \ return a false flag.

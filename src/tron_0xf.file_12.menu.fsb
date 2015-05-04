@@ -41,21 +41,22 @@ OPTIONS BUFFER: MENU-KEYS
   \ the current language. This table is updated every time the
   \ menu is printed, using the initials of the menu options.
 
-: OPTION-2#$  ( -- ca len )
-  \ Menu option 2 with the number of players.
-  OPTION-2$ PLAYERS S->D <# #S #> S+  ;
-  
-: OPTION-3#$  ( -- ca len )
+:NONAME  ( -- ca len )
   \ Menu option 3 with the status of the sound.
   OPTION-3$ SOUND? @ ON/OFF$ S+  ;
+
+:NONAME  ( -- ca len )
+  \ Menu option 2 with the number of players.
+  OPTION-2$ PLAYERS S->D <# #S #> S+  ;
   
 HERE: MENU-OPTIONS
   
   \ Table that holds the cfa of the words that return the
   \ localized texts of the menu options.
 
-  ' OPTION-0$ CFA ,   ' OPTION-1$ CFA ,  ' OPTION-2#$ CFA ,
-  ' OPTION-3#$ CFA ,  ' OPTION-4$ CFA ,  ' OPTION-5$ CFA ,
+  ' OPTION-0$ CFA ,   ' OPTION-1$ CFA ,
+  , ,  \ options 2 and 3 created with `:NONAME` above
+  ' OPTION-4$ CFA ,  ' OPTION-5$ CFA ,
   ' OPTION-6$ CFA ,   ' OPTION-7$ CFA ,
 
 ( Menu -- language and commands)
