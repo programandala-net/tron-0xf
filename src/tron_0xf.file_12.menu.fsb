@@ -1,3 +1,5 @@
+.( Tron 0xF: menu )
+
 \ tron_0xf.file_12.menu.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: menu )
-
-3 11 THRU
+2 10 THRU
 
 ( Menu -- data )
 
@@ -115,10 +113,38 @@ HERE: MENU-COMMANDS
 
 ( Menu effect)
 
+0 VARIABLE CURTAIN-COL  \ column
+
+  \ Add bright to a color attribute.
+: BRIGHT+  ( b1 -- b2 )  64 OR  ;
+
+  \ Remove bright from a color attribute.
+: BRIGHT-  ( b1 -- b2 )  [ 64 INVERT ] LITERAL AND  ;
+
+: (CURTAIN-COL)  ( a b -- )
+  \ a = address of the screen attribute of the column top
+  \ b = attribute to set the column with
+  SWAP DUP [ COLS 7 * ] LITERAL + SWAP 
+  DO  DUP I C!  COLS +LOOP  DROP  ;
+
+: CURTAIN-START  ( col -- a b )
+  \ col = screen colum (0..31)
+  \ a = address of the color attribute at the top of column
+  \ b = color attribute
+  ATTRIBUTES + DUP C@  ;
+
+: +CURTAIN-COL  ( col -- )
+  \ col = screen colum (0..31)
+  CURTAIN-START BRIGHT+ (CURTAIN-COL)  ;
+
+: -CURTAIN-COL  ( col -- )
+  \ col = screen colum (0..31)
+  CURTAIN-START BRIGHT- (CURTAIN-COL)  ;
+
 : MENU-EFFECT  ( -- )
   \ Do some screen effect on the menu.
-  \ XXX TODO
-  ;
+  CURTAIN-COL @ DUP +CURTAIN-COL 
+  DUP 1+ [ COLS 1- ] LITERAL AND CURTAIN-COL !  -CURTAIN-COL  ;
 
 ( Menu options)
 
@@ -181,7 +207,7 @@ HERE: MENU-COMMANDS
   LOOP  DROP  ;
 
 : MENU-KEY  ( -- c )
-  \ Wait until a key to be pressed and return its code.
+  \ Wait until a key is pressed then and return its code.
   BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
 
 : VALID-OPTION  ( -- cfa )
@@ -192,7 +218,7 @@ HERE: MENU-COMMANDS
 ( Boot)
 
 : INIT  ( -- )
-  +SCREEN +FONT PAGE  ;
+  +SCREEN +FONT CLS0 PAGE  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
