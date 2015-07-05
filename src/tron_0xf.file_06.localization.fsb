@@ -1,3 +1,5 @@
+.( Tron 0xF: localization )
+
 \ tron_0xf.file_06.localization.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: localization )
-
-3 8 THRU
+2 7 THRU
 
 ( LOCALIZED )
 
@@ -104,6 +102,9 @@ LOCALIZED DO-STOP$  ( -- ca len )
 
 ( Localized texts) 
 
+' ES-DO-CHANGE$ ' EO-DO-CHANGE$ ' EN-DO-CHANGE$
+LOCALIZED DO-CHANGE$  ( -- ca len )
+
 ' ES-LICENSE$ ' EO-LICENSE$ ' EN-LICENSE$
 LOCALIZED LICENSE$  ( -- ca len )
 
@@ -149,4 +150,4 @@ LOCALIZED AUTHORS  ( -- )
 
 CHAR N CONSTANT 'N'  \ the letter used to say "no"
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

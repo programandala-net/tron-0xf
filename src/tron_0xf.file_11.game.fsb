@@ -1,3 +1,5 @@
+.( Tron 0xF: game -- part 2 )
+
 \ tron_0xf.file_11.game.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: game )
-
-3 11 THRU
+2 9 THRU
 
 ( Rudder increments)
 
@@ -241,4 +239,4 @@ HERE: POSITIONS-TABLE  ( cfa3 cfa2 cfa1 )
 ' AUTOPILOT CFA CONTROL1 !
 ' AUTOPILOT CFA CONTROL2 !
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

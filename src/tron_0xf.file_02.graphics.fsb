@@ -1,3 +1,5 @@
+.( Tron 0xF: graphics )
+
 \ tron_0xf.file_02.graphics.fsb
 
 \ This file is part of
@@ -25,25 +27,21 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: graphics )
-
 16384 CONSTANT SYS-SCREEN  \ address of the screen
 6912 CONSTANT /SYS-SCREEN  \ bytes of the screen
 6144 CONSTANT /SYS-SCREEN-BITMAP  \ bytes of the screen bitmap
 
 : SAVE-DISPLAY  ( -- )
   \ Save a copy of the whole display image
-  \ to block 1 of the Forth RAM disk.
-  SYS-SCREEN [ 1 'BLOCK ] LITERAL /SYS-SCREEN CMOVE  ;
+  \ to screen 2 of the Forth RAM disk.
+  SYS-SCREEN [ 2 DISC-SCR ] LITERAL /SYS-SCREEN CMOVE  ;
 
 : RESTORE-DISPLAY  ( -- )
   \ Save the copy of the whole display image
-  \ from block 1 of the Forth RAM disk.
-  [ 1 'BLOCK ] LITERAL SYS-SCREEN /SYS-SCREEN CMOVE  ;
+  \ from screen 2 of the Forth RAM disk.
+  [ 2 DISC-SCR ] LITERAL SYS-SCREEN /SYS-SCREEN CMOVE  ;
 
-3 11 THRU
+2 10 THRU
 
 ( Font)
 
@@ -51,8 +49,8 @@
   \ compilation. Words are defined to switch them on and off:
 
   768 CONSTANT /FONT  \ size in bytes
-  \ Block 8 of the Forth RAM disk is used to store the font.
-8 'BLOCK CONSTANT FONT
+  \ Screen 9 of the Forth RAM disk is used to store the font.
+9 DISC-SCR CONSTANT FONT
 
   \ Set the game font:
 : +FONT  ( -- )  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
@@ -67,7 +65,9 @@
   \ when needed.
 
 10 2 * 8 * CONSTANT /DIGITS-UDG  \ size in bytes
-/DIGITS-UDG BUFFER: DIGITS-UDG
+  \ /DIGITS-UDG BUFFER: DIGITS-UDG  \ XXX OLD
+  \ The unused space above `HI` is used:
+HI 1+ CONSTANT DIGITS-UDG
 
 : DIGITS>CHARS  ( a1 -- a2 )
   \ Convert the address of UDG digits to the address of a fake
@@ -98,11 +98,15 @@ SYS-UDG @ CONSTANT UDG0  \ address of the default UDG bank
 
   \ UDG bank for the Esperanto letters.
 12 8 * CONSTANT /EO-UDG  \ size in bytes
-/EO-UDG BUFFER: EO-UDG
+  \ /EO-UDG BUFFER: EO-UDG  \ XXX OLD
+  \ The unused space above `HI` is used:
+DIGITS-UDG /DIGITS-UDG + CONSTANT EO-UDG
 
   \ UDG bank for the Spanish letters and characters.
 18 8 * CONSTANT /ES-UDG  \ size in bytes
-/ES-UDG BUFFER: ES-UDG
+  \ /ES-UDG BUFFER: ES-UDG
+  \ The unused space above `HI` is used:
+EO-UDG /EO-UDG + CONSTANT ES-UDG
 
 HERE: UDG-BANK
   \ Addresses of the UDG banks used for every language.
@@ -115,13 +119,18 @@ HERE: UDG-BANK
 : -UDG  ( -- )
   \ Set the default UDG bank.
   \ It contains the frame graphs.
-  UDG0 SYS-UDG !  ;
+  0 +UDG  ;
   
 ( Screen -- generic)
 
+: COLORS0  ( -- )
+  \ Set the default colors.
+  BLACK PAPER  WHITE INK  BLACK BORDER
+  0 FLASH  0 BRIGHT  0 INVERSE  0 GOVER  ;
+
 : CLS0  ( -- )
   \ Clear the screen with the default colors.
-  BLACK PAPER  BLACK BORDER  WHITE INK  CLS  ;
+  COLORS0 CLS  ;
 
 : BLACKOUT  ( -- )
   \ Erase the whole display,
@@ -152,37 +161,32 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   COLS SWAP - 2 /  ;
 
 : |AT|  ( line len -- )
-  \ Put the cursor on the given line, on the column
+  \ Put the cursor on the given line, at the column
   \ required to center a text of the given length.
   CENTERED AT  ;
 
-  \ XXX OLD
-  \ : |LINESPACES|  ( len line -- )
-  \   \ Type spaces centered on a given line.
-  \   OVER |AT| SPACES  ;
+  \ Type spaces centered on a given line.
+: |LINESPACES|  ( len line -- )  OVER |AT| SPACES  ;
 
-: |LINETYPE|  ( ca len line -- )
   \ Type a string centered on a given line.
-  OVER |AT| TYPE  ;
+: |LINETYPE|  ( ca len line -- )  OVER |AT| TYPE  ;
 
-: REMARK  ( ca len -- )
   \ Type a string centered on the last line.
-  [ LINES 1- ] LITERAL |LINETYPE|  ;
+: REMARK  ( ca len -- )  [ LINES 1- ] LITERAL |LINETYPE|  ;
 
-: AT-COL  ( col -- )
   \ Move the cursor position to the given column
   \ of the current line.
-  AT@ DROP SWAP AT  ;
+: AT-COL  ( col -- )  AT@ DROP SWAP AT  ;
 
   \ XXX OLD
   \ : |TYPE|  ( ca len -- )
   \   \ Type a string centered on the current line.
   \   DUP CENTERED AT-COL TYPE  ;
 
-  \ The last two blocks (9..10) of the Forth RAM disk
+  \ The last two screens (10..11) of the Forth RAM disk
   \ are used to store the graphic of the title, that 
-  \ ocuppies 2 KiB:
-9 'BLOCK CONSTANT TITLE-ADDRESS
+  \ ocuppies exactly 2 KiB, one third of the bitmap:
+10 DISC-SCR CONSTANT TITLE-ADDRESS
 
 : TITLE  ( -- )
   \ Show the main title, copying its graphic to the screen
@@ -200,9 +204,11 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
 
 8 CONSTANT CONTENTS-LINE  \ first usable line
 
-: PAGE  ( -- )
+  \ Set ink color and print position ready for new contents.
+: AT-CONTENTS  ( -- )  CONTENTS-LINE 0 AT  BLACK INK  ;
+
   \ Start a new contents page.
-  BLACKOUT TITLE  CONTENTS-LINE 0 AT  BLACK INK  ;
+: PAGE  ( -- )  BLACKOUT TITLE  AT-CONTENTS  ;
 
   \ Calculate the screen attributes zone of the contents zone.
 CONTENTS-LINE COLS *  \ bytes to skip
@@ -222,7 +228,7 @@ SYS-SCREEN OVER +  /SYS-SCREEN-BITMAP ROT - ( a len )
   \ without deleting the title header, and hidding the new
   \ contents until they are fully printed.
   CONTENTS-ATTRIBUTES ERASE  CONTENTS-BITMAP ERASE
-  CONTENTS-LINE 0 AT  BLACK INK  ;
+  AT-CONTENTS  ;
 
 : REVEAL-CONTENTS  ( -- )
   \ Set the screen attributes of the contents zone to the
@@ -308,7 +314,7 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
 
 : SAVE-ARENA  ( -- )
   \ Save the attributes of the central zone of the arena
-  \ (between the horizontal borders) to the first block of
+  \ (between the horizontal borders) to the first screen of
   \ the Forth RAM-disc.
   [ TOP-FRAME-ATTRIBUTES COLS +
     BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
@@ -316,7 +322,7 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
 
 : RESTORE-ARENA  ( -- )
   \ Restore the attributes of the central zone of the arena
-  \ (between the horizontal borders) from the first block of
+  \ (between the horizontal borders) from the first screen of
   \ the Forth RAM-disc.
   LO [ TOP-FRAME-ATTRIBUTES COLS +
        BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
@@ -340,4 +346,4 @@ RED BLACK PAPERY + CONSTANT FRAME-COLOR
   \ Draw the arena.
   BLACKOUT FRAME SAVE-ARENA STATUS  ;
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

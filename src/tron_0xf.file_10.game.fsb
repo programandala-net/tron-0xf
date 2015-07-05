@@ -1,3 +1,5 @@
+.( Tron 0xF: game -- part 1 )
+
 \ tron_0xf.file_10.game.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: game )
-
-3 6 THRU
+2 5 THRU
   
 ( Paint )
 
@@ -84,10 +82,15 @@
 : CRASH?  ( -- f )
   \ Is the next position occupied?
   PLAYER-XINC @ PLAYER-XC @ +
-  PLAYER-YINC @ PLAYER-YC @ + POINT  ;
+  \ DUP 0 0 AT .  \  XXX INFORMER
+  PLAYER-YINC @ PLAYER-YC @ +
+  \ DUP 0 15 AT .  \  XXX INFORMER
+  POINT
+  \ DUP IF  1 0 AT QUIT  THEN  \  XXX INFORMER
+  ;
 
 : +SCORES  ( -- )
   \ Increase the score of the players that didn't crash.
   PLAYERS 0 DO  I PLAYER! CRASH? 0= SCORE+  LOOP  ;
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

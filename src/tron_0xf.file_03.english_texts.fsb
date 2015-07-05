@@ -1,3 +1,5 @@
+.( Tron 0xF: English texts )
+
 \ tron_0xf.file_03.english_texts.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: English texts )
-
-3 9 THRU
+2 8 THRU
 
 ( Instructions )
 
@@ -62,9 +60,9 @@
   CR
   ." Code and graphics: Marcos Cruz" CR
   12 AT-COL ." Tests: Teo and Irene" CR CR
-  ." Written in fig-Forth with" CR
-  ." Abersoft Forth (Melbourne House," CR
-  ." 1983)."  ;
+  ." Written in Forth with Abersoft" CR
+  ." Forth (Melbourne House, 1983)" CR
+  ." and the Afera library (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -132,6 +130,9 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
 
 : EN-DO-STOP$  ( -- ca len )  S" Do you want to stop?"  ;
 
+: EN-DO-CHANGE$  ( -- ca len )
+  S" Do you want to change something?"  ;
+
 : EN-LICENSE$  ( -- ca len )  S" License:"  ;
 
   \ : EN-KEY$  ( -- ca len )  S" Key"  ;
@@ -144,4 +145,4 @@ CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
 : EN-ON$   ( -- ca len )  S" Yes"  ;
 : EN-OFF$  ( -- ca len )  S" No "  ;
   
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

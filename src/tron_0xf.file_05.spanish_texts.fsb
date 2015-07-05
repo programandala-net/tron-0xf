@@ -1,3 +1,5 @@
+.( Tron 0xF: Spanish texts )
+
 \ tron_0xf.file_05.spanish_texts.fsb
 
 \ This file is part of
@@ -50,11 +52,7 @@
   \ #vim %substitute@¿@\=nr2char(158)@g
   \ #vim %substitute@¡@\=nr2char(159)@g
 
--->
-
-.( Tron 0xF: Spanish texts )
-
-3 9 THRU
+2 8 THRU
 
 ( Instructions )
 
@@ -84,9 +82,9 @@
   CR
   ." Código y gráficos: Marcos Cruz" CR
   10 AT-COL ." Pruebas: Teo e Irene" CR CR
-  ." Escrito en fig-Forth con" CR
-  ." Abersoft Forth (Melbourne House," CR
-  ." 1983)."  ;
+  ." Escrito en Forth con Abersoft" CR
+  ." Forth (Melbourne House, 1983)." CR
+  ." y la biblioteca Afera (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -115,7 +113,7 @@
   ." siquiera la garantía implícita" CR
   ." de ser COMERCIALIZABLE o APTO" CR
   ." PARA UN OBJETIVO PARTICULAR" CR
-  ." Para más detalles lee la"
+  ." Para más detalles lee la" CR
   ." Licencia Pública General GNU." CR CR
   \  <------------------------------>
   ." Deberías haber recibido una" CR
@@ -154,6 +152,8 @@ CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
 
 : ES-DO-STOP$  ( -- ca len )  S" ¿Quieres terminar?"  ;
 
+: ES-DO-CHANGE$  ( -- ca len )  S" ¿Quieres cambiar algo?"  ;
+
 : ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
 
   \ : EN-KEY$  ( -- ca len )  S" Tecla"  ;
@@ -166,4 +166,4 @@ CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
 : ES-ON$   ( -- ca len )  S" Sí"  ;
 : ES-OFF$  ( -- ca len )  S" No"  ;
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforthafera:fileencoding=utf-8

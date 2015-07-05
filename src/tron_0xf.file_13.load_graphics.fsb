@@ -1,3 +1,5 @@
+.( Tron 0xF: load graphic files )
+
 \ tron_0xf.file_13.load_graphics.fsb
 
 \ This file is part of
@@ -27,76 +29,46 @@
 
   \ -----------------------------------------------------------
 
-  \ In order to save dictionary space, this last RAM disk
-  \ loaded from tape is used to store the font (in block #8)
-  \ and the graphic title (in blocks #9 and #10).
-
-  \ -----------------------------------------------------------
-  \ fsb directives
-
-  \ The following '#vim' directives, processed by fsb,
-  \ translate the UTF-8 chars in this source file to ZX
-  \ Spectrum UDG.
-
-  \ Esperanto letters:
-  \ #vim %substitute@Ĉ@\=nr2char(144)@g
-  \ #vim %substitute@ĉ@\=nr2char(145)@g
-  \ #vim %substitute@Ĝ@\=nr2char(146)@g
-  \ #vim %substitute@ĝ@\=nr2char(147)@g
-  \ #vim %substitute@Ĥ@\=nr2char(148)@g
-  \ #vim %substitute@ĥ@\=nr2char(149)@g
-  \ #vim %substitute@Ĵ@\=nr2char(150)@g
-  \ #vim %substitute@ĵ@\=nr2char(151)@g
-  \ #vim %substitute@Ŝ@\=nr2char(152)@g
-  \ #vim %substitute@ŝ@\=nr2char(153)@g
-  \ #vim %substitute@Ŭ@\=nr2char(154)@g
-  \ #vim %substitute@ŭ@\=nr2char(155)@g
-
-  \ Spanish letters and signs:
-  \ #vim %substitute@Á@\=nr2char(144)@g
-  \ #vim %substitute@á@\=nr2char(145)@g
-  \ #vim %substitute@É@\=nr2char(146)@g
-  \ #vim %substitute@é@\=nr2char(147)@g
-  \ #vim %substitute@Í@\=nr2char(148)@g
-  \ #vim %substitute@í@\=nr2char(149)@g
-  \ #vim %substitute@Ó@\=nr2char(150)@g
-  \ #vim %substitute@ó@\=nr2char(151)@g
-  \ #vim %substitute@Ú@\=nr2char(152)@g
-  \ #vim %substitute@ú@\=nr2char(153)@g
-  \ #vim %substitute@Ü@\=nr2char(154)@g
-  \ #vim %substitute@ü@\=nr2char(155)@g
-  \ #vim %substitute@Ñ@\=nr2char(156)@g
-  \ #vim %substitute@ñ@\=nr2char(157)@g
-  \ #vim %substitute@¿@\=nr2char(158)@g
-  \ #vim %substitute@¡@\=nr2char(159)@g
-
   \ This is the last RAM-disc loaded from tape during the
   \ compilation of the game. Its space is used to store some
   \ binary data, with the folling structure:
   \
-  \ block 0:          copy of the arena attributes (<768 bytes)
-  \ blocks 1-7:       copy of the whole screen (6912 bytes)
-  \ block 8:          game font (768 bytes)
-  \ blocks 9 and 10:  graphic title (2048 bytes)
+  \ Used as storage space during the game:
+  \
+  \ screen 1:           copy of arena attributes (<768 bytes)
+  \ screens 2-8:        copy of whole screen (6912 bytes)
+  \
+  \ Loaded directly from tape files:
+  \
+  \ screen 9:           game font (768 bytes)
+  \ screens 10 and 11:  graphic title (2048 bytes)
 
 -->
 
-.( Tron 0xF: fonts, UDG, license )
+( Fonts, UDG, title )
 
--SCROLL
-FONT /FONT 0 0 TAPE>                  \ main font
--SCROLL
-EO-UDG /EO-UDG 0 0 TAPE>              \ Esperanto characters
--SCROLL
-ES-UDG /ES-UDG 0 0 TAPE>              \ Spanish characters
--SCROLL
-DIGITS-UDG /DIGITS-UDG 0 0 TAPE>      \ double heigth digits
--SCROLL
-UDG 0 0 0 TAPE>                       \ frame graphs
--SCROLL
-TITLE-ADDRESS 0 0 0 TAPE>             \ graphic title
--SCROLL
++SCROLL
+FONT /FONT 0 0 <TAPE              \ main font
++SCROLL
+EO-UDG /EO-UDG 0 0 <TAPE          \ Esperanto characters
++SCROLL
+ES-UDG /ES-UDG 0 0 <TAPE          \ Spanish characters
++SCROLL
+DIGITS-UDG /DIGITS-UDG 0 0 <TAPE  \ score digits
++SCROLL
+UDG 0 0 0 <TAPE                   \ frame graphs
++SCROLL
+TITLE-ADDRESS 0 0 0 <TAPE         \ graphic title
++SCROLL
 
-LOADED? ON  \ tell the loader's loop it's finished
+  \ After the binary files have been loaded into the RAM disk,
+  \ the loader must stop immediately, else it would erase the
+  \ contents of the RAM disk before loading the next RAM disk
+  \ from tape (see the Afera module <loader.fsb>). That's why
+  \ the Afera module <loaded_execute.fsb> is not used to stop
+  \ the loader at the end of the compilation. The return stack
+  \ is cleared instead:
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+RP! RUN
+
+  \ vim: filetype=abersoftforthafera

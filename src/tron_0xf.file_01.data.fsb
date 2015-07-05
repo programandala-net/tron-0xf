@@ -1,3 +1,5 @@
+.( Tron 0xF: data )
+
 \ tron_0xf.file_01.data.fsb
 
 \ This file is part of
@@ -25,10 +27,6 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: data )
-
 FORTH DEFINITIONS
 
   \ Memory addresses and sizes
@@ -40,18 +38,19 @@ FORTH DEFINITIONS
 23606 CONSTANT SYS-CHARS    23675 CONSTANT SYS-UDG
 23677 CONSTANT SYS-X-COORD  23678 CONSTANT SYS-Y-COORD
 
+2 10 THRU
+
+( Colors)
+
   \ Color constants
 
-0 CONSTANT BLACK    1 CONSTANT BLUE
-2 CONSTANT RED      3 CONSTANT MAGENTA
-4 CONSTANT GREEN    5 CONSTANT CYAN
+0 CONSTANT BLACK    1 CONSTANT BLUE   2 CONSTANT RED
+3 CONSTANT MAGENTA  4 CONSTANT GREEN  5 CONSTANT CYAN
 6 CONSTANT YELLOW   7 CONSTANT WHITE
 
 : PAPERY  ( color -- paper-attribute )  8 *  ;
 
-3 11 THRU
-
-( Vocabulary)
+( Vocabulary, languages, players types)
 
 : TASK  ;  VOCABULARY TRON IMMEDIATE  TRON DEFINITIONS
 
@@ -227,4 +226,4 @@ PLAYER0-DATA VALUE PLAYER-DATA
 10 PLAYER-VARIABLE PLAYER-RIGHT-K  \ right key
 11 PLAYER-VARIABLE PLAYER-CONTROL  \ manual, autopilot
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

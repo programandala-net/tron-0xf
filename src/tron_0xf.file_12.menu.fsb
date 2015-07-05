@@ -111,41 +111,6 @@ HERE: MENU-COMMANDS
   ' ABOUT CFA ,
   ' FINISH CFA ,
 
-( Menu effect)
-
-0 VARIABLE CURTAIN-COL  \ column
-
-  \ Add bright to a color attribute.
-: BRIGHT+  ( b1 -- b2 )  64 OR  ;
-
-  \ Remove bright from a color attribute.
-: BRIGHT-  ( b1 -- b2 )  [ 64 INVERT ] LITERAL AND  ;
-
-: (CURTAIN-COL)  ( a b -- )
-  \ a = address of the screen attribute of the column top
-  \ b = attribute to set the column with
-  SWAP DUP [ COLS 7 * ] LITERAL + SWAP 
-  DO  DUP I C!  COLS +LOOP  DROP  ;
-
-: CURTAIN-START  ( col -- a b )
-  \ col = screen colum (0..31)
-  \ a = address of the color attribute at the top of column
-  \ b = color attribute
-  ATTRIBUTES + DUP C@  ;
-
-: +CURTAIN-COL  ( col -- )
-  \ col = screen colum (0..31)
-  CURTAIN-START BRIGHT+ (CURTAIN-COL)  ;
-
-: -CURTAIN-COL  ( col -- )
-  \ col = screen colum (0..31)
-  CURTAIN-START BRIGHT- (CURTAIN-COL)  ;
-
-: MENU-EFFECT  ( -- )
-  \ Do some screen effect on the menu.
-  CURTAIN-COL @ DUP +CURTAIN-COL 
-  DUP 1+ [ COLS 1- ] LITERAL AND CURTAIN-COL !  -CURTAIN-COL  ;
-
 ( Menu options)
 
 : INITIAL.  ( c -- )
@@ -208,7 +173,7 @@ HERE: MENU-COMMANDS
 
 : MENU-KEY  ( -- c )
   \ Wait until a key is pressed then and return its code.
-  BEGIN  INKEY? ?EXIT MENU-EFFECT  AGAIN  ;
+  BEGIN  INKEY? ?EXIT  AGAIN  ;
 
 : VALID-OPTION  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
@@ -217,11 +182,15 @@ HERE: MENU-COMMANDS
 
 ( Boot)
 
-: INIT  ( -- )
-  +SCREEN +FONT CLS0 PAGE  ;
+  \ Init the circular string-buffer.
+  128 ALLOT-CSB
+
+: BYE  ( -- )  MON  ;
+
+: INIT  ( -- )  +SCREEN +FONT CLS0 PAGE  ;
 
 : RUN  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
   INIT BEGIN  MENU VALID-OPTION EXECUTE  AGAIN  ;
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

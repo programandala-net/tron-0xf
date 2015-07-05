@@ -1,3 +1,5 @@
+.( Tron 0xF: Esperanto texts )
+
 \ tron_0xf.file_04.esperanto_texts.fsb
 
 \ This file is part of
@@ -46,11 +48,7 @@
   \ #vim %substitute@Ŭ@\=nr2char(154)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
--->
-
-.( Tron 0xF: Esperanto texts )
-
-3 9 THRU
+2 8 THRU
 
 ( Instructions )
 
@@ -79,9 +77,9 @@
   CR
   ." Kodo kaj grafikoj: Marcos Cruz" CR
   10 AT-COL ." Provado: Teo kaj Irene"  CR CR
-  ." Verkita en fig-Forth per" CR
-  ." Abersoft Forth (Melbourne House," CR
-  ." 1983)."  ;
+  ." Verkita en Forth per Abersoft" CR
+  ." Forth (Melbourne House, 1983)" CR
+  ." kaj la biblioteko Afera (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -149,6 +147,8 @@ CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
 
 : EO-DO-STOP$  ( -- ca len )  S" Ĉu vi volas fini?"  ;
 
+: EO-DO-CHANGE$  ( -- ca len )  S" Ĉu vi volas ŝanĝi ion?"  ;
+
 : EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
 
   \ : EO-KEY$  ( -- ca len )  S" Klavo"  ;
@@ -161,4 +161,4 @@ CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
 : EO-ON$   ( -- ca len )  S" Jes"  ;
 : EO-OFF$  ( -- ca len )  S" Ne "  ;
 
-  \ vim: filetype=abersoftforth:fileencoding=utf-8
+  \ vim: filetype=abersoftforthafera:fileencoding=utf-8

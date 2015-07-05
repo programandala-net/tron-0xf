@@ -21,17 +21,27 @@
 # 2015-04-22: Frame graphs file.
 # 2015-04-28: Title file.
 # 2015-05-03: Updated.
+# 2015-05-04: Updated with <lib/1plus.tap>, <lib/plot.tap>,
+#   <lib/noname.tap>.
+# 2015-05-06: Updated after the recent changes in the Afera library.
+# 2015-05-11: Updated after the recent changes in the Afera library.
+# 2015-05-12: Updated after the recent changes in the Afera library.
+# 2015-05-16: New: backup recipe.
 
 ################################################################
 # Requirements
 
 # Gforth
 # 	<http://gnu.org/software/gforth/>
+#
 # bin2code
 #   <http://metalbrain.speccy.org/link-eng.htm>.
+#
 # fsb
 # 	<http://programandala.net/en.program.fsb.html>
+#
 # head (part of the GNU core utilities)
+#
 # pbm2scr
 # 	<http://programandala.net/en.program.pbm2scr.html>
 
@@ -43,16 +53,11 @@ MAKEFLAGS = --no-print-directory
 .ONESHELL :
 
 .PHONEY : all
-all : tron_0xf.tap
+all : tron_0xf_compiling.tap
 
 clean:
-	rm -f tron_0xf.tap
-
-clean-src:
-	rm -f src/*.tap
-
-clean-lib:
-	rm -f lib/*.tap
+	rm -f tron_0xf_compiling.tap ; \
+	rm -f tap/*.tap
 
 graph/score_digits.tap : graph/score_digits.fs
 	cd graph ; \
@@ -73,59 +78,82 @@ graph/title.tap : graph/title.pbm
 	bin2code title.bin title.tap ; \
 	cd -
 
-lib/%.tap : lib/%.fsb
-	fsb2abersoft  $<
-
-src/%.tap : src/%.fsb
-	fsb2abersoft  $<
+tap/%.tap : src/%.fsb
+	fsb2abersoft  $< && \
+	mv src/$*.tap tap/
 
 library_tapes=$(wildcard lib/*.tap)
-program_tapes=$(wildcard src/*.tap)
+program_tapes=$(wildcard tap/*.tap)
 
-# XXX Note: dot-s.tap, cswap.tap and dump.tap are included only for debugging
-# and will be removed.
+#		lib/lowersys.tap \
+#		lib/bank.tap \
+#		lib/16kramdisks.tap \
+		
 
-tron_0xf.tap : \
+#		@make tap/$$(basename $${source%%.fsb}).tap ;
+
+tron_0xf_compiling.tap : \
 	$(library_tapes) \
 	$(program_tapes) \
 	graph/score_digits.tap \
 	graph/frame_graphs.tap \
 	graph/title.tap
-	for source in $$(ls -1 lib/*.fsb src/*.fsb) ; do
-		@make $${source%%.fsb}.tap ;
-	done
+	for source in $$(ls -1 src/*.fsb) ; do \
+		make tap/$$(basename $${source%%.fsb}).tap ; \
+	done ; \
 	cat \
 		sys/abersoft_forth.tap \
-		src/tron_0xf.file_00.loader.tap \
-		lib/extend.tap \
+		lib/loader.tap \
+		lib/afera.tap \
+		lib/upperc.tap \
+		lib/uppers.tap \
+		lib/2r.tap \
+		lib/caseins.tap \
+		lib/traverse.tap \
 		lib/flags.tap \
 		lib/cell.tap \
+		lib/at-fetch.tap \
 		lib/plusscreen.tap \
 		lib/scroll.tap \
-		lib/color.tap \
 		lib/pick.tap \
+		lib/move.tap \
 		lib/strings.tap \
-		lib/upperc.tap \
+		lib/csb.tap \
+		lib/csb-256.tap \
+		lib/s-plus.tap \
 		lib/time.tap \
-		lib/random.tap \
 		lib/dot-s.tap \
 		lib/cswap.tap \
 		lib/dump.tap \
 		lib/tape.tap \
 		lib/defer.tap \
 		lib/value.tap \
+		lib/notequals.tap \
 		lib/akey.tap \
 		lib/inkeyq.tap \
 		lib/buffercol.tap \
-		lib/at-fetch.tap \
+		lib/unloop.tap \
 		lib/point.tap \
-		src/tron_0xf.file_0[1-9].*.tap \
-		src/tron_0xf.file_[1-9]?.*.tap \
+		lib/color.tap \
+		lib/plot.tap \
+		lib/noname.tap \
+		lib/qexit.tap \
+		tap/tron_0xf.file_*.tap \
 		graph/font.tap \
 		graph/font.esperanto_characters.tap \
 		graph/font.spanish_characters.tap \
 		graph/score_digits.tap \
 		graph/frame_graphs.tap \
 		graph/title.tap \
-		> tron_0xf.tap
+		> tron_0xf_compiling.tap
 		
+# ##############################################################
+# Backups
+
+backup:
+	tar -czf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tgz \
+		Makefile \
+		src/*.fsb \
+		README.md \
+		old/*
+

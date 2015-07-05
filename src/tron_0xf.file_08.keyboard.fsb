@@ -1,3 +1,5 @@
+.( Tron 0xF: keyboard )
+
 \ tron_0xf.file_08.keyboard.fsb
 
 \ This file is part of
@@ -25,11 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: keyboard )
-
-3 11 THRU
+2 9 THRU
 
 ( Y/N input )
 
@@ -75,13 +73,20 @@
   PRESS-ANY-KEY WIPE-CONTENTS  ;
 
 : .DO-STOP  ( -- )
-  \ Print "do you want to stop?" in the current language.
+  \ Print "Do you want to stop?" in the current language.
   DO-STOP$ [ LINES 2 / 1 - ] LITERAL WHITE INK |LINETYPE|  ;
 
 : DO-STOP?  ( -- f )
-  \ Ask "do you want to stop?" in the current language
+  \ Ask "Do you want to stop?" in the current language
   \ and return flag with the answer (true=yes).
   .DO-STOP YES?  ;
+
+: DO-CHANGE?  ( -- f )
+  \ Ask "Do you want to change something?" in the current
+  \ language and return flag with the answer (true=yes).
+  \ The message is deleted.
+  DO-CHANGE$ [ LINES 1- ] LITERAL   2DUP 2>R
+  WHITE INK |LINETYPE| YES?         2R> |LINESPACES|  ;
 
 ( KEYS table, rows 1-5 Q-T )
 
@@ -218,4 +223,4 @@ DECIMAL
   \ a = address in the `KEYS` table
   BEGIN  (PRESSED)  UNTIL  ;
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

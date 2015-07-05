@@ -28,7 +28,7 @@
 ( Tron 0xF: loader )
 
   \ This file is the first one to be loaded.  That's why it can
-  \ not use any word of defined by the Afera library.
+  \ not use any word defined by the Afera library.
 
 0 PAPER 4 INK 0 BORDER CLS
 
@@ -43,11 +43,20 @@ FORTH DEFINITIONS
 : LOADER  ( -- )
   \ Get and compile every RAM disk from tape, until `LOADED?`
   \ is on, and then execute the latest word defined.
+   
+  \ XXX TMP benchmark -- reset the system frames counter
+  0 23672 ! 0 23674 C!
+
   BEGIN  LOADED? @ 0=  WHILE
     255 23692 C!  ( avoid the "scroll?" prompt)
     FLUSH INIT-DISC LOADT 1 LOAD
   REPEAT
-  RP! LATEST PFA CFA EXECUTE  ;
+
+  \ XXX TMP benchmark -- result
+  23672 @ 23674 C@ D. ." FRAMES" CR
+
+  \ RP! LATEST PFA CFA EXECUTE
+  ;
 
 LOADER
   

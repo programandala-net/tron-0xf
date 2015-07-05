@@ -1,0 +1,21 @@
+  \ XXX OLD -- Draft, abandoned idea.
+  \ 2015-05-16 Removed from <tron_0xf.file_12.menu.fsb>
+  \ `MENU-EFFECT` was called in `MENU-KEY`.
+
+( Menu effect)
+
+0 VARIABLE CURTAIN-COL  \ column
+
+: TOGGLE-COL  ( col -- )
+  \ Toggle the bright of a title column.
+  \ col = screen colum (0..31)
+  ATTRIBUTES + DUP [ COLS 7 * ] LITERAL + SWAP 
+  DO  I 64 TOGGLE  COLS +LOOP  ;
+
+: MENU-EFFECT  ( -- )
+  \ Do some screen effect on the title during the menu.
+  CURTAIN-COL @ DUP TOGGLE-COL 
+  1+ [ COLS 1- ] LITERAL AND CURTAIN-COL !  ;
+
+: -MENU-EFFECT  ( -- )
+  ;

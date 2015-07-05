@@ -1,3 +1,5 @@
+.( Tron 0xF: sound )
+
 \ tron_0xf.file_07.sound.fsb
 
 \ This file is part of
@@ -25,10 +27,6 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: sound )
-
 DEFER ?BLEEP  ( n1 n2 -- )
 
 : SOUND  ( f -- )
@@ -43,4 +41,4 @@ SOUND? @ SOUND        \ set default
   \ XXX TODO
   100 50 DO  11 I ?BLEEP  LOOP  ;
 
-  \ vim: filetype=abersoftforth
+  \ vim: filetype=abersoftforthafera

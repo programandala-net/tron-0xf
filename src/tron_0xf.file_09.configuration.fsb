@@ -1,3 +1,5 @@
+.( Tron 0xF: configuration )
+
 \ tron_0xf.file_09.configuration.fsb
 
 \ This file is part of
@@ -25,10 +27,6 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
--->
-
-.( Tron 0xF: configuration )
-
   \ Max length of a player key description in any language:
 11 CONSTANT /KEY-DESC
 
@@ -38,7 +36,7 @@ CONTENTS-LINE 3 + CONSTANT KEYS-LINE
   \ Column of the key description:
 0 CONSTANT KEY-DESC-COL
 
-3 11 THRU
+2 8 THRU
 
 ( Key descriptions )
 
@@ -110,10 +108,21 @@ HERE: KEYS-COL-TABLE
   \ to the key's cursor coordinates in the redefine menu.
   KEYS-LINE + KEYS-COL ;
 
-: KEY-PROMPT  ( a n -- )
+: (KEY-PROMPT)  ( a n f -- )
   \ a = player keys table
   \ n = key number in the table 
-  DUP KEY#>COORDS 2SWAP 1 FLASH PLAYER-KEY. 0 FLASH  ;
+  \ f = flash?
+  FLASH DUP KEY#>COORDS 2SWAP PLAYER-KEY.  ;
+
+: +KEY-PROMPT  ( a n -- )
+  \ a = player keys table
+  \ n = key number in the table 
+  1 (KEY-PROMPT) 0 FLASH  ;
+
+: -KEY-PROMPT  ( a n -- )
+  \ a = player keys table
+  \ n = key number in the table 
+  0 (KEY-PROMPT)  ;
 
 ( Redefine keys )
 
@@ -122,8 +131,8 @@ HERE: KEYS-COL-TABLE
   \ f = quit redefining?
   FALSE  \ default return flag
   KEYS/PLAYER 0 DO
-    PLAYER-KEYS I KEY-PROMPT  1000 MS PRESSED  ( a | ff )
-    -DUP 0= IF  UNLOOP 0= EXIT  THEN
+    PLAYER-KEYS I +KEY-PROMPT  512 MS PRESSED  ( a | ff )
+    -DUP 0= IF  -KEY-PROMPT UNLOOP 0= EXIT  THEN
     DUP PLAYER-KEYS I CELLS + !  I KEY#>COORDS ROT KEY. SPACE
   LOOP  ;
 
@@ -136,11 +145,15 @@ HERE: KEYS-COL-TABLE
   \   PLAYER$ S"  " S+ PLAYER 1+ S->D <# #S #> S+  ;
 
 : .PLAYER  ( -- )
+
   \ Print the current player, centered over the keys column.
+
   \ First the word "Player" in the current language:
-  PLAYER$ KEYS-COL OVER 2 / - KEYS-LINE 3 - SWAP AT TYPE
+  \ XXX OLD
+  \ PLAYER$ KEYS-COL OVER 2 / - KEYS-LINE 3 - SWAP AT TYPE
+
   \ Then the player number, one line above:
-  KEYS-LINE 2- KEYS-COL AT PLAYER 1+ .  ;
+  KEYS-LINE 2- KEYS-COL AT PLAYER .  ;
 
 ( Redefine keys menu )
 
@@ -153,14 +166,18 @@ HERE: KEYS-COL-TABLE
   \ Show a column of the redefine keys menu, for the player
   \ number 'n'.
   \ Blue color is used for inactive players, if any.
+
   DUP PLAYER!  
-  DUP PLAYERS < 1 + INK .PLAYER  \ active: red; else, blue
-  PLAYERS < WHITE * BLUE MAX INK  \ active: white; else, blue
+
+  DUP PLAYERS < BLUE + INK .PLAYER  \ active: red; else blue
+
+  PLAYERS < WHITE * BLUE MAX INK  \ active: white; else blue
   KEYS/PLAYER 0 DO  I REDEFINE-MENU-KEY  LOOP  ;
 
 : REDEFINE-MENU  ( -- )
   \ Show the redefine keys menu.
   WIPE-CONTENTS  RED INK
+  PLAYER$ KEYS-LINE 2- 0 AT TYPE
   \ Names of the keys at the left.
   KEYS/PLAYER 0 DO  I KEY-DESC KEYS-LINE I + |KEY-DESC  LOOP
   \ A column for every active player.
@@ -177,16 +194,10 @@ HERE: KEYS-COL-TABLE
   WHITE INK
   PLAYERS 0 DO  I PLAYER! (REDEFINE) IF  LEAVE  THEN  LOOP  ;
 
-: REDEFINED?  ( -- f )
-  \ Ask for confirmation: Are the redefined keys ok?
-  \ XXX TODO
-  TRUE  ;
-
 : CONFIGURATION  ( -- )
   \ Redefine the keys.
   \ XXX TODO -- human/machine options
   REDEFINE-MENU
-  BEGIN  REDEFINE REDEFINED?  UNTIL  WIPE-CONTENTS  ;
+  BEGIN  REDEFINE  DO-CHANGE? 0=  UNTIL  WIPE-CONTENTS  ;
 
-  \ vim: filetype=abersoftforth
-
+  \ vim: filetype=abersoftforthafera
