@@ -27,122 +27,122 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 8 THRU
+2 8 thru
 
 ( Instructions )
 
-: EN-INSTRUCTIONS  ( -- )
+: en-instructions  ( -- )
   \  <------------------------------>
   \  XXX TODO -- complete:
   \  The aim of the game is to be the last player riding.
-  ." Every player drives a motorbike" CR
-  ." whose only control makes it turn" CR
-  ." ninety degrees without" CR
-  ." deceleration." CR CR
-  ." Every motorbike leaves a solid" CR
-  ." light trail behind." CR CR
-  ." The goal of the game is to make" CR
-  ." your adversary crash the" CR
-  ." labyrinth." CR  ;
+  ." Every player drives a motorbike" cr
+  ." whose only control makes it turn" cr
+  ." ninety degrees without" cr
+  ." deceleration." cr cr
+  ." Every motorbike leaves a solid" cr
+  ." light trail behind." cr cr
+  ." The goal of the game is to make" cr
+  ." your adversary crash the" cr
+  ." labyrinth." cr  ;
   \  <------------------------------>
 
 ( Quit and authors )
 
-: EN-QUIT-MESSAGE  ( -- )
+: en-quit-message  ( -- )
   \  <------------------------------>
-  ." To play again: RUN" CR
-  ." To exit Forth: BYE" CR  ;
+  ." To play again: RUN" cr
+  ." To exit Forth: BYE" cr  ;
   \  <------------------------------>
 
-: EN-AUTHORS  ( -- )
+: en-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/en.program.tron_0xf.html>" CR
-  CR
-  ." Code and graphics: Marcos Cruz" CR
-  12 AT-COL ." Tests: Teo and Irene" CR CR
-  ." Written in Forth with Abersoft" CR
-  ." Forth (Melbourne House, 1983)" CR
+  ." <http://programandala.net/en.program.tron_0xf.html>" cr
+  cr
+  ." Code and graphics: Marcos Cruz" cr
+  12 at-col ." Tests: Teo and Irene" cr cr
+  ." Written in Forth with Abersoft" cr
+  ." Forth (Melbourne House, 1983)" cr
   ." and the Afera library (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
 
-: EN-LICENSE-1  ( -- )
+: en-license-1  ( -- )
 
   \  <------------------------------>
-  ." This program is free software;" CR
-  ." you can redistribute it and/or" CR
-  ." modify it under the terms of the" CR
-  ." GNU General Public License as" CR
-  ." published by the Free Software" CR
-  ." Foundation; either version 3 of" CR
-  ." the License, or (at your option)" CR
+  ." This program is free software;" cr
+  ." you can redistribute it and/or" cr
+  ." modify it under the terms of the" cr
+  ." GNU General Public License as" cr
+  ." published by the Free Software" cr
+  ." Foundation; either version 3 of" cr
+  ." the License, or (at your option)" cr
   ." any later version."  ;
   \  <------------------------------>
 
 ( License -- part 2 )
 
-: EN-LICENSE-2  ( -- )
+: en-license-2  ( -- )
 
   \  <------------------------------>
-  ." This program is distributed in" CR
-  ." the hope that it will be useful," CR
-  ." but WITHOUT ANY WARRANTY; with-" CR
-  ." out even the implied warranty" CR
-  ." of MERCHANTABILITY or FITNESS" CR
-  ." FOR A PARTICULAR PURPOSE. See" CR
-  ." the GNU General Public License" CR
-  ." for more details." CR CR
+  ." This program is distributed in" cr
+  ." the hope that it will be useful," cr
+  ." but WITHOUT ANY WARRANTY; with-" cr
+  ." out even the implied warranty" cr
+  ." of MERCHANTABILITY or FITNESS" cr
+  ." FOR A PARTICULAR PURPOSE. See" cr
+  ." the GNU General Public License" cr
+  ." for more details." cr cr
   \  <------------------------------>
-  ." You should have received a copy" CR
-  ." of the GNU General Public" CR
+  ." You should have received a copy" cr
+  ." of the GNU General Public" cr
   ." License along with this program;"
-  ." if not, see:" CR
+  ." if not, see:" cr
   ." <http://gnu.org/licenses>."  ;
   \  <------------------------------>
 
 ( Keys )
 
-: EN-UP$     ( -- ca len )  S" Up"  ;
-: EN-DOWN$   ( -- ca len )  S" Down"  ;
-: EN-LEFT$   ( -- ca len )  S" Left"  ;
-: EN-RIGHT$  ( -- ca len )  S" Right"  ;
+: en-up$     ( -- ca len )  s" Up"  ;
+: en-down$   ( -- ca len )  s" Down"  ;
+: en-left$   ( -- ca len )  s" Left"  ;
+: en-right$  ( -- ca len )  s" Right"  ;
 
-CHAR Y CONSTANT EN-'Y'  \ the letter used to say "yes"
+char Y constant en-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
-: EN-OPTION-0$  ( -- ca len )  S" Not in English"  ;
-: EN-OPTION-1$  ( -- ca len )  S" Instructions"  ;
-: EN-OPTION-2$  ( -- ca len )  S" Motorbikes: "  ;
-: EN-OPTION-3$  ( -- ca len )  S" Sound: "  ;
-: EN-OPTION-4$  ( -- ca len )  S" Configure"  ;
-: EN-OPTION-5$  ( -- ca len )  S" Play"  ;
-: EN-OPTION-6$  ( -- ca len )  S" About"  ;
-: EN-OPTION-7$  ( -- ca len )  S" Quit"  ;
+: en-option-0$  ( -- ca len )  s" Not in English"  ;
+: en-option-1$  ( -- ca len )  s" Instructions"  ;
+: en-option-2$  ( -- ca len )  s" Motorbikes: "  ;
+: en-option-3$  ( -- ca len )  s" Sound: "  ;
+: en-option-4$  ( -- ca len )  s" Configure"  ;
+: en-option-5$  ( -- ca len )  s" Play"  ;
+: en-option-6$  ( -- ca len )  s" About"  ;
+: en-option-7$  ( -- ca len )  s" Quit"  ;
 
 ( Other )
 
   \ XXX OLD
-  \ : EN-ANOTHER?$  ( -- ca len )  S" Play again? (Y/N)"  ;
+  \ : EN-ANOTHER?$  ( -- ca len )  s" Play again? (Y/N)"  ;
 
-: EN-PRESS-ANY-KEY$  ( -- ca len )  S" Press any key"  ;
+: en-press-any-key$  ( -- ca len )  s" Press any key"  ;
 
-: EN-DO-STOP$  ( -- ca len )  S" Do you want to stop?"  ;
+: en-do-stop$  ( -- ca len )  s" do you want to stop?"  ;
 
-: EN-DO-CHANGE$  ( -- ca len )
-  S" Do you want to change something?"  ;
+: en-do-change$  ( -- ca len )
+  s" do you want to change something?"  ;
 
-: EN-LICENSE$  ( -- ca len )  S" License:"  ;
+: en-license$  ( -- ca len )  s" License:"  ;
 
-  \ : EN-KEY$  ( -- ca len )  S" Key"  ;
+  \ : EN-KEY$  ( -- ca len )  s" Key"  ;
 
-: EN-PLAYER$  ( -- ca len )  S" Player"  ;
+: en-player$  ( -- ca len )  s" Player"  ;
 
-: EN-HUMAN$  ( -- ca len )  S" Human"  ;
-: EN-ROBOT$  ( -- ca len )  S" Robot"  ;
+: en-human$  ( -- ca len )  s" Human"  ;
+: en-robot$  ( -- ca len )  s" Robot"  ;
 
-: EN-ON$   ( -- ca len )  S" Yes"  ;
-: EN-OFF$  ( -- ca len )  S" No "  ;
+: en-on$   ( -- ca len )  s" Yes"  ;
+: en-off$  ( -- ca len )  s" No "  ;
   
   \ vim: filetype=abersoftforthafera

@@ -27,76 +27,76 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 9 THRU
+2 9 thru
 
-( Y/N input )
+( y/n input )
 
-: Y/N?  ( c -- f )
+: y/n?  ( c -- f )
   \ Is the given (uppercase) char c
-  \ a valid answer for a Y/N question?
-  DUP 'Y' = SWAP 'N' = OR  ;
+  \ a valid answer for a y/n question?
+  dup 'y' = swap 'n' = or  ;
 
-: Y/N  ( -- c )
-  \ Wait for a valid key press for a Y/N question
+: y/n  ( -- c )
+  \ Wait for a valid key press for a y/n question
   \ and return its code.
-  BEGIN  AKEY UPPERC DUP Y/N? 0=  WHILE  DROP  REPEAT
-  KEY-SOUND  ;
+  begin  akey upperc dup y/n? 0=  while  drop  repeat
+  key-sound  ;
 
-: NO?  ( -- f )
-  \ Wait for a valid key press for a Y/N question
+: no?  ( -- f )
+  \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "N" or "n"?
   \ (or the correspondent letters in the current language).
-  Y/N 'N' =  ;
+  y/n 'n' =  ;
 
-: YES?  ( -- f )
-  \ Wait for a valid key press for a Y/N question
+: yes?  ( -- f )
+  \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "Y" or "y"?
   \ (or the correspondent letters in the current language).
-  Y/N 'Y' =  ;
+  y/n 'y' =  ;
 
 ( Keyboard messages and prompts )
 
-: .PRESS-ANY-KEY  ( -- )
+: .press-any-key  ( -- )
   \ Print "press any key" in the current language.
-  PRESS-ANY-KEY$ REMARK REVEAL-CONTENTS  ;
+  press-any-key$ remark reveal-contents  ;
 
-: WAIT-ANY-KEY  ( -- )
-  500 MS  AKEY DROP KEY-SOUND  ;
+: wait-any-key  ( -- )
+  500 ms  akey drop key-sound  ;
 
-: PRESS-ANY-KEY  ( -- )
+: press-any-key  ( -- )
   \ Wait for a key press.
-  .PRESS-ANY-KEY WAIT-ANY-KEY  ;
+  .press-any-key wait-any-key  ;
 
-: MORE  ( -- )
+: more  ( -- )
   \ Wait for a key press and prepare the screen
   \ for a new contents page.
-  PRESS-ANY-KEY WIPE-CONTENTS  ;
+  press-any-key wipe-contents  ;
 
-: .DO-STOP  ( -- )
+: .do-stop  ( -- )
   \ Print "Do you want to stop?" in the current language.
-  DO-STOP$ [ LINES 2 / 1 - ] LITERAL WHITE INK |LINETYPE|  ;
+  do-stop$ [ lines 2 / 1 - ] literal white ink |linetype|  ;
 
-: DO-STOP?  ( -- f )
+: do-stop?  ( -- f )
   \ Ask "Do you want to stop?" in the current language
   \ and return flag with the answer (true=yes).
-  .DO-STOP YES?  ;
+  .do-stop yes?  ;
 
-: DO-CHANGE?  ( -- f )
+: do-change?  ( -- f )
   \ Ask "Do you want to change something?" in the current
   \ language and return flag with the answer (true=yes).
   \ The message is deleted.
-  DO-CHANGE$ [ LINES 1- ] LITERAL   2DUP 2>R
-  WHITE INK |LINETYPE| YES?         2R> |LINESPACES|  ;
+  do-change$ [ lines 1- ] literal   2dup 2>r
+  white ink |linetype| yes?         2r> |linespaces|  ;
 
-( KEYS table, rows 1-5 Q-T )
+( keys table, rows 1-5 Q-T )
 
-40 CONSTANT #KEYS   \ number of keys of ZX Spectrum
- 6 CONSTANT /KEY    \ bytes per key in the table
+40 constant #keys   \ number of keys of ZX Spectrum
+ 6 constant /key    \ bytes per key in the table
 
   \ Convert two characters to a 16-bit number.
-: SPECIAL-KEY-NAME  ( c1 c2 -- n )  256 * +  ;
+: special-key-name  ( c1 c2 -- n )  256 * +  ;
 
-HERE: KEYS
+here: keys
 
   \ Every element of the `KEYS` table 
   \ has the following structure:
@@ -117,110 +117,110 @@ HERE: KEYS
   \ player 2 are suitable for the Dvorak keyboard layout (keys
   \ K, X, B, M).
 
-HEX                   HERE LEFT-K0 !   \ "1"
-CHAR 1 01 F7FE , , ,  HERE RIGHT-K0 !  \ "2"
-CHAR 2 02 F7FE , , ,  HERE UP-K0 !     \ "3"
-CHAR 3 04 F7FE , , ,  HERE DOWN-K0 !   \ "4"
-CHAR 4 08 F7FE , , ,
-CHAR 5 10 F7FE , , , 
+hex                   here left-k0 !   \ "1"
+char 1 01 F7FE , , ,  here right-k0 !  \ "2"
+char 2 02 F7FE , , ,  here up-k0 !     \ "3"
+char 3 04 F7FE , , ,  here down-k0 !   \ "4"
+char 4 08 F7FE , , ,
+char 5 10 F7FE , , , 
 
-CHAR Q 01 FBFE , , ,
-CHAR W 02 FBFE , , ,
-CHAR E 04 FBFE , , ,
-CHAR R 08 FBFE , , ,
-CHAR T 10 FBFE , , ,
+char Q 01 FBFE , , ,
+char W 02 FBFE , , ,
+char E 04 FBFE , , ,
+char r 08 FBFE , , ,
+char T 10 FBFE , , ,
 
-( KEYS table, rows A-G CS-V 0-6 )
+( keys table, rows A-G CS-V 0-6 )
 
-CHAR A 01 FDFE , , ,
-CHAR S 02 FDFE , , ,
-CHAR D 04 FDFE , , ,
-CHAR F 08 FDFE , , ,
-CHAR G 10 FDFE , , ,
+char A 01 FDFE , , ,
+char S 02 FDFE , , ,
+char D 04 FDFE , , ,
+char F 08 FDFE , , ,
+char G 10 FDFE , , ,
 
-CHAR C CHAR S SPECIAL-KEY-NAME 01 FEFE , , ,  \ Caps Shift
-CHAR Z 02 FEFE , , ,  HERE RIGHT-K2 ! \ "X"
-CHAR X 04 FEFE , , ,
-CHAR C 08 FEFE , , ,
-CHAR V 10 FEFE , , ,
+char C char S special-key-name 01 FEFE , , ,  \ Caps Shift
+char Z 02 FEFE , , ,  here right-k2 ! \ "X"
+char X 04 FEFE , , ,
+char C 08 FEFE , , ,
+char V 10 FEFE , , ,
 
-CHAR 0 01 EFFE , , ,  HERE DOWN-K1 !  \ "9"
-CHAR 9 02 EFFE , , ,  HERE UP-K1 !    \ "8"
-CHAR 8 04 EFFE , , ,  HERE RIGHT-K1 ! \ "7"
-CHAR 7 08 EFFE , , ,  HERE LEFT-K1 !  \ "6"
-CHAR 6 10 EFFE , , ,
+char 0 01 EFFE , , ,  here down-k1 !  \ "9"
+char 9 02 EFFE , , ,  here up-k1 !    \ "8"
+char 8 04 EFFE , , ,  here right-k1 ! \ "7"
+char 7 08 EFFE , , ,  here left-k1 !  \ "6"
+char 6 10 EFFE , , ,
 
-( KEYS table, rows P-Y En-H )
+( keys table, rows P-Y En-H )
 
-CHAR P 01 DFFE , , ,
-CHAR O 02 DFFE , , ,
-CHAR I 04 DFFE , , ,
-CHAR U 08 DFFE , , ,
-CHAR Y 10 DFFE , , ,
+char P 01 DFFE , , ,
+char O 02 DFFE , , ,
+char i 04 DFFE , , ,
+char U 08 DFFE , , ,
+char Y 10 DFFE , , ,
 
-CHAR E CHAR n SPECIAL-KEY-NAME 01 BFFE , , ,  \ Enter
-CHAR L 02 BFFE , , ,  HERE LEFT-K2 !  \ "K"
-CHAR K 04 BFFE , , ,
-CHAR J 08 BFFE , , ,
-CHAR H 10 BFFE , , ,
+char E char n special-key-name 01 BFFE , , ,  \ Enter
+char L 02 BFFE , , ,  here left-k2 !  \ "K"
+char K 04 BFFE , , ,
+char j 08 BFFE , , ,
+char H 10 BFFE , , ,
 
-( KEYS table, row Sp-B )
+( keys table, row Sp-B )
 
-CHAR S CHAR p SPECIAL-KEY-NAME 01 7FFE , , ,  \ Space
-CHAR S CHAR S SPECIAL-KEY-NAME 02 7FFE , , ,  \ Symbol Shift
-                      HERE DOWN-K2 !  \ "M"
-CHAR M 04 7FFE , , ,
-CHAR N 08 7FFE , , ,  HERE UP-K2 !    \ "B"
-CHAR B 10 7FFE , , ,
+char S char p special-key-name 01 7FFE , , ,  \ Space
+char S char S special-key-name 02 7FFE , , ,  \ Symbol Shift
+                      here down-k2 !  \ "M"
+char M 04 7FFE , , ,
+char N 08 7FFE , , ,  here up-k2 !    \ "B"
+char B 10 7FFE , , ,
 
-DECIMAL
+decimal
 
-( K#>A KEY-NAME )
+( k#>a key-name )
 
-: K#>A  ( n -- a )
+: k#>a  ( n -- a )
   \ Convert a key number to its address in `KEYS`.
-  /KEY * KEYS +  ;
+  /key * keys +  ;
 
-: C>S  ( c -- ca len )
+: c>s  ( c -- ca len )
   \ Convert a character to a string.
-  PAD C! PAD 1  ;
+  pad c! pad 1  ;
 
-: 2C>S  ( n1 -- ca len )
+: 2c>s  ( n1 -- ca len )
   \ Convert two characters to a string.
   \ high byte of n1 = first character
   \ low byte of n1 = second character
-  PAD ! PAD 2  ;
+  pad ! pad 2  ;
 
-: KEY-NAME  ( a -- ca len )
+: key-name  ( a -- ca len )
   \ Convert a key identifier to its key name.
   \ a = key address in the `KEYS` table
-  4 + @ DUP 256 U< IF  C>S  ELSE  2C>S  THEN  ;
+  4 + @ dup 256 u< if  c>s  else  2c>s  then  ;
 
-( PRESSED? PRESSED )
+( pressed? pressed )
 
-: PRESSED?  ( a -- f )
+: pressed?  ( a -- f )
   \ Is a key pressed?
   \ a = key address in the `KEYS` table
-  2@ INP AND 0=  ;
+  2@ inp and 0=  ;
 
-: (PRESSED)  ( -- a tf | ff tf | ff )
+: (pressed)  ( -- a tf | ff tf | ff )
   \ Check all keys.
   \ If a key is pressed, return its address in the `KEYS` table
   \ and a true flag; if "Break" is pressed, return a false flag
   \ and a true flag; else return a false flag.
-  FALSE  \ default
-  [ KEYS #KEYS /KEY * BOUNDS SWAP ] LITERAL LITERAL DO
-    ?TERMINAL IF  TRUE UNLOOP EXIT  THEN
-    I PRESSED? IF  DROP I TRUE UNLOOP EXIT  THEN
-  /KEY +LOOP  ;
+  false  \ default
+  [ keys #keys /key * bounds swap ] literal literal do
+    ?terminal if  true unloop exit  then
+    i pressed? if  drop i true unloop exit  then
+  /key +loop  ;
 
-: PRESSED  ( -- a | ff )
+: pressed  ( -- a | ff )
   \ Check all keys forever until one of them,
   \ or the "Break" key, is pressed.
   \ If a valid key was pressed, return its address
   \ in the `KEYS` table; if the "Break" key was pressed,
   \ return a false flag.
   \ a = address in the `KEYS` table
-  BEGIN  (PRESSED)  UNTIL  ;
+  begin  (pressed)  until  ;
 
   \ vim: filetype=abersoftforthafera

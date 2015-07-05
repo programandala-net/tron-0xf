@@ -48,117 +48,117 @@
   \ #vim %substitute@Ŭ@\=nr2char(154)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-2 8 THRU
+2 8 thru
 
 ( Instructions )
 
-: EO-INSTRUCTIONS  ( -- )
+: eo-instructions  ( -- )
   \  <------------------------------>
-  ." Ĉiu ludanto veturas motorciklon" CR
-  ." kies nura stirilo ĝin turnas" CR
-  ." naŭdek gradojn sen malrapidiĝo." CR CR
-  ." Ĉiu veturilo postlasas solidan" CR
-  ." lumo-muron." CR CR
-  ." La ludocelo estas igi la kon-" CR
-  ." traŭulon frakasi la labirinton." CR  ;
+  ." Ĉiu ludanto veturas motorciklon" cr
+  ." kies nura stirilo ĝin turnas" cr
+  ." naŭdek gradojn sen malrapidiĝo." cr cr
+  ." Ĉiu veturilo postlasas solidan" cr
+  ." lumo-muron." cr cr
+  ." La ludocelo estas igi la kon-" cr
+  ." traŭulon frakasi la labirinton." cr  ;
   \  <------------------------------>
 
 ( Quit and authors )
 
-: EO-QUIT-MESSAGE  ( -- )
+: eo-quit-message  ( -- )
   \  <------------------------------>
-  ." Por reludi: RUN" CR
-  ." Por eliri el Fortho: BYE" CR  ;
+  ." Por reludi: RUN" cr
+  ." Por eliri el Fortho: BYE" cr  ;
   \  <------------------------------>
 
-: EO-AUTHORS  ( -- )
+: eo-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/eo.programo.tron_0xf.html>" CR
-  CR
-  ." Kodo kaj grafikoj: Marcos Cruz" CR
-  10 AT-COL ." Provado: Teo kaj Irene"  CR CR
-  ." Verkita en Forth per Abersoft" CR
-  ." Forth (Melbourne House, 1983)" CR
+  ." <http://programandala.net/eo.programo.tron_0xf.html>" cr
+  cr
+  ." Kodo kaj grafikoj: Marcos Cruz" cr
+  10 at-col ." Provado: Teo kaj Irene"  cr cr
+  ." Verkita en Forth per Abersoft" cr
+  ." Forth (Melbourne House, 1983)" cr
   ." kaj la biblioteko Afera (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
 
-: EO-LICENSE-1  ( -- )
+: eo-license-1  ( -- )
 
   \  <------------------------------>
-  ." Ĉi tiu programo estas libera; vi" CR
-  ." rajtas reliveri kaŭ modifi ĝin" CR
-  ." sub la kondiĉoj de la GNU-a" CR
-  ." Ĝenerala Publika Permesilo, tia" CR
-  ." kiun publikigas Free Software" CR
-  ." Foundation (Liber-Programara" CR
-  ." Fondaĵo), ĉu versio 3 de la" CR
-  ." permesilo aŭ, je via prefero, iu" CR
+  ." Ĉi tiu programo estas libera; vi" cr
+  ." rajtas reliveri kaŭ modifi ĝin" cr
+  ." sub la kondiĉoj de la GNU-a" cr
+  ." Ĝenerala Publika Permesilo, tia" cr
+  ." kiun publikigas Free Software" cr
+  ." Foundation (Liber-Programara" cr
+  ." Fondaĵo), ĉu versio 3 de la" cr
+  ." permesilo aŭ, je via prefero, iu" cr
   ." posta versio."  ;
   \  <------------------------------>
 
 ( License -- part 2 )
 
-: EO-LICENSE-2  ( -- )
+: eo-license-2  ( -- )
 
   \  <------------------------------>
-  ." Ĉi tiu programo estas" CR
-  ." distribuita kun espero ke ĝi" CR
-  ." utilu, sed SEN AJNA GARANTIO; eĉ" CR
-  ." sen implicita garantio de" CR
-  ." KOMERCEBLECO or TAŬGECO POR" CR
+  ." Ĉi tiu programo estas" cr
+  ." distribuita kun espero ke ĝi" cr
+  ." utilu, sed SEN AJNA GARANTIO; eĉ" cr
+  ." sen implicita garantio de" cr
+  ." KOMERCEBLECO or TAŬGECO POR" cr
   ." PARTIKULARA CELO. Vidu la GNU-an"
-  ." Ĝeneralan Publikan Permesilon" CR
-  ." por pliaj detaloj." CR CR
+  ." Ĝeneralan Publikan Permesilon" cr
+  ." por pliaj detaloj." cr cr
   \  <------------------------------>
-  ." Vi devintus ricevi kopion de la" CR
-  ." GNU-a Ĝenerala Publika Permesilo" CR
-  ." kun ĉi tiu programo; alikaze" CR
+  ." Vi devintus ricevi kopion de la" cr
+  ." GNU-a Ĝenerala Publika Permesilo" cr
+  ." kun ĉi tiu programo; alikaze" cr
   ." vidu <http://gnu.org/licenses>."  ;
   \  <------------------------------>
 
 ( Keys )
 
-: EO-UP$     ( -- ca len )  S" Supren"  ;
-: EO-DOWN$   ( -- ca len )  S" Malsupren"  ;
-: EO-LEFT$   ( -- ca len )  S" Maldektren"  ;
-: EO-RIGHT$  ( -- ca len )  S" Dekstren"  ;
+: eo-up$     ( -- ca len )  s" Supren"  ;
+: eo-down$   ( -- ca len )  s" Malsupren"  ;
+: eo-left$   ( -- ca len )  s" Maldektren"  ;
+: eo-right$  ( -- ca len )  s" Dekstren"  ;
 
-CHAR J CONSTANT EO-'Y'  \ the letter used to say "yes"
+char j constant eo-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
-: EO-OPTION-0$  ( -- ca len )  S" Ne en Esperanto"  ;
-: EO-OPTION-1$  ( -- ca len )  S" Instrukcioj"  ;
-: EO-OPTION-2$  ( -- ca len )  S" Motorcikloj: "  ;
-: EO-OPTION-3$  ( -- ca len )  S" Sono: "  ;
-: EO-OPTION-4$  ( -- ca len )  S" Konfiguri"  ;
-: EO-OPTION-5$  ( -- ca len )  S" Ludi"  ;
-: EO-OPTION-6$  ( -- ca len )  S" Prio"  ;
-: EO-OPTION-7$  ( -- ca len )  S" Eliri"  ;
+: eo-option-0$  ( -- ca len )  s" Ne en Esperanto"  ;
+: eo-option-1$  ( -- ca len )  s" Instrukcioj"  ;
+: eo-option-2$  ( -- ca len )  s" Motorcikloj: "  ;
+: eo-option-3$  ( -- ca len )  s" Sono: "  ;
+: eo-option-4$  ( -- ca len )  s" Konfiguri"  ;
+: eo-option-5$  ( -- ca len )  s" Ludi"  ;
+: eo-option-6$  ( -- ca len )  s" Prio"  ;
+: eo-option-7$  ( -- ca len )  s" Eliri"  ;
 
 ( Other )
 
   \ XXX OLD
-  \ : EO-ANOTHER?$  ( -- ca len )  S" Ĉu reludi? (J/N)"  ;
+  \ : EO-ANOTHER?$  ( -- ca len )  s" Ĉu reludi? (J/N)"  ;
 
-: EO-PRESS-ANY-KEY$  ( -- ca len ) S" Premu klavon"  ;
+: eo-press-any-key$  ( -- ca len ) s" Premu klavon"  ;
 
-: EO-DO-STOP$  ( -- ca len )  S" Ĉu vi volas fini?"  ;
+: eo-do-stop$  ( -- ca len )  s" Ĉu vi volas fini?"  ;
 
-: EO-DO-CHANGE$  ( -- ca len )  S" Ĉu vi volas ŝanĝi ion?"  ;
+: eo-do-change$  ( -- ca len )  s" Ĉu vi volas ŝanĝi ion?"  ;
 
-: EO-LICENSE$  ( -- ca len )  S" Permesilo:"  ;
+: eo-license$  ( -- ca len )  s" Permesilo:"  ;
 
-  \ : EO-KEY$  ( -- ca len )  S" Klavo"  ;
+  \ : EO-KEY$  ( -- ca len )  s" Klavo"  ;
 
-: EO-PLAYER$  ( -- ca len )  S" Ludanto"  ;
+: eo-player$  ( -- ca len )  s" Ludanto"  ;
 
-: EO-HUMAN$  ( -- ca len )  S" Homo  "  ;
-: EO-ROBOT$  ( -- ca len )  S" Roboto"  ;
+: eo-human$  ( -- ca len )  s" Homo  "  ;
+: eo-robot$  ( -- ca len )  s" Roboto"  ;
 
-: EO-ON$   ( -- ca len )  S" Jes"  ;
-: EO-OFF$  ( -- ca len )  S" Ne "  ;
+: eo-on$   ( -- ca len )  s" Jes"  ;
+: eo-off$  ( -- ca len )  s" Ne "  ;
 
   \ vim: filetype=abersoftforthafera:fileencoding=utf-8

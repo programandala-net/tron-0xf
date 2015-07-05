@@ -47,19 +47,19 @@
 
 ( Fonts, UDG, title )
 
-+SCROLL
-FONT /FONT 0 0 <TAPE              \ main font
-+SCROLL
-EO-UDG /EO-UDG 0 0 <TAPE          \ Esperanto characters
-+SCROLL
-ES-UDG /ES-UDG 0 0 <TAPE          \ Spanish characters
-+SCROLL
-DIGITS-UDG /DIGITS-UDG 0 0 <TAPE  \ score digits
-+SCROLL
-UDG 0 0 0 <TAPE                   \ frame graphs
-+SCROLL
-TITLE-ADDRESS 0 0 0 <TAPE         \ graphic title
-+SCROLL
++scroll
+font /font 0 0 <tape              \ main font
++scroll
+eo-udg /eo-udg 0 0 <tape          \ Esperanto characters
++scroll
+es-udg /es-udg 0 0 <tape          \ Spanish characters
++scroll
+digits-udg /digits-udg 0 0 <tape  \ score digits
++scroll
+udg 0 0 0 <tape                   \ frame graphs
++scroll
+title-address 0 0 0 <tape         \ graphic title
++scroll
 
   \ After the binary files have been loaded into the RAM disk,
   \ the loader must stop immediately, else it would erase the
@@ -69,6 +69,6 @@ TITLE-ADDRESS 0 0 0 <TAPE         \ graphic title
   \ the loader at the end of the compilation. The return stack
   \ is cleared instead:
 
-RP! RUN
+rp! run
 
   \ vim: filetype=abersoftforthafera

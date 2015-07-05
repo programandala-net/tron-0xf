@@ -27,11 +27,11 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 7 THRU
+2 7 thru
 
-( LOCALIZED )
+( localized )
 
-: LOCALIZED  ( cfa1 cfa2 cfa3 "name" -- )
+: localized  ( cfa1 cfa2 cfa3 "name" -- )
 
   \ Create a word that will execute another word from a list of
   \ three, depending on the current language.
@@ -46,13 +46,13 @@
   \ given name, and store the three cfa (cofe field
   \ addresses) of the given words into its own pfa:
 
-  <BUILDS CFA , CFA , CFA ,
+  <builds cfa , cfa , cfa ,
 
   \ Second, define what the new word will do when executed:
   \ fetch from its pfa one of the three stored cfa depending on
   \ the current language, and execute it:
 
-  DOES>  ( pfa )  LANG @ CELLS + @ EXECUTE  ;
+  does>  ( pfa )  lang cells + @ execute  ;
 
 ( Localized menu options)
 
@@ -60,94 +60,94 @@
   \ store it into a table. Now it's calculated at run-time,
   \ what is slow.
 
-' ES-OPTION-0$ ' EO-OPTION-0$ ' EN-OPTION-0$
-  LOCALIZED OPTION-0$  ( -- ca len )
-' ES-OPTION-1$ ' EO-OPTION-1$ ' EN-OPTION-1$
-  LOCALIZED OPTION-1$  ( -- ca len )
-' ES-OPTION-2$ ' EO-OPTION-2$ ' EN-OPTION-2$
-  LOCALIZED OPTION-2$  ( -- ca len )
-' ES-OPTION-3$ ' EO-OPTION-3$ ' EN-OPTION-3$
-  LOCALIZED OPTION-3$  ( -- ca len )
-' ES-OPTION-4$ ' EO-OPTION-4$ ' EN-OPTION-4$
-  LOCALIZED OPTION-4$  ( -- ca len )
+' es-option-0$ ' eo-option-0$ ' en-option-0$
+  localized option-0$  ( -- ca len )
+' es-option-1$ ' eo-option-1$ ' en-option-1$
+  localized option-1$  ( -- ca len )
+' es-option-2$ ' eo-option-2$ ' en-option-2$
+  localized option-2$  ( -- ca len )
+' es-option-3$ ' eo-option-3$ ' en-option-3$
+  localized option-3$  ( -- ca len )
+' es-option-4$ ' eo-option-4$ ' en-option-4$
+  localized option-4$  ( -- ca len )
 
 ( Localized menu options)
 
-' ES-OPTION-5$ ' EO-OPTION-5$ ' EN-OPTION-5$
-  LOCALIZED OPTION-5$  ( -- ca len )
-' ES-OPTION-6$ ' EO-OPTION-6$ ' EN-OPTION-6$
-  LOCALIZED OPTION-6$  ( -- ca len )
-' ES-OPTION-7$ ' EO-OPTION-7$ ' EN-OPTION-7$
-  LOCALIZED OPTION-7$  ( -- ca len )
+' es-option-5$ ' eo-option-5$ ' en-option-5$
+  localized option-5$  ( -- ca len )
+' es-option-6$ ' eo-option-6$ ' en-option-6$
+  localized option-6$  ( -- ca len )
+' es-option-7$ ' eo-option-7$ ' en-option-7$
+  localized option-7$  ( -- ca len )
 
 ( Localized texts)
 
-' ES-INSTRUCTIONS ' EO-INSTRUCTIONS ' EN-INSTRUCTIONS
-LOCALIZED (INSTRUCTIONS)  ( -- )
+' es-instructions ' eo-instructions ' en-instructions
+localized (instructions)  ( -- )
 
-' ES-UP$ ' EO-UP$ ' EN-UP$
-  LOCALIZED UP$  ( -- ca len )
-' ES-DOWN$ ' EO-DOWN$ ' EN-DOWN$
-  LOCALIZED DOWN$  ( -- ca len )
-' ES-LEFT$ ' EO-LEFT$ ' EN-LEFT$
-  LOCALIZED LEFT$  ( -- ca len )
-' ES-RIGHT$ ' EO-RIGHT$ ' EN-RIGHT$
-  LOCALIZED RIGHT$  ( -- ca len )
+' es-up$ ' eo-up$ ' en-up$
+  localized up$  ( -- ca len )
+' es-down$ ' eo-down$ ' en-down$
+  localized down$  ( -- ca len )
+' es-left$ ' eo-left$ ' en-left$
+  localized left$  ( -- ca len )
+' es-right$ ' eo-right$ ' en-right$
+  localized right$  ( -- ca len )
 
-' ES-PRESS-ANY-KEY$ ' EO-PRESS-ANY-KEY$ ' EN-PRESS-ANY-KEY$
-LOCALIZED PRESS-ANY-KEY$  ( -- ca len )
+' es-press-any-key$ ' eo-press-any-key$ ' en-press-any-key$
+localized press-any-key$  ( -- ca len )
 
-' ES-DO-STOP$ ' EO-DO-STOP$ ' EN-DO-STOP$
-LOCALIZED DO-STOP$  ( -- ca len )
+' es-do-stop$ ' eo-do-stop$ ' en-do-stop$
+localized do-stop$  ( -- ca len )
 
 ( Localized texts) 
 
-' ES-DO-CHANGE$ ' EO-DO-CHANGE$ ' EN-DO-CHANGE$
-LOCALIZED DO-CHANGE$  ( -- ca len )
+' es-do-change$ ' eo-do-change$ ' en-do-change$
+localized do-change$  ( -- ca len )
 
-' ES-LICENSE$ ' EO-LICENSE$ ' EN-LICENSE$
-LOCALIZED LICENSE$  ( -- ca len )
+' es-license$ ' eo-license$ ' en-license$
+localized license$  ( -- ca len )
 
   \ XXX OLD
   \ ' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
-  \ LOCALIZED ANOTHER?$  ( -- ca len )
+  \ localized ANOTHER?$  ( -- ca len )
 
-' ES-'Y' ' EO-'Y' ' EN-'Y' LOCALIZED 'Y'  ( -- c )
+' es-'y' ' eo-'y' ' en-'y' localized 'y'  ( -- c )
 
-' ES-QUIT-MESSAGE ' EO-QUIT-MESSAGE ' EN-QUIT-MESSAGE
-LOCALIZED QUIT-MESSAGE  ( -- )
+' es-quit-message ' eo-quit-message ' en-quit-message
+localized quit-message  ( -- )
 
-' ES-PLAYER$ ' EO-PLAYER$ ' EN-PLAYER$
-LOCALIZED PLAYER$  ( -- ca len )
+' es-player$ ' eo-player$ ' en-player$
+localized player$  ( -- ca len )
 
-' ES-HUMAN$ ' EO-HUMAN$ ' EN-HUMAN$
-LOCALIZED HUMAN$  ( -- ca len )
+' es-human$ ' eo-human$ ' en-human$
+localized human$  ( -- ca len )
 
-' ES-ROBOT$ ' EO-ROBOT$ ' EN-ROBOT$
-LOCALIZED ROBOT$  ( -- ca len )
+' es-robot$ ' eo-robot$ ' en-robot$
+localized robot$  ( -- ca len )
 
-' ES-ON$ ' EO-ON$ ' EN-ON$ LOCALIZED ON$  ( -- ca len )
+' es-on$ ' eo-on$ ' en-on$ localized on$  ( -- ca len )
 
-' ES-OFF$ ' EO-OFF$ ' EN-OFF$ LOCALIZED OFF$  ( -- ca len )
+' es-off$ ' eo-off$ ' en-off$ localized off$  ( -- ca len )
 
 ( Special texts and texts that don't need translation)
 
-: ON/OFF$  ( f -- ca len )
-  IF  ON$  ELSE  OFF$  THEN  ;
+: on/off$  ( f -- ca len )
+  if  on$  else  off$  then  ;
 
-' ES-LICENSE-1 ' EO-LICENSE-1 ' EN-LICENSE-1
-LOCALIZED LICENSE-1  ( -- )
+' es-license-1 ' eo-license-1 ' en-license-1
+localized license-1  ( -- )
 
-' ES-LICENSE-2 ' EO-LICENSE-2 ' EN-LICENSE-2
-LOCALIZED LICENSE-2  ( -- )
+' es-license-2 ' eo-license-2 ' en-license-2
+localized license-2  ( -- )
 
-' ES-AUTHORS ' EO-AUTHORS ' EN-AUTHORS
-LOCALIZED AUTHORS  ( -- )
+' es-authors ' eo-authors ' en-authors
+localized authors  ( -- )
   
-: COPYRIGHT  ( -- )
-  ." Copyright (C) 1985,2009,2015" CR
+: copyright  ( -- )
+  ." Copyright (C) 1985,2009,2015" cr
   ." Marcos Cruz (programandala.net)"  ;
 
-CHAR N CONSTANT 'N'  \ the letter used to say "no"
+char N constant 'n'  \ the letter used to say "no"
 
   \ vim: filetype=abersoftforthafera

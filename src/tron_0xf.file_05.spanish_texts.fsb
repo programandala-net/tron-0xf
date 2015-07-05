@@ -52,118 +52,118 @@
   \ #vim %substitute@¿@\=nr2char(158)@g
   \ #vim %substitute@¡@\=nr2char(159)@g
 
-2 8 THRU
+2 8 thru
 
 ( Instructions )
 
-: ES-INSTRUCTIONS  ( -- )
+: es-instructions  ( -- )
   \  <------------------------------>
-  ." Cada jugador conduce una moto" CR
-  ." cuyo único control la hace girar" CR
-  ." noventa grados sin frenar." CR CR
-  ." Cada moto deja tras de sí una" CR
-  ." pared sólida de luz." CR CR
-  ." El objetivo del juego es hacer" CR
-  ." estrellarse al contrincante con" CR
-  ." el laberinto." CR  ;
+  ." Cada jugador conduce una moto" cr
+  ." cuyo único control la hace girar" cr
+  ." noventa grados sin frenar." cr cr
+  ." Cada moto deja tras de sí una" cr
+  ." pared sólida de luz." cr cr
+  ." El objetivo del juego es hacer" cr
+  ." estrellarse al contrincante con" cr
+  ." el laberinto." cr  ;
   \  <------------------------------>
 
 ( Quit and authors )
 
-: ES-QUIT-MESSAGE  ( -- )
+: es-quit-message  ( -- )
   \  <------------------------------>
-  ." Para jugar otra vez: RUN" CR
-  ." Para salir de Forth: BYE" CR  ;
+  ." Para jugar otra vez: RUN" cr
+  ." Para salir de Forth: BYE" cr  ;
   \  <------------------------------>
 
-: ES-AUTHORS  ( -- )
+: es-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/es.programa.tron_0xf.html>" CR
-  CR
-  ." Código y gráficos: Marcos Cruz" CR
-  10 AT-COL ." Pruebas: Teo e Irene" CR CR
-  ." Escrito en Forth con Abersoft" CR
-  ." Forth (Melbourne House, 1983)." CR
+  ." <http://programandala.net/es.programa.tron_0xf.html>" cr
+  cr
+  ." Código y gráficos: Marcos Cruz" cr
+  10 at-col ." Pruebas: Teo e Irene" cr cr
+  ." Escrito en Forth con Abersoft" cr
+  ." Forth (Melbourne House, 1983)." cr
   ." y la biblioteca Afera (2015)."  ;
   \  <------------------------------>
 
 ( License -- part 1 )
 
-: ES-LICENSE-1  ( -- )
+: es-license-1  ( -- )
 
   \  <------------------------------>
-  ." Este programa es libre; puedes" CR
-  ." redistribuirlo y modificarlo" CR
-  ." bajo los términos de la Licencia" CR
-  ." Pública General GNU, publicada" CR
-  ." por Free Software Foundation" CR
-  ." (Fundación para los programas" CR
-  ." libres), bien su versión 3 o, a" CR
+  ." Este programa es libre; puedes" cr
+  ." redistribuirlo y modificarlo" cr
+  ." bajo los términos de la Licencia" cr
+  ." Pública General GNU, publicada" cr
+  ." por Free Software Foundation" cr
+  ." (Fundación para los programas" cr
+  ." libres), bien su versión 3 o, a" cr
   ." tu criterio, otra posterior."  ;
   \  <------------------------------>
 
 ( License -- part 2 )
 
-: ES-LICENSE-2  ( -- )
+: es-license-2  ( -- )
 
   \  <------------------------------>
-  ." Este programa se distribuye con" CR
-  ." la esperanza de que sea útil," CR
-  ." pero SIN GARANTÍA ALGUNA; ni" CR
-  ." siquiera la garantía implícita" CR
-  ." de ser COMERCIALIZABLE o APTO" CR
-  ." PARA UN OBJETIVO PARTICULAR" CR
-  ." Para más detalles lee la" CR
-  ." Licencia Pública General GNU." CR CR
+  ." Este programa se distribuye con" cr
+  ." la esperanza de que sea útil," cr
+  ." pero SIN GARANTÍA ALGUNA; ni" cr
+  ." siquiera la garantía implícita" cr
+  ." de ser COMERCIALIZABLE o APTO" cr
+  ." PARA un OBJETIVO PARTICULAR" cr
+  ." Para más detalles lee la" cr
+  ." Licencia Pública General GNU." cr cr
   \  <------------------------------>
-  ." Deberías haber recibido una" CR
-  ." copia de la Licencia Pública" CR
-  ." General GNU junto con este" CR
-  ." programa; si no es así, léela en" CR
+  ." Deberías haber recibido una" cr
+  ." copia de la Licencia Pública" cr
+  ." General GNU junto con este" cr
+  ." programa; si no es así, léela en" cr
   ." <http://gnu.org/licenses>."  ;
   \  <------------------------------>
 
 ( Keys )
 
-: ES-UP$     ( -- ca len )  S" Arriba"  ;
-: ES-DOWN$   ( -- ca len )  S" Abajo"  ;
-: ES-LEFT$   ( -- ca len )  S" Izquierda"  ;
-: ES-RIGHT$  ( -- ca len )  S" Derecha"  ;
+: es-up$     ( -- ca len )  s" Arriba"  ;
+: es-down$   ( -- ca len )  s" Abajo"  ;
+: es-left$   ( -- ca len )  s" Izquierda"  ;
+: es-right$  ( -- ca len )  s" Derecha"  ;
 
-CHAR S CONSTANT ES-'Y'  \ the letter used to say "yes"
+char S constant es-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
-: ES-OPTION-0$  ( -- ca len )  S" No en español"  ;
-: ES-OPTION-1$  ( -- ca len )  S" Instrucciones"  ;
-: ES-OPTION-2$  ( -- ca len )  S" Motos: "  ;
-: ES-OPTION-3$  ( -- ca len )  S" Sonido: "  ;
-: ES-OPTION-4$  ( -- ca len )  S" Configurar"  ;
-: ES-OPTION-5$  ( -- ca len )  S" Jugar"  ;
-: ES-OPTION-6$  ( -- ca len )  S" Acerca de"  ;
-: ES-OPTION-7$  ( -- ca len )  S" Terminar"  ;
+: es-option-0$  ( -- ca len )  s" No en español"  ;
+: es-option-1$  ( -- ca len )  s" Instrucciones"  ;
+: es-option-2$  ( -- ca len )  s" Motos: "  ;
+: es-option-3$  ( -- ca len )  s" Sonido: "  ;
+: es-option-4$  ( -- ca len )  s" Configurar"  ;
+: es-option-5$  ( -- ca len )  s" Jugar"  ;
+: es-option-6$  ( -- ca len )  s" Acerca de"  ;
+: es-option-7$  ( -- ca len )  s" Terminar"  ;
 
 ( Other )
 
   \ XXX OLD
-  \ : ES-ANOTHER?$  ( -- ca len )  S" ¿Jugar otra vez? (S/N)"  ;
+  \ : ES-ANOTHER?$  ( -- ca len )  s" ¿Jugar otra vez? (S/N)"  ;
 
-: ES-PRESS-ANY-KEY$  ( -- ca len ) S" Pulsa una tecla"  ;
+: es-press-any-key$  ( -- ca len ) s" Pulsa una tecla"  ;
 
-: ES-DO-STOP$  ( -- ca len )  S" ¿Quieres terminar?"  ;
+: es-do-stop$  ( -- ca len )  s" ¿Quieres terminar?"  ;
 
-: ES-DO-CHANGE$  ( -- ca len )  S" ¿Quieres cambiar algo?"  ;
+: es-do-change$  ( -- ca len )  s" ¿Quieres cambiar algo?"  ;
 
-: ES-LICENSE$  ( -- ca len )  S" Licencia:"  ;
+: es-license$  ( -- ca len )  s" Licencia:"  ;
 
-  \ : EN-KEY$  ( -- ca len )  S" Tecla"  ;
+  \ : EN-KEY$  ( -- ca len )  s" Tecla"  ;
 
-: ES-PLAYER$  ( -- ca len )  S" Jugador"  ;
+: es-player$  ( -- ca len )  s" Jugador"  ;
 
-: ES-HUMAN$  ( -- ca len )  S" Humano"  ;
-: ES-ROBOT$  ( -- ca len )  S" Robot "  ;
+: es-human$  ( -- ca len )  s" Humano"  ;
+: es-robot$  ( -- ca len )  s" Robot "  ;
 
-: ES-ON$   ( -- ca len )  S" Sí"  ;
-: ES-OFF$  ( -- ca len )  S" No"  ;
+: es-on$   ( -- ca len )  s" Sí"  ;
+: es-off$  ( -- ca len )  s" No"  ;
 
   \ vim: filetype=abersoftforthafera:fileencoding=utf-8

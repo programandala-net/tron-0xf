@@ -27,72 +27,72 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 10 THRU
+2 10 thru
 
 ( Menu -- data )
 
-8 CONSTANT OPTIONS       \ number of menu options
-2 CONSTANT LINES/OPTION  \ lines occupied per menu option
+8 constant options       \ number of menu options
+2 constant lines/option  \ lines occupied per menu option
 
-OPTIONS BUFFER: MENU-KEYS
+options buffer: menu-keys
   \ A table to store the menu keys. They change depending on
   \ the current language. This table is updated every time the
   \ menu is printed, using the initials of the menu options.
 
-:NONAME  ( -- ca len )
+:noname  ( -- ca len )
   \ Menu option 3 with the status of the sound.
-  OPTION-3$ SOUND? @ ON/OFF$ S+  ;
+  option-3$ sound? @ on/off$ s+  ;
 
-:NONAME  ( -- ca len )
+:noname  ( -- ca len )
   \ Menu option 2 with the number of players.
-  OPTION-2$ PLAYERS S->D <# #S #> S+  ;
+  option-2$ players s->d <# #s #> s+  ;
   
-HERE: MENU-OPTIONS
+here: menu-options
   
   \ Table that holds the cfa of the words that return the
   \ localized texts of the menu options.
 
-  ' OPTION-0$ CFA ,   ' OPTION-1$ CFA ,
+  ' option-0$ cfa ,   ' option-1$ cfa ,
   , ,  \ options 2 and 3 created with `:NONAME` above
-  ' OPTION-4$ CFA ,  ' OPTION-5$ CFA ,
-  ' OPTION-6$ CFA ,   ' OPTION-7$ CFA ,
+  ' option-4$ cfa ,  ' option-5$ cfa ,
+  ' option-6$ cfa ,   ' option-7$ cfa ,
 
 ( Menu -- language and commands)
 
-: CHANGE-LANGUAGE  ( -- )
+: change-language  ( -- )
   \ Change the current language.
-  LANG @ 1+ DUP LANGS < *  DUP LANG ! +UDG WIPE-CONTENTS  ;
+  lang 1+ dup langs < *  dup to lang  +udg wipe-contents  ;
 
-: CHANGE-PLAYERS  ( -- )
+: change-players  ( -- )
   \ Change the number of players.
   \ White ink has to be set at the end in order to
   \ prevent flickering when updating the menu,
   \ because the way the screen is uptaded sets black ink
   \ as default.
-  PLAYERS 1+ DUP [ MAX-PLAYERS 1+ ] LITERAL < * 1 MAX
-  TO PLAYERS  WHITE INK  ;
+  players 1+ dup [ max-players 1+ ] literal < * 1 max
+  to players  white ink  ;
 
-: TOGGLE-SOUND  ( -- )
+: toggle-sound  ( -- )
   \ Toggle the game sounds.
   \ White ink has to be set at the end in order to
   \ prevent flickering when updating the menu,
   \ because the way the screen is uptaded sets black ink
   \ as default.
-  SOUND? DUP 1 TOGGLE @ SOUND  WHITE INK  ;
+  sound? dup 1 toggle @ sound  white ink  ;
 
-: ABOUT  ( -- )
-  WIPE-CONTENTS COPYRIGHT CR CR
-  AUTHORS MORE  LICENSE-1 MORE  LICENSE-2 MORE  ;
+: about  ( -- )
+  wipe-contents copyright cr cr
+  authors more  license-1 more  license-2 more  ;
 
-: INSTRUCTIONS  ( -- )
-  WIPE-CONTENTS (INSTRUCTIONS) MORE  ;
+: instructions  ( -- )
+  wipe-contents (instructions) more  ;
 
-: FINISH  ( -- )
-  CLS0 -FONT QUIT-MESSAGE QUIT  ;
+: finish  ( -- )
+  cls0 -font quit-message quit  ;
 
 ( Menu commands table)
 
-HERE: MENU-COMMANDS
+here: menu-commands
 
   \ Execution table of the menu commands.
   \
@@ -102,95 +102,95 @@ HERE: MENU-COMMANDS
   \ `WIPE-CONTENTS` (or `MORE`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
-  ' CHANGE-LANGUAGE CFA ,
-  ' INSTRUCTIONS CFA ,
-  ' CHANGE-PLAYERS CFA ,
-  ' TOGGLE-SOUND CFA ,
-  ' CONFIGURATION CFA ,
-  ' GAME CFA ,
-  ' ABOUT CFA ,
-  ' FINISH CFA ,
+  ' change-language cfa ,
+  ' instructions cfa ,
+  ' change-players cfa ,
+  ' toggle-sound cfa ,
+  ' configuration cfa ,
+  ' game cfa ,
+  ' about cfa ,
+  ' finish cfa ,
 
 ( Menu options)
 
-: INITIAL.  ( c -- )
+: initial.  ( c -- )
   \ Print the given char as a menu option initial.
-  1 INVERSE EMIT 0 INVERSE  ;
+  1 inverse emit 0 inverse  ;
 
-: INITIAL!  ( n c -- )
+: initial!  ( n c -- )
   \ Store char 'c' into the 'n' position of the
   \ `MENU-KEYS` table.
-  SWAP MENU-KEYS + C!  ;
+  swap menu-keys + c!  ;
 
-: OPTION-INITIAL  ( ca n -- )
+: option-initial  ( ca n -- )
   \ Print the initial of the menu option number n,
   \ stored in the given address, and also store it
   \ into the `MENU-KEYS` table.
-  SWAP C@ UPPERC DUP INITIAL. INITIAL!  ;
+  swap C@ upperc dup initial. initial!  ;
 
-: OPTION>LINE  (  n -- line )
+: option>line  (  n -- line )
   \ Convert a menu option number to its line.
-  LINES/OPTION * CONTENTS-LINE +  ;
+  lines/option * contents-line +  ;
 
-: OPTION>STRING  ( n -- ca len )
+: option>string  ( n -- ca len )
   \ Convert a menu option number to its localized text.
-  CELLS MENU-OPTIONS + @ EXECUTE  ;
+  cells menu-options + @ execute  ;
 
 ( Option)
 
-: OPTION  ( n -- )
+: option  ( n -- )
   \ Print menu option number n. 
   \ XXX TODO make it much faster: calculate
   \ the coordinates when the strings are created, and
   \ store them in a table.
-  DUP >R                  ( n ) ( R: n )
-  DUP OPTION>LINE         ( n line ) 
-  >R OPTION>STRING        ( ca len ) ( R: n line )
-  DUP CENTERED            ( ca len col )
-  R> SWAP                 ( ca len line col ) ( R: n )
-  2DUP AT 2OVER DROP R>   ( ca len line col ca n ) ( R: )
-  OPTION-INITIAL          ( ca len line col )
-  1+ AT 1 /STRING TYPE  ;
+  dup >r                  ( n ) ( R: n )
+  dup option>line         ( n line ) 
+  >r option>string        ( ca len ) ( R: n line )
+  dup centered            ( ca len col )
+  r> swap                 ( ca len line col ) ( R: n )
+  2dup at 2over drop r>   ( ca len line col ca n ) ( R: )
+  option-initial          ( ca len line col )
+  1+ at 1 /string type  ;
 
 ( Menu)
 
-: MENU  ( -- )
+: menu  ( -- )
   \ Print the menu.
-  OPTIONS 0 DO  I OPTION  LOOP  REVEAL-CONTENTS 256 MS  ;
+  options 0 do  i option  loop  reveal-contents 256 ms  ;
 
 ( Valid option)
 
-: VALID-OPTION?  ( c -- cfa tf | ff )
+: valid-option?  ( c -- cfa tf | ff )
   \ Is the given character a valid menu option in the current
   \ language? If so, return the cfa of its associated command
   \ and a true flag; otherwise return a false flag.
-  UPPERC
-  FALSE SWAP  \ default exit flag
-  OPTIONS 0 DO
-    DUP MENU-KEYS I + C@ =  \ valid key?
-    IF  2DROP MENU-COMMANDS I CELLS + @ TRUE DUP LEAVE  THEN
-  LOOP  DROP  ;
+  upperc
+  false swap  \ default exit flag
+  options 0 do
+    dup menu-keys i + C@ =  \ valid key?
+    if  2drop menu-commands i cells + @ true dup leave  then
+  loop  drop  ;
 
-: MENU-KEY  ( -- c )
+: menu-key  ( -- c )
   \ Wait until a key is pressed then and return its code.
-  BEGIN  INKEY? ?EXIT  AGAIN  ;
+  begin  inkey? ?exit  again  ;
 
-: VALID-OPTION  ( -- cfa )
+: valid-option  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  BEGIN  MENU-KEY VALID-OPTION?  UNTIL  KEY-SOUND  ;
+  begin  menu-key valid-option?  until  key-sound  ;
 
 ( Boot)
 
   \ Init the circular string-buffer.
-  128 ALLOT-CSB
+  128 allot-csb
 
-: BYE  ( -- )  MON  ;
+: bye  ( -- )  mon  ;
 
-: INIT  ( -- )  +SCREEN +FONT CLS0 PAGE  ;
+: init  ( -- )  +screen +font cls0 page  ;
 
-: RUN  ( -- )
+: run  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
-  INIT BEGIN  MENU VALID-OPTION EXECUTE  AGAIN  ;
+  init begin  menu valid-option execute  again  ;
 
   \ vim: filetype=abersoftforthafera

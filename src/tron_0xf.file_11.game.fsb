@@ -27,7 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 9 THRU
+2 9 thru
 
 ( Rudder increments)
 
@@ -36,207 +36,207 @@
  \ increments faster.
 
  \ X  Y 
-   0  1 2CONSTANT UP-INCS
-   0 -1 2CONSTANT DOWN-INCS
-  -1  0 2CONSTANT LEFT-INCS
-   1  0 2CONSTANT RIGHT-INCS
+   0  1 2constant up-incs
+   0 -1 2constant down-incs
+  -1  0 2constant left-incs
+   1  0 2constant right-incs
 
   \ XXX OLD -- first version:
   \ : -1|1  ( -- -1 | 1 )
   \   \ Return a random increment for a graphic coordinate.
-  \   SYS-FRAMES C@ 1 AND DUP ?EXIT 1-  ;
+  \   sys-frames C@ 1 and dup ?exit 1-  ;
 
   \ XXX NEW -- faster version in Z80:
-CREATE -1|1  ( -- -1 | 1 )
+create -1|1  ( -- -1 | 1 )
   \ Return a random increment for a graphic coordinate.
-  HEX
-  3A C, 5C78 ,        \ ld a,(FRAMES)
-  E6 C, 01 C,         \ and 1 ; bit 0 only
-  26 C, 00 C,         \ ld h,0
-  68 07 + C,          \ ld l,a
-  C2 C, PUSHHL ,      \ jp nz,PUSHHL ; return 1
-  2B C,               \ dec hl
-  C3 C, PUSHHL ,      \ jp PUSHHL ; return -1
-  SMUDGE DECIMAL
+  hex
+  3A c, 5C78 ,        \ ld a,(FRAMES)
+  E6 c, 01 c,         \ and 1 ; bit 0 only
+  26 c, 00 c,         \ ld h,0
+  68 07 + c,          \ ld l,a
+  C2 c, pushhl ,      \ jp nz,PUSHHL ; return 1
+  2B c,               \ dec hl
+  C3 c, pushhl ,      \ jp pushhl ; return -1
+  smudge decimal
 
-( INCS2* )
+( incs2* )
 
-CREATE INCS2*  ( b1 b2 -- b1' b2' )  HEX
+create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ Double the coordinate increments b1 and b2
   \ by shifting them left directly on the stack.
   \ b1' = b1 2*
   \ b2' = b2 2*
-  21 C, 0 ,       \ ld hl,0
-  39 C,           \ add hl,sp ; low byte of TOS
-  CB C, 26 C,     \ sla (hl)
-  23 C,           \ inc hl ; high byte of TOS
-  23 C,           \ inc hl ; low byte of 2TOS
-  CB C, 26 C,     \ sla (hl)
-  C3 C, NEXT ,    \ jp NEXT
-  SMUDGE DECIMAL
+  21 c, 0 ,       \ ld hl,0
+  39 c,           \ add hl,sp ; low byte of TOS
+  CB c, 26 c,     \ sla (hl)
+  23 c,           \ inc hl ; high byte of TOS
+  23 c,           \ inc hl ; low byte of 2TOS
+  CB c, 26 c,     \ sla (hl)
+  C3 c, next ,    \ jp next
+  smudge decimal
 
-( AUTOPILOT )
+( autopilot )
 
-: CRASHING?  ( xinc yinc -- f )
+: crashing?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
   \ for the current player,
   \ is the second next position occupied?
   \ XXX TODO faster in Z80
-  INCS2* PLAYER-YC @ + SWAP PLAYER-XC @ + SWAP POINT  ;
+  incs2* player-yc @ + swap player-xc @ + swap point  ;
   \ XXX TODO check if this is slower or faster:
-  \ INCS2* PLAYER-YC @ + >R PLAYER-XC @ + R> POINT  ;
+  \ incs2* player-yc @ + >r player-xc @ + r> point  ;
 
-: DODGED?  ( xinc yinc -- f )
+: dodged?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
   \ for the current player,
   \ is the second next position free?
-  CRASHING? 0=  ;
+  crashing? 0=  ;
 
-: DODGE-Y  ( -- 0 yinc )
+: dodge-y  ( -- 0 yinc )
   \ Choose increments to start moving on the Y axis.
-  0 -1|1 2DUP DODGED? ?EXIT  MINUS  ;
+  0 -1|1 2dup dodged? ?exit  minus  ;
 
-: DODGE-X  ( -- xinc 0 )
+: dodge-x  ( -- xinc 0 )
   \ Choose increments to start moving on the X axis.
-  -1|1 0 2DUP DODGED? ?EXIT  SWAP MINUS SWAP  ;
+  -1|1 0 2dup dodged? ?exit  swap minus swap  ;
 
-: DODGE  ( -- )
+: dodge  ( -- )
   \ Change the direction of the current player.
-  PLAYER-XINC @   \ moving on the X axis?
-  IF  DODGE-Y  ELSE  DODGE-X  THEN  PLAYER-INCS 2!  ;
+  player-xinc @   \ moving on the X axis?
+  if  dodge-y  else  dodge-x  then  player-incs 2!  ;
 
-: AUTOPILOT  ( -- )
+: autopilot  ( -- )
   \ Update the coordinate increments
   \ of the current (robot) player:
   \ If there's something ahead, change the direction.
-  PLAYER-INCS 2@ CRASHING?  IF  DODGE  THEN  ;
+  player-incs 2@ crashing?  if  dodge  then  ;
 
-( RUDDER )
+( rudder )
 
-: RUDDER  ( -- )
+: rudder  ( -- )
   \ Update the coordinate increments
   \ of the current (human) player.
-  PLAYER-UP-K @ PRESSED? IF
-    PLAYER-XINC @ IF  UP-INCS PLAYER-INCS 2!  THEN  EXIT
-  THEN
-  PLAYER-DOWN-K @ PRESSED? IF
-    PLAYER-XINC @ IF  DOWN-INCS PLAYER-INCS 2!  THEN  EXIT
-  THEN
-  PLAYER-LEFT-K @ PRESSED? IF
-    PLAYER-YINC @ IF  LEFT-INCS PLAYER-INCS 2!  THEN  EXIT
-  THEN
-  PLAYER-RIGHT-K @ PRESSED? IF
-    PLAYER-YINC @ IF  RIGHT-INCS PLAYER-INCS 2!  THEN  EXIT
-  THEN  ;
+  player-up-k @ pressed? if
+    player-xinc @ if  up-incs player-incs 2!  then  exit
+  then
+  player-down-k @ pressed? if
+    player-xinc @ if  down-incs player-incs 2!  then  exit
+  then
+  player-left-k @ pressed? if
+    player-yinc @ if  left-incs player-incs 2!  then  exit
+  then
+  player-right-k @ pressed? if
+    player-yinc @ if  right-incs player-incs 2!  then  exit
+  then  ;
 
-( POSITIONS READY )
+( positions ready )
 
-:NONAME  ( -- )
+:noname  ( -- )
   \ Set the players' positions before a new round,
   \ for three players.
-   40 XC0 ! 127 YC0 !  RIGHT-INCS INCS0 2!
-  215 XC1 ! 127 YC1 !  LEFT-INCS  INCS1 2!
-  126 XC2 !  40 YC2 !  UP-INCS    INCS2 2!  ;
+   40 xc0 ! 127 yc0 !  right-incs incs0 2!
+  215 xc1 ! 127 yc1 !  left-incs  incs1 2!
+  126 xc2 !  40 yc2 !  up-incs    incs2 2!  ;
 
-:NONAME  ( -- )
+:noname  ( -- )
   \ Set the players' positions before a new round,
   \ for two players.
-   40 XC0 ! 88 YC0 !  RIGHT-INCS INCS0 2!
-  215 XC1 ! 88 YC1 !  LEFT-INCS  INCS1 2!  ;
+   40 xc0 ! 88 yc0 !  right-incs incs0 2!
+  215 xc1 ! 88 yc1 !  left-incs  incs1 2!  ;
 
-:NONAME  ( -- )
+:noname  ( -- )
   \ Set the player's position before a new round,
   \ for one player.
-  127 XC0 ! 88 YC0 !  UP-INCS INCS0 2!  ;
+  127 xc0 ! 88 yc0 !  up-incs incs0 2!  ;
 
-HERE: POSITIONS-TABLE  ( cfa3 cfa2 cfa1 )
+here: positions-table  ( cfa3 cfa2 cfa1 )
   \ Execution table for `POSITIONS`.
   , , ,
  
-: POSITIONS  ( -- )
+: positions  ( -- )
   \ Set the players' start positions.
-  PLAYERS 1- CELLS POSITIONS-TABLE + @ EXECUTE  ;
+  players 1- cells positions-table + @ execute  ;
 
-: READY  ( -- )
+: ready  ( -- )
   \ Show all players at their start positions.
-  POSITIONS  PLAYERS 0 DO  I PLAYER! PAINT  LOOP  ;
+  positions  players 0 do  i player! paint  loop  ;
 
-( ROUND )
+( round )
 
   \ Init a game round.
   \ XXX TODO message
-: ROUND-INIT  ( -- )  CLEAR-ARENA READY AKEY DROP  ;
+: round-init  ( -- )  clear-arena ready akey drop  ;
 
-: FORWARD  ( -- )
+: forward  ( -- )
   \ Update the coordinates of the current player.
-  PLAYER-XINC @ PLAYER-XC +!  PLAYER-YINC @ PLAYER-YC +!  ;
+  player-xinc @ player-xc +!  player-yinc @ player-yc +!  ;
 
-: STOP?  ( -- f )
-  FALSE  ?TERMINAL 0= ?EXIT  DROP SAVE-DISPLAY DO-STOP?
-  DUP 0= IF  RESTORE-DISPLAY  THEN  ;
+: stop?  ( -- f )
+  false  ?terminal 0= ?exit  drop save-display do-stop?
+  dup 0= if  restore-display  then  ;
 
-( ROUND )
+( round )
 
-0 VARIABLE CRASHES
+0 variable crashes
 
-: ROUND  ( -- f )
+: round  ( -- f )
   \ Game round, until a crash happens
   \ or the break key is pressed and confirmed.
   \ f = Break key pressed?
-  ROUND-INIT
-  BEGIN
+  round-init
+  begin
 
     \ XXX NEW method
-    \ CRASHES OFF
+    \ crashes off
 
-    PLAYERS 0 DO
-      I PLAYER!  PLAYER-CONTROL @ EXECUTE
+    players 0 do
+      i player!  player-control @ execute
 
       \ XXX OLD method
       \ XXX FIXME when 2 robots play, they crash
-      CRASH? IF
-        \ I QUIT \ XXX TMP
-        CRASH +SCORES UNLOOP FALSE EXIT  THEN
-      FORWARD PAINT MOTOR-NOISE
-     LOOP
+      crash? if
+        \ i quit \ XXX TMP
+        crash +scores unloop false exit  then
+      forward paint motor-noise
+     loop
 
       \ XXX NEW method -- doesn't makes any difference
       \ XXX FIXME when 2 robots play, they crash
-      \ CRASH? DUP CRASHES +!
-      \ 0= IF  FORWARD PAINT MOTOR-NOISE  THEN
-    \ LOOP  CRASHES @ IF  CRASH +SCORES FALSE EXIT  THEN
+      \ crash? dup crashes +!
+      \ 0= if  forward paint motor-noise  then
+    \ loop  crashes @ if  crash +scores false exit  then
 
-  STOP? UNTIL  TRUE  ;
+  stop? until  true  ;
 
-( GAME )
+( game )
 
   \ : ENOUGH?  ( -- f )  \ XXX OLD -- not used
   \   \ No more rounds?
-  \   WHITE INK  ANOTHER?$ 12 |LINETYPE|  NO?  ;
+  \   white ink  ANOTHER?$ 12 |linetype|  no?  ;
 
-: -SCORES  ( -- )
+: -scores  ( -- )
   \ Reset all scores.
-  PLAYERS 0 DO  I PLAYER!  PLAYER-SCORE OFF  LOOP  ;
+  players 0 do  i player!  player-score off  loop  ;
 
-: GAME-INIT  ( -- )
+: game-init  ( -- )
   \ Init the game.
-  CLS0 -SCORES ARENA SAVE-ARENA  SOUND? @ SOUND  ;
+  cls0 -scores arena save-arena  sound? @ sound  ;
 
-: ?ROUND-END  ( f -- )
+: ?round-end  ( f -- )
   \ XXX TMP
-  ?EXIT  AKEY DROP  ;
+  ?exit  akey drop  ;
 
-: GAME  ( -- )
+: game  ( -- )
   \ Game loop.
-  GAME-INIT BEGIN  ROUND DUP 0= ?ROUND-END  UNTIL  PAGE   ;
+  game-init begin  round dup 0= ?round-end  until  page   ;
 
   \ Init the players' controls. By default, only player 0 is
   \ human. Their type (human or robot) is already set in the
   \ data module, but their controls have to be init here,
   \ when `RUDDER` and `AUTOPILOT` have been defined.
 
-   ' RUDDER CFA CONTROL0 !
-' AUTOPILOT CFA CONTROL1 !
-' AUTOPILOT CFA CONTROL2 !
+   ' rudder cfa control0 !
+' autopilot cfa control1 !
+' autopilot cfa control2 !
 
   \ vim: filetype=abersoftforthafera

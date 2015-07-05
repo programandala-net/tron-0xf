@@ -27,174 +27,174 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-16384 CONSTANT SYS-SCREEN  \ address of the screen
-6912 CONSTANT /SYS-SCREEN  \ bytes of the screen
-6144 CONSTANT /SYS-SCREEN-BITMAP  \ bytes of the screen bitmap
+16384 constant sys-screen  \ address of the screen
+6912 constant /sys-screen  \ bytes of the screen
+6144 constant /sys-screen-bitmap  \ bytes of the screen bitmap
 
-: SAVE-DISPLAY  ( -- )
+: save-display  ( -- )
   \ Save a copy of the whole display image
   \ to screen 2 of the Forth RAM disk.
-  SYS-SCREEN [ 2 DISC-SCR ] LITERAL /SYS-SCREEN CMOVE  ;
+  sys-screen [ 2 disc-scr ] literal /sys-screen cmove  ;
 
-: RESTORE-DISPLAY  ( -- )
+: restore-display  ( -- )
   \ Save the copy of the whole display image
   \ from screen 2 of the Forth RAM disk.
-  [ 2 DISC-SCR ] LITERAL SYS-SCREEN /SYS-SCREEN CMOVE  ;
+  [ 2 disc-scr ] literal sys-screen /sys-screen cmove  ;
 
-2 10 THRU
+2 10 thru
 
 ( Font)
 
   \ The game fonts are loaded from tape at the end of the
   \ compilation. Words are defined to switch them on and off:
 
-  768 CONSTANT /FONT  \ size in bytes
+  768 constant /font  \ size in bytes
   \ Screen 9 of the Forth RAM disk is used to store the font.
-9 DISC-SCR CONSTANT FONT
+9 disc-scr constant font
 
   \ Set the game font:
-: +FONT  ( -- )  [ FONT 256 - ] LITERAL SYS-CHARS ! ;
+: +font  ( -- )  [ font 256 - ] literal sys-chars ! ;
 
   \ Set the ROM font:
-: -FONT  ( -- )  15360 SYS-CHARS ! ;
+: -font  ( -- )  15360 sys-chars ! ;
   
   \ Double height digits are used to print the scores.  They
-  \ are hold in a bank of 20 UDG. The first 10 UDG are the top
-  \ halves of the digits, the second 10 UDG are the bottom
+  \ are hold in a bank of 20 UDG. The first 10 udg are the top
+  \ halves of the digits, the second 10 udg are the bottom
   \ halves.  Every set is switched instead of the game font
   \ when needed.
 
-10 2 * 8 * CONSTANT /DIGITS-UDG  \ size in bytes
-  \ /DIGITS-UDG BUFFER: DIGITS-UDG  \ XXX OLD
+10 2 * 8 * constant /digits-udg  \ size in bytes
+  \ /digits-udg buffer: digits-udg  \ XXX OLD
   \ The unused space above `HI` is used:
-HI 1+ CONSTANT DIGITS-UDG
+hi 1+ constant digits-udg
 
-: DIGITS>CHARS  ( a1 -- a2 )
-  \ Convert the address of UDG digits to the address of a fake
+: digits>chars  ( a1 -- a2 )
+  \ Convert the address of udg digits to the address of a fake
   \ font that contains those digits.
-  [CHAR] 0 BL - 8 * -  256 -  ;
+  [char] 0 bl - 8 * -  256 -  ;
 
-: +HI-DIGITS  ( -- )
+: +hi-digits  ( -- )
   \ Set the high part of the double height digits
   \ as the current font.
-  [ DIGITS-UDG DIGITS>CHARS ] LITERAL
-  SYS-CHARS ! ;
+  [ digits-udg digits>chars ] literal
+  sys-chars ! ;
 
-: +LO-DIGITS  ( -- )
+: +lo-digits  ( -- )
   \ Set the low part of the double height digits
   \ as the current font.
-  [ DIGITS-UDG /DIGITS-UDG 2 / +  DIGITS>CHARS ] LITERAL
-  SYS-CHARS ! ;
+  [ digits-udg /digits-udg 2 / +  digits>chars ] literal
+  sys-chars ! ;
 
-( UDG fonts)
+( udg fonts)
 
   \ User Defined Graphics are used for the Spanish and
   \ Esperanto characters. Two banks are used. They are loaded
   \ from tape at the end of the compilation. The correspondent
-  \ UDG bank is switched when the user changes the language in
+  \ udg bank is switched when the user changes the language in
   \ the game menu.
 
-SYS-UDG @ CONSTANT UDG0  \ address of the default UDG bank
+sys-udg @ constant udg0  \ address of the default udg bank
 
-  \ UDG bank for the Esperanto letters.
-12 8 * CONSTANT /EO-UDG  \ size in bytes
-  \ /EO-UDG BUFFER: EO-UDG  \ XXX OLD
+  \ udg bank for the Esperanto letters.
+12 8 * constant /eo-udg  \ size in bytes
+  \ /eo-udg buffer: eo-udg  \ XXX OLD
   \ The unused space above `HI` is used:
-DIGITS-UDG /DIGITS-UDG + CONSTANT EO-UDG
+digits-udg /digits-udg + constant eo-udg
 
-  \ UDG bank for the Spanish letters and characters.
-18 8 * CONSTANT /ES-UDG  \ size in bytes
-  \ /ES-UDG BUFFER: ES-UDG
+  \ udg bank for the Spanish letters and characters.
+18 8 * constant /es-udg  \ size in bytes
+  \ /es-udg buffer: es-udg
   \ The unused space above `HI` is used:
-EO-UDG /EO-UDG + CONSTANT ES-UDG
+eo-udg /eo-udg + constant es-udg
 
-HERE: UDG-BANK
-  \ Addresses of the UDG banks used for every language.
-  UDG0 , EO-UDG , ES-UDG ,
+here: udg-bank
+  \ Addresses of the udg banks used for every language.
+  udg0 , eo-udg , es-udg ,
 
-: +UDG  ( n -- )
-  \ Set the UDG bank required by the given language number.
-  CELLS UDG-BANK + @ SYS-UDG !  ;
+: +udg  ( n -- )
+  \ Set the udg bank required by the given language number.
+  cells udg-bank + @ sys-udg !  ;
 
-: -UDG  ( -- )
-  \ Set the default UDG bank.
+: -udg  ( -- )
+  \ Set the default udg bank.
   \ It contains the frame graphs.
-  0 +UDG  ;
+  0 +udg  ;
   
 ( Screen -- generic)
 
-: COLORS0  ( -- )
+: colors0  ( -- )
   \ Set the default colors.
-  BLACK PAPER  WHITE INK  BLACK BORDER
-  0 FLASH  0 BRIGHT  0 INVERSE  0 GOVER  ;
+  black paper  white ink  black border
+  0 flash  0 bright  0 inverse  0 gover  ;
 
-: CLS0  ( -- )
+: cls0  ( -- )
   \ Clear the screen with the default colors.
-  COLORS0 CLS  ;
+  colors0 cls  ;
 
-: BLACKOUT  ( -- )
+: blackout  ( -- )
   \ Erase the whole display,
   \ both the bitmap and the attributes
   \ (what means black ink and black paper).
-  SYS-SCREEN /SYS-SCREEN ERASE  ;
+  sys-screen /sys-screen erase  ;
 
   \ Size of the screen:
-32 CONSTANT COLS
-24 CONSTANT LINES
+32 constant cols
+24 constant lines
 
   \ Size of the game arena (inside its frame):
-COLS 2 - CONSTANT ARENA-COLS
-LINES 4 - CONSTANT ARENA-LINES
+cols 2 - constant arena-cols
+lines 4 - constant arena-lines
 
   \ Attributes addresses of the arena frame:
-ATTRIBUTES CONSTANT TOP-FRAME-ATTRIBUTES
-ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
+attributes constant top-frame-attributes
+attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Center justified texts and title )
 
   \ XXX OLD
-  \ : HOME  ( -- )  0 DUP AT  ;
+  \ : HOME  ( -- )  0 dup at  ;
 
-: CENTERED  ( len -- column )
+: centered  ( len -- column )
   \ Convert a string length to the column required
   \ to print the string centered.
-  COLS SWAP - 2 /  ;
+  cols swap - 2 /  ;
 
-: |AT|  ( line len -- )
+: |at|  ( line len -- )
   \ Put the cursor on the given line, at the column
   \ required to center a text of the given length.
-  CENTERED AT  ;
+  centered at  ;
 
   \ Type spaces centered on a given line.
-: |LINESPACES|  ( len line -- )  OVER |AT| SPACES  ;
+: |linespaces|  ( len line -- )  over |at| spaces  ;
 
   \ Type a string centered on a given line.
-: |LINETYPE|  ( ca len line -- )  OVER |AT| TYPE  ;
+: |linetype|  ( ca len line -- )  over |at| type  ;
 
   \ Type a string centered on the last line.
-: REMARK  ( ca len -- )  [ LINES 1- ] LITERAL |LINETYPE|  ;
+: remark  ( ca len -- )  [ lines 1- ] literal |linetype|  ;
 
   \ Move the cursor position to the given column
   \ of the current line.
-: AT-COL  ( col -- )  AT@ DROP SWAP AT  ;
+: at-col  ( col -- )  AT@ drop swap at  ;
 
   \ XXX OLD
   \ : |TYPE|  ( ca len -- )
   \   \ Type a string centered on the current line.
-  \   DUP CENTERED AT-COL TYPE  ;
+  \   dup centered at-col type  ;
 
   \ The last two screens (10..11) of the Forth RAM disk
   \ are used to store the graphic of the title, that 
   \ ocuppies exactly 2 KiB, one third of the bitmap:
-10 DISC-SCR CONSTANT TITLE-ADDRESS
+10 disc-scr constant title-address
 
-: TITLE  ( -- )
+: title  ( -- )
   \ Show the main title, copying its graphic to the screen
   \ and setting its color attributes.
   \ The graphic ocuppies the first third of the screen
   \ (2048 bytes of bitmap and 256 bytes of color attributes).
-  TITLE-ADDRESS SYS-SCREEN 2048 CMOVE
-  22528 256 RED FILL  ;
+  title-address sys-screen 2048 cmove
+  22528 256 red fill  ;
 
 ( Contents zone )
 
@@ -202,148 +202,148 @@ ATTRIBUTES COLS LINES 3 - * + CONSTANT BOTTOM-FRAME-ATTRIBUTES
   \ is used for menus, configuration and information
   \ (instructions, about, etc.).
 
-8 CONSTANT CONTENTS-LINE  \ first usable line
+8 constant contents-line  \ first usable line
 
   \ Set ink color and print position ready for new contents.
-: AT-CONTENTS  ( -- )  CONTENTS-LINE 0 AT  BLACK INK  ;
+: at-contents  ( -- )  contents-line 0 at  black ink  ;
 
   \ Start a new contents page.
-: PAGE  ( -- )  BLACKOUT TITLE  AT-CONTENTS  ;
+: page  ( -- )  blackout title  at-contents  ;
 
   \ Calculate the screen attributes zone of the contents zone.
-CONTENTS-LINE COLS *  \ bytes to skip
-ATTRIBUTES OVER +  /ATTRIBUTES ROT -  ( a len )
-  2CONSTANT CONTENTS-ATTRIBUTES
+contents-line cols *  \ bytes to skip
+attributes over +  /attributes rot -  ( a len )
+  2constant contents-attributes
 
   \ Calculate the screen bitmap zone of the contents zone.
-CONTENTS-LINE COLS * 8 *  \ bytes to skip (8 scans/char)
-SYS-SCREEN OVER +  /SYS-SCREEN-BITMAP ROT - ( a len )
-  2CONSTANT CONTENTS-BITMAP
+contents-line cols * 8 *  \ bytes to skip (8 scans/char)
+sys-screen over +  /sys-screen-bitmap rot - ( a len )
+  2constant contents-bitmap
 
-: WIPE-CONTENTS  ( -- )
+: wipe-contents  ( -- )
   \ Erase the screen attributes of the contents zone (what
   \ equals black ink and black paper), position the cursor at
   \ the start of the zone and set black ink for the text to be
   \ printed.  This is used to clear the menu and other pages
   \ without deleting the title header, and hidding the new
   \ contents until they are fully printed.
-  CONTENTS-ATTRIBUTES ERASE  CONTENTS-BITMAP ERASE
-  AT-CONTENTS  ;
+  contents-attributes erase  contents-bitmap erase
+  at-contents  ;
 
-: REVEAL-CONTENTS  ( -- )
+: reveal-contents  ( -- )
   \ Set the screen attributes of the contents zone to the
   \ normal values (white ink).  This is used to show the menu
   \ and other pages instantaneously after updating them.
-  CONTENTS-ATTRIBUTES WHITE FILL  ;
+  contents-attributes white fill  ;
 
 ( Status bar)
 
-22 CONSTANT STATUS-LINE
+22 constant status-line
 
   \ XXX OLD -- version with normal characters
   \ : SCORE. ( a color line column -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits.
-  \ AT INK @ S->D <# # # # #> TYPE  ;
-: (.SCORE) ( a1 column a2 -- )
+  \ at ink @ s->d <# # # # #> type  ;
+: (.score) ( a1 column a2 -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits and double height characters.
   \ a1 = score
   \ a2 = color
-  @ INK >R
-  STATUS-LINE R AT  @ S->D <# # # # #> 2DUP +HI-DIGITS TYPE
-  STATUS-LINE 1+ R> AT  +LO-DIGITS TYPE +FONT  ;
+  @ ink >r
+  status-line r at  @ s->d <# # # # #> 2dup +hi-digits type
+  status-line 1+ r> at  +lo-digits type +font  ;
 
-HERE: SCORE-COLUMN-TABLE
+here: score-column-table
   \ Columns of the scores on the status bar.
-  1 C, 28 C, 14 C,
+  1 c, 28 c, 14 c,
 
-: SCORE-COLUMN  ( -- column )
+: score-column  ( -- column )
   \ Column of the current player's score.
-  PLAYER SCORE-COLUMN-TABLE + C@  ;
+  player score-column-table + C@  ;
 
-: .SCORE  ( -- )
+: .score  ( -- )
   \ Print the the current player's score.
-  PLAYER-SCORE SCORE-COLUMN PLAYER-COLOR (.SCORE)  ;
+  player-score score-column player-color (.score)  ;
 
-: STATUS  ( -- )
+: status  ( -- )
   \ Show the status bar.
   \ XXX TODO improve (now it shows only the scores)
-  PLAYERS 0 DO  I PLAYER! .SCORE  LOOP  ;
+  players 0 do  i player! .score  loop  ;
 
-( COLOR-FRAME )
+( color-frame )
 
-RED BLACK PAPERY + CONSTANT FRAME-COLOR
+red black papery + constant frame-color
 
-: FRAME-BAR  ( a -- )  COLS FRAME-COLOR FILL  ;
+: frame-bar  ( a -- )  cols frame-color fill  ;
 
-: COLOR-FRAME  ( -- )
+: color-frame  ( -- )
 
   \ Color the arena frame.
 
-  TOP-FRAME-ATTRIBUTES FRAME-BAR  \ top part
-  BOTTOM-FRAME-ATTRIBUTES FRAME-BAR  \ bottom part
+  top-frame-attributes frame-bar  \ top part
+  bottom-frame-attributes frame-bar  \ bottom part
   \ Left and right parts:
-  BOTTOM-FRAME-ATTRIBUTES TOP-FRAME-ATTRIBUTES DO
-    FRAME-COLOR DUP I C!  I [ COLS 1 - ] LITERAL + C!
-  COLS +LOOP  ;
+  bottom-frame-attributes top-frame-attributes do
+    frame-color dup i c!  i [ cols 1 - ] literal + c!
+  cols +loop  ;
 
-( DRAW-FRAME FRAME )
+( draw-frame frame )
 
-: DRAW-FRAME  ( -- )
+: draw-frame  ( -- )
 
   \ Draw the arena frame.
 
   \ Corners.
-  0  0 AT 145 EMIT   0 31 AT 146 EMIT
-  21 0 AT 144 EMIT  21 31 AT 147 EMIT
+  0  0 at 145 emit   0 31 at 146 emit
+  21 0 at 144 emit  21 31 at 147 emit
 
   \ Horizontal sides.
-  31 1 DO  0 I AT 149 EMIT  21 I AT 151 EMIT  LOOP
+  31 1 do  0 i at 149 emit  21 i at 151 emit  loop
 
   \ Vertical sides.
-  21 1 DO  I 0 AT 148 EMIT  I 31 AT 150 EMIT  LOOP  ;
+  21 1 do  i 0 at 148 emit  i 31 at 150 emit  loop  ;
 
-: FRAME  ( -- )
+: frame  ( -- )
   \ Draw the arena frame.
-  -UDG BLACK INK DRAW-FRAME COLOR-FRAME  LANG @ +UDG  ;
+  -udg black ink draw-frame color-frame  lang +udg  ;
 
 ( Arena -- save, restore, clear, draw)
 
-: SAVE-ARENA  ( -- )
+: save-arena  ( -- )
   \ Save the attributes of the central zone of the arena
   \ (between the horizontal borders) to the first screen of
   \ the Forth RAM-disc.
-  [ TOP-FRAME-ATTRIBUTES COLS +
-    BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
-    LITERAL LO LITERAL CMOVE  ;
+  [ top-frame-attributes cols +
+    bottom-frame-attributes over - swap ]
+    literal lo literal cmove  ;
 
-: RESTORE-ARENA  ( -- )
+: restore-arena  ( -- )
   \ Restore the attributes of the central zone of the arena
   \ (between the horizontal borders) from the first screen of
   \ the Forth RAM-disc.
-  LO [ TOP-FRAME-ATTRIBUTES COLS +
-       BOTTOM-FRAME-ATTRIBUTES OVER - SWAP ]
-       LITERAL LITERAL CMOVE  ;
+  lo [ top-frame-attributes cols +
+       bottom-frame-attributes over - swap ]
+       literal literal cmove  ;
 
-: CLEAR-ARENA  ( -- )
+: clear-arena  ( -- )
 
   \ Clear only the game arena.
 
   \ First, hide the arena instantaneously by restoring the
   \ saved attributes:
-  RESTORE-ARENA
+  restore-arena
 
   \ Second, a slower process, actually clear the players'
   \ trails by overwritting the arena with spaces:
-  [ ARENA-LINES 1+ ] LITERAL 1 DO
-    I 1 AT [ COLS 2 - ] LITERAL  SPACES
-  LOOP  ;
+  [ arena-lines 1+ ] literal 1 do
+    i 1 at [ cols 2 - ] literal  spaces
+  loop  ;
 
-: ARENA  ( -- )
+: arena  ( -- )
   \ Draw the arena.
-  BLACKOUT FRAME SAVE-ARENA STATUS  ;
+  blackout frame save-arena status  ;
 
   \ vim: filetype=abersoftforthafera

@@ -28,113 +28,113 @@
   \ <http://gnu.org/licenses>.
 
   \ Max length of a player key description in any language:
-11 CONSTANT /KEY-DESC
+11 constant /key-desc
 
   \ Line of the top keys row in the redefine menu:
-CONTENTS-LINE 3 + CONSTANT KEYS-LINE
+contents-line 3 + constant keys-line
 
   \ Column of the key description:
-0 CONSTANT KEY-DESC-COL
+0 constant key-desc-col
 
-2 8 THRU
+2 8 thru
 
 ( Key descriptions )
 
-: +KEY-DESC-COL  ( ca len line -- ca len line col' )
+: +key-desc-col  ( ca len line -- ca len line col' )
   \ Relative column of a key description,
   \ depending on its length; it's relative to
   \ the absolute column of the key descriptions.
-  OVER /KEY-DESC SWAP -  ;
+  over /key-desc swap -  ;
 
-: (TYPE-KEY-DESC)  ( ca len line col -- )
+: (type-key-desc)  ( ca len line col -- )
   \ Print a key description, on the given line.
   \ col = columns from the left margin of its region.
-  KEY-DESC-COL + AT TYPE  ;
+  key-desc-col + at type  ;
 
-: |KEY-DESC|  ( ca len line -- )
+: |key-desc|  ( ca len line -- )
   \ XXX OLD -- not used
   \ Print a key description, on the given line,
   \ centered on its region.
-  +KEY-DESC-COL 2 / (TYPE-KEY-DESC)  ;
+  +key-desc-col 2 / (type-key-desc)  ;
 
-: |KEY-DESC  ( ca len line -- )
+: |key-desc  ( ca len line -- )
   \ Print a key description, on the given line,
   \ at the left of its region.
-  0 (TYPE-KEY-DESC)  ;
+  0 (type-key-desc)  ;
 
-: KEY-DESC|  ( ca len line -- )
+: key-desc|  ( ca len line -- )
   \ XXX OLD -- not used
   \ Print a key description, on the given line,
   \ at the right of its region.
-  OVER KEY-DESC-COL SWAP - (TYPE-KEY-DESC)  ;
+  over key-desc-col swap - (type-key-desc)  ;
   
 ( Key descriptions )
 
-HERE: KEY-DESCS
+here: key-descs
   \  This table contains the cfa of the four texts used
   \  to describe the player keys. When executed, they
   \  return a string in the current language.
-  ' UP$ CFA , ' DOWN$ CFA , ' LEFT$ CFA , ' RIGHT$ CFA ,
+  ' up$ cfa , ' down$ cfa , ' left$ cfa , ' right$ cfa ,
 
-: KEY-DESC  ( n -- ca len )
+: key-desc  ( n -- ca len )
   \ Get the n element from the `KEY-DESCS` table.
-  CELLS KEY-DESCS + @ EXECUTE  ;
+  cells key-descs + @ execute  ;
   
-: KEY.  ( line col a -- )
+: key.  ( line col a -- )
   \ Print a key name.
   \ line col = screen coordinates
   \ a = key address in the keys table
-  KEY-NAME 2SWAP AT TYPE  ;
+  key-name 2swap at type  ;
 
-: PLAYER-KEY.  ( line col a n -- )
+: player-key.  ( line col a n -- )
   \ Print a player key name.
   \ line col = screen coordinates
   \ a = player keys table
   \ n = key number in the table 
-  CELLS + @ KEY.  ;
+  cells + @ key.  ;
 
 ( Keys position)
 
-HERE: KEYS-COL-TABLE
+here: keys-col-table
   \ Columns of the player keys.
-  12 C, 20 C, 28 C,
+  12 c, 20 c, 28 c,
 
-: KEYS-COL  ( -- col )
+: keys-col  ( -- col )
   \ Column of the current player's keys.
-  PLAYER KEYS-COL-TABLE + C@  ;
+  player keys-col-table + C@  ;
 
-: KEY#>COORDS  ( n -- line col )
+: key#>coords  ( n -- line col )
   \ Convert a key number (0..3) of the current player
   \ to the key's cursor coordinates in the redefine menu.
-  KEYS-LINE + KEYS-COL ;
+  keys-line + keys-col ;
 
-: (KEY-PROMPT)  ( a n f -- )
+: (key-prompt)  ( a n f -- )
   \ a = player keys table
   \ n = key number in the table 
   \ f = flash?
-  FLASH DUP KEY#>COORDS 2SWAP PLAYER-KEY.  ;
+  flash dup key#>coords 2swap player-key.  ;
 
-: +KEY-PROMPT  ( a n -- )
+: +key-prompt  ( a n -- )
   \ a = player keys table
   \ n = key number in the table 
-  1 (KEY-PROMPT) 0 FLASH  ;
+  1 (key-prompt) 0 flash  ;
 
-: -KEY-PROMPT  ( a n -- )
+: -key-prompt  ( a n -- )
   \ a = player keys table
   \ n = key number in the table 
-  0 (KEY-PROMPT)  ;
+  0 (key-prompt)  ;
 
 ( Redefine keys )
 
-: (REDEFINE)  ( -- f )
+: (redefine)  ( -- f )
   \ Redefine the keys of the current player.
   \ f = quit redefining?
-  FALSE  \ default return flag
-  KEYS/PLAYER 0 DO
-    PLAYER-KEYS I +KEY-PROMPT  512 MS PRESSED  ( a | ff )
-    -DUP 0= IF  -KEY-PROMPT UNLOOP 0= EXIT  THEN
-    DUP PLAYER-KEYS I CELLS + !  I KEY#>COORDS ROT KEY. SPACE
-  LOOP  ;
+  false  \ default return flag
+  keys/player 0 do
+    player-keys i +key-prompt  512 ms pressed  ( a | ff )
+    -dup 0= if  -key-prompt unloop 0= exit  then
+    dup player-keys i cells + !  i key#>coords rot key. space
+  loop  ;
 
 ( Print current player )
 
@@ -142,62 +142,62 @@ HERE: KEYS-COL-TABLE
   \ : PLAYER#$  ( -- ca len )
   \   \ The word "Player" in the current language,
   \   \ with the current player number added.
-  \   PLAYER$ S"  " S+ PLAYER 1+ S->D <# #S #> S+  ;
+  \   player$ s"  " s+ player 1+ s->d <# #s #> s+  ;
 
-: .PLAYER  ( -- )
+: .player  ( -- )
 
   \ Print the current player, centered over the keys column.
 
   \ First the word "Player" in the current language:
   \ XXX OLD
-  \ PLAYER$ KEYS-COL OVER 2 / - KEYS-LINE 3 - SWAP AT TYPE
+  \ player$ keys-col over 2 / - keys-line 3 - swap at type
 
   \ Then the player number, one line above:
-  KEYS-LINE 2- KEYS-COL AT PLAYER .  ;
+  keys-line 2- keys-col at player .  ;
 
 ( Redefine keys menu )
 
-: REDEFINE-MENU-KEY  ( n -- )
+: redefine-menu-key  ( n -- )
   \ Show a key of the redefine keys menu, for the 'n' key of
   \ the current player.
-  DUP >R KEYS-LINE + KEYS-COL PLAYER-KEYS R> PLAYER-KEY.  ;
+  dup >r keys-line + keys-col player-keys r> player-key.  ;
 
-: REDEFINE-MENU-COLUMN  ( n -- )
+: redefine-menu-column  ( n -- )
   \ Show a column of the redefine keys menu, for the player
   \ number 'n'.
   \ Blue color is used for inactive players, if any.
 
-  DUP PLAYER!  
+  dup player!  
 
-  DUP PLAYERS < BLUE + INK .PLAYER  \ active: red; else blue
+  dup players < blue + ink .player  \ active: red; else blue
 
-  PLAYERS < WHITE * BLUE MAX INK  \ active: white; else blue
-  KEYS/PLAYER 0 DO  I REDEFINE-MENU-KEY  LOOP  ;
+  players < white * blue max ink  \ active: white; else blue
+  keys/player 0 do  i redefine-menu-key  loop  ;
 
-: REDEFINE-MENU  ( -- )
+: redefine-menu  ( -- )
   \ Show the redefine keys menu.
-  WIPE-CONTENTS  RED INK
-  PLAYER$ KEYS-LINE 2- 0 AT TYPE
+  wipe-contents  red ink
+  player$ keys-line 2- 0 at type
   \ Names of the keys at the left.
-  KEYS/PLAYER 0 DO  I KEY-DESC KEYS-LINE I + |KEY-DESC  LOOP
+  keys/player 0 do  i key-desc keys-line i + |key-desc  loop
   \ A column for every active player.
-  PLAYERS 0 DO  I REDEFINE-MENU-COLUMN  LOOP
+  players 0 do  i redefine-menu-column  loop
   \ A column for every inactive player.
-  MAX-PLAYERS PLAYERS 2DUP - IF
-    DO  I REDEFINE-MENU-COLUMN  LOOP
-  ELSE  2DROP  THEN  ;
+  max-players players 2dup - if
+    do  i redefine-menu-column  loop
+  else  2drop  then  ;
 
 ( Redefine keys )
 
-: REDEFINE  ( -- )
+: redefine  ( -- )
   \ Redefine the keys of all active players.
-  WHITE INK
-  PLAYERS 0 DO  I PLAYER! (REDEFINE) IF  LEAVE  THEN  LOOP  ;
+  white ink
+  players 0 do  i player! (redefine) if  leave  then  loop  ;
 
-: CONFIGURATION  ( -- )
+: configuration  ( -- )
   \ Redefine the keys.
   \ XXX TODO -- human/machine options
-  REDEFINE-MENU
-  BEGIN  REDEFINE  DO-CHANGE? 0=  UNTIL  WIPE-CONTENTS  ;
+  redefine-menu
+  begin  redefine  do-change? 0=  until  wipe-contents  ;
 
   \ vim: filetype=abersoftforthafera

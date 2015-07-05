@@ -27,18 +27,18 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-DEFER ?BLEEP  ( n1 n2 -- )
+defer ?bleep  ( n1 n2 -- )
 
-: SOUND  ( f -- )
+: sound  ( f -- )
   \ Turn the sound on or off, depending on the 'f' flag.
-  IF  ' BLEEP ELSE  ' 2DROP  THEN  ' ?BLEEP DEFER!  ;
+  if  ' bleep else  ' 2drop  then  ' ?bleep defer!  ;
 
-TRUE VARIABLE SOUND?  \ status of the sound, on or off
-SOUND? @ SOUND        \ set default
+true variable sound?  \ status of the sound, on or off
+sound? @ sound        \ set default
 
-: KEY-SOUND  ( -- )
+: key-sound  ( -- )
   \ Sound used when a key is pressed, except during the game.
   \ XXX TODO
-  100 50 DO  11 I ?BLEEP  LOOP  ;
+  100 50 do  11 i ?bleep  loop  ;
 
   \ vim: filetype=abersoftforthafera

@@ -27,7 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 5 THRU
+2 5 thru
   
 ( Paint )
 
@@ -37,60 +37,60 @@
   \ instead ROM 22DF, but it's not enough:
   \ 22E5 7F7F !
 
-: PAINT  ( -- )
-  PLAYER-COLOR @ INK PLAYER-XC @ PLAYER-YC @ PLOT  ;
+: paint  ( -- )
+  player-color @ ink player-xc @ player-yc @ plot  ;
 
 ( Crash effect )
 
-: COORDS>CURSOR  ( x y -- line col )  \ XXX OLD -- not used
+: coords>cursor  ( x y -- line col )  \ XXX OLD -- not used
   \ Convert graphic coordinates to line and column.
-  175 SWAP - 8 / SWAP 8 /  ;
+  175 swap - 8 / swap 8 /  ;
 
-: CRASH-NOISE  ( -- )
+: crash-noise  ( -- )
   \ XXX TODO
-  100 50 DO  11 I ?BLEEP  LOOP  ;
+  100 50 do  11 i ?bleep  loop  ;
 
-: CRASH  ( -- )
+: crash  ( -- )
   \ XXX TODO
-  CRASH-NOISE  ;
+  crash-noise  ;
 
 ( Noise )
 
   \ XXX OLD
-\ HERE: MOTOR-NOISES
+\ here: MOTOR-NOISES
 \  \ Table of `BLEEP` parameters for every player.
 \  0 1 , ,  100 1 , ,  200 1 , ,
 
-: MOTOR-NOISE  ( -- )
-  \ Do the motor noise of the current player.
-  \ PLAYER [ 2 CELLS ] LITERAL * MOTOR-NOISES + 2@
-  1 0 ?BLEEP  ;
+: motor-noise  ( -- )
+  \ do the motor noise of the current player.
+  \ player [ 2 cells ] literal * MOTOR-NOISES + 2@
+  1 0 ?bleep  ;
 
 ( Collisions )
 
-999 CONSTANT MAX-SCORE
+999 constant max-score
 
-: SCORE!   ( n a -- )
+: score!   ( n a -- )
   \ Update the score stored in 'a' with 'n';
   \ if the result is greater than the maximum score,
   \ reset the score to zero.
-  DUP @ ROT + DUP MAX-SCORE > IF  0=  THEN  SWAP !  ;
+  dup @ rot + dup max-score > if  0=  then  swap !  ;
 
-: SCORE+  ( n -- )
-  PLAYER-SCORE SCORE! .SCORE  ;
+: score+  ( n -- )
+  player-score score! .score  ;
 
-: CRASH?  ( -- f )
+: crash?  ( -- f )
   \ Is the next position occupied?
-  PLAYER-XINC @ PLAYER-XC @ +
-  \ DUP 0 0 AT .  \  XXX INFORMER
-  PLAYER-YINC @ PLAYER-YC @ +
-  \ DUP 0 15 AT .  \  XXX INFORMER
-  POINT
-  \ DUP IF  1 0 AT QUIT  THEN  \  XXX INFORMER
+  player-xinc @ player-xc @ +
+  \ dup 0 0 at .  \  XXX INFORMER
+  player-yinc @ player-yc @ +
+  \ dup 0 15 at .  \  XXX INFORMER
+  point
+  \ dup if  1 0 at quit  then  \  XXX INFORMER
   ;
 
-: +SCORES  ( -- )
+: +scores  ( -- )
   \ Increase the score of the players that didn't crash.
-  PLAYERS 0 DO  I PLAYER! CRASH? 0= SCORE+  LOOP  ;
+  players 0 do  i player! crash? 0= score+  loop  ;
 
   \ vim: filetype=abersoftforthafera
