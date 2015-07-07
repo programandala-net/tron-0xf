@@ -53,7 +53,7 @@ here: menu-options
   \ localized texts of the menu options.
 
   ' option-0$ cfa ,   ' option-1$ cfa ,
-  , ,  \ options 2 and 3 created with `:NONAME` above
+  , ,  \ options 2 and 3 created with `:noname` above
   ' option-4$ cfa ,  ' option-5$ cfa ,
   ' option-6$ cfa ,   ' option-7$ cfa ,
 
@@ -99,7 +99,7 @@ here: menu-commands
   \ Every command must leave the screen ready to print the
   \ menu: commands that use the whole screen must call `PAGE`;
   \ commands that use only the contents zone must call
-  \ `WIPE-CONTENTS` (or `MORE`, that calls it); commands that
+  \ `wipe-contents` (or `MORE`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
   ' change-language cfa ,
@@ -119,14 +119,14 @@ here: menu-commands
 
 : initial!  ( n c -- )
   \ Store char 'c' into the 'n' position of the
-  \ `MENU-KEYS` table.
+  \ `menu-keys` table.
   swap menu-keys + c!  ;
 
 : option-initial  ( ca n -- )
   \ Print the initial of the menu option number n,
   \ stored in the given address, and also store it
-  \ into the `MENU-KEYS` table.
-  swap C@ upperc dup initial. initial!  ;
+  \ into the `menu-keys` table.
+  swap c@ upperc dup initial. initial!  ;
 
 : option>line  (  n -- line )
   \ Convert a menu option number to its line.
@@ -167,7 +167,7 @@ here: menu-commands
   upperc
   false swap  \ default exit flag
   options 0 do
-    dup menu-keys i + C@ =  \ valid key?
+    dup menu-keys i + c@ =  \ valid key?
     if  2drop menu-commands i cells + @ true dup leave  then
   loop  drop  ;
 

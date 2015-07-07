@@ -98,7 +98,7 @@
 
 here: keys
 
-  \ Every element of the `KEYS` table 
+  \ Every element of the `keys` table 
   \ has the following structure:
 
   \ +0 = port of the keyboard row (2 bytes)
@@ -193,19 +193,19 @@ decimal
 
 : key-name  ( a -- ca len )
   \ Convert a key identifier to its key name.
-  \ a = key address in the `KEYS` table
+  \ a = key address in the `keys` table
   4 + @ dup 256 u< if  c>s  else  2c>s  then  ;
 
 ( pressed? pressed )
 
 : pressed?  ( a -- f )
   \ Is a key pressed?
-  \ a = key address in the `KEYS` table
+  \ a = key address in the `keys` table
   2@ inp and 0=  ;
 
 : (pressed)  ( -- a tf | ff tf | ff )
   \ Check all keys.
-  \ If a key is pressed, return its address in the `KEYS` table
+  \ If a key is pressed, return its address in the `keys` table
   \ and a true flag; if "Break" is pressed, return a false flag
   \ and a true flag; else return a false flag.
   false  \ default
@@ -218,9 +218,9 @@ decimal
   \ Check all keys forever until one of them,
   \ or the "Break" key, is pressed.
   \ If a valid key was pressed, return its address
-  \ in the `KEYS` table; if the "Break" key was pressed,
+  \ in the `keys` table; if the "Break" key was pressed,
   \ return a false flag.
-  \ a = address in the `KEYS` table
+  \ a = address in the `keys` table
   begin  (pressed)  until  ;
 
   \ vim: filetype=abersoftforthafera

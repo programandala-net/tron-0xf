@@ -66,7 +66,7 @@
 
 10 2 * 8 * constant /digits-udg  \ size in bytes
   \ /digits-udg buffer: digits-udg  \ XXX OLD
-  \ The unused space above `HI` is used:
+  \ The unused space above `hi` is used:
 hi 1+ constant digits-udg
 
 : digits>chars  ( a1 -- a2 )
@@ -99,13 +99,13 @@ sys-udg @ constant udg0  \ address of the default udg bank
   \ udg bank for the Esperanto letters.
 12 8 * constant /eo-udg  \ size in bytes
   \ /eo-udg buffer: eo-udg  \ XXX OLD
-  \ The unused space above `HI` is used:
+  \ The unused space above `hi` is used:
 digits-udg /digits-udg + constant eo-udg
 
   \ udg bank for the Spanish letters and characters.
 18 8 * constant /es-udg  \ size in bytes
   \ /es-udg buffer: es-udg
-  \ The unused space above `HI` is used:
+  \ The unused space above `hi` is used:
 eo-udg /eo-udg + constant es-udg
 
 here: udg-bank
@@ -123,14 +123,13 @@ here: udg-bank
   
 ( Screen -- generic)
 
-: colors0  ( -- )
+: tron-colors  ( -- )
   \ Set the default colors.
   black paper  white ink  black border
   0 flash  0 bright  0 inverse  0 gover  ;
 
-: cls0  ( -- )
-  \ Clear the screen with the default colors.
-  colors0 cls  ;
+  \ Patch `colors0`.
+' tron-colors cfa ' colors0 !
 
 : blackout  ( -- )
   \ Erase the whole display,
@@ -262,7 +261,7 @@ here: score-column-table
 
 : score-column  ( -- column )
   \ Column of the current player's score.
-  player score-column-table + C@  ;
+  player score-column-table + c@  ;
 
 : .score  ( -- )
   \ Print the the current player's score.

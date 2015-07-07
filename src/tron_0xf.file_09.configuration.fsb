@@ -31,7 +31,7 @@
 11 constant /key-desc
 
   \ Line of the top keys row in the redefine menu:
-contents-line 3 + constant keys-line
+contents-line 6 + constant keys-line
 
   \ Column of the key description:
 0 constant key-desc-col
@@ -51,22 +51,22 @@ contents-line 3 + constant keys-line
   \ col = columns from the left margin of its region.
   key-desc-col + at type  ;
 
-: |key-desc|  ( ca len line -- )
   \ XXX OLD -- not used
-  \ Print a key description, on the given line,
-  \ centered on its region.
-  +key-desc-col 2 / (type-key-desc)  ;
+  \ : |key-desc|  ( ca len line -- )
+  \   \ Print a key description, on the given line,
+  \   \ centered on its region.
+  \   +key-desc-col 2 / (type-key-desc)  ;
 
 : |key-desc  ( ca len line -- )
   \ Print a key description, on the given line,
   \ at the left of its region.
   0 (type-key-desc)  ;
 
-: key-desc|  ( ca len line -- )
   \ XXX OLD -- not used
-  \ Print a key description, on the given line,
-  \ at the right of its region.
-  over key-desc-col swap - (type-key-desc)  ;
+  \ : key-desc|  ( ca len line -- )
+  \   \ Print a key description, on the given line,
+  \   \ at the right of its region.
+  \   over key-desc-col swap - (type-key-desc)  ;
   
 ( Key descriptions )
 
@@ -77,7 +77,7 @@ here: key-descs
   ' up$ cfa , ' down$ cfa , ' left$ cfa , ' right$ cfa ,
 
 : key-desc  ( n -- ca len )
-  \ Get the n element from the `KEY-DESCS` table.
+  \ Get the n element from the `key-descs` table.
   cells key-descs + @ execute  ;
   
 : key.  ( line col a -- )
@@ -101,25 +101,28 @@ here: keys-col-table
 
 : keys-col  ( -- col )
   \ Column of the current player's keys.
-  player keys-col-table + C@  ;
+  player keys-col-table + c@  ;
 
 : key#>coords  ( n -- line col )
   \ Convert a key number (0..3) of the current player
-  \ to the key's cursor coordinates in the redefine menu.
+  \ to the cursor coordinates of the key in the redefine menu.
   keys-line + keys-col ;
 
 : (key-prompt)  ( a n f -- )
+  \ Activate or deactivate the prompt of a redefined key.
   \ a = player keys table
   \ n = key number in the table 
   \ f = flash?
   flash dup key#>coords 2swap player-key.  ;
 
 : +key-prompt  ( a n -- )
+  \ Activate the prompt of the key to be redefined.
   \ a = player keys table
   \ n = key number in the table 
   1 (key-prompt) 0 flash  ;
 
 : -key-prompt  ( a n -- )
+  \ Deactivate the prompt of the key just redefined.
   \ a = player keys table
   \ n = key number in the table 
   0 (key-prompt)  ;
@@ -136,6 +139,11 @@ here: keys-col-table
     dup player-keys i cells + !  i key#>coords rot key. space
   loop  ;
 
+: redefine  ( -- )
+  \ Redefine the keys of all active players.
+  white ink
+  players 0 do  i player! (redefine) if  leave  then  loop  ;
+
 ( Print current player )
 
   \ XXX OLD
@@ -145,14 +153,7 @@ here: keys-col-table
   \   player$ s"  " s+ player 1+ s->d <# #s #> s+  ;
 
 : .player  ( -- )
-
-  \ Print the current player, centered over the keys column.
-
-  \ First the word "Player" in the current language:
-  \ XXX OLD
-  \ player$ keys-col over 2 / - keys-line 3 - swap at type
-
-  \ Then the player number, one line above:
+  \ Print the current player, centered above the keys column.
   keys-line 2- keys-col at player .  ;
 
 ( Redefine keys menu )
@@ -169,10 +170,14 @@ here: keys-col-table
 
   dup player!  
 
-  dup players < blue + ink .player  \ active: red; else blue
+  \ XXX OLD
+  \ dup players < blue + ink .player  \ active: red; else blue
 
-  players < white * blue max ink  \ active: white; else blue
-  keys/player 0 do  i redefine-menu-key  loop  ;
+  players <  if  red ink .player  white ink  \ XXX NEW
+    \ XXX OLD
+    \ players < white * blue max ink  \ active: white; else blue
+    keys/player 0 do  i redefine-menu-key  loop  then
+  ;
 
 : redefine-menu  ( -- )
   \ Show the redefine keys menu.
@@ -188,11 +193,6 @@ here: keys-col-table
   else  2drop  then  ;
 
 ( Redefine keys )
-
-: redefine  ( -- )
-  \ Redefine the keys of all active players.
-  white ink
-  players 0 do  i player! (redefine) if  leave  then  loop  ;
 
 : configuration  ( -- )
   \ Redefine the keys.

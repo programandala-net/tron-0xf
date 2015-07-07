@@ -31,7 +31,7 @@ defer ?bleep  ( n1 n2 -- )
 
 : sound  ( f -- )
   \ Turn the sound on or off, depending on the 'f' flag.
-  if  ' bleep else  ' 2drop  then  ' ?bleep defer!  ;
+  if  ' bleep cfa  else  ' 2drop  then  ' ?bleep defer!  ;
 
 true variable sound?  \ status of the sound, on or off
 sound? @ sound        \ set default

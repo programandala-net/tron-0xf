@@ -44,7 +44,7 @@
   \ XXX OLD -- first version:
   \ : -1|1  ( -- -1 | 1 )
   \   \ Return a random increment for a graphic coordinate.
-  \   sys-frames C@ 1 and dup ?exit 1-  ;
+  \   sys-frames c@ 1 and dup ?exit 1-  ;
 
   \ XXX NEW -- faster version in Z80:
 create -1|1  ( -- -1 | 1 )
@@ -75,7 +75,7 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   C3 c, next ,    \ jp next
   smudge decimal
 
-( autopilot )
+( robot )
 
 : crashing?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
@@ -105,15 +105,18 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   player-xinc @   \ moving on the X axis?
   if  dodge-y  else  dodge-x  then  player-incs 2!  ;
 
-: autopilot  ( -- )
+:noname  ( -- )
+  \ Control procedure for robot pilots.
   \ Update the coordinate increments
   \ of the current (robot) player:
   \ If there's something ahead, change the direction.
-  player-incs 2@ crashing?  if  dodge  then  ;
+  player-incs 2@ crashing?  if  dodge  then
+  ; is (robot)
 
-( rudder )
+( human )
 
-: rudder  ( -- )
+:noname  ( -- )
+  \ Control procedure for human pilots.
   \ Update the coordinate increments
   \ of the current (human) player.
   player-up-k @ pressed? if
@@ -127,7 +130,8 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   then
   player-right-k @ pressed? if
     player-yinc @ if  right-incs player-incs 2!  then  exit
-  then  ;
+  then 
+  ; is (human)
 
 ( positions ready )
 
@@ -190,7 +194,7 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
     \ crashes off
 
     players 0 do
-      i player!  player-control @ execute
+      i player!  player-pilot @ execute
 
       \ XXX OLD method
       \ XXX FIXME when 2 robots play, they crash
@@ -210,7 +214,8 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
 
 ( game )
 
-  \ : ENOUGH?  ( -- f )  \ XXX OLD -- not used
+  \ XXX OLD -- not used
+  \ : ENOUGH?  ( -- f )
   \   \ No more rounds?
   \   white ink  ANOTHER?$ 12 |linetype|  no?  ;
 
@@ -229,14 +234,5 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
 : game  ( -- )
   \ Game loop.
   game-init begin  round dup 0= ?round-end  until  page   ;
-
-  \ Init the players' controls. By default, only player 0 is
-  \ human. Their type (human or robot) is already set in the
-  \ data module, but their controls have to be init here,
-  \ when `RUDDER` and `AUTOPILOT` have been defined.
-
-   ' rudder cfa control0 !
-' autopilot cfa control1 !
-' autopilot cfa control2 !
 
   \ vim: filetype=abersoftforthafera

@@ -67,15 +67,16 @@ en value lang   \ current language
 
 4 constant keys/player  \ keys per player
 
-  \ Type of players.
+  \ Type of players. The cfa of the control word is stored into
+  \ the correspondent player variable, ready to be executed
+  \ during the game.
 
-0 constant missing
-1 constant human
-2 constant robot
+defer (human)  ' (human) cfa constant human
+defer (robot)  ' (robot) cfa constant robot
 
 ( Players data)
 
-12 cells constant /player-data \ bytes per player data
+11 cells constant /player-data \ bytes per player data
 
   \ Buffer that holds the data of all players.
 
@@ -111,11 +112,7 @@ here: player#-data
 
 ( Player 0 data fields)
 
-  \ XXX TODO simplify:
-  \ the PLAYERx and CONTROLx fields are redundant,
-  \ the PLAYERx and player-type are not used.
-
- robot  0 0 player#-variable player0   \ human or robot
+ human  0 0 player#-variable pilot0    \ human or robot
      0  1 0 player#-variable score0    \ score
      0  2 0 player#-variable yc0       \ Y coordinate
      0  3 0 player#-variable xc0       \ X coordinate
@@ -126,9 +123,6 @@ yellow  6 0 player#-variable color0    \ ink color
      0  8 0 player#-variable down-k0   \ down key
      0  9 0 player#-variable left-k0   \ left key
      0 10 0 player#-variable right-k0  \ right key
-     0 11 0 player#-variable control0  \ manual or automatic
-
-  \ Note: `CONTROL0` is initialized later with a cfa.
 
   \ Double data fields:
 yc0   constant coords0
@@ -138,7 +132,7 @@ up-k0 constant keys0
 
 ( Player 1 data fields)
 
- robot  0 1 player#-variable player1   \ type
+ robot  0 1 player#-variable pilot1    \ human or robot
      0  1 1 player#-variable score1    \ score
      0  2 1 player#-variable yc1       \ Y coordinate
      0  3 1 player#-variable xc1       \ X coordinate
@@ -149,9 +143,6 @@ up-k0 constant keys0
      0  8 1 player#-variable down-k1   \ down key
      0  9 1 player#-variable left-k1   \ left key
      0 10 1 player#-variable right-k1  \ right key
-     0 11 1 player#-variable control1  \ manual or automatic
-
-  \ Note: `CONTROL1` is initialized later with a cfa.
 
   \ Double data fields:
 yc1   constant coords1
@@ -161,7 +152,7 @@ up-k1 constant keys1
 
 ( Player 2 data fields)
 
- human  0 2 player#-variable player2   \ type
+ robot  0 2 player#-variable pilot2    \ human or robot
      0  1 2 player#-variable score2    \ score
      0  2 2 player#-variable yc2       \ Y coordinate
      0  3 2 player#-variable xc2       \ X coordinate
@@ -172,12 +163,9 @@ up-k1 constant keys1
      0  8 2 player#-variable down-k2   \ down key
      0  9 2 player#-variable left-k2   \ left key
      0 10 2 player#-variable right-k2  \ right key
-     0 11 2 player#-variable control2  \ manual or automatic
-
-  \ Note: `CONTROL2` is initialized later with a cfa.
 
   \ Double data fields:
-yc2   constant coords2
+  yc2 constant coords2
 yinc2 constant incs2
   \ Player keys table:
 up-k2 constant keys2
@@ -200,16 +188,16 @@ player0-data value player-data
   \ Create a player variable.
 
   \ A player variable returns the address of a player data
-  \ field, depending on the content of `PLAYER-DATA`.  This way
+  \ field, depending on the content of `player-data`.  This way
   \ one single word can be used to manage any player.
 
   <builds   ( n "name" )  cells c,
   does>     ( -- a ) ( pfa )
-    C@ player-data +  ;
+    c@ player-data +  ;
 
 ( Current player data fields )
 
- 0 player-variable player-type     \ human, robot
+ 0 player-variable player-pilot    \ human, robot
  1 player-variable player-score    \ score
  2 player-variable player-coords   \ both coordinates
  2 player-variable player-yc       \ Y coordinate
@@ -223,6 +211,5 @@ player0-data value player-data
  8 player-variable player-down-k   \ down key
  9 player-variable player-left-k   \ left key
 10 player-variable player-right-k  \ right key
-11 player-variable player-control  \ manual, autopilot
 
   \ vim: filetype=abersoftforthafera

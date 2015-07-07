@@ -33,7 +33,7 @@
 
   \ XXX TODO Make the graphics faster
   \
-  \ This patch modifies `PLOT` to call ROM 22E5
+  \ This patch modifies `plot` to call ROM 22E5
   \ instead ROM 22DF, but it's not enough:
   \ 22E5 7F7F !
 
@@ -42,9 +42,10 @@
 
 ( Crash effect )
 
-: coords>cursor  ( x y -- line col )  \ XXX OLD -- not used
-  \ Convert graphic coordinates to line and column.
-  175 swap - 8 / swap 8 /  ;
+  \ XXX OLD -- not used
+  \ : coords>cursor  ( x y -- line col )
+  \   \ Convert graphic coordinates to line and column.
+  \   175 swap - 8 / swap 8 /  ;
 
 : crash-noise  ( -- )
   \ XXX TODO
@@ -58,7 +59,7 @@
 
   \ XXX OLD
 \ here: MOTOR-NOISES
-\  \ Table of `BLEEP` parameters for every player.
+\  \ Table of `bleep` parameters for every player.
 \  0 1 , ,  100 1 , ,  200 1 , ,
 
 : motor-noise  ( -- )

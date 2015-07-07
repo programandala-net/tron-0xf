@@ -128,10 +128,10 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-press-any-key$  ( -- ca len )  s" Press any key"  ;
 
-: en-do-stop$  ( -- ca len )  s" do you want to stop?"  ;
+: en-do-stop$  ( -- ca len )  s" Do you want to stop?"  ;
 
 : en-do-change$  ( -- ca len )
-  s" do you want to change something?"  ;
+  s" Do you want to change something?"  ;
 
 : en-license$  ( -- ca len )  s" License:"  ;
 
