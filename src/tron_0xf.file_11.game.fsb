@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -75,7 +75,7 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   C3 c, next ,    \ jp next
   smudge decimal
 
-( robot )
+( Robot pilot)
 
 : crashing?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
@@ -83,8 +83,6 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ is the second next position occupied?
   \ XXX TODO faster in Z80
   incs2* player-yc @ + swap player-xc @ + swap point  ;
-  \ XXX TODO check if this is slower or faster:
-  \ incs2* player-yc @ + >r player-xc @ + r> point  ;
 
 : dodged?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
@@ -102,7 +100,7 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
 
 : dodge  ( -- )
   \ Change the direction of the current player.
-  player-xinc @   \ moving on the X axis?
+  set-turn-sound player-xinc @   \ moving on the X axis?
   if  dodge-y  else  dodge-x  then  player-incs 2!  ;
 
 :noname  ( -- )
@@ -113,24 +111,22 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   player-incs 2@ crashing?  if  dodge  then
   ; is (robot)
 
-( human )
+( Human pilot)
+
+: turn  ( d -- )  player-incs 2! set-turn-sound  ;
 
 :noname  ( -- )
   \ Control procedure for human pilots.
   \ Update the coordinate increments
   \ of the current (human) player.
-  player-up-k @ pressed? if
-    player-xinc @ if  up-incs player-incs 2!  then  exit
-  then
+  player-up-k @ pressed?  if
+    player-xinc @ if  up-incs turn  then  exit  then
   player-down-k @ pressed? if
-    player-xinc @ if  down-incs player-incs 2!  then  exit
-  then
+    player-xinc @ if  down-incs turn  then  exit  then
   player-left-k @ pressed? if
-    player-yinc @ if  left-incs player-incs 2!  then  exit
-  then
+    player-yinc @ if  left-incs turn  then  exit  then
   player-right-k @ pressed? if
-    player-yinc @ if  right-incs player-incs 2!  then  exit
-  then 
+    player-yinc @ if  right-incs turn  then  then 
   ; is (human)
 
 ( positions ready )
@@ -201,13 +197,13 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
       crash? if
         \ i quit \ XXX TMP
         crash +scores unloop false exit  then
-      forward paint motor-noise
+      forward paint noise
      loop
 
       \ XXX NEW method -- doesn't makes any difference
       \ XXX FIXME when 2 robots play, they crash
       \ crash? dup crashes +!
-      \ 0= if  forward paint motor-noise  then
+      \ 0= if  forward paint noise  then
     \ loop  crashes @ if  crash +scores false exit  then
 
   stop? until  true  ;
@@ -225,7 +221,8 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
 
 : game-init  ( -- )
   \ Init the game.
-  cls0 -scores arena save-arena  sound? @ sound  ;
+  cls0 -scores arena save-arena
+  set-motor-sound  sound? @ sound  ;
 
 : ?round-end  ( f -- )
   \ XXX TMP

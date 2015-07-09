@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -133,20 +133,20 @@ here: key-columns
 
 ( Human or robot pilot )
 
-: h/r?  ( c -- f )
+: h/r/n?  ( c -- f )
   \ Is the given (uppercase) char c
   \ a valid answer for a human/robot option?
   dup [char] H = swap [char] R = or  ;
 
-: h/r  ( -- c )
+: h/r/n  ( -- c )
   \ Wait for a valid key press for a human/robot option
   \ and return its code.
-  begin  akey upperc dup h/r? 0=  while  drop  repeat  ;
+  begin  akey upperc dup h/r/n? 0=  while  drop  repeat  ;
 
 : human/robot  ( -- cfa )
   \ Wait for a valid key press for a human/robot question
   \ and return the cfa of the correspondent control word.
-  h/r [char] H = if  human  else  robot  then  ;
+  h/r/n [char] H = if  human  else  robot  then  ;
 
 ( Redefine the pilot )
 
@@ -199,7 +199,7 @@ here: key-columns
 : redefine-menu-column  ( n -- )
   \ Show a column of the redefine keys menu,
   \ for player number 'n'.
-  dup player!  red ink .player  white ink .pilot
+  player!  red ink .player  white ink .pilot
   human? if  show-keys  else  hide-keys  then  ;
 
 : -redefine-menu-column  ( n -- )

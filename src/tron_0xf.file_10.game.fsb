@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -53,18 +53,6 @@
 : crash  ( -- )
   \ Do a visual effect; then wait until a key is pressed.
   crash-effect  begin  inkey?  until  drop  ;
-
-( Noise )
-
-  \ XXX OLD
-  \ here: MOTOR-NOISES
-  \  \ Table of `bleep` parameters for every player.
-  \  0 1 , ,  100 1 , ,  200 1 , ,
-
-: motor-noise  ( -- )
-  \ do the motor noise of the current player.
-  \ player [ 2 cells ] literal * MOTOR-NOISES + 2@
-  1 0 ?bleep  ;
 
 ( Collisions )
 

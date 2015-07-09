@@ -28,6 +28,7 @@
 # 2015-05-12: Updated after the recent changes in the Afera library.
 # 2015-05-16: New: backup recipe.
 # 2015-07-08: Changed backup recipe to use xz.
+# 2015-07-09: Added <tron_0xf.szx> to the backup recipe.
 
 ################################################################
 # Requirements
@@ -158,5 +159,6 @@ backup:
 		Makefile \
 		src/*.fsb \
 		README.md \
+		tron_0xf.szx \
 		old/*
 

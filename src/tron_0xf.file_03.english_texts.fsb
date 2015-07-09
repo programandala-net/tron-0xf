@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -142,9 +142,10 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-pilot$  ( -- ca len )  s" Pilot"  ;
 : en-human$  ( -- ca len )  s" Human"  ;
 : en-robot$  ( -- ca len )  s" Robot"  ;
+: en-no-one$  ( -- ca len )  s" No-one"  ;
 
 : en-pilot-help$  ( -- ca len )
-  s" Keys: H (human) R (robot)"  ;
+  s" H=human R=robot N=no-one"  ;
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;

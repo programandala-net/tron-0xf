@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -28,17 +28,47 @@
   \ <http://gnu.org/licenses>.
 
 defer ?bleep  ( n1 n2 -- )
+  \ F = frequency = 437500/(n2+30) Hz
+  \ n1 = F*seconds
+  \ n2 = (437500/F)-30
 
 : sound  ( f -- )
-  \ Turn the sound on or off, depending on the 'f' flag.
-  if  ' bleep cfa  else  ' 2drop  then  ' ?bleep defer!  ;
+  \ Turn the sound on or off, depending on the 'f' flag,
+  \ by changing the word `?bleep` will execute.
+  if  ' bleep  else  ' 2drop  then  cfa ' ?bleep defer!  ;
 
 true variable sound?  \ status of the sound, on or off
 sound? @ sound        \ set default
 
-: key-sound  ( -- )
-  \ Sound used when a key is pressed, except during the game.
+-->
+
+( Sounds effects )
+
   \ XXX TODO
-  100 50 do  11 i ?bleep  loop  ;
+
+: turn-sound  ( -- )
+  \ Sound used when a player turns during the game.
+  64 48 do  i 1 ?bleep  loop  ;
+
+: key-sound  ( -- )
+  \ Sound used when a menu key is pressed.
+  32 32 ?bleep  ;
+
+  \ XXX OLD
+  \ here: MOTOR-NOISES
+  \  \ Table of `bleep` parameters for every player.
+  \  0 1 , ,  100 1 , ,  200 1 , ,
+
+1 0   2constant motor-sound
+2 100 2constant turn-sound
+
+motor-sound 2variable player-sound
+
+: set-motor-sound  ( -- )  motor-sound player-sound 2!  ;
+: set-turn-sound  ( -- )  turn-sound player-sound 2!  ;
+
+: noise  ( -- )
+  \ Do the noise of the current player.
+  player-sound 2@ ?bleep set-motor-sound  ;
 
   \ vim: filetype=abersoftforthafera

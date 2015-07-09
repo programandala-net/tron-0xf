@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 1985,2009,2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -138,13 +138,18 @@ localized pilot$  ( -- ca len )
 ' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
 localized pilot-help$   ( -- ca len )
 
-( Special texts and texts that don't need translation)
+( Conditional texts)
 
 : human|robot$  ( -- ca len )
-  player-pilot @ human = if  human$  else  robot$  then  ;
+  player-pilot @ case 
+    human of  human$  endof
+    robot of  robot$  endof
+    no-one$ rot
+  endcase  ;
 
-: on/off$  ( f -- ca len )
-  if  on$  else  off$  then  ;
+: on/off$  ( f -- ca len )  if  on$  else  off$  then  ;
+
+( Special texts and texts that don't need translation)
 
 ' es-license-1 ' eo-license-1 ' en-license-1
 localized license-1  ( -- )
@@ -156,7 +161,7 @@ localized license-2  ( -- )
 localized authors  ( -- )
   
 : copyright  ( -- )
-  ." Copyright (C) 1985,2009,2015" cr
+  ." Copyright (C) 2015" cr
   ." Marcos Cruz (programandala.net)"  ;
 
 char N constant 'n'  \ the letter used to say "no"
