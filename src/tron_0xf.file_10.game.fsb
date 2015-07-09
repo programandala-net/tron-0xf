@@ -42,25 +42,24 @@
 
 ( Crash effect )
 
-  \ XXX OLD -- not used
-  \ : coords>cursor  ( x y -- line col )
-  \   \ Convert graphic coordinates to line and column.
-  \   175 swap - 8 / swap 8 /  ;
+: borders  ( -- )
+  \ Change the border using all colors from white to black.
+  [ black 1- ] literal white do  i border  -1 +loop  ;
 
-: crash-noise  ( -- )
+: crash-effect  ( -- )
   \ XXX TODO
-  100 50 do  11 i ?bleep  loop  ;
+  100 50 do  11 i ?bleep borders  loop  ;
 
 : crash  ( -- )
-  \ XXX TODO
-  crash-noise  ;
+  \ Do a visual effect; then wait until a key is pressed.
+  crash-effect  begin  inkey?  until  drop  ;
 
 ( Noise )
 
   \ XXX OLD
-\ here: MOTOR-NOISES
-\  \ Table of `bleep` parameters for every player.
-\  0 1 , ,  100 1 , ,  200 1 , ,
+  \ here: MOTOR-NOISES
+  \  \ Table of `bleep` parameters for every player.
+  \  0 1 , ,  100 1 , ,  200 1 , ,
 
 : motor-noise  ( -- )
   \ do the motor noise of the current player.

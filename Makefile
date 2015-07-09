@@ -27,6 +27,7 @@
 # 2015-05-11: Updated after the recent changes in the Afera library.
 # 2015-05-12: Updated after the recent changes in the Afera library.
 # 2015-05-16: New: backup recipe.
+# 2015-07-08: Changed backup recipe to use xz.
 
 ################################################################
 # Requirements
@@ -123,8 +124,6 @@ tron_0xf_compiling.tap : \
 		lib/s-plus.tap \
 		lib/time.tap \
 		lib/dot-s.tap \
-		lib/cswap.tap \
-		lib/dump.tap \
 		lib/tape.tap \
 		lib/defer.tap \
 		lib/value.tap \
@@ -146,12 +145,16 @@ tron_0xf_compiling.tap : \
 		graph/frame_graphs.tap \
 		graph/title.tap \
 		> tron_0xf_compiling.tap
-		
+	
+# XXX OLD	
+#		lib/cswap.tap \
+#		lib/dump.tap \
+
 # ##############################################################
 # Backups
 
 backup:
-	tar -czf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tgz \
+	tar -cJf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tar.xz \
 		Makefile \
 		src/*.fsb \
 		README.md \

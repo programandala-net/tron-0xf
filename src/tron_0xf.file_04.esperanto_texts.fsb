@@ -32,7 +32,7 @@
 
   \ The following '#vim' directives, processed by fsb,
   \ translate the UTF-8 chars in this source file to ZX
-  \ Spectrum UDG.
+  \ Spectrum UDGs.
 
   \ Esperanto letters:
   \ #vim %substitute@Ĉ@\=nr2char(144)@g
@@ -125,7 +125,7 @@
 : eo-left$   ( -- ca len )  s" Maldektren"  ;
 : eo-right$  ( -- ca len )  s" Dekstren"  ;
 
-char j constant eo-'y'  \ the letter used to say "yes"
+char J constant eo-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
@@ -155,8 +155,12 @@ char j constant eo-'y'  \ the letter used to say "yes"
 
 : eo-player$  ( -- ca len )  s" Ludanto"  ;
 
+: eo-pilot$  ( -- ca len )  s" Piloto"  ;
 : eo-human$  ( -- ca len )  s" Homo  "  ;
 : eo-robot$  ( -- ca len )  s" Roboto"  ;
+
+: eo-pilot-help$  ( -- ca len )
+  s" Klavoj: H (homo) R (roboto)"  ;
 
 : eo-on$   ( -- ca len )  s" Jes"  ;
 : eo-off$  ( -- ca len )  s" Ne "  ;

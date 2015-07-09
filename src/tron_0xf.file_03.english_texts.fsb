@@ -139,8 +139,12 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-player$  ( -- ca len )  s" Player"  ;
 
+: en-pilot$  ( -- ca len )  s" Pilot"  ;
 : en-human$  ( -- ca len )  s" Human"  ;
 : en-robot$  ( -- ca len )  s" Robot"  ;
+
+: en-pilot-help$  ( -- ca len )
+  s" Keys: H (human) R (robot)"  ;
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;

@@ -30,13 +30,15 @@
   \ Max length of a player key description in any language:
 11 constant /key-desc
 
-  \ Line of the top keys row in the redefine menu:
-contents-line 6 + constant keys-line
+  \ Lines of some parts of the redefine menu:
+contents-line 2+ constant player-line \ player number
+player-line 2+ constant pilot-line  \ human or robot
+pilot-line 2+ constant keys-line  \ top keys row
 
   \ Column of the key description:
 0 constant key-desc-col
 
-2 8 thru
+2 10 thru
 
 ( Key descriptions )
 
@@ -95,13 +97,15 @@ here: key-descs
 
 ( Keys position)
 
-here: keys-col-table
+here: key-columns
   \ Columns of the player keys.
-  12 c, 20 c, 28 c,
+  \ XXX TODO change with the language, because the row headers
+  \ are longer is Esperanto.
+  10 c, 18 c, 26 c,
 
 : keys-col  ( -- col )
   \ Column of the current player's keys.
-  player keys-col-table + c@  ;
+  player key-columns + c@  ;
 
 : key#>coords  ( n -- line col )
   \ Convert a key number (0..3) of the current player
@@ -127,9 +131,43 @@ here: keys-col-table
   \ n = key number in the table 
   0 (key-prompt)  ;
 
+( Human or robot pilot )
+
+: h/r?  ( c -- f )
+  \ Is the given (uppercase) char c
+  \ a valid answer for a human/robot option?
+  dup [char] H = swap [char] R = or  ;
+
+: h/r  ( -- c )
+  \ Wait for a valid key press for a human/robot option
+  \ and return its code.
+  begin  akey upperc dup h/r? 0=  while  drop  repeat  ;
+
+: human/robot  ( -- cfa )
+  \ Wait for a valid key press for a human/robot question
+  \ and return the cfa of the correspondent control word.
+  h/r [char] H = if  human  else  robot  then  ;
+
+( Redefine the pilot )
+
+  \ Print the pilot of the current player.
+: at-pilot  ( -- )  pilot-line keys-col at  ;
+: .pilot  ( -- )  at-pilot human|robot$ type  ;
+
+  \ Is the current player a human pilot?
+: human?  ( -- f )  player-pilot @ human =  ;
+
+: redefine-pilot  ( -- )
+  \ Redefine the pilot of the current player.
+  pilot-help$ remark  1 flash .pilot 0 flash
+  human/robot player-pilot !
+  .pilot  pilot-help$ -remark  ;
+
 ( Redefine keys )
 
-: (redefine)  ( -- f )
+  \ XXX FIXME when Break is used, a wrong char is shown
+
+: redefine-keys  ( -- f )
   \ Redefine the keys of the current player.
   \ f = quit redefining?
   false  \ default return flag
@@ -139,64 +177,81 @@ here: keys-col-table
     dup player-keys i cells + !  i key#>coords rot key. space
   loop  ;
 
-: redefine  ( -- )
-  \ Redefine the keys of all active players.
-  white ink
-  players 0 do  i player! (redefine) if  leave  then  loop  ;
+( Redefine keys menu column )
 
-( Print current player )
+  \ Print the number of the current player.
+: at-player  ( -- )  player-line keys-col at  ;
+: .player  ( -- )  at-player player .  ;
 
-  \ XXX OLD
-  \ : PLAYER#$  ( -- ca len )
-  \   \ The word "Player" in the current language,
-  \   \ with the current player number added.
-  \   player$ s"  " s+ player 1+ s->d <# #s #> s+  ;
+: redefine-menu-key  ( n -- )
+  \ Show a key of the redefine keys menu,
+  \ for the 'n' key of the current player.
+  dup >r keys-line + keys-col player-keys r> player-key.  ;
 
-: .player  ( -- )
-  \ Print the current player, centered above the keys column.
-  keys-line 2- keys-col at player .  ;
+: hide-keys  ( -- )
+  \ Hide the keys of the current player.
+  keys/player 0 do  keys-line i + keys-col at 2 spaces  loop  ;
+
+: show-keys  ( -- )
+  \ Show the keys of the current player.
+  keys/player 0 do  i redefine-menu-key  loop  ;
+
+: redefine-menu-column  ( n -- )
+  \ Show a column of the redefine keys menu,
+  \ for player number 'n'.
+  dup player!  red ink .player  white ink .pilot
+  human? if  show-keys  else  hide-keys  then  ;
+
+: -redefine-menu-column  ( n -- )
+  \ Erase a column of the redefine keys menu
+  \ for player number 'n'.
+  player!  at-player space  at-pilot human|robot$ type-spaces
+  hide-keys  ;
 
 ( Redefine keys menu )
 
-: redefine-menu-key  ( n -- )
-  \ Show a key of the redefine keys menu, for the 'n' key of
-  \ the current player.
-  dup >r keys-line + keys-col player-keys r> player-key.  ;
-
-: redefine-menu-column  ( n -- )
-  \ Show a column of the redefine keys menu, for the player
-  \ number 'n'.
-  \ Blue color is used for inactive players, if any.
-
-  dup player!  
-
-  \ XXX OLD
-  \ dup players < blue + ink .player  \ active: red; else blue
-
-  players <  if  red ink .player  white ink  \ XXX NEW
-    \ XXX OLD
-    \ players < white * blue max ink  \ active: white; else blue
-    keys/player 0 do  i redefine-menu-key  loop  then
-  ;
+: redefine-menu-row-headers  ( -- )
+  \ Show the row headers of the redefine keys menu.
+  red ink
+  player$ player-line 0 at type  pilot$ pilot-line 0 at type
+  \ Names of the keys at the left.
+  keys/player 0 do  i key-desc keys-line i + |key-desc  loop ;
 
 : redefine-menu  ( -- )
   \ Show the redefine keys menu.
-  wipe-contents  red ink
-  player$ keys-line 2- 0 at type
-  \ Names of the keys at the left.
-  keys/player 0 do  i key-desc keys-line i + |key-desc  loop
+  wipe-contents redefine-menu-row-headers
   \ A column for every active player.
   players 0 do  i redefine-menu-column  loop
-  \ A column for every inactive player.
-  max-players players 2dup - if
-    do  i redefine-menu-column  loop
-  else  2drop  then  ;
+  \ A column for every inactive player, if any.
+  max-players players 2dup <>
+    if    do  i -redefine-menu-column  loop
+    else  2drop  then  ;
 
-( Redefine keys )
+( Redefine )
+
+: do-change?  ( -- f )
+  \ Ask "Do you want to change something?" in the current
+  \ language and return a flag with the answer (true=yes).
+  \ The message is deleted.
+  do-change$ bottom-line      2dup 2>r
+  white ink |linetype| yes?   2r> |linespaces|  ;
+
+: (redefine)  ( -- f )
+  \ Redefine the pilot and keys of the current player.
+  \ f = quit?
+  \ XXX TODO option to remove the player (human/robot/none)
+  \ XXX TODO option to redefine the color
+  redefine-pilot human?
+  if    show-keys redefine-keys
+  else  hide-keys false  then  ;
+
+: redefine  ( -- )
+  \ Redefine the pilot and keys of all active players.
+  white ink
+  players 0 do  i player! (redefine) if  leave  then  loop  ;
 
 : configuration  ( -- )
   \ Redefine the keys.
-  \ XXX TODO -- human/machine options
   redefine-menu
   begin  redefine  do-change? 0=  until  wipe-contents  ;
 

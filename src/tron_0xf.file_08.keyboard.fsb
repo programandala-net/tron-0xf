@@ -81,13 +81,6 @@
   \ and return flag with the answer (true=yes).
   .do-stop yes?  ;
 
-: do-change?  ( -- f )
-  \ Ask "Do you want to change something?" in the current
-  \ language and return flag with the answer (true=yes).
-  \ The message is deleted.
-  do-change$ [ lines 1- ] literal   2dup 2>r
-  white ink |linetype| yes?         2r> |linespaces|  ;
-
 ( keys table, rows 1-5 Q-T )
 
 40 constant #keys   \ number of keys of ZX Spectrum
@@ -127,7 +120,7 @@ char 5 10 F7FE , , ,
 char Q 01 FBFE , , ,
 char W 02 FBFE , , ,
 char E 04 FBFE , , ,
-char r 08 FBFE , , ,
+char R 08 FBFE , , ,
 char T 10 FBFE , , ,
 
 ( keys table, rows A-G CS-V 0-6 )
@@ -154,14 +147,14 @@ char 6 10 EFFE , , ,
 
 char P 01 DFFE , , ,
 char O 02 DFFE , , ,
-char i 04 DFFE , , ,
+char I 04 DFFE , , ,
 char U 08 DFFE , , ,
 char Y 10 DFFE , , ,
 
 char E char n special-key-name 01 BFFE , , ,  \ Enter
 char L 02 BFFE , , ,  here left-k2 !  \ "K"
 char K 04 BFFE , , ,
-char j 08 BFFE , , ,
+char J 08 BFFE , , ,
 char H 10 BFFE , , ,
 
 ( keys table, row Sp-B )

@@ -32,7 +32,7 @@
 
   \ The following '#vim' directives, processed by fsb,
   \ translate the UTF-8 chars in this source file to ZX
-  \ Spectrum UDG.
+  \ Spectrum UDGs.
 
   \ Spanish letters and signs:
   \ #vim %substitute@Á@\=nr2char(144)@g
@@ -160,8 +160,12 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-player$  ( -- ca len )  s" Jugador"  ;
 
+: es-pilot$  ( -- ca len )  s" Piloto"  ;
 : es-human$  ( -- ca len )  s" Humano"  ;
 : es-robot$  ( -- ca len )  s" Robot "  ;
+
+: es-pilot-help$  ( -- ca len )
+  s" Teclas: H (humano) R (robot)"  ;
 
 : es-on$   ( -- ca len )  s" Sí"  ;
 : es-off$  ( -- ca len )  s" No"  ;

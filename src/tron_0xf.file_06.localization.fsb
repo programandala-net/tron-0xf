@@ -27,7 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 7 thru
+2 8 thru
 
 ( localized )
 
@@ -117,6 +117,12 @@ localized license$  ( -- ca len )
 ' es-quit-message ' eo-quit-message ' en-quit-message
 localized quit-message  ( -- )
 
+' es-on$ ' eo-on$ ' en-on$ localized on$  ( -- ca len )
+
+' es-off$ ' eo-off$ ' en-off$ localized off$  ( -- ca len )
+
+( Localized texts) 
+
 ' es-player$ ' eo-player$ ' en-player$
 localized player$  ( -- ca len )
 
@@ -126,11 +132,16 @@ localized human$  ( -- ca len )
 ' es-robot$ ' eo-robot$ ' en-robot$
 localized robot$  ( -- ca len )
 
-' es-on$ ' eo-on$ ' en-on$ localized on$  ( -- ca len )
+' es-pilot$ ' eo-pilot$ ' en-pilot$
+localized pilot$  ( -- ca len )
 
-' es-off$ ' eo-off$ ' en-off$ localized off$  ( -- ca len )
+' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
+localized pilot-help$   ( -- ca len )
 
 ( Special texts and texts that don't need translation)
+
+: human|robot$  ( -- ca len )
+  player-pilot @ human = if  human$  else  robot$  then  ;
 
 : on/off$  ( f -- ca len )
   if  on$  else  off$  then  ;

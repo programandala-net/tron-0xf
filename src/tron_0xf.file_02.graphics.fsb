@@ -59,8 +59,8 @@
 : -font  ( -- )  15360 sys-chars ! ;
   
   \ Double height digits are used to print the scores.  They
-  \ are hold in a bank of 20 UDG. The first 10 udg are the top
-  \ halves of the digits, the second 10 udg are the bottom
+  \ are hold in a bank of 20 UDG. The first 10 UDGs are the top
+  \ halves of the digits, the second 10 UDGs are the bottom
   \ halves.  Every set is switched instead of the game font
   \ when needed.
 
@@ -70,7 +70,7 @@
 hi 1+ constant digits-udg
 
 : digits>chars  ( a1 -- a2 )
-  \ Convert the address of udg digits to the address of a fake
+  \ Convert the address of UDG digits to the address of a fake
   \ font that contains those digits.
   [char] 0 bl - 8 * -  256 -  ;
 
@@ -86,38 +86,38 @@ hi 1+ constant digits-udg
   [ digits-udg /digits-udg 2 / +  digits>chars ] literal
   sys-chars ! ;
 
-( udg fonts)
+( UDG fonts)
 
   \ User Defined Graphics are used for the Spanish and
   \ Esperanto characters. Two banks are used. They are loaded
   \ from tape at the end of the compilation. The correspondent
-  \ udg bank is switched when the user changes the language in
+  \ UDG bank is switched when the user changes the language in
   \ the game menu.
 
-sys-udg @ constant udg0  \ address of the default udg bank
+sys-udg @ constant udg0  \ address of the default UDG bank
 
-  \ udg bank for the Esperanto letters.
+  \ UDG bank for the Esperanto letters.
 12 8 * constant /eo-udg  \ size in bytes
   \ /eo-udg buffer: eo-udg  \ XXX OLD
   \ The unused space above `hi` is used:
 digits-udg /digits-udg + constant eo-udg
 
-  \ udg bank for the Spanish letters and characters.
+  \ UDG bank for the Spanish letters and characters.
 18 8 * constant /es-udg  \ size in bytes
   \ /es-udg buffer: es-udg
   \ The unused space above `hi` is used:
 eo-udg /eo-udg + constant es-udg
 
 here: udg-bank
-  \ Addresses of the udg banks used for every language.
+  \ Addresses of the UDG banks used for every language.
   udg0 , eo-udg , es-udg ,
 
 : +udg  ( n -- )
-  \ Set the udg bank required by the given language number.
+  \ Set the UDG bank required by the given language number.
   cells udg-bank + @ sys-udg !  ;
 
 : -udg  ( -- )
-  \ Set the default udg bank.
+  \ Set the default UDG bank.
   \ It contains the frame graphs.
   0 +udg  ;
   
@@ -140,6 +140,8 @@ here: udg-bank
   \ Size of the screen:
 32 constant cols
 24 constant lines
+
+lines 1- constant bottom-line 
 
   \ Size of the game arena (inside its frame):
 cols 2 - constant arena-cols
@@ -171,7 +173,10 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
 : |linetype|  ( ca len line -- )  over |at| type  ;
 
   \ Type a string centered on the last line.
-: remark  ( ca len -- )  [ lines 1- ] literal |linetype|  ;
+: remark  ( ca len -- )  bottom-line |linetype|  ;
+
+  \ Erase a string centered on the last line.
+:  -remark  ( ca len -- )  nip bottom-line |linespaces|  ;
 
   \ Move the cursor position to the given column
   \ of the current line.
@@ -194,6 +199,8 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \ (2048 bytes of bitmap and 256 bytes of color attributes).
   title-address sys-screen 2048 cmove
   22528 256 red fill  ;
+
+: type-spaces  ( ca len -- )  nip spaces  ;
 
 ( Contents zone )
 

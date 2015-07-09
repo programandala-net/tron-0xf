@@ -102,14 +102,16 @@ here: menu-commands
   \ `wipe-contents` (or `MORE`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
-  ' change-language cfa ,
-  ' instructions cfa ,
-  ' change-players cfa ,
-  ' toggle-sound cfa ,
-  ' configuration cfa ,
-  ' game cfa ,
-  ' about cfa ,
-  ' finish cfa ,
+  ]
+    change-language
+    instructions
+    change-players
+    toggle-sound
+    configuration
+    game
+    about
+    finish
+  [
 
 ( Menu options)
 
@@ -172,8 +174,8 @@ here: menu-commands
   loop  drop  ;
 
 : menu-key  ( -- c )
-  \ Wait until a key is pressed then and return its code.
-  begin  inkey? ?exit  again  ;
+  \ Wait until a key is pressed and return its code.
+  begin  inkey?  until  ;
 
 : valid-option  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
