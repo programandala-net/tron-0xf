@@ -27,7 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 8 thru
+2 9 thru
 
 ( localized )
 
@@ -64,8 +64,9 @@
   localized option-0$  ( -- ca len )
 ' es-option-1$ ' eo-option-1$ ' en-option-1$
   localized option-1$  ( -- ca len )
-' es-option-2$ ' eo-option-2$ ' en-option-2$
-  localized option-2$  ( -- ca len )
+  \ XXX OLD
+  \ ' es-option-2$ ' eo-option-2$ ' en-option-2$
+  \  localized option-2$  ( -- ca len )
 ' es-option-3$ ' eo-option-3$ ' en-option-3$
   localized option-3$  ( -- ca len )
 ' es-option-4$ ' eo-option-4$ ' en-option-4$
@@ -102,8 +103,9 @@ localized do-stop$  ( -- ca len )
 
 ( Localized texts) 
 
-' es-do-change$ ' eo-do-change$ ' en-do-change$
-localized do-change$  ( -- ca len )
+  \ XXX OLD
+  \ ' es-do-change$ ' eo-do-change$ ' en-do-change$
+  \ localized do-change$  ( -- ca len )
 
 ' es-license$ ' eo-license$ ' en-license$
 localized license$  ( -- ca len )
@@ -135,16 +137,19 @@ localized robot$  ( -- ca len )
 ' es-pilot$ ' eo-pilot$ ' en-pilot$
 localized pilot$  ( -- ca len )
 
+' es-none$ ' eo-none$ ' en-none$
+localized none$  ( -- ca len )
+
 ' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
 localized pilot-help$   ( -- ca len )
 
 ( Conditional texts)
 
-: human|robot$  ( -- ca len )
+: human|robot|none$  ( -- ca len )
   player-pilot @ case 
     human of  human$  endof
     robot of  robot$  endof
-    no-one$ rot
+    none$ rot  \ default
   endcase  ;
 
 : on/off$  ( f -- ca len )  if  on$  else  off$  then  ;

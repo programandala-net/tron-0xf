@@ -31,12 +31,6 @@
   
 ( Paint )
 
-  \ XXX TODO Make the graphics faster
-  \
-  \ This patch modifies `plot` to call ROM 22E5
-  \ instead ROM 22DF, but it's not enough:
-  \ 22E5 7F7F !
-
 : paint  ( -- )
   player-color @ ink player-xc @ player-yc @ plot  ;
 
@@ -79,6 +73,7 @@
 
 : +scores  ( -- )
   \ Increase the score of the players that didn't crash.
-  players 0 do  i player! crash? 0= score+  loop  ;
+  \ XXX TODO new system: the last survivor wins
+  max-players 0 do  i player! crash? 0= score+  loop  ;
 
   \ vim: filetype=abersoftforthafera

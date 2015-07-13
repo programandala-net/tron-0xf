@@ -46,10 +46,6 @@ sound? @ sound        \ set default
 
   \ XXX TODO
 
-: turn-sound  ( -- )
-  \ Sound used when a player turns during the game.
-  64 48 do  i 1 ?bleep  loop  ;
-
 : key-sound  ( -- )
   \ Sound used when a menu key is pressed.
   32 32 ?bleep  ;

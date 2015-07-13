@@ -2,8 +2,9 @@
 
 ## EN
 
-Tron 0xF is written in Abersoft Forth (a ZX Spectrum's fig-Forth written by
-John Jones Steele in 1983, and published by Melbourne House).
+Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 ported to ZX
+Spectrum by John Jones Steele and published by Melbourne House
+in 1983).
 
 In order to convert the Tron sources to a TAP file suitable for Abersoft
 Forth, with a ZX Spectrum emulator, the fsb converter has to be installed:
@@ -16,8 +17,9 @@ command `LOADT 1 LOAD`.
 
 ## ES
 
-Tron 0xF está escrito en Abersoft Forth (un fig-Forth para ZX Spectrum, escrito
-por John Jones Steele en 1983 y publicado por Melbourne House).
+Tron 0xF está escrito en Abersoft Forth (un fig-Forth 1.1
+llevado a ZX Spectrum por John Jones Steele y publicado por
+Melbourne House en 1983).
 
 Para convertir los ficheros fuente de Tron en un fichero TAP utilizable por
 Abersoft Forth en un emulador de ZX Spectrum, es preciso tener instalado el
@@ -31,8 +33,9 @@ creará el fichero _tron.tap_. Para cargarlo en Abersoft Forth, usa el comando
 
 ## EO
 
-Tron 0xF estas verkita en Abersoft Forth (fig-Forth por ZX Spectrum, verkita de
-John Jones Steele en 1983 kaj eldonita de Melbourne House).
+Tron 0xF estas verkita en Abersoft Forth (fig-Forth 1.1
+adaptita al ZX Spectrum far John Jones Steele kaj eldonita de
+Melbourne House en 1983).
 
 Por traduki la Tron-fontdosierojn en TAP-dosieron uzeblan de Abersoft Forth
 per emulilo de ZX Spectrum, la tradukilo fsb devas esti instalita:

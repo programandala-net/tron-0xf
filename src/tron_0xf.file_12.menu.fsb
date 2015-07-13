@@ -31,7 +31,7 @@
 
 ( Menu -- data )
 
-8 constant options       \ number of menu options
+7 constant options       \ number of menu options
 2 constant lines/option  \ lines occupied per menu option
 
 options buffer: menu-keys
@@ -43,9 +43,10 @@ options buffer: menu-keys
   \ Menu option 3 with the status of the sound.
   option-3$ sound? @ on/off$ s+  ;
 
-:noname  ( -- ca len )
-  \ Menu option 2 with the number of players.
-  option-2$ players s->d <# #s #> s+  ;
+  \ XXX OLD
+  \ :noname  ( -- ca len )
+  \   \ Menu option 2 with the number of players.
+  \   option-2$ players s->d <# #s #> s+  ;
   
 here: menu-options
   
@@ -53,7 +54,9 @@ here: menu-options
   \ localized texts of the menu options.
 
   ' option-0$ cfa ,   ' option-1$ cfa ,
-  , ,  \ options 2 and 3 created with `:noname` above
+  \ XXX OLD
+  \ , ,  \ options 2 and 3 created with `:noname` above
+  , \ options 3 created with `:noname` above
   ' option-4$ cfa ,  ' option-5$ cfa ,
   ' option-6$ cfa ,   ' option-7$ cfa ,
 
@@ -63,14 +66,15 @@ here: menu-options
   \ Change the current language.
   lang 1+ dup langs < *  dup to lang  +udg wipe-contents  ;
 
-: change-players  ( -- )
-  \ Change the number of players.
-  \ White ink has to be set at the end in order to
-  \ prevent flickering when updating the menu,
-  \ because the way the screen is uptaded sets black ink
-  \ as default.
-  players 1+ dup [ max-players 1+ ] literal < * 1 max
-  to players  white ink  ;
+  \ XXX OLD
+  \ : change-players  ( -- )
+  \   \ Change the number of players.
+  \   \ White ink has to be set at the end in order to
+  \   \ prevent flickering when updating the menu,
+  \   \ because the way the screen is uptaded sets black ink
+  \   \ as default.
+  \   players 1+ dup [ max-players 1+ ] literal < * 1 max
+  \   to players  white ink  ;
 
 : toggle-sound  ( -- )
   \ Toggle the game sounds.
@@ -105,9 +109,9 @@ here: menu-commands
   ]
     change-language
     instructions
-    change-players
+    \ change-players \ XXX OLD
     toggle-sound
-    configuration
+    pilots
     game
     about
     finish

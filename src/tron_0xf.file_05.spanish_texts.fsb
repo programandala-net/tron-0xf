@@ -136,12 +136,13 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-option-0$  ( -- ca len )  s" No en español"  ;
 : es-option-1$  ( -- ca len )  s" Instrucciones"  ;
-: es-option-2$  ( -- ca len )  s" Motos: "  ;
+  \ XXX OLD
+  \ : es-option-2$  ( -- ca len )  s" Motos: "  ;
 : es-option-3$  ( -- ca len )  s" Sonido: "  ;
-: es-option-4$  ( -- ca len )  s" Configurar"  ;
-: es-option-5$  ( -- ca len )  s" Jugar"  ;
+: es-option-4$  ( -- ca len )  s" Pilotos"  ;
+: es-option-5$  ( -- ca len )  s" Empezar"  ;
 : es-option-6$  ( -- ca len )  s" Acerca de"  ;
-: es-option-7$  ( -- ca len )  s" Terminar"  ;
+: es-option-7$  ( -- ca len )  s" Salir"  ;
 
 ( Other )
 
@@ -152,7 +153,9 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-do-stop$  ( -- ca len )  s" ¿Quieres terminar?"  ;
 
-: es-do-change$  ( -- ca len )  s" ¿Quieres cambiar algo?"  ;
+  \ XXX OLD
+  \ : es-do-change$  ( -- ca len )
+  \ s" ¿Quieres cambiar algo?"  ;
 
 : es-license$  ( -- ca len )  s" Licencia:"  ;
 
@@ -161,12 +164,17 @@ char S constant es-'y'  \ the letter used to say "yes"
 : es-player$  ( -- ca len )  s" Jugador"  ;
 
 : es-pilot$  ( -- ca len )  s" Piloto"  ;
+  \ These three strings must be padded with spaces
+  \ to the length of the longest one:
 : es-human$  ( -- ca len )  s" Humano"  ;
 : es-robot$  ( -- ca len )  s" Robot "  ;
-: es-no-one$  ( -- ca len )  s" Nadie"  ;
+: es-none$  ( -- ca len )  s" Nadie "  ;
 
 : es-pilot-help$  ( -- ca len )
-  s" H=humano R=robot N=nadie"  ;
+  s" H=humano R=robot N=nadie"
+  \ Remove the last option from the string if `players` is 1,
+  \ according to the behaviour of the configuration:
+  players 1 = 8 * -  ;
 
 : es-on$   ( -- ca len )  s" Sí"  ;
 : es-off$  ( -- ca len )  s" No"  ;

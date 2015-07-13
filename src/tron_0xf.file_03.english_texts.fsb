@@ -114,10 +114,11 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-option-0$  ( -- ca len )  s" Not in English"  ;
 : en-option-1$  ( -- ca len )  s" Instructions"  ;
-: en-option-2$  ( -- ca len )  s" Motorbikes: "  ;
+  \ XXX OLD
+  \ : en-option-2$  ( -- ca len )  s" Motorbikes: "  ;
 : en-option-3$  ( -- ca len )  s" Sound: "  ;
-: en-option-4$  ( -- ca len )  s" Configure"  ;
-: en-option-5$  ( -- ca len )  s" Play"  ;
+: en-option-4$  ( -- ca len )  s" Pilots"  ;
+: en-option-5$  ( -- ca len )  s" Start"  ;
 : en-option-6$  ( -- ca len )  s" About"  ;
 : en-option-7$  ( -- ca len )  s" Quit"  ;
 
@@ -130,8 +131,9 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-do-stop$  ( -- ca len )  s" Do you want to stop?"  ;
 
-: en-do-change$  ( -- ca len )
-  s" Do you want to change something?"  ;
+  \ XXX OLD
+  \ : en-do-change$  ( -- ca len )
+  \   s" Do you want to change something?"  ;
 
 : en-license$  ( -- ca len )  s" License:"  ;
 
@@ -140,12 +142,17 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-player$  ( -- ca len )  s" Player"  ;
 
 : en-pilot$  ( -- ca len )  s" Pilot"  ;
+  \ These three strings must be padded with spaces
+  \ to the length of the longest one:
 : en-human$  ( -- ca len )  s" Human"  ;
 : en-robot$  ( -- ca len )  s" Robot"  ;
-: en-no-one$  ( -- ca len )  s" No-one"  ;
+: en-none$  ( -- ca len )  s" None "  ;
 
 : en-pilot-help$  ( -- ca len )
-  s" H=human R=robot N=no-one"  ;
+  s" H=human R=robot N=none"
+  \ Remove the last option from the string if `players` is 1,
+  \ according to the behaviour of the configuration:
+  players 1 = 7 * -  ;
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;

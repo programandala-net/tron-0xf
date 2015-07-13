@@ -131,10 +131,11 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
 : eo-option-0$  ( -- ca len )  s" Ne en Esperanto"  ;
 : eo-option-1$  ( -- ca len )  s" Instrukcioj"  ;
-: eo-option-2$  ( -- ca len )  s" Motorcikloj: "  ;
+  \ XXX OLD
+  \ : eo-option-2$  ( -- ca len )  s" Motorcikloj: "  ;
 : eo-option-3$  ( -- ca len )  s" Sono: "  ;
-: eo-option-4$  ( -- ca len )  s" Konfiguri"  ;
-: eo-option-5$  ( -- ca len )  s" Ludi"  ;
+: eo-option-4$  ( -- ca len )  s" Pilotoj"  ;
+: eo-option-5$  ( -- ca len )  s" Komenci"  ;
 : eo-option-6$  ( -- ca len )  s" Prio"  ;
 : eo-option-7$  ( -- ca len )  s" Eliri"  ;
 
@@ -147,7 +148,9 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
 : eo-do-stop$  ( -- ca len )  s" Ĉu vi volas fini?"  ;
 
-: eo-do-change$  ( -- ca len )  s" Ĉu vi volas ŝanĝi ion?"  ;
+  \ XXX OLD
+  \ : eo-do-change$  ( -- ca len )
+  \ s" Ĉu vi volas ŝanĝi ion?"  ;
 
 : eo-license$  ( -- ca len )  s" Permesilo:"  ;
 
@@ -156,12 +159,17 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-player$  ( -- ca len )  s" Ludanto"  ;
 
 : eo-pilot$  ( -- ca len )  s" Piloto"  ;
+  \ These three strings must be padded with spaces
+  \ to the length of the longest one:
 : eo-human$  ( -- ca len )  s" Homo  "  ;
 : eo-robot$  ( -- ca len )  s" Roboto"  ;
-: eo-no-one$  ( -- ca len )  s" Neniu"  ;
+: eo-none$  ( -- ca len )  s" Neniu "  ;
 
 : eo-pilot-help$  ( -- ca len )
-  s" H=homo R=roboto N=neniu"  ;
+  s" H=homo R=roboto N=neniu"
+  \ Remove the last option from the string if `players` is 1,
+  \ according to the behaviour of the configuration:
+  players 1 = 8 * -  ;
 
 : eo-on$   ( -- ca len )  s" Jes"  ;
 : eo-off$  ( -- ca len )  s" Ne "  ;

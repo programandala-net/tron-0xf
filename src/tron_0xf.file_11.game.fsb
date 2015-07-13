@@ -27,7 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 9 thru
+2 11 thru
 
 ( Rudder increments)
 
@@ -41,16 +41,17 @@
   -1  0 2constant left-incs
    1  0 2constant right-incs
 
-  \ XXX OLD -- first version:
-  \ : -1|1  ( -- -1 | 1 )
-  \   \ Return a random increment for a graphic coordinate.
-  \   sys-frames c@ 1 and dup ?exit 1-  ;
+( -1|1 )
 
-  \ XXX NEW -- faster version in Z80:
 create -1|1  ( -- -1 | 1 )
   \ Return a random increment for a graphic coordinate.
   hex
-  3A c, 5C78 ,        \ ld a,(FRAMES)
+  here 1+             \ local_seed: equ $+1
+  21 c, 0 ,           \ ld hl,the_seed ; patched
+  5C76 @ over ! \ patch the_seed with system FRAMES
+  7E c,               \ ld a,(hl)
+  23 c,               \ inc hl
+  22 c, ,             \ ld (local_seed),hl
   E6 c, 01 c,         \ and 1 ; bit 0 only
   26 c, 00 c,         \ ld h,0
   68 07 + c,          \ ld l,a
@@ -129,37 +130,52 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
     player-yinc @ if  right-incs turn  then  then 
   ; is (human)
 
-( positions ready )
+( positions-table )
 
-:noname  ( -- )
-  \ Set the players' positions before a new round,
+:noname
+  ( -- col0 x0 y0 x-inc0 y-inc0 ... col2 x2 y2 x-inc2 y-inc2 )
+  \ Score column, start screen position and increments,
   \ for three players.
-   40 xc0 ! 127 yc0 !  right-incs incs0 2!
-  215 xc1 ! 127 yc1 !  left-incs  incs1 2!
-  126 xc2 !  40 yc2 !  up-incs    incs2 2!  ;
+   1 126  40 up-incs    
+  14 215 127 left-incs  
+  28  40 127 right-incs ;
 
-:noname  ( -- )
-  \ Set the players' positions before a new round,
+:noname
+  ( -- col0 x0 y0 x-inc0 y-inc0 col1 x1 y1 x-inc1 y-inc1 )
+  \ Score column, start screen position and increments,
   \ for two players.
-   40 xc0 ! 88 yc0 !  right-incs incs0 2!
-  215 xc1 ! 88 yc1 !  left-incs  incs1 2!  ;
+   1 215 88 left-incs 
+  28  40 88 right-incs  ;
 
-:noname  ( -- )
-  \ Set the player's position before a new round,
+:noname
+  ( -- col0 x0 y0 x-inc0 y-inc0 )
+  \ Score column, start screen position and increments,
   \ for one player.
-  127 xc0 ! 88 yc0 !  up-incs incs0 2!  ;
+  14 127 88 up-incs  ;
 
-here: positions-table  ( cfa3 cfa2 cfa1 )
-  \ Execution table for `POSITIONS`.
+here: positions-table
+  \ Execution table for `positions`.
+  ( cfa3 cfa2 cfa1 )
   , , ,
  
+( positions ready )
+
 : positions  ( -- )
   \ Set the players' start positions.
-  players 1- cells positions-table + @ execute  ;
+  \ First, get the positions needed for the number of players:
+  players 1- cells positions-table + @ execute
+  \ Second, store them into the players:
+  max-players 0 do  i player!
+    someone? if
+      player-incs 2! player-yc ! player-xc ! player-score-col ! 
+    then
+  loop  ;
 
 : ready  ( -- )
   \ Show all players at their start positions.
-  positions  players 0 do  i player! paint  loop  ;
+  positions  max-players 0 do
+    i player!  someone? if  paint  then
+  loop  ;
 
 ( round )
 
@@ -189,16 +205,18 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
     \ XXX NEW method
     \ crashes off
 
-    players 0 do
-      i player!  player-pilot @ execute
+    max-players 0 do
+      i player!  player-pilot @ -dup if
+        execute
 
-      \ XXX OLD method
-      \ XXX FIXME when 2 robots play, they crash
-      crash? if
-        \ i quit \ XXX TMP
-        crash +scores unloop false exit  then
-      forward paint noise
-     loop
+        \ XXX OLD method
+        \ XXX FIXME when 2 robots play, they crash
+        crash? if
+          \ i quit \ XXX TMP
+          crash +scores unloop false exit  then
+        forward paint noise
+      then
+    loop
 
       \ XXX NEW method -- doesn't makes any difference
       \ XXX FIXME when 2 robots play, they crash
@@ -217,7 +235,7 @@ here: positions-table  ( cfa3 cfa2 cfa1 )
 
 : -scores  ( -- )
   \ Reset all scores.
-  players 0 do  i player!  player-score off  loop  ;
+  max-players 0 do  i player!  player-score off  loop  ;
 
 : game-init  ( -- )
   \ Init the game.

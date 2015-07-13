@@ -29,6 +29,7 @@
 # 2015-05-16: New: backup recipe.
 # 2015-07-08: Changed backup recipe to use xz.
 # 2015-07-09: Added <tron_0xf.szx> to the backup recipe.
+# 2015-07-12: Updated with <lib/rdrop.tap>.
 
 ################################################################
 # Requirements
@@ -134,10 +135,10 @@ tron_0xf_compiling.tap : \
 		lib/buffercol.tap \
 		lib/unloop.tap \
 		lib/point.tap \
-		lib/color.tap \
 		lib/plot.tap \
 		lib/noname.tap \
 		lib/qexit.tap \
+		lib/rdrop.tap \
 		tap/tron_0xf.file_*.tap \
 		graph/font.tap \
 		graph/font.esperanto_characters.tap \
@@ -146,9 +147,10 @@ tron_0xf_compiling.tap : \
 		graph/frame_graphs.tap \
 		graph/title.tap \
 		> tron_0xf_compiling.tap
-	
+
 # XXX OLD	
 #		lib/cswap.tap \
+#		lib/color.tap \
 #		lib/dump.tap \
 
 # ##############################################################
