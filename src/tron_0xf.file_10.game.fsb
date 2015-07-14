@@ -27,12 +27,16 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 5 thru
+2 4 thru
   
 ( Paint )
 
 : paint  ( -- )
-  player-color @ ink player-xc @ player-yc @ plot  ;
+  \ Paint the current player.
+  \ player-color @ ink player-coords 2@ plot  ;
+  \ Note: 23693 is the system variable ATTR P;
+  \ faster than executing `ink`.
+  player-color @ 23693 c! player-coords 2@ plot  ;
 
 ( Crash effect )
 
@@ -62,7 +66,7 @@
   player-score score! .score  ;
 
 : crash?  ( -- f )
-  \ Is the next position occupied?
+  \ Is the next position of the current player occupied?
   player-xinc @ player-xc @ +
   \ dup 0 0 at .  \  XXX INFORMER
   player-yinc @ player-yc @ +

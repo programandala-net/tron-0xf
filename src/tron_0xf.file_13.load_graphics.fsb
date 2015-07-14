@@ -66,9 +66,12 @@ title-address 0 0 0 <tape         \ graphic title
   \ contents of the RAM disk before loading the next RAM disk
   \ from tape (see the Afera module <loader.fsb>). That's why
   \ the Afera module <loaded_execute.fsb> is not used to stop
-  \ the loader at the end of the compilation. The return stack
-  \ is cleared instead:
+  \ the loader at the end of the compilation.
 
+  \ First method: tell the loader to stop and execute `run`:
+  \ ' run cfa loaded !
+
+  \ Second method: Clear the return stack and execute `run`:
 rp! run
 
   \ vim: filetype=abersoftforthafera

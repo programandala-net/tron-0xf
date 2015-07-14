@@ -134,6 +134,7 @@ tron_0xf_compiling.tap : \
 		lib/inkeyq.tap \
 		lib/buffercol.tap \
 		lib/unloop.tap \
+		lib/color.tap \
 		lib/point.tap \
 		lib/plot.tap \
 		lib/noname.tap \
@@ -150,8 +151,8 @@ tron_0xf_compiling.tap : \
 
 # XXX OLD	
 #		lib/cswap.tap \
-#		lib/color.tap \
 #		lib/dump.tap \
+#		tap/tron_0xf.file_*.tap \
 
 # ##############################################################
 # Backups

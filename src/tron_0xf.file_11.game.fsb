@@ -188,50 +188,43 @@ here: positions-table
   player-xinc @ player-xc +!  player-yinc @ player-yc +!  ;
 
 : stop?  ( -- f )
-  false  ?terminal 0= ?exit  drop save-display do-stop?
+  \ f = confirmed Break key?
+  false  ?terminal 0= ?exit   \ no Break key
+  drop save-display do-stop?  \ ask for confirmation
   dup 0= if  restore-display  then  ;
 
-( round )
+: killed  ( -- )
+  \ Kill the current player
+  \ [ ' noop cfa ] literal player-pilot !  \ deactivate it
+  none player-pilot !  \ deactivate it
+  players 1- to players  ;  \ one player less
 
-0 variable crashes
+: only-one?  ( -- f )
+  \ Only one player alive?
+  players 1 =  ;
+
+( round )
 
 : round  ( -- f )
   \ Game round, until a crash happens
   \ or the break key is pressed and confirmed.
   \ f = Break key pressed?
-  round-init
-  begin
-
-    \ XXX NEW method
-    \ crashes off
-
+  round-init  begin
     max-players 0 do
       i player!  player-pilot @ -dup if
-        execute
-
-        \ XXX OLD method
-        \ XXX FIXME when 2 robots play, they crash
-        crash? if
-          \ i quit \ XXX TMP
-          crash +scores unloop false exit  then
-        forward paint noise
+        execute  crash? if
+          killed only-one? if  unloop false exit  then
+        then  forward paint noise
       then
     loop
-
-      \ XXX NEW method -- doesn't makes any difference
-      \ XXX FIXME when 2 robots play, they crash
-      \ crash? dup crashes +!
-      \ 0= if  forward paint noise  then
-    \ loop  crashes @ if  crash +scores false exit  then
-
   stop? until  true  ;
 
 ( game )
 
   \ XXX OLD -- not used
-  \ : ENOUGH?  ( -- f )
+  \ : enough?  ( -- f )
   \   \ No more rounds?
-  \   white ink  ANOTHER?$ 12 |linetype|  no?  ;
+  \   white ink  another?$ 12 |linetype|  no?  ;
 
 : -scores  ( -- )
   \ Reset all scores.
