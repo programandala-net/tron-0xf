@@ -68,8 +68,8 @@ here: menu-options
   sound? dup 1 toggle @ sound  white ink  ;
 
 : about  ( -- )
-  wipe-contents copyright cr cr
-  authors more  license-1 more  license-2 more  ;
+  wipe-contents  copyright cr cr authors more
+  license-1 more  license-2 more  ;
 
 : instructions  ( -- )
   wipe-contents (instructions) more  ;

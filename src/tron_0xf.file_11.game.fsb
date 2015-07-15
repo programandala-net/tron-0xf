@@ -27,19 +27,7 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 11 thru
-
-( Rudder increments)
-
- \ Coordinate increments.
- \ Double constants are used to update the coordinate
- \ increments faster.
-
- \ X  Y 
-   0  1 2constant up-incs
-   0 -1 2constant down-incs
-  -1  0 2constant left-incs
-   1  0 2constant right-incs
+2 8 thru
 
 ( -1|1 )
 
@@ -82,7 +70,6 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ Considering the given coordinate increments
   \ for the current player,
   \ is the second next position occupied?
-  \ XXX TODO faster in Z80
   incs2* player-yc @ + swap player-xc @ + swap point  ;
 
 : dodged?  ( xinc yinc -- f )
@@ -92,11 +79,11 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   crashing? 0=  ;
 
 : dodge-y  ( -- 0 yinc )
-  \ Choose increments to start moving on the Y axis.
+  \ Choose random increments to start moving on the Y axis.
   0 -1|1 2dup dodged? ?exit  minus  ;
 
 : dodge-x  ( -- xinc 0 )
-  \ Choose increments to start moving on the X axis.
+  \ Choose random increments to start moving on the X axis.
   -1|1 0 2dup dodged? ?exit  swap minus swap  ;
 
 : dodge  ( -- )
@@ -130,62 +117,7 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
     player-yinc @ if  right-incs turn  then  then 
   ; is (human)
 
-( positions-table )
-
-:noname
-  ( -- col2 x2 y2 x-inc2 y-inc2 ... col0 x0 y0 x-inc0 y-inc0 )
-  \ Score column, start screen position and increments,
-  \ for three players.
-  18 215 127 left-incs  
-  14 126  40 up-incs    
-  01  40 127 right-incs ;
-
-:noname
-  ( -- col1 x1 y1 x-inc1 y-inc1 col0 x0 y0 x-inc0 y-inc0 )
-  \ Score column, start screen position and increments,
-  \ for two players.
-  28 215 88 left-incs 
-  01  40 88 right-incs  ;
-
-:noname
-  ( -- col0 x0 y0 x-inc0 y-inc0 )
-  \ Score column, start screen position and increments,
-  \ for one player.
-  14 127 88 up-incs  ;
-
-here: positions
-  \ Execution table for `positions`.
-  ( cfa2 cfa1 cfa0 )
-  , , ,
- 
-( positions ready )
-
-: get-positions ( -- ... col x y x-inc y-inc )
-  \ Return one, two or three sets of player positions
-  \ (score column, start screen position and increments).
-  \ Note: only one set is shown in the stack notation above.
-  players 1- positions swap >execute  ;
-
-: set-positions  ( -- )
-  \ Set the players' start positions.
-  get-positions
-  max-players 0 do  i player!
-    player-control @ if
-      player-incs 2! player-yc ! player-xc ! player-score-col ! 
-    then
-  loop  ;
-
-: ready  ( -- )
-  \ Show all players at their start positions.
-  set-positions  max-players 0 do
-    i player!  player-control @ if  paint  then 
-  loop  ;
-
-( round )
-
-  \ Init a game round.
-  \ XXX TODO message
-: round-init  ( -- )  clear-arena ready akey drop  ;
+( duel )
 
 : forward  ( -- )
   \ Update the coordinates of the current player.
@@ -197,19 +129,18 @@ here: positions
   drop save-display do-stop?  \ ask for confirmation
   dup 0= if  restore-display  then  ;
 
-( round )
+( duel )
 
-: round  ( -- f )
-  \ Game round. Stop when a player crashes
+: duel  ( -- f )
+  \ Game duel. Stop when a player crashes
   \ or the break key is pressed and confirmed.
   \ f = Break key pressed and confirmed?
-  round-init  begin
+  duel-init  begin
     max-players 0 do  i player!
       player-control @ -dup if
         execute crash? if
           killed last-one? if  winner unloop false exit  then
-        then
-        forward paint noise
+        else  forward paint noise  then
       then
     loop
   stop? until  true  ;
@@ -218,31 +149,15 @@ here: positions
 
   \ XXX OLD -- not used
   \ : enough?  ( -- f )
-  \   \ No more rounds?
+  \   \ No more duels?
   \   white ink  another?$ 12 |linetype|  no?  ;
 
-: -scores  ( -- )
-  \ Reset all scores.
-  max-players 0 do  i player!  player-score off  loop  ;
-
-: player-controls  ( -- )
-  \ Init every `player-control` with `player-pilot`.
-  max-players 0 do
-    i player!  player-pilot @ player-control !
-  loop  ;
-
-: game-init  ( -- )
-  \ Init the game.
-  cls0 -scores arena save-arena
-  set-motor-sound  sound? @ sound
-  update-players player-controls  ;
-
-: ?round-end  ( f -- )
+: ?duel-end  ( f -- )
   \ XXX TMP
   ?exit  akey drop  ;
 
 : game  ( -- )
   \ Game loop.
-  game-init begin  round dup 0= ?round-end  until  page   ;
+  game-init begin  duel dup 0= ?duel-end  until  page   ;
 
   \ vim: filetype=abersoftforthafera

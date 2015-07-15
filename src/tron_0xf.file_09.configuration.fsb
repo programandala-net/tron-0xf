@@ -160,11 +160,18 @@ here: pilot-controls  \ table of cfa
 : at-pilot  ( -- )  pilot-line player-col at  ;
 : .pilot  ( -- )  at-pilot human|robot|none$ type  ;
 
+: player-controls  ( -- )
+  \ Init every `player-control` with `player-pilot`.
+  max-players 0 do
+    i player!  player-pilot @ player-control !
+  loop  ;
+
 : update-players  ( -- )
   \ Update the number of actual players,
   \ by counting how many players are human or robot.
+  player-controls
   0  max-players 0 do
-      i player! someone? +
+       i player!  player-control @ 0<> +
      loop  to players  ;
 
 : change-pilot  ( -- )

@@ -29,18 +29,10 @@
 
 forth definitions
 
-  \ Memory addresses and sizes
-
-22528 constant attributes  768 constant /attributes
-
   \ System variables
 
 23606 constant sys-chars    23675 constant sys-udg
 23677 constant sys-x-coord  23678 constant sys-y-coord
-
-2 11 thru
-
-( Colors)
 
   \ Color constants
 
@@ -48,7 +40,7 @@ forth definitions
 3 constant magenta  4 constant green  5 constant cyan
 6 constant yellow   7 constant white
 
-: papery  ( color -- paper-attribute )  8 *  ;
+2 11 thru
 
 ( Vocabulary, languages, players types)
 
@@ -60,7 +52,7 @@ forth definitions
  0 constant en     \ English
  1 constant eo     \ Esperanto
  2 constant es     \ Spanish
-en value lang   \ current language
+en value lang      \ current language
 
 3 constant max-players  \ maximum number of players
 3 value players         \ number of players
@@ -91,7 +83,7 @@ defer (robot)  ' (robot) cfa constant robot
 
 ( Players data)
 
-13 cells constant /player-data \ bytes per player data
+17 cells constant /player-data \ bytes per player data
 
   \ Buffer that holds the data of all players.
 
@@ -105,15 +97,12 @@ players-data constant player0-data
 player0-data /player-data + constant player1-data
 player1-data /player-data + constant player2-data
 
-here: player#-data
   \ Table to access the players' data addresses.
-  player0-data , player1-data , player2-data ,
-
-( Specific player data fields )
+here: player#-data player0-data , player1-data , player2-data ,
 
 : player#-variable  ( value field player "name" -- )
 
-  \ Create a player variable.
+  \ Create a player# variable.
 
   \ A player# variable is a constant that points to a data
   \ field of a specific player. This way it works like an
@@ -139,13 +128,10 @@ yellow  7 0 player#-variable color0      \ ink color
      0  9 0 player#-variable down-k0     \ down key
      0 10 0 player#-variable left-k0     \ left key
      0 11 0 player#-variable right-k0    \ right key
-     1 12 0 player#-variable score-col0  \ score column
-
-  \ Double data fields:
-yc0 constant coords0  yinc0 constant incs0
-
-  \ Player keys table:
-up-k0 constant keys0
+     0 12 0 player#-variable score-col0  \ score column
+     \ Double number fields:
+     0 13 0 player#-variable start-incs0    \ start incs
+     0 15 0 player#-variable start-coords0  \ start coords
 
 ( Player 1 data fields)
 
@@ -161,13 +147,10 @@ up-k0 constant keys0
      0  9 1 player#-variable down-k1     \ down key
      0 10 1 player#-variable left-k1     \ left key
      0 11 1 player#-variable right-k1    \ right key
-    14 12 1 player#-variable score-col1  \ score column
-
-  \ Double data fields:
-yc1 constant coords1  yinc1 constant incs1
-
-  \ Player keys table:
-up-k1 constant keys1
+     0 12 1 player#-variable score-col1  \ score column
+     \ Double number fields:
+     0 13 1 player#-variable start-incs1    \ start incs
+     0 15 1 player#-variable start-coords1  \ start coords
 
 ( Player 2 data fields)
 
@@ -183,13 +166,27 @@ up-k1 constant keys1
      0  9 2 player#-variable down-k2     \ down key
      0 10 2 player#-variable left-k2     \ left key
      0 11 2 player#-variable right-k2    \ right key
-    28 12 2 player#-variable score-col2  \ score column
+     0 12 2 player#-variable score-col2  \ score column
+     \ Double number fields:
+     0 13 2 player#-variable start-incs2    \ start incs
+     0 15 2 player#-variable start-coords2  \ start coords
 
-  \ Double data fields:
-yc2 constant coords2  yinc2 constant incs2
+( Double or table fields )
 
-  \ Player keys table:
+  \ These additional definitions point to the first one of
+  \ several related fields that sometimes are managed together,
+  \ e.g. as a double number (coordinates and coordinates
+  \ incrementes) or a table (keys):
+
+up-k0 constant keys0
+up-k1 constant keys1
 up-k2 constant keys2
+yc0 constant coords0
+yc1 constant coords1
+yc2 constant coords2
+yinc0 constant incs0
+yinc1 constant incs1
+yinc2 constant incs2
 
 ( Current player's data fields )
 
@@ -231,12 +228,18 @@ player0-data value player-data
 10 player-variable player-left-k     \ left key
 11 player-variable player-right-k    \ right key
 12 player-variable player-score-col  \ score column
+  \ Double number fields:
+13 player-variable player-start-incs    \ start incs
+15 player-variable player-start-coords  \ start coords
 
 ( Current player special fields )
 
+  \ Double or table fields
+
   \ These additional definitions point to the first one of
   \ several related fields that sometimes are managed together,
-  \ e.g. as a double number:
+  \ e.g. as a double number (coordinates and coordinates
+  \ incrementes) or a table (keys):
 
 5 player-variable player-incs       \ both incs
 3 player-variable player-coords     \ both coordinates
@@ -271,5 +274,8 @@ player0-data value player-data
   \ a = table
   \ n = element of the table (0..x)
   cells + @ execute  ;
+
+  \ Only one player alive, o no-one?
+: last-one?  ( -- f )  players 2 <  ;
 
   \ vim: filetype=abersoftforthafera

@@ -27,9 +27,11 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-16384 constant sys-screen  \ address of the screen
-6912 constant /sys-screen  \ bytes of the screen
-6144 constant /sys-screen-bitmap  \ bytes of the screen bitmap
+  \ Address and size of the screen
+16384 constant sys-screen  6912 constant /sys-screen
+                           6144 constant /sys-screen-bitmap
+  \ Address and size of the screen attributes
+22528 constant attributes  768 constant /attributes
 
 : save-display  ( -- )
   \ Save a copy of the whole display image
@@ -237,7 +239,7 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
   \ Set the screen attributes of the contents zone to the
   \ normal values (white ink).  This is used to show the menu
   \ and other pages instantaneously after updating them.
-  contents-attributes white fill  ;
+  contents-attributes white fill  white ink  ;
 
 ( Status bar)
 
@@ -254,15 +256,6 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
   status-line r at  @ s->d <# # # # #> 2dup +hi-digits type
   status-line 1+ r> at  +lo-digits type +font  ;
 
-  \ XXX OLD
-  \ here: score-column-table
-  \   \ Columns of the scores on the status bar.
-  \   1 c, 28 c, 14 c,
-
-  \ : score-column  ( -- column )
-  \   \ Column of the current player's score.
-  \   player score-column-table + c@  ;
-
 : .score  ( -- )
   \ Print the the current player's score.
   player-score player-score-col player-color (.score)  ;
@@ -270,15 +263,23 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
 : status  ( -- )
   \ Show the status bar.
   \ XXX TODO improve (now it shows only the scores)
+  last-one? ?exit
   max-players 0 do
     i player!  someone? if  .score  then
   loop  ;
 
+: -status  ( -- )
+  \ Erase the status bar.
+  status-line 0 at  [ cols 2* ] literal spaces  ;
+
 ( color-frame )
 
-red black papery + constant frame-color
+: papery  ( color -- paper-attribute )  8 *  ;
 
-: frame-bar  ( a -- )  cols frame-color fill  ;
+red constant frame-color
+frame-color black papery + constant frame-attribute
+
+: frame-bar  ( a -- )  cols frame-attribute fill  ;
 
 : color-frame  ( -- )
 
@@ -288,7 +289,7 @@ red black papery + constant frame-color
   bottom-frame-attributes frame-bar  \ bottom part
   \ Left and right parts:
   bottom-frame-attributes top-frame-attributes do
-    frame-color dup i c!  i [ cols 1 - ] literal + c!
+    frame-attribute dup i c!  i [ cols 1 - ] literal + c!
   cols +loop  ;
 
 ( draw-frame frame )

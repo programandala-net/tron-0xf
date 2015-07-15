@@ -56,21 +56,18 @@
 
 ( Keyboard messages and prompts )
 
-: .press-any-key  ( -- )
-  \ Print "press any key" in the current language.
-  press-any-key$ remark reveal-contents  ;
-
 : wait-any-key  ( -- )
   500 ms  akey drop key-sound  ;
 
 : press-any-key  ( -- )
-  \ Wait for a key press.
-  .press-any-key wait-any-key  ;
+  \ Print "press any key" in the current language
+  \ and wait for a key press.
+  press-any-key$ remark wait-any-key  ;
 
 : more  ( -- )
   \ Wait for a key press and prepare the screen
   \ for a new contents page.
-  press-any-key wipe-contents  ;
+  reveal-contents press-any-key wipe-contents  ;
 
 : .do-stop  ( -- )
   \ Print "Do you want to stop?" in the current language.

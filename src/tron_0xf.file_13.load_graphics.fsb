@@ -36,7 +36,7 @@
   \ Used as storage space during the game:
   \
   \ screen 1:           copy of arena attributes (<768 bytes)
-  \ screens 2-8:        copy of whole screen (6912 bytes)
+  \ screens 2-8:        copy of a whole screen (6912 bytes)
   \
   \ Loaded directly from tape files:
   \
