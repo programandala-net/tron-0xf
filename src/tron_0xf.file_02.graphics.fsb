@@ -88,7 +88,7 @@ hi 1+ constant digits-udg
 
 ( UDG fonts)
 
-  \ User Defined Graphics are used for the Spanish and
+  \ The user defined graphics are used for the Spanish and
   \ Esperanto characters. Two banks are used. They are loaded
   \ from tape at the end of the compilation. The correspondent
   \ UDG bank is switched when the user changes the language in
@@ -152,9 +152,6 @@ attributes constant top-frame-attributes
 attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Center justified texts and title )
-
-  \ XXX OLD
-  \ : HOME  ( -- )  0 dup at  ;
 
 : centered  ( len -- column )
   \ Convert a string length to the column required
@@ -245,13 +242,6 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
 ( Status bar)
 
 22 constant status-line
-
-  \ XXX OLD -- version with normal characters
-  \ : score. ( a color line column -- )
-  \ Print the content of a score variable,
-  \ with the given color, at the given position,
-  \ using 3 digits.
-  \ at ink @ s->d <# # # # #> type  ;
 
 : (.score) ( a1 a2 a3 -- )
   \ Print the content of a score variable,

@@ -69,16 +69,29 @@ en value lang   \ current language
 
   \ Type of players. The cfa of the control word is stored into
   \ the correspondent player variable, ready to be executed
-  \ during the game. `none` is a special case, skipped by the
-  \ game loop.
+  \ during the game. `none` is a special case, used to ignore
+  \ the player in the game loop.
 
 defer (human)  ' (human) cfa constant human
 defer (robot)  ' (robot) cfa constant robot
                            0 constant none
+                           0 constant dead
+
+  \ There are two similar player fields the constants above are
+  \ used with:
+  \
+  \ `player-pilot` holds the type of pilot, `human` or `robot`,
+  \ or `none` to indicate the player is not used at all in the
+  \ game.
+  \
+  \ `player-control` is updated at the start of every round
+  \ with the contents of `player-pilot`; when a crash happens,
+  \ this field is changed to `dead`, what means the player will
+  \ be skipped in the game loop.
 
 ( Players data)
 
-12 cells constant /player-data \ bytes per player data
+13 cells constant /player-data \ bytes per player data
 
   \ Buffer that holds the data of all players.
 
@@ -114,64 +127,67 @@ here: player#-data
 
 ( Player 0 data fields)
 
- human  0 0 player#-variable pilot0      \ human or robot
-     0  1 0 player#-variable score0      \ score
-     0  2 0 player#-variable yc0         \ Y coordinate
-     0  3 0 player#-variable xc0         \ X coordinate
-     0  4 0 player#-variable yinc0       \ Y inc (-1..1)
-     0  5 0 player#-variable xinc0       \ X inc (-1..1)
-yellow  6 0 player#-variable color0      \ ink color
-     0  7 0 player#-variable up-k0       \ up key
-     0  8 0 player#-variable down-k0     \ down key
-     0  9 0 player#-variable left-k0     \ left key
-     0 10 0 player#-variable right-k0    \ right key
-     1 11 0 player#-variable score-col0  \ score column
+ robot  0 0 player#-variable pilot0      \ human, robot, none
+ robot  1 0 player#-variable control0    \ human, robot, noop
+     0  2 0 player#-variable score0      \ score
+     0  3 0 player#-variable yc0         \ Y coordinate
+     0  4 0 player#-variable xc0         \ X coordinate
+     0  5 0 player#-variable yinc0       \ Y inc (-1..1)
+     0  6 0 player#-variable xinc0       \ X inc (-1..1)
+yellow  7 0 player#-variable color0      \ ink color
+     0  8 0 player#-variable up-k0       \ up key
+     0  9 0 player#-variable down-k0     \ down key
+     0 10 0 player#-variable left-k0     \ left key
+     0 11 0 player#-variable right-k0    \ right key
+     1 12 0 player#-variable score-col0  \ score column
 
   \ Double data fields:
-yc0   constant coords0
-yinc0 constant incs0
+yc0 constant coords0  yinc0 constant incs0
+
   \ Player keys table:
 up-k0 constant keys0
 
 ( Player 1 data fields)
 
- robot  0 1 player#-variable pilot1      \ human or robot
-     0  1 1 player#-variable score1      \ score
-     0  2 1 player#-variable yc1         \ Y coordinate
-     0  3 1 player#-variable xc1         \ X coordinate
-     0  4 1 player#-variable yinc1       \ Y inc (-1..1)
-     0  5 1 player#-variable xinc1       \ X inc (-1..1)
-  cyan  6 1 player#-variable color1      \ ink color
-     0  7 1 player#-variable up-k1       \ up key
-     0  8 1 player#-variable down-k1     \ down key
-     0  9 1 player#-variable left-k1     \ left key
-     0 10 1 player#-variable right-k1    \ right key
-    14 11 1 player#-variable score-col1  \ score column
+ human  0 1 player#-variable pilot1      \ human or robot
+ human  1 1 player#-variable control1    \ human, robot, noop
+     0  2 1 player#-variable score1      \ score
+     0  3 1 player#-variable yc1         \ Y coordinate
+     0  4 1 player#-variable xc1         \ X coordinate
+     0  5 1 player#-variable yinc1       \ Y inc (-1..1)
+     0  6 1 player#-variable xinc1       \ X inc (-1..1)
+  cyan  7 1 player#-variable color1      \ ink color
+     0  8 1 player#-variable up-k1       \ up key
+     0  9 1 player#-variable down-k1     \ down key
+     0 10 1 player#-variable left-k1     \ left key
+     0 11 1 player#-variable right-k1    \ right key
+    14 12 1 player#-variable score-col1  \ score column
 
   \ Double data fields:
-yc1   constant coords1
-yinc1 constant incs1
+yc1 constant coords1  yinc1 constant incs1
+
   \ Player keys table:
 up-k1 constant keys1
 
 ( Player 2 data fields)
 
- robot  0 2 player#-variable pilot2      \ human or robot
-     0  1 2 player#-variable score2      \ score
-     0  2 2 player#-variable yc2         \ Y coordinate
-     0  3 2 player#-variable xc2         \ X coordinate
-     0  4 2 player#-variable yinc2       \ Y inc (-1..1)
-     0  5 2 player#-variable xinc2       \ X inc (-1..1)
- green  6 2 player#-variable color2      \ ink color
-     0  7 2 player#-variable up-k2       \ up key
-     0  8 2 player#-variable down-k2     \ down key
-     0  9 2 player#-variable left-k2     \ left key
-     0 10 2 player#-variable right-k2    \ right key
-    28 11 2 player#-variable score-col2  \ score column
+ robot  0 2 player#-variable pilot2      \ human, robot, none
+ robot  1 2 player#-variable control2    \ human, robot, noop
+     0  2 2 player#-variable score2      \ score
+     0  3 2 player#-variable yc2         \ Y coordinate
+     0  4 2 player#-variable xc2         \ X coordinate
+     0  5 2 player#-variable yinc2       \ Y inc (-1..1)
+     0  6 2 player#-variable xinc2       \ X inc (-1..1)
+ green  7 2 player#-variable color2      \ ink color
+     0  8 2 player#-variable up-k2       \ up key
+     0  9 2 player#-variable down-k2     \ down key
+     0 10 2 player#-variable left-k2     \ left key
+     0 11 2 player#-variable right-k2    \ right key
+    28 12 2 player#-variable score-col2  \ score column
 
   \ Double data fields:
-  yc2 constant coords2
-yinc2 constant incs2
+yc2 constant coords2  yinc2 constant incs2
+
   \ Player keys table:
 up-k2 constant keys2
 
@@ -202,32 +218,45 @@ player0-data value player-data
 
 ( Current player data fields )
 
- 0 player-variable player-pilot      \ human, robot
- 1 player-variable player-score      \ score
- 2 player-variable player-coords     \ both coordinates
- 2 player-variable player-yc         \ Y coordinate
- 3 player-variable player-xc         \ X coordinate
- 4 player-variable player-incs       \ both incs
- 4 player-variable player-yinc       \ Y inc (-1..1)
- 5 player-variable player-xinc       \ X inc (-1..1)
- 6 player-variable player-color      \ ink color
- 7 player-variable player-keys       \ keys table
- 7 player-variable player-up-k       \ up key
- 8 player-variable player-down-k     \ down key
- 9 player-variable player-left-k     \  left key
-10 player-variable player-right-k    \ right key
-11 player-variable player-score-col  \ score column
+ 0 player-variable player-pilot      \ human, robot, none
+ 1 player-variable player-control    \ human, robot, noop
+ 2 player-variable player-score      \ score
+ 3 player-variable player-yc         \ Y coordinate
+ 4 player-variable player-xc         \ X coordinate
+ 5 player-variable player-yinc       \ Y inc (-1..1)
+ 6 player-variable player-xinc       \ X inc (-1..1)
+ 7 player-variable player-color      \ ink color
+ 8 player-variable player-up-k       \ up key
+ 9 player-variable player-down-k     \ down key
+10 player-variable player-left-k     \ left key
+11 player-variable player-right-k    \ right key
+12 player-variable player-score-col  \ score column
 
-( Current player calculated fields and other tools)
+( Current player special fields )
+
+  \ These additional definitions point to the first one of
+  \ several related fields that sometimes are managed together,
+  \ e.g. as a double number:
+
+5 player-variable player-incs       \ both incs
+3 player-variable player-coords     \ both coordinates
+8 player-variable player-keys       \ keys table
+
+  \ Calculated fields
 
   \ Is the current player a human pilot?
 : human?  ( -- f )  player-pilot @ human =  ;
-  
-  \ Is the current player "none"? (not human, not robot).
-: none?  ( -- f )  player-pilot @ 0=  ;
+
+  \ Is the current player "none"?
+: none?  ( -- f )  player-pilot @ none =  ;
 
   \ Is the current player "someone"? (human or robot).
 : someone?  ( -- f )  none? 0=  ;
+
+  \ Is the current player alive?
+: alive?  ( -- f )  player-control @ dead <>  ;
+
+  \ Other tools
 
 : char-in-string?  ( c ca len -- n tf | ff )
   \ Is the char _c_ in the  string _ca len_?
@@ -236,5 +265,11 @@ player0-data value player-data
   over >r bounds do
     dup i c@ = if  drop i unloop r> - true exit  then
   loop  drop rdrop false  ;
+
+: >execute  ( a n -- )
+  \ Execute a cfa stored in a table.
+  \ a = table
+  \ n = element of the table (0..x)
+  cells + @ execute  ;
 
   \ vim: filetype=abersoftforthafera

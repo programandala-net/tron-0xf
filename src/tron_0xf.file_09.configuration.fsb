@@ -80,7 +80,7 @@ here: key-descs
 
 : key-desc  ( n -- ca len )
   \ Get the _n_ text from the `key-descs` table.
-  cells key-descs + @ execute  ;
+  key-descs swap >execute  ;
   
 : key.  ( line col a -- )
   \ Print a key name.

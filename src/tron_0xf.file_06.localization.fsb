@@ -52,7 +52,7 @@
   \ fetch from its pfa one of the three stored cfa depending on
   \ the current language, and execute it:
 
-  does>  ( pfa )  lang cells + @ execute  ;
+  does>  ( pfa )  lang >execute  ;
 
 ( Localized menu options)
 

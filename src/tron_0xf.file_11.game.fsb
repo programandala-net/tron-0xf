@@ -133,19 +133,19 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
 ( positions-table )
 
 :noname
-  ( -- col0 x0 y0 x-inc0 y-inc0 ... col2 x2 y2 x-inc2 y-inc2 )
+  ( -- col2 x2 y2 x-inc2 y-inc2 ... col0 x0 y0 x-inc0 y-inc0 )
   \ Score column, start screen position and increments,
   \ for three players.
-   1 126  40 up-incs    
-  14 215 127 left-incs  
-  28  40 127 right-incs ;
+  18 215 127 left-incs  
+  14 126  40 up-incs    
+  01  40 127 right-incs ;
 
 :noname
-  ( -- col0 x0 y0 x-inc0 y-inc0 col1 x1 y1 x-inc1 y-inc1 )
+  ( -- col1 x1 y1 x-inc1 y-inc1 col0 x0 y0 x-inc0 y-inc0 )
   \ Score column, start screen position and increments,
   \ for two players.
-   1 215 88 left-incs 
-  28  40 88 right-incs  ;
+  28 215 88 left-incs 
+  01  40 88 right-incs  ;
 
 :noname
   ( -- col0 x0 y0 x-inc0 y-inc0 )
@@ -153,28 +153,32 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ for one player.
   14 127 88 up-incs  ;
 
-here: positions-table
+here: positions
   \ Execution table for `positions`.
-  ( cfa3 cfa2 cfa1 )
+  ( cfa2 cfa1 cfa0 )
   , , ,
  
 ( positions ready )
 
-: positions  ( -- )
+: get-positions ( -- ... col x y x-inc y-inc )
+  \ Return one, two or three sets of player positions
+  \ (score column, start screen position and increments).
+  \ Note: only one set is shown in the stack notation above.
+  players 1- positions swap >execute  ;
+
+: set-positions  ( -- )
   \ Set the players' start positions.
-  \ First, get the positions needed for the number of players:
-  players 1- cells positions-table + @ execute
-  \ Second, store them into the players:
+  get-positions
   max-players 0 do  i player!
-    someone? if
+    player-control @ if
       player-incs 2! player-yc ! player-xc ! player-score-col ! 
     then
   loop  ;
 
 : ready  ( -- )
   \ Show all players at their start positions.
-  positions  max-players 0 do
-    i player!  someone? if  paint  then
+  set-positions  max-players 0 do
+    i player!  player-control @ if  paint  then 
   loop  ;
 
 ( round )
@@ -193,28 +197,19 @@ here: positions-table
   drop save-display do-stop?  \ ask for confirmation
   dup 0= if  restore-display  then  ;
 
-: killed  ( -- )
-  \ Kill the current player
-  \ [ ' noop cfa ] literal player-pilot !  \ deactivate it
-  none player-pilot !  \ deactivate it
-  players 1- to players  ;  \ one player less
-
-: only-one?  ( -- f )
-  \ Only one player alive?
-  players 1 =  ;
-
 ( round )
 
 : round  ( -- f )
-  \ Game round, until a crash happens
+  \ Game round. Stop when a player crashes
   \ or the break key is pressed and confirmed.
-  \ f = Break key pressed?
+  \ f = Break key pressed and confirmed?
   round-init  begin
-    max-players 0 do
-      i player!  player-pilot @ -dup if
-        execute  crash? if
-          killed only-one? if  unloop false exit  then
-        then  forward paint noise
+    max-players 0 do  i player!
+      player-control @ -dup if
+        execute crash? if
+          killed last-one? if  winner unloop false exit  then
+        then
+        forward paint noise
       then
     loop
   stop? until  true  ;
@@ -230,10 +225,17 @@ here: positions-table
   \ Reset all scores.
   max-players 0 do  i player!  player-score off  loop  ;
 
+: player-controls  ( -- )
+  \ Init every `player-control` with `player-pilot`.
+  max-players 0 do
+    i player!  player-pilot @ player-control !
+  loop  ;
+
 : game-init  ( -- )
   \ Init the game.
   cls0 -scores arena save-arena
-  set-motor-sound  sound? @ sound  ;
+  set-motor-sound  sound? @ sound
+  update-players player-controls  ;
 
 : ?round-end  ( f -- )
   \ XXX TMP

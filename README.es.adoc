@@ -1,0 +1,27 @@
+= Acerca de Tron 0xF
+:author: Marcos Cruz (programandala.net)
+:revdate: 2015-07-14
+
+Tron 0xF está escrito en Abersoft Forth (un fig-Forth 1.1
+llevado a ZX Spectrum por John Jones Steele y publicado por
+Melbourne House en 1983).
+
+== Cómo ejecutarlo
+
+Abre el fichero <tron_0xf.szx> en un emulador de ZX Spectrum.
+
+== Cómo compilarlo
+
+Para convertir los ficheros fuente de Tron 0xF en un fichero TAP
+utilizable por Abersoft Forth en un emulador de ZX Spectrum, es
+preciso tener instalado el conversor fsb:
+
+http://programandala.net/es.programa.fsb.html
+
+Después entra en el directorio de Tron 0xF y ejecuta el comando
+`make`.  Esto creará el fichero <tron_0xf_compiling.tap>.  Ábrelo con
+tu emulador. Saldrá la pantalla inicial de Abersoft Forth.  Entonces
+teclea el comando `LOADT 1 LOAD`. La compilación durará unos minutos,
+a la velocidad original de ZX Spectrum. El programa se pondrá en
+marcha al final.
+

@@ -43,20 +43,13 @@ options buffer: menu-keys
   \ Menu option 3 with the status of the sound.
   option-3$ sound? @ on/off$ s+  ;
 
-  \ XXX OLD
-  \ :noname  ( -- ca len )
-  \   \ Menu option 2 with the number of players.
-  \   option-2$ players s->d <# #s #> s+  ;
-  
 here: menu-options
   
   \ Table that holds the cfa of the words that return the
   \ localized texts of the menu options.
 
   ' option-0$ cfa ,   ' option-1$ cfa ,
-  \ XXX OLD
-  \ , ,  \ options 2 and 3 created with `:noname` above
-  , \ options 3 created with `:noname` above
+  , \ option 3 created with `:noname` above
   ' option-4$ cfa ,  ' option-5$ cfa ,
   ' option-6$ cfa ,   ' option-7$ cfa ,
 
@@ -65,16 +58,6 @@ here: menu-options
 : change-language  ( -- )
   \ Change the current language.
   lang 1+ dup langs < *  dup to lang  +udg wipe-contents  ;
-
-  \ XXX OLD
-  \ : change-players  ( -- )
-  \   \ Change the number of players.
-  \   \ White ink has to be set at the end in order to
-  \   \ prevent flickering when updating the menu,
-  \   \ because the way the screen is uptaded sets black ink
-  \   \ as default.
-  \   players 1+ dup [ max-players 1+ ] literal < * 1 max
-  \   to players  white ink  ;
 
 : toggle-sound  ( -- )
   \ Toggle the game sounds.
@@ -101,15 +84,14 @@ here: menu-commands
   \ Execution table of the menu commands.
   \
   \ Every command must leave the screen ready to print the
-  \ menu: commands that use the whole screen must call `PAGE`;
+  \ menu: commands that use the whole screen must call `page`;
   \ commands that use only the contents zone must call
-  \ `wipe-contents` (or `MORE`, that calls it); commands that
+  \ `wipe-contents` (or `more`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
   ]
     change-language
     instructions
-    \ change-players \ XXX OLD
     toggle-sound
     pilots
     game
@@ -140,15 +122,17 @@ here: menu-commands
 
 : option>string  ( n -- ca len )
   \ Convert a menu option number to its localized text.
-  cells menu-options + @ execute  ;
+  menu-options swap >execute  ;
 
 ( Option)
 
 : option  ( n -- )
   \ Print menu option number n. 
-  \ XXX TODO make it much faster: calculate
+
+  \ XXX TODO -- make it simpler and faster: calculate
   \ the coordinates when the strings are created, and
   \ store them in a table.
+
   dup >r                  ( n ) ( R: n )
   dup option>line         ( n line ) 
   >r option>string        ( ca len ) ( R: n line )

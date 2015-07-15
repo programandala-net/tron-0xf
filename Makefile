@@ -30,6 +30,7 @@
 # 2015-07-08: Changed backup recipe to use xz.
 # 2015-07-09: Added <tron_0xf.szx> to the backup recipe.
 # 2015-07-12: Updated with <lib/rdrop.tap>.
+# 2015-07-15: Updated the backup recipe.
 
 ################################################################
 # Requirements
@@ -161,7 +162,7 @@ backup:
 	tar -cJf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tar.xz \
 		Makefile \
 		src/*.fsb \
-		README.md \
+		README.* \
 		tron_0xf.szx \
 		old/*
 

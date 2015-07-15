@@ -68,7 +68,7 @@ title-address 0 0 0 <tape         \ graphic title
   \ the Afera module <loaded_execute.fsb> is not used to stop
   \ the loader at the end of the compilation.
 
-  \ First method: tell the loader to stop and execute `run`:
+  \ First method: make the loader stop and execute `run`:
   \ ' run cfa loaded !
 
   \ Second method: Clear the return stack and execute `run`:

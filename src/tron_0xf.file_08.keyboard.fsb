@@ -110,11 +110,11 @@ here: keys
   \ player 2 are suitable for the Dvorak keyboard layout (keys
   \ K, X, B, M).
 
-hex                   here left-k0 !   \ "1"
-char 1 01 F7FE , , ,  here right-k0 !  \ "2"
-char 2 02 F7FE , , ,  here up-k0 !     \ "3"
-char 3 04 F7FE , , ,  here down-k0 !   \ "4"
-char 4 08 F7FE , , ,
+hex                   here left-k0 !    \ "1"
+char 1 01 F7FE , , ,  here right-k0 !   \ "2"
+char 2 02 F7FE , , ,  here up-k0 !      \ "3"
+char 3 04 F7FE , , ,  here down-k0 !    \ "4"
+char 4 08 F7FE , , ,  here left-k1 !    \ "5"
 char 5 10 F7FE , , , 
 
 char Q 01 FBFE , , ,
@@ -137,10 +137,10 @@ char X 04 FEFE , , ,
 char C 08 FEFE , , ,
 char V 10 FEFE , , ,
 
-char 0 01 EFFE , , ,  here down-k1 !  \ "9"
-char 9 02 EFFE , , ,  here up-k1 !    \ "8"
-char 8 04 EFFE , , ,  here right-k1 ! \ "7"
-char 7 08 EFFE , , ,  here left-k1 !  \ "6"
+char 0 01 EFFE , , ,
+char 9 02 EFFE , , ,  here right-k1 ! \ "8"
+char 8 04 EFFE , , ,  here up-k1 !    \ "7"
+char 7 08 EFFE , , ,  here down-k1 !  \ "6"
 char 6 10 EFFE , , ,
 
 ( keys table, rows P-Y En-H )

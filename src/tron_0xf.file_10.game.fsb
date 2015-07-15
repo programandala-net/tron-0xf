@@ -27,18 +27,15 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 4 thru
+2 5 thru
   
 ( Paint )
 
 : paint  ( -- )
   \ Paint the current player.
-  \ player-color @ ink player-coords 2@ plot  ;
-  \ Note: 23693 is the system variable ATTR P;
-  \ faster than executing `ink`.
-  player-color @ 23693 c! player-coords 2@ plot  ;
+  player-color @ ink player-coords 2@ plot  ;
 
-( Crash effect )
+( Crash check and effect )
 
 : borders  ( -- )
   \ Change the border using all colors from white to black.
@@ -52,19 +49,6 @@
   \ Do a visual effect; then wait until a key is pressed.
   crash-effect  begin  inkey?  until  drop  ;
 
-( Collisions )
-
-999 constant max-score
-
-: score!   ( n a -- )
-  \ Update the score stored in 'a' with 'n';
-  \ if the result is greater than the maximum score,
-  \ reset the score to zero.
-  dup @ rot + dup max-score > if  0=  then  swap !  ;
-
-: score+  ( n -- )
-  player-score score! .score  ;
-
 : crash?  ( -- f )
   \ Is the next position of the current player occupied?
   player-xinc @ player-xc @ +
@@ -75,9 +59,35 @@
   \ dup if  1 0 at quit  then  \  XXX INFORMER
   ;
 
-: +scores  ( -- )
-  \ Increase the score of the players that didn't crash.
-  \ XXX TODO new system: the last survivor wins
-  max-players 0 do  i player! crash? 0= score+  loop  ;
+( Scores )
+
+999 constant max-score
+
+: score!   ( n a -- )
+  \ Update the score stored in 'a' with 'n';
+  \ if the result is greater than the maximum score,
+  \ reset the score to zero.
+  dup @ rot + dup max-score > if  0=  then  swap !  ;
+
+: score+  ( -- )
+  \ Increase the score of the current player.
+  1 player-score score! .score  ;
+
+: winner  ( -- )
+  \ Search for the winner and increase the score.
+  max-players 0 do
+    i player! alive? if  score+ leave  then
+  loop  ;
+
+( Collisions )
+
+: killed  ( -- )
+  \ Kill the current player.
+  dead player-control !  \ deactivate it
+  players 1- to players  ;  \ one less
+
+: last-one?  ( -- f )
+  \ Only one player alive, o no-one?
+  players 2 <  ;
 
   \ vim: filetype=abersoftforthafera

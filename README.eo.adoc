@@ -1,0 +1,25 @@
+= Pri Tron 0xF
+:author: Marcos Cruz (programandala.net)
+:revdate: 2015-07-14
+
+Tron 0xF estas verkita en Abersoft Forth (fig-Forth 1.1
+adaptita al ZX Spectrum far John Jones Steele kaj eldonita de
+Melbourne House en 1983).
+
+== Kiel funkciigi
+
+Malfermu la dosieron <tron_0xf.szx> per emulilo de ZX Spectrum.
+
+== Kiel kompili
+
+Por traduki la font-dosierojn de Tron 0xF en TAP-dosieron uzeblan de
+Abersoft Forth per emulilo de ZX Spectrum, la tradukilo fsb devas esti
+instalita:
+
+http://programandala.net/eo.programo.fsb.html
+
+Poste eniru la dosierujon de Tron 0xF kaj ordonu `make`. Tio kreos la
+dosieron <tron_0xf_compiling.tap>. Malfermu ĝin per via emulilo. Ĉe la
+salutekrano de Abersoft Forth tajpu la ordonon `LOADT 1 LOAD`. La
+kompilado daŭros plurajn minutojn je la originala rapido de ZX
+Spectrum.  La programo ekfunctios je la fino.
