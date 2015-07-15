@@ -136,10 +136,8 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-option-0$  ( -- ca len )  s" No en español"  ;
 : es-option-1$  ( -- ca len )  s" Instrucciones"  ;
-  \ XXX OLD
-  \ : es-option-2$  ( -- ca len )  s" Motos: "  ;
 : es-option-3$  ( -- ca len )  s" Sonido: "  ;
-: es-option-4$  ( -- ca len )  s" Pilotos"  ;
+: es-option-4$  ( -- ca len )  s" Configurar"  ;
 : es-option-5$  ( -- ca len )  s" Empezar"  ;
 : es-option-6$  ( -- ca len )  s" Acerca de"  ;
 : es-option-7$  ( -- ca len )  s" Salir"  ;
@@ -152,10 +150,6 @@ char S constant es-'y'  \ the letter used to say "yes"
 : es-press-any-key$  ( -- ca len ) s" Pulsa una tecla"  ;
 
 : es-do-stop$  ( -- ca len )  s" ¿Quieres terminar?"  ;
-
-  \ XXX OLD
-  \ : es-do-change$  ( -- ca len )
-  \ s" ¿Quieres cambiar algo?"  ;
 
 : es-license$  ( -- ca len )  s" Licencia:"  ;
 

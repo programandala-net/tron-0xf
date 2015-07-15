@@ -31,17 +31,20 @@
 
 ( Menu -- data )
 
-7 constant options       \ number of menu options
+6 constant options       \ number of menu options
 2 constant lines/option  \ lines occupied per menu option
+
+contents-line 2+ constant menu-line
 
 options buffer: menu-keys
   \ A table to store the menu keys. They change depending on
   \ the current language. This table is updated every time the
   \ menu is printed, using the initials of the menu options.
 
-:noname  ( -- ca len )
-  \ Menu option 3 with the status of the sound.
-  option-3$ sound? @ on/off$ s+  ;
+  \ XXX OLD
+  \ :noname  ( -- ca len )
+  \   \ Menu option 3 with the status of the sound.
+  \   option-3$ sound? @ on/off$ s+  ;
 
 here: menu-options
   
@@ -49,7 +52,7 @@ here: menu-options
   \ localized texts of the menu options.
 
   ' option-0$ cfa ,   ' option-1$ cfa ,
-  , \ option 3 created with `:noname` above
+  \ , \ option 3 created with `:noname` above \ XXX OLD
   ' option-4$ cfa ,  ' option-5$ cfa ,
   ' option-6$ cfa ,   ' option-7$ cfa ,
 
@@ -59,25 +62,23 @@ here: menu-options
   \ Change the current language.
   lang 1+ dup langs < *  dup to lang  +udg wipe-contents  ;
 
-: toggle-sound  ( -- )
-  \ Toggle the game sounds.
-  \ White ink has to be set at the end in order to
-  \ prevent flickering when updating the menu,
-  \ because the way the screen is uptaded sets black ink
-  \ as default.
-  sound? dup 1 toggle @ sound  white ink  ;
+  \ : x-toggle-sound  ( -- )  \ XXX OLD
+  \   \ Toggle the game sounds.
+  \   \ White ink has to be set at the end in order to
+  \   \ prevent flickering when updating the menu,
+  \   \ because the way the screen is uptaded sets black ink
+  \   \ as default.
+  \   sound? dup 1 toggle @ sound  white ink  ;
 
 : about  ( -- )
   wipe-contents  copyright cr cr authors more
   license-1 more  license-2 more  ;
 
-: instructions  ( -- )
-  wipe-contents (instructions) more  ;
+: instructions  ( -- )  wipe-contents (instructions) more  ;
 
-: finish  ( -- )
-  cls0 -font quit-message quit  ;
+: finish  ( -- )  cls0 -font quit-message quit  ;
 
-( Menu commands table)
+( Menu commands and options)
 
 here: menu-commands
 
@@ -89,17 +90,7 @@ here: menu-commands
   \ `wipe-contents` (or `more`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
-  ]
-    change-language
-    instructions
-    toggle-sound
-    pilots
-    game
-    about
-    finish
-  [
-
-( Menu options)
+  ] change-language instructions configure game about finish [
 
 : initial.  ( c -- )
   \ Print the given char as a menu option initial.
@@ -118,7 +109,7 @@ here: menu-commands
 
 : option>line  (  n -- line )
   \ Convert a menu option number to its line.
-  lines/option * contents-line +  ;
+  lines/option * menu-line +  ;
 
 : option>string  ( n -- ca len )
   \ Convert a menu option number to its localized text.

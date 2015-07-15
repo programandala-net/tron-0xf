@@ -103,10 +103,6 @@ localized do-stop$  ( -- ca len )
 
 ( Localized texts) 
 
-  \ XXX OLD
-  \ ' es-do-change$ ' eo-do-change$ ' en-do-change$
-  \ localized do-change$  ( -- ca len )
-
 ' es-license$ ' eo-license$ ' en-license$
 localized license$  ( -- ca len )
 

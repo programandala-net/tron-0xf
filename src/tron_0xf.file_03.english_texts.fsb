@@ -114,10 +114,8 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-option-0$  ( -- ca len )  s" Not in English"  ;
 : en-option-1$  ( -- ca len )  s" Instructions"  ;
-  \ XXX OLD
-  \ : en-option-2$  ( -- ca len )  s" Motorbikes: "  ;
 : en-option-3$  ( -- ca len )  s" Sound: "  ;
-: en-option-4$  ( -- ca len )  s" Pilots"  ;
+: en-option-4$  ( -- ca len )  s" Configure"  ;
 : en-option-5$  ( -- ca len )  s" Start"  ;
 : en-option-6$  ( -- ca len )  s" About"  ;
 : en-option-7$  ( -- ca len )  s" Quit"  ;
@@ -130,10 +128,6 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-press-any-key$  ( -- ca len )  s" Press any key"  ;
 
 : en-do-stop$  ( -- ca len )  s" Do you want to stop?"  ;
-
-  \ XXX OLD
-  \ : en-do-change$  ( -- ca len )
-  \   s" Do you want to change something?"  ;
 
 : en-license$  ( -- ca len )  s" License:"  ;
 

@@ -77,7 +77,7 @@
   cr
   ." Kodo kaj grafikoj: Marcos Cruz" cr
   10 at-col ." Provado: Teo kaj Irene"  cr cr
-  ." Verkita en Forth per Abersoft" cr
+  ." Verkita en Fortho per Abersoft" cr
   ." Forth (Melbourne House, 1983)" cr
   ." kaj la biblioteko Afera (2015)."  ;
   \  <------------------------------>
@@ -131,13 +131,11 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
 : eo-option-0$  ( -- ca len )  s" Ne en Esperanto"  ;
 : eo-option-1$  ( -- ca len )  s" Instrukcioj"  ;
-  \ XXX OLD
-  \ : eo-option-2$  ( -- ca len )  s" Motorcikloj: "  ;
 : eo-option-3$  ( -- ca len )  s" Sono: "  ;
-: eo-option-4$  ( -- ca len )  s" Pilotoj"  ;
-: eo-option-5$  ( -- ca len )  s" Komenci"  ;
+: eo-option-4$  ( -- ca len )  s" Konfiguri"  ;
+: eo-option-5$  ( -- ca len )  s" Eki"  ;
 : eo-option-6$  ( -- ca len )  s" Prio"  ;
-: eo-option-7$  ( -- ca len )  s" Eliri"  ;
+: eo-option-7$  ( -- ca len )  s" Fini"  ;
 
 ( Other )
 
@@ -147,10 +145,6 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-press-any-key$  ( -- ca len ) s" Premu klavon"  ;
 
 : eo-do-stop$  ( -- ca len )  s" Ĉu vi volas fini?"  ;
-
-  \ XXX OLD
-  \ : eo-do-change$  ( -- ca len )
-  \ s" Ĉu vi volas ŝanĝi ion?"  ;
 
 : eo-license$  ( -- ca len )  s" Permesilo:"  ;
 
