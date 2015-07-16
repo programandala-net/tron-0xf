@@ -27,7 +27,11 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 forth definitions
+
+20150716. 2constant version
 
   \ System variables
 

@@ -27,13 +27,15 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
   \ Max length of a player key description in any language:
 11 constant /key-desc
 
   \ Lines of some parts of the config menu:
 contents-line
- 1+ dup constant sound-line  \ sound
-3 + dup constant player-line \ player number
+ 2+ dup constant sound-line  \ sound
+ 2+ dup constant vehicle-line \ vehicle number
  2+ dup constant pilot-line  \ human or robot
  2+     constant keys-line   \ top keys row
 
@@ -186,18 +188,24 @@ here: pilot-controls  \ table of cfa
 
 ( Redefine the keys )
 
+: valid-game-key  ( -- a )
+  \ Check all keys forever until a valid one is pressed.
+  \ Return its address in the `keys` table.
+  \ a = address in the `keys` table
+  0 begin  drop pressed dup caps-shift-key <>  until  ;
+
 : redefine-keys  ( -- )
   \ Redefine the keys of the current player.
   keys/player 0 do
     i +key-prompt
-    512 ms pressed player-keys i cells + !
+    512 ms valid-game-key player-keys i cells + !
     i -key-prompt
   loop  ;
 
 ( Pilots' keys )
 
   \ Print the number of the current player.
-: at-player  ( -- )  player-line player-col at  ;
+: at-player  ( -- )  vehicle-line player-col at  ;
 : .player  ( -- )  at-player player .  ;
 
 : pilots-menu-key  ( n -- )
@@ -219,57 +227,59 @@ here: pilot-controls  \ table of cfa
 
 : pilots-menu-row-headers  ( -- )
   \ Show the row headers of the redefine keys menu.
-  red ink  pilot$ pilot-line 0 at type
+  red ink
+  vehicle$ vehicle-line 0 at type  pilot$ pilot-line 0 at type
   \ Names of the keys at the left.
   keys/player 0 do  i key-desc keys-line i + |key-desc  loop
   white ink  ;
 
-: player-numbers  ( f -- )
-  \ Print the player numbers at the top of the columns.
+: vehicle-numbers  ( f -- )
+  \ Print the vehicle numbers at the top of the columns.
   \ f = active pilot menu?
   inverse   max-players 0 do
-              player-line i pilot-col at i s->d 0 d.r
+              vehicle-line i pilot-col at i s->d 0 d.r
             loop  0 inverse  ;
 
 : pilots-menu-headers  ( f -- )
   \ f = active pilot menu?
-  player-numbers pilots-menu-row-headers  ;
+  vehicle-numbers pilots-menu-row-headers  ;
 
 : pilots-menu  ( f -- )
   \ Show the redefine keys menu.
   \ f = active pilot menu?
   pilots-menu-headers  max-players 0 do
     i player! .pilot
-    human? if  show-keys  else  hide-keys  then
-  loop  ;
+    human? if  show-keys  else  hide-keys  then  loop  ;
 
 ( Sound option )
 
-: sound-option  ( -- )
-  sound-line 0 at option-3$ sound? @ on/off$ s+ type  ;
+: sound-option$  ( -- ca len )
+  option-3$ sound? @ on/off$ s+  ;
+  
+: sound-option  ( f -- )
+  \ Show the menu option that toggles the sound.
+  \ f = Active option?
+  sound-line 0 at sound-option$
+  rot if  over c@ upperc initial. 1 /string  then  type  ;
 
-: toggle-sound  ( -- )
   \ Toggle the game sounds.
-  \ White ink has to be set at the end in order to
-  \ prevent flickering when updating the menu,
-  \ because the way the screen is uptaded sets black ink
-  \ as default.
-  sound? dup 1 toggle @ sound  sound-option  ;
+: toggle-sound  ( -- )  sound? dup 1 toggle @ sound  ;
 
 ( Configure )
 
 : config-pilot  ( n -- )
   \ Config the pilot number _n_.
-  player!  false player-numbers  change-pilot human?
+  player!  false vehicle-numbers  change-pilot human?
   if    show-keys redefine-keys
   else  hide-keys  then
-  update-players  players to pilots  true player-numbers  ;
+  update-players  players to pilots  true vehicle-numbers  ;
 
 : config-option  ( n -- )
-  -dup if  1- config-pilot  else  toggle-sound  then  ;
+  -dup  if    false sound-option  1- config-pilot
+        else  125 ms toggle-sound  then  true sound-option  ;
 
 : config-menu  ( -- )
-  wipe-contents white ink sound-option pilots-menu  ;
+  wipe-contents white ink true sound-option pilots-menu  ;
 
 : configure  ( -- )
   \ Configure the sound and the pilots.

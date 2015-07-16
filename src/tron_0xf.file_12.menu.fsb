@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 2 10 thru
 
 ( Menu -- data )
@@ -91,10 +93,6 @@ here: menu-commands
   \ change only their own menu option must set ink to white.
 
   ] change-language instructions configure game about finish [
-
-: initial.  ( c -- )
-  \ Print the given char as a menu option initial.
-  1 inverse emit 0 inverse  ;
 
 : initial!  ( n c -- )
   \ Store char 'c' into the 'n' position of the

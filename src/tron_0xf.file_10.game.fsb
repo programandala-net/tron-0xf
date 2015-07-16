@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 2 8 thru
   
 ( Crash check and effect )
@@ -66,9 +68,9 @@
   player-score @ 1+ dup max-score > 0= * player-score !  ;
 
 : duel-end  ( -- )
-  2000 pilots 1 > * ms
-  robots-only? 0=
-  if  -status colors0 press-any-key -status  then  ;
+  \ XXX TODO simpler
+  2000 pilots 1 > * ms  robots-only? 0=
+  if  -status colors0 press-any-key then  -status  ;
 
 : winner  ( -- )
   \ Search for the winner and increase the score,
@@ -152,9 +154,8 @@ here: start-positions
     then
   loop  ;
 
-: paint  ( -- )
   \ Paint the current player.
-  player-color @ ink player-coords 2@ plot  ;
+: paint  ( -- )  player-color @ ink player-coords 2@ plot  ;
 
 ( Duel init )
 
@@ -168,11 +169,12 @@ here: start-positions
     then 
   loop  ;
 
+: duel-init  ( -- )
   \ Init a duel.
   \ XXX TODO message
-: duel-init  ( -- )
   update-players set-start-positions 
-  clear-arena status ready akey drop  ;
+  clear-arena status ready
+  robots-only? if  1000 ms  else  akey drop  then  ;
 
 ( Game init )
 

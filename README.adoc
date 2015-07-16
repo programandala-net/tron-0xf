@@ -2,9 +2,12 @@
 :author: Marcos Cruz (programandala.net)
 :revdate: 2015-07-14
 
-Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 ported
-to ZX Spectrum by John Jones Steele and published by Melbourne
-House in 1983).
+== About the code
+
+Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 ported to ZX
+Spectrum by John Jones Steele and published by Melbourne House in
+1983), using the Afera libray (Marcos Cruz, 2015). See more details in
+http://programandala.net/en.program.tron_0xf.html.
 
 == How to run
 

@@ -27,11 +27,13 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 9 thru
+  \ -----------------------------------------------------------
+
+2 10 thru
 
 ( localized )
 
-: localized  ( cfa1 cfa2 cfa3 "name" -- )
+: localized  ( pfa1 pfa2 pfa3 "name" -- )
 
   \ Create a word that will execute another word from a list of
   \ three, depending on the current language.
@@ -137,6 +139,14 @@ localized none$  ( -- ca len )
 ' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
 localized pilot-help$   ( -- ca len )
 
+( Localized texts) 
+
+' es-version$ ' eo-version$ ' en-version$
+localized version$  ( -- ca len )
+
+' es-vehicle$ ' eo-vehicle$ ' en-vehicle$
+localized vehicle$  ( -- ca len )
+
 ( Conditional texts)
 
 : human|robot|none$  ( -- ca len )
@@ -148,7 +158,7 @@ localized pilot-help$   ( -- ca len )
 
 : on/off$  ( f -- ca len )  if  on$  else  off$  then  ;
 
-( Special texts and texts that don't need translation)
+( Texts that don't need translation)
 
 ' es-license-1 ' eo-license-1 ' en-license-1
 localized license-1  ( -- )
@@ -158,11 +168,18 @@ localized license-2  ( -- )
 
 ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
+
+: .version  ( -- )
+  \ Print the version number, stored as a double number.
+  version
+  <# # # [char] - hold # # [char] - hold #s #>  type  ;
   
 : copyright  ( -- )
+  ." Tron 0xF (" version$ type space .version [char] ) emit cr
   ." Copyright (C) 2015" cr
   ." Marcos Cruz (programandala.net)"  ;
 
-char N constant 'n'  \ the letter used to say "no"
+  \ The letter used to say "no", in the three languages.
+char N constant 'n'
 
   \ vim: filetype=abersoftforthafera

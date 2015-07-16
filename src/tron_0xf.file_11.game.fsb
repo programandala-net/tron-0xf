@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 2 8 thru
 
 ( -1|1 )
@@ -34,12 +36,19 @@
 create -1|1  ( -- -1 | 1 )
   \ Return a random increment for a graphic coordinate.
   hex
-  here 1+             \ local_seed: equ $+1
-  21 c, 0 ,           \ ld hl,the_seed ; patched
-  5C76 @ over ! \ patch the_seed with system FRAMES
-  7E c,               \ ld a,(hl)
-  23 c,               \ inc hl
-  22 c, ,             \ ld (local_seed),hl
+
+  \ XXX OLD -- first version, with memory address as seed
+  \   here 1+             \ local_seed: equ $+1
+  \   21 c, 0 ,           \ ld hl,the_seed ; patched
+  \   5C76 @ over ! \ patch the_seed with system FRAMES
+  \   7E c,               \ ld a,(hl)
+  \   23 c,               \ inc hl
+  \   22 c, ,             \ ld (local_seed),hl
+
+  \ XXX NEW -- second version, with register R
+  \ (not better results, but faster and smaller code)
+  ED c, 5F C,         \ ld a,r
+
   E6 c, 01 c,         \ and 1 ; bit 0 only
   26 c, 00 c,         \ ld h,0
   68 07 + c,          \ ld l,a

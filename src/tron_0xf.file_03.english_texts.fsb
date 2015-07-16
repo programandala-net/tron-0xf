@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 2 8 thru
 
 ( Instructions )
@@ -128,7 +130,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-press-any-key$  ( -- ca len )  s" Press any key"  ;
 
-: en-do-stop$  ( -- ca len )  s" Do you want to stop?"  ;
+: en-do-stop$  ( -- ca len )  s" Do you want to stop? (Y/N)"  ;
 
 : en-license$  ( -- ca len )  s" License:"  ;
 
@@ -136,6 +138,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-player$  ( -- ca len )  s" Player"  ;
 
+: en-vehicle$  ( -- ca len )  s" Vehicle"  ;
 : en-pilot$  ( -- ca len )  s" Pilot"  ;
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
@@ -151,5 +154,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;
+
+: en-version$  ( -- ca len )  s" Version"  ;
   
   \ vim: filetype=abersoftforthafera

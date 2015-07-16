@@ -27,6 +27,16 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
+  \ `caps-shift-key` will be updated later with the address of
+  \ the Caps Shift key in the keys table. It is used to prevent
+  \ this key from being chosen in the configuration menu, in
+  \ order to make it impossible to press the Break key (Caps
+  \ Shift + 1 or Caps Shift + Space) unintentionally during the
+  \ game.
+0 value caps-shift-key
+
 2 10 thru
 
 ( y/n input )
@@ -126,7 +136,7 @@ char A 01 FDFE , , ,
 char S 02 FDFE , , ,
 char D 04 FDFE , , ,
 char F 08 FDFE , , ,
-char G 10 FDFE , , ,
+char G 10 FDFE , , ,  here to caps-shift-key
 
 char C char S special-key-name 01 FEFE , , ,  \ Caps Shift
 char Z 02 FEFE , , ,  here right-k2 ! \ "X"

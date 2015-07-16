@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
   \ Address and size of the screen
 16384 constant sys-screen  6912 constant /sys-screen
                            6144 constant /sys-screen-bitmap
@@ -43,7 +45,7 @@
   \ from screen 2 of the Forth RAM disk.
   [ 2 disc-scr ] literal sys-screen /sys-screen cmove  ;
 
-2 10 thru
+2 11 thru
 
 ( Font)
 
@@ -347,5 +349,10 @@ frame-color black papery + constant frame-attribute
 : arena  ( -- )
   \ Draw the arena.
   blackout frame save-arena status  ;
+
+( Text tools )
+
+  \ Print the given char as a menu option initial.
+: initial.  ( c -- )  1 inverse emit 0 inverse  ;
 
   \ vim: filetype=abersoftforthafera

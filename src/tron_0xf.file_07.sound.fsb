@@ -27,6 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
+  \ -----------------------------------------------------------
+
 defer ?bleep  ( n1 n2 -- )
   \ F = frequency = 437500/(n2+30) Hz
   \ n1 = F*seconds

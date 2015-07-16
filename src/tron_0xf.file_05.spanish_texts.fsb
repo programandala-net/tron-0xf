@@ -52,6 +52,8 @@
   \ #vim %substitute@¿@\=nr2char(158)@g
   \ #vim %substitute@¡@\=nr2char(159)@g
 
+  \ -----------------------------------------------------------
+
 2 8 thru
 
 ( Instructions )
@@ -112,7 +114,7 @@
   ." pero SIN GARANTÍA ALGUNA; ni" cr
   ." siquiera la garantía implícita" cr
   ." de ser COMERCIALIZABLE o APTO" cr
-  ." PARA un OBJETIVO PARTICULAR" cr
+  ." PARA un OBJETIVO PARTICULAR." cr
   ." Para más detalles lee la" cr
   ." Licencia Pública General GNU." cr cr
   \  <------------------------------>
@@ -150,7 +152,7 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-press-any-key$  ( -- ca len ) s" Pulsa una tecla"  ;
 
-: es-do-stop$  ( -- ca len )  s" ¿Quieres terminar?"  ;
+: es-do-stop$  ( -- ca len )  s" ¿Quieres terminar? (S/N)"  ;
 
 : es-license$  ( -- ca len )  s" Licencia:"  ;
 
@@ -158,6 +160,7 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-player$  ( -- ca len )  s" Jugador"  ;
 
+: es-vehicle$  ( -- ca len )  s" Vehículo"  ;
 : es-pilot$  ( -- ca len )  s" Piloto"  ;
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
@@ -173,5 +176,7 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 : es-on$   ( -- ca len )  s" Sí"  ;
 : es-off$  ( -- ca len )  s" No"  ;
+
+: es-version$  ( -- ca len )  s" Versión"  ;
 
   \ vim: filetype=abersoftforthafera:fileencoding=utf-8

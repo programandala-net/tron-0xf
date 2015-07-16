@@ -2,9 +2,12 @@
 :author: Marcos Cruz (programandala.net)
 :revdate: 2015-07-14
 
-Tron 0xF estas verkita en Abersoft Forth (fig-Forth 1.1
-adaptita al ZX Spectrum far John Jones Steele kaj eldonita de
-Melbourne House en 1983).
+== Pri la kodo
+
+Tron 0xF estas verkita en Abersoft Forth (fig-Forth 1.1 adaptita al ZX
+Spectrum far John Jones Steele kaj eldonita de Melbourne House en
+1983), uzante la bibliotekon Afera (Marcos Cruz, 2015). Pliaj detaloj
+estas en http://programandala.net/es.programa.tron_0xf.html.
 
 == Kiel funkciigi
 
