@@ -260,7 +260,16 @@ player0-data value player-data
   \ Is the current player alive?
 : alive?  ( -- f )  player-control @ dead <>  ;
 
-  \ Other tools
+  \ Only one player alive, o no-one?
+: last-one?  ( -- f )  players 2 <  ;
+
+  \ Are all the configured players robots?
+: robots-only?  ( -- f )
+  true max-players 0 do  i player!
+    human? if  0= leave  then
+  loop  ;
+
+( Other tools data-related )
 
 : char-in-string?  ( c ca len -- n tf | ff )
   \ Is the char _c_ in the  string _ca len_?
@@ -275,8 +284,5 @@ player0-data value player-data
   \ a = table
   \ n = element of the table (0..x)
   cells + @ execute  ;
-
-  \ Only one player alive, o no-one?
-: last-one?  ( -- f )  players 2 <  ;
 
   \ vim: filetype=abersoftforthafera

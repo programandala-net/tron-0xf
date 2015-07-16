@@ -274,7 +274,8 @@ here: pilot-controls  \ table of cfa
 : configure  ( -- )
   \ Configure the sound and the pilots.
   true config-menu  begin  ?terminal 0=  while
-    akey s" S012" char-in-string? if  config-option  then
+    akey key-sound s" S012" char-in-string?
+    if  config-option  then
   repeat  wipe-contents  ;
 
   \ vim: filetype=abersoftforthafera

@@ -122,17 +122,15 @@ tron_0xf_compiling.tap : \
 		lib/move.tap \
 		lib/strings.tap \
 		lib/csb.tap \
-		lib/csb-256.tap \
 		lib/pick.tap \
-		lib/lengths.tap \
 		lib/s-plus.tap \
 		lib/ms.tap \
 		lib/tape.tap \
 		lib/defer.tap \
 		lib/value.tap \
 		lib/notequals.tap \
-		lib/akey.tap \
 		lib/inkeyq.tap \
+		lib/akey.tap \
 		lib/buffercol.tap \
 		lib/unloop.tap \
 		lib/color.tap \
@@ -153,6 +151,7 @@ tron_0xf_compiling.tap : \
 # XXX OLD	
 #		lib/cswap.tap \
 #		lib/dump.tap \
+#		lib/csb-256.tap \
 #		lib/dot-s.tap \
 
 # ##############################################################

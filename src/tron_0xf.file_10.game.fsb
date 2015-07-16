@@ -67,7 +67,8 @@
 
 : duel-end  ( -- )
   2000 pilots 1 > * ms
-  -status colors0 press-any-key -status  ;
+  robots-only? 0=
+  if  -status colors0 press-any-key -status  then  ;
 
 : winner  ( -- )
   \ Search for the winner and increase the score,

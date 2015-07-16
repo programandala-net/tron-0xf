@@ -152,14 +152,10 @@ here: menu-commands
     if  2drop menu-commands i cells + @ true dup leave  then
   loop  drop  ;
 
-: menu-key  ( -- c )
-  \ Wait until a key is pressed and return its code.
-  begin  inkey?  until  ;
-
 : valid-option  ( -- cfa )
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  begin  menu-key valid-option?  until  key-sound  ;
+  begin  akey valid-option?  until  key-sound  ;
 
 ( Boot)
 
