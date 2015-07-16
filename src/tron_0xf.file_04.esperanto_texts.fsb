@@ -73,13 +73,13 @@
 
 : eo-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/eo.programo.tron_0xf.html>" cr
-  cr
   ." Kodo kaj grafikoj: Marcos Cruz" cr
   10 at-col ." Provado: Teo kaj Irene"  cr cr
   ." Verkita en Fortho per Abersoft" cr
   ." Forth (Melbourne House, 1983)" cr
-  ." kaj la biblioteko Afera (2015)."  ;
+  ." kaj la biblioteko Afera (2015)." cr cr
+  ." Pliaj detaloj:" cr
+  ." <http://programandala.net/eo.programo.tron_0xf.html>" ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -129,6 +129,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
+  \ XXX TODO update
 : eo-option-0$  ( -- ca len )  s" Ne en Esperanto"  ;
 : eo-option-1$  ( -- ca len )  s" Instrukcioj"  ;
 : eo-option-3$  ( -- ca len )  s" Sono: "  ;

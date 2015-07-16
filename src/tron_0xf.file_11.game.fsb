@@ -147,11 +147,6 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
 
 ( game )
 
-  \ XXX OLD -- not used
-  \ : enough?  ( -- f )
-  \   \ No more duels?
-  \   white ink  another?$ 12 |linetype|  no?  ;
-
 : ?duel-end  ( f -- )
   \ XXX TMP
   ?exit  akey drop  ;

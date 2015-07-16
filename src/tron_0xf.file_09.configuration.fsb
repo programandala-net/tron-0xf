@@ -262,7 +262,8 @@ here: pilot-controls  \ table of cfa
   \ Config the pilot number _n_.
   player!  false player-numbers  change-pilot human?
   if    show-keys redefine-keys
-  else  hide-keys  then  update-players true player-numbers  ;
+  else  hide-keys  then
+  update-players  players to pilots  true player-numbers  ;
 
 : config-option  ( n -- )
   -dup if  1- config-pilot  else  toggle-sound  then  ;

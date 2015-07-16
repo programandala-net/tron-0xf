@@ -110,8 +110,8 @@ tron_0xf_compiling.tap : \
 		lib/loader.tap \
 		lib/afera.tap \
 		lib/upperc.tap \
-		lib/uppers.tap \
 		lib/2r.tap \
+		lib/uppers.tap \
 		lib/caseins.tap \
 		lib/traverse.tap \
 		lib/flags.tap \
@@ -119,14 +119,14 @@ tron_0xf_compiling.tap : \
 		lib/at-fetch.tap \
 		lib/plusscreen.tap \
 		lib/scroll.tap \
-		lib/pick.tap \
 		lib/move.tap \
 		lib/strings.tap \
 		lib/csb.tap \
 		lib/csb-256.tap \
+		lib/pick.tap \
+		lib/lengths.tap \
 		lib/s-plus.tap \
-		lib/time.tap \
-		lib/dot-s.tap \
+		lib/ms.tap \
 		lib/tape.tap \
 		lib/defer.tap \
 		lib/value.tap \
@@ -153,7 +153,7 @@ tron_0xf_compiling.tap : \
 # XXX OLD	
 #		lib/cswap.tap \
 #		lib/dump.tap \
-#		tap/tron_0xf.file_*.tap \
+#		lib/dot-s.tap \
 
 # ##############################################################
 # Backups

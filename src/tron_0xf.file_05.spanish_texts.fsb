@@ -78,13 +78,13 @@
 
 : es-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/es.programa.tron_0xf.html>" cr
-  cr
   ." Código y gráficos: Marcos Cruz" cr
   10 at-col ." Pruebas: Teo e Irene" cr cr
   ." Escrito en Forth con Abersoft" cr
   ." Forth (Melbourne House, 1983)." cr
-  ." y la biblioteca Afera (2015)."  ;
+  ." y la biblioteca Afera (2015)."  cr cr
+  ." Más detalles:" cr
+  ." <http://programandala.net/es.programa.tron_0xf.html>" ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -134,6 +134,7 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
+  \ XXX TODO update
 : es-option-0$  ( -- ca len )  s" No en español"  ;
 : es-option-1$  ( -- ca len )  s" Instrucciones"  ;
 : es-option-3$  ( -- ca len )  s" Sonido: "  ;

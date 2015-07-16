@@ -56,13 +56,13 @@
 
 : en-authors  ( -- )
   \  <------------------------------>
-  ." <http://programandala.net/en.program.tron_0xf.html>" cr
-  cr
   ." Code and graphics: Marcos Cruz" cr
   12 at-col ." Tests: Teo and Irene" cr cr
   ." Written in Forth with Abersoft" cr
   ." Forth (Melbourne House, 1983)" cr
-  ." and the Afera library (2015)."  ;
+  ." and the Afera library (2015)." cr cr
+  ." More details:" cr
+  ." <http://programandala.net/en.program.tron_0xf.html>" ;
   \  <------------------------------>
 
 ( License -- part 1 )
@@ -112,6 +112,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 ( Menu options )
 
+  \ XXX TODO update
 : en-option-0$  ( -- ca len )  s" Not in English"  ;
 : en-option-1$  ( -- ca len )  s" Instructions"  ;
 : en-option-3$  ( -- ca len )  s" Sound: "  ;

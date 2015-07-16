@@ -245,20 +245,20 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
 
 22 constant status-line
 
-: (.score) ( a1 a2 a3 -- )
+: (.score) ( n1 n2 -- )
   \ Print the content of a score variable,
   \ with the given color, at the given position,
   \ using 3 digits and double height characters.
-  \ a1 = address of the score
-  \ a2 = address of the score column
-  \ a3 = address of the color
-  @ ink @ >r
-  status-line r at  @ s->d <# # # # #> 2dup +hi-digits type
+  \ n1 = score
+  \ n2 = score column
+  >r
+  status-line r at  s->d <# # # # #> 2dup +hi-digits type
   status-line 1+ r> at  +lo-digits type +font  ;
 
 : .score  ( -- )
   \ Print the the current player's score.
-  player-score player-score-col player-color (.score)  ;
+  player-score @ player-score-col @
+  player-color @ ink (.score)  ;
 
 : status  ( -- )
   \ Show the status bar.

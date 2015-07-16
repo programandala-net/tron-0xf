@@ -27,14 +27,8 @@
   \ License along with Tron 0xF; if not, see
   \ <http://gnu.org/licenses>.
 
-2 11 thru
+2 8 thru
   
-( Paint )
-
-: paint  ( -- )
-  \ Paint the current player.
-  player-color @ ink player-coords 2@ plot  ;
-
 ( Crash check and effect )
 
 : borders  ( -- )
@@ -57,61 +51,35 @@
   \ dup 0 15 at .  \  XXX INFORMER
   point  ;
 
+: killed  ( -- )
+  \ Kill the current player.
+  dead player-control !  players 1- to players  ;
+
 ( Scores )
 
 999 constant max-score
 
-: score!   ( n a -- )
-  \ Update the score stored in 'a' with 'n';
-  \ if the result is greater than the maximum score,
-  \ reset the score to zero.
-  dup @ rot + dup max-score > if  0=  then  swap !  ;
-
-: score+  ( -- )
+: +score   ( -- )
   \ Increase the score of the current player.
-  1 player-score score! .score  ;
+  \ if the result is greater than the maximum score,
+  \ set the score to zero.
+  player-score @ 1+ dup max-score > 0= * player-score !  ;
 
 : duel-end  ( -- )
-  2000 ms -status colors0 press-any-key -status  ;
+  2000 pilots 1 > * ms
+  -status colors0 press-any-key -status  ;
 
 : winner  ( -- )
   \ Search for the winner and increase the score,
   \ showing the new score with flashing digits.
   max-players 0 do
-    i player! alive? if  1 flash score+ 0 flash leave  then
-  loop  ( f ) duel-end  ;
+    i player! alive?
+    if  +score 1 flash .score 0 flash leave  then
+  loop  duel-end  ;
 
 : -scores  ( -- )
   \ Reset all scores.
   max-players 0 do  i player!  player-score off  loop  ;
-
-( Collisions )
-
-  \ XXX OLD
-  \ : uncolor  ( -- )
-  \   \ Change the color of the current player
-  \   \ to the color of the frame.
-  \   player-color @
-  \   [ attributes /attributes bounds swap ] literal literal
-  \   do  dup i c@ = if  frame-attribute i c!  then  loop  drop  ;
-
-: killed  ( -- )
-  \ Kill the current player.
-  dead player-control !  \ deactivate it
-  \ uncolor  \ XXX OLD
-  players 1- to players  ;  \ one less
-
-( Rudder increments)
-
- \ Coordinate increments.
- \ Double constants are used to update the coordinate
- \ increments faster.
-
- \ X  Y 
-   0  1 2constant up-incs
-   0 -1 2constant down-incs
-  -1  0 2constant left-incs
-   1  0 2constant right-incs
 
 ( Score columns execution table )
 
@@ -136,6 +104,16 @@ here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
 
 ( Start positions execution table )
 
+ \ Coordinate increments.
+ \ Double constants are used to update the coordinate
+ \ increments faster.
+
+ \ X  Y 
+   0  1 2constant up-incs
+   0 -1 2constant down-incs
+  -1  0 2constant left-incs
+   1  0 2constant right-incs
+
 :noname
   \ ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
   \ Start screen position and increments, for three players.
@@ -156,7 +134,7 @@ here: start-positions
   \ ( cfa2 cfa1 cfa0 )
   , , ,
 
-( Start positions )
+( Start positions and paint )
 
 : get-start-positions ( -- ... col x y x-inc y-inc )
   \ Return one, two or three sets of player positions
@@ -172,6 +150,10 @@ here: start-positions
       player-start-incs 2!  player-start-coords 2!
     then
   loop  ;
+
+: paint  ( -- )
+  \ Paint the current player.
+  player-color @ ink player-coords 2@ plot  ;
 
 ( Duel init )
 

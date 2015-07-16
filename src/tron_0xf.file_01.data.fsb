@@ -55,7 +55,8 @@ forth definitions
 en value lang      \ current language
 
 3 constant max-players  \ maximum number of players
-3 value players         \ number of players
+3 value pilots          \ number of configured pilots
+3 value players         \ number of current players
 
 4 constant keys/player  \ keys per player
 
