@@ -40,18 +40,17 @@
   \ binary data (directly loaded from tape or used during the
   \ game), with the following map:
 
-  \ screen 1:           copy of arena attributes (640 bytes)
+  \ screen 7:           copy of arena attributes (640 bytes)
   \                     384 bytes free
   \
-  \ screens 2-8:        copy of a whole screen (6912 bytes)
-  \                     game font (first part, 256 bytes)
-  \
-  \ screen 9:           game font (second part, 512 bytes)
-  \                     double height digits (160 bytes)
+  \ screen 8:           game font (768 bytes)
   \                     Esperanto characters (96 bytes)
   \                     Spanish characters (144 bytes)
-  \                     Default UDG (96 bytes)
-  \                     38 bytes free
+  \                     16 bytes free
+  \
+  \ screen 9:           double height digits (160 bytes)
+  \                     UDG (144 bytes)
+  \                     720 bytes free
   \
   \ screens 10 and 11:  graphic title (2048 bytes)
 

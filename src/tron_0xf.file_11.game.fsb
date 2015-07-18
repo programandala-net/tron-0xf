@@ -138,11 +138,18 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ Update the coordinates of the current player.
   player-xinc @ player-xc +!  player-yinc @ player-yc +!  ;
 
+  \ Ask "Do you want to stop?" in the current language
+  \ and return a flag with the answer (true=yes).
+  \ Erase the message at the end.
+: do-stop?  ( -- f )
+  white ink do-stop$ 2dup remark yes? >r -remark r>  ;
+
 : stop?  ( -- f )
+  \ Check if the Break key has been pressed; if so, confirm it.
   \ f = confirmed Break key?
-  false  ?terminal 0= ?exit   \ no Break key
-  drop save-display do-stop?  \ ask for confirmation
-  dup 0= if  restore-display  then  ;
+  false  ?terminal 0= ?exit   \ no Break key, exit
+  drop -status do-stop?       \ ask for confirmation
+  dup 0= if  status  then  ;  \ restore the status bar
 
 ( duel )
 

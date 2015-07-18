@@ -120,10 +120,10 @@
 
 ( Keys )
 
-: en-up$     ( -- ca len )  s" Up"  ;
-: en-down$   ( -- ca len )  s" Down"  ;
-: en-left$   ( -- ca len )  s" Left"  ;
-: en-right$  ( -- ca len )  s" Right"  ;
+: en-up$     ( -- ca len )  s" Up:"  ;
+: en-down$   ( -- ca len )  s" Down:"  ;
+: en-left$   ( -- ca len )  s" Left:"  ;
+: en-right$  ( -- ca len )  s" Right:"  ;
 
 char Y constant en-'y'  \ the letter used to say "yes"
 
@@ -146,19 +146,18 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
   \ XXX OLD
   \ : EN-ANOTHER?$  ( -- ca len )  s" Play again? (Y/N)"  ;
+  \ : en-license$  ( -- ca len )  s" License:"  ;
+  \ : EN-KEY$  ( -- ca len )  s" Key"  ;
+  \ : en-player$  ( -- ca len )  s" Player"  ;
 
 : en-press-any-key$  ( -- ca len )  s" Press any key"  ;
 
 : en-do-stop$  ( -- ca len )  s" Do you want to stop? (Y/N)"  ;
 
-: en-license$  ( -- ca len )  s" License:"  ;
+: en-vehicle$  ( -- ca len )  s" Vehicle:"  ;
+: en-pilot$  ( -- ca len )  s" Pilot:"  ;
+: en-color$  ( -- ca len )  s" Color:"  ;
 
-  \ : EN-KEY$  ( -- ca len )  s" Key"  ;
-
-: en-player$  ( -- ca len )  s" Player"  ;
-
-: en-vehicle$  ( -- ca len )  s" Vehicle"  ;
-: en-pilot$  ( -- ca len )  s" Pilot"  ;
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
 : en-human$  ( -- ca len )  s" Human"  ;
@@ -166,10 +165,9 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-none$  ( -- ca len )  s" None "  ;
 
 : en-pilot-help$  ( -- ca len )
-  s" H=human R=robot N=none"
-  \ Remove the last option from the string if `players` is 1,
-  \ according to the behaviour of the configuration:
-  players 1 = 7 * -  ;
+  s" H=human R=robot N=none" 7 -none  ;
+
+: en-color-help$  ( -- ca len )  s" 1-7=color" ;
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;

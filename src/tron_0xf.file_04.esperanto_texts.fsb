@@ -105,12 +105,11 @@
   ." Tron 0xF estas libera; vi rajtas"
   ." reliveri kaŭ modifi ĝin sub la" cr
   ." kondiĉoj de la GNU-a Ĝenerala" cr
-  ." Publika Permesilo, tia kiun" cr
-  ." publikigas Free Software" cr
-  ." Foundation (Liber-Programara" cr
-  ." Fondaĵo), ĉu versio 3 de la" cr
-  ." permesilo aŭ, je via prefero, iu" cr
-  ." posta versio." cr
+  ." Publika Permesilo, publikigita" cr
+  ." de Free Software Foundation" cr
+  ." (Liber-Programara Fondaĵo), ĉu" cr
+  ." versio 3 de la permesilo aŭ, je" cr
+  ." via prefero, iu posta versio." cr
   \  <------------------------------>
 
 -->
@@ -137,10 +136,10 @@
 
 ( Keys )
 
-: eo-up$     ( -- ca len )  s" Supren"  ;
-: eo-down$   ( -- ca len )  s" Malsupren"  ;
-: eo-left$   ( -- ca len )  s" Maldektren"  ;
-: eo-right$  ( -- ca len )  s" Dekstren"  ;
+: eo-up$     ( -- ca len )  s" Supren:"  ;
+: eo-down$   ( -- ca len )  s" Malsupren:"  ;
+: eo-left$   ( -- ca len )  s" Maldektren:"  ;
+: eo-right$  ( -- ca len )  s" Dekstren:"  ;
 
 char J constant eo-'y'  \ the letter used to say "yes"
 
@@ -163,19 +162,18 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
   \ XXX OLD
   \ : EO-ANOTHER?$  ( -- ca len )  s" Ĉu reludi? (J/N)"  ;
+  \ : eo-license$  ( -- ca len )  s" Permesilo:"  ;
+  \ : EO-KEY$  ( -- ca len )  s" Klavo"  ;
+  \ : eo-player$  ( -- ca len )  s" Ludanto"  ;
 
 : eo-press-any-key$  ( -- ca len ) s" Premu klavon"  ;
 
 : eo-do-stop$  ( -- ca len )  s" Ĉu vi volas fini? (J/N)"  ;
 
-: eo-license$  ( -- ca len )  s" Permesilo:"  ;
+: eo-vehicle$  ( -- ca len )  s" Veturilo:"  ;
+: eo-pilot$  ( -- ca len )  s" Piloto:"  ;
+: eo-color$  ( -- ca len )  s" Koloro:"  ;
 
-  \ : EO-KEY$  ( -- ca len )  s" Klavo"  ;
-
-: eo-player$  ( -- ca len )  s" Ludanto"  ;
-
-: eo-vehicle$  ( -- ca len )  s" Veturilo"  ;
-: eo-pilot$  ( -- ca len )  s" Piloto"  ;
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
 : eo-human$  ( -- ca len )  s" Homo  "  ;
@@ -183,10 +181,9 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-none$  ( -- ca len )  s" Neniu "  ;
 
 : eo-pilot-help$  ( -- ca len )
-  s" H=homo R=roboto N=neniu"
-  \ Remove the last option from the string if `players` is 1,
-  \ according to the behaviour of the configuration:
-  players 1 = 8 * -  ;
+  s" H=homo R=roboto N=neniu" 8 -none ;
+
+: eo-color-help$  ( -- ca len )  s" 1-7=koloro" ;
 
 : eo-on$   ( -- ca len )  s" Jes"  ;
 : eo-off$  ( -- ca len )  s" Ne "  ;

@@ -35,7 +35,7 @@
 
   \ -----------------------------------------------------------
 
-2 10 thru
+2 8 thru
 
 ( Menu -- data )
 
@@ -83,7 +83,7 @@ here: menu-options
 
 : instructions  ( -- )  whole-page (instructions) more page  ;
 
-: finish  ( -- )  cls0 -font quit-message quit  ;
+: finish  ( -- )  cls0 -font greeting cr quit-message quit  ;
 
 ( Menu commands and options)
 
@@ -162,15 +162,25 @@ here: menu-commands
 
 ( Boot)
 
+  \ XXX TODO use the RAM-disk
   \ Init the circular string-buffer.
   128 allot-csb
 
-: bye  ( -- )  mon  ;
-
 : init  ( -- )  +screen +font cls0 page  ;
+
+forth definitions
+
+: bye  ( -- )  mon  ;
 
 : run  ( -- )
   \ Endless loop: Show the menu and execute the chosen option.
+  \ Note: `tron` must be executed because fig-Forth
+  \ sets `context` to `current` before compiling a definition.
+  \ Beside, `tron` must be compiled in order to let the user
+  \ execute the game after being exited to BASIC.
+  tron [compile] tron
   init begin  menu valid-option execute  again  ;
+
+extend  \ protect the code from `cold`
 
   \ vim: filetype=abersoftforthafera

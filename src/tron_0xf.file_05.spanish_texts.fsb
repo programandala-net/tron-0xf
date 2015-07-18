@@ -143,10 +143,10 @@
 
 ( Keys )
 
-: es-up$     ( -- ca len )  s" Arriba"  ;
-: es-down$   ( -- ca len )  s" Abajo"  ;
-: es-left$   ( -- ca len )  s" Izquierda"  ;
-: es-right$  ( -- ca len )  s" Derecha"  ;
+: es-up$     ( -- ca len )  s" Arriba:"  ;
+: es-down$   ( -- ca len )  s" Abajo:"  ;
+: es-left$   ( -- ca len )  s" Izquierda:"  ;
+: es-right$  ( -- ca len )  s" Derecha:"  ;
 
 char S constant es-'y'  \ the letter used to say "yes"
 
@@ -169,30 +169,28 @@ char S constant es-'y'  \ the letter used to say "yes"
 
   \ XXX OLD
   \ : ES-ANOTHER?$  ( -- ca len )  s" ¿Jugar otra vez? (S/N)"  ;
+  \ : es-license$  ( -- ca len )  s" Licencia:"  ;
+  \ : EN-KEY$  ( -- ca len )  s" Tecla"  ;
+  \ : es-player$  ( -- ca len )  s" Jugador"  ;
 
 : es-press-any-key$  ( -- ca len ) s" Pulsa una tecla"  ;
 
 : es-do-stop$  ( -- ca len )  s" ¿Quieres terminar? (S/N)"  ;
 
-: es-license$  ( -- ca len )  s" Licencia:"  ;
+: es-vehicle$  ( -- ca len )  s" Vehículo:"  ;
+: es-pilot$  ( -- ca len )  eo-pilot$  ;
+: es-color$  ( -- ca len )  en-color$  ;
 
-  \ : EN-KEY$  ( -- ca len )  s" Tecla"  ;
-
-: es-player$  ( -- ca len )  s" Jugador"  ;
-
-: es-vehicle$  ( -- ca len )  s" Vehículo"  ;
-: es-pilot$  ( -- ca len )  s" Piloto"  ;
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
 : es-human$  ( -- ca len )  s" Humano"  ;
-: es-robot$  ( -- ca len )  s" Robot "  ;
+: es-robot$  ( -- ca len )  en-robot$  ;
 : es-none$  ( -- ca len )  s" Nadie "  ;
 
 : es-pilot-help$  ( -- ca len )
-  s" H=humano R=robot N=nadie"
-  \ Remove the last option from the string if `players` is 1,
-  \ according to the behaviour of the configuration:
-  players 1 = 8 * -  ;
+  s" H=humano R=robot N=nadie" 8 -none  ;
+
+: es-color-help$  ( -- ca len ) en-color-help$  ;
 
 : es-on$   ( -- ca len )  s" Sí"  ;
 : es-off$  ( -- ca len )  s" No"  ;

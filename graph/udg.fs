@@ -23,15 +23,8 @@
 \ --------------------------------------------------------------
 \ Requirements
 
-fpath path+ ~/forth
-
 \ From the Galope library
 \ (http://programandala.net/en.program.galope.html):
-
-\ Copyright (C) 2013,2014 Marcos Cruz (programandala.net)
-
-\ 2013-11-28: First version, 'unslurp', after Gforth's 'slurp-file'.
-\ 2014-02-21: Renamed to 'unslurp-file'.
 
 : unslurp-file  ( ca1 len1 ca2 len2 -- )
   \ ca1 len1 = content to write to the file
@@ -44,7 +37,7 @@ fpath path+ ~/forth
 \ --------------------------------------------------------------
 \ Main
 
-12 constant characters  \ characters in the UDG set
+18 constant characters  \ characters in the UDG set
 8 constant /character   \ bytes per character
 characters /character * chars constant /font
 create font /font allot
@@ -140,41 +133,95 @@ create font /font allot
 %11111111
 %00110011 7 >font  \ frame bottom border
 
-%11101111
+%11101110
 %10001000
 %10001000
-%10001111
-%10000001
-%10000001
-%11101111
+%10001110
+%10000010
+%10000010
+%11101110
 %00000000 8 >font  \ Caps Shift key name
 
 %11100000
 %10000000
 %10000000
-%11001111
-%10001001
-%10001001
-%11101001
+%11001100
+%10001010
+%10001010
+%11101010
 %00000000 9 >font  \ Enter key name
 
 %11100000
 %10000000
 %10000000
-%11101111
-%00101001
-%00101001
-%11101111
+%11101110
+%00101010
+%00101010
+%11101110
 %00001000 10 >font  \ Space key name
 
-%11101111
+%11101110
 %10001000
 %10001000
-%11101111
-%00100001
-%00100001
-%11101111
+%11101110
+%00100010
+%00100010
+%11101110
 %00000000 11 >font  \ Symbol Shift key name
 
-font /font s" ~/forth/tron_0xf/graph/udg.bin" unslurp-file
+%11111111
+%00000000
+%11111111
+%10000000
+%10100000
+%10111111
+%10000000
+%11111111 12 >font  \ Color icon for robots, left part
+
+%11111111
+%00000000
+%11111111
+%00000000
+%00000000
+%11111111
+%00000000
+%11111111 13 >font  \ Color icon for robots, middle part
+
+%11111111
+%00000001
+%11111101
+%00000101
+%00000101
+%11111101
+%00000001
+%11111111 14 >font  \ Color icon for robots, right part
+
+%11111111
+%00000000
+%00001111
+%00001000
+%00001000
+%11111000
+%10000000
+%11111111 15 >font  \ Color icon for humans, left part
+
+%11111111
+%00000000
+%11110000
+%00010000
+%00010000
+%00011100
+%00000000
+%11111111 16 >font  \ Color icon for humans, middle part
+
+%11111111
+%00000001
+%11111001
+%10001001
+%10001001
+%10001001
+%10001001
+%10001111 17 >font  \ Color icon for humans, right part
+
+font /font s" ./udg.bin" unslurp-file
 bye

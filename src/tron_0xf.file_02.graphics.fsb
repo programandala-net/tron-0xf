@@ -41,56 +41,68 @@
   \ Address and size of the screen attributes
 22528 constant attributes  768 constant /attributes
 
-: save-display  ( -- )
-  \ Save a copy of the whole display image
-  \ to screen 2 of the Forth RAM disk.
-  sys-screen [ 2 disc-scr ] literal /sys-screen cmove  ;
+  \ XXX OLD
+  \ : save-display  ( -- )
+  \   \ Save a copy of the whole display image
+  \   \ to screen 2 of the Forth RAM disk.
+  \   sys-screen [ 2 disc-scr ] literal /sys-screen cmove  ;
 
-: restore-display  ( -- )
-  \ Save the copy of the whole display image
-  \ from screen 2 of the Forth RAM disk.
-  [ 2 disc-scr ] literal sys-screen /sys-screen cmove  ;
+  \ : restore-display  ( -- )
+  \   \ Save the copy of the whole display image
+  \   \ from screen 2 of the Forth RAM disk.
+  \   [ 2 disc-scr ] literal sys-screen /sys-screen cmove  ;
 
 2 11 thru
 
-( Font and double height digits)
+( Font and foreign language chars)
 
-  \ The game fonts are loaded from tape at the end of the
-  \ compilation. Words are defined to switch them on and off:
+  \ The font, the Spanish and Esperanto characters and other
+  \ UDG sets are loaded from tape at the end of the compilation
+  \ and stored in the Forth RAM disk, in order to save a lot of
+  \ dictionary space.
+  \
+  \ The required UDG set is switched when the user changes the
+  \ language in the game menu, or when graphics have to be
+  \ printed.
 
-  768 constant /font  \ size in bytes
-  \ The game font is stored in the Forth RAM disk;
-  \ the first 256 bytes at the end of screen 8, and the rest
-  \ 512 bytes at the start of screen 9:
-9 disc-scr 256 - constant font
+768 constant /font  \ size in bytes
+8 disc-scr constant font  \ address: RAM-disk screen 8
 
   \ Set the game font:
 : +font  ( -- )  [ font 256 - ] literal sys-chars ! ;
 
   \ Set the ROM font:
 : -font  ( -- )  15360 sys-chars ! ;
-  
+
+  \ UDG set for the Esperanto letters.
+12 8 * constant /eo-udg  \ size in bytes
+font /font + constant eo-udg  \ address
+
+  \ UDG set for the Spanish letters and characters.
+18 8 * constant /es-udg  \ size in bytes
+eo-udg /eo-udg + constant es-udg  \ address
+
+( Double height digits and misc UDG)
+
   \ Double height digits are used to print the scores.  They
   \ are hold in a set of 20 UDG. The first 10 UDGs are the top
   \ halves of the digits, the second 10 UDGs are the bottom
   \ halves.  Every set is switched instead of the game font
   \ when needed.
-  \
-  \ The data is stored in the Forth RAM disk, after the font.
 
 10 2 * 8 * constant /digits-udg  \ size in bytes
-font /font + constant digits-udg
+9 disc-scr constant digits-udg  \ address: RAM-disk screen 9
 
-: digits>chars  ( a1 -- a2 )
   \ Convert the address of UDG digits to the address of a fake
-  \ font that contains those digits.
-  [char] 0 bl - 8 * -  256 -  ;
+  \ font that contains those digits. The first UDG defined
+  \ in the set must be "0".
+: digits>chars  ( a1 -- a2 )
+  [ char 0 bl - ] literal 8 * -  256 -  ;
 
 : +hi-digits  ( -- )
   \ Set the high part of the double height digits
   \ as the current font.
-  [ digits-udg digits>chars ] literal
-  sys-chars ! ;
+  [ digits-udg digits>chars ] literal sys-chars ! ;
 
 : +lo-digits  ( -- )
   \ Set the low part of the double height digits
@@ -98,24 +110,9 @@ font /font + constant digits-udg
   [ digits-udg /digits-udg 2 / +  digits>chars ] literal
   sys-chars ! ;
 
-( Foreign language characters and graphic UDG)
-
-  \ The graphics, and the Spanish and Esperanto characters are
-  \ stored as UDG sets in the Forth RAM disk, and loaded from
-  \ tape at the end of the compilation. The correspondent UDG
-  \ set is switched when the user changes the language in the
-  \ game menu, or when graphis have to be printed.
-
-  \ UDG set for the Esperanto letters.
-12 8 * constant /eo-udg  \ size in bytes
-digits-udg /digits-udg + constant eo-udg
-
-  \ UDG set for the Spanish letters and characters.
-18 8 * constant /es-udg  \ size in bytes
-eo-udg /eo-udg + constant es-udg
-
-  \ Default UDG set.  It contains the frame graphs.
-es-udg /es-udg + constant udg0
+  \ Misc UDG set.
+18 8 * constant /udg0  \ size in bytes
+digits-udg /digits-udg + constant udg0  \ address
 
   \ Addresses of the UDG sets.
 here: udg-set  udg0 , eo-udg , es-udg ,
@@ -142,24 +139,23 @@ here: udg-set  udg0 , eo-udg , es-udg ,
   \ Patch `colors0`.
 ' tron-colors cfa ' colors0 !
 
-: blackout  ( -- )
   \ Erase the whole display,
   \ both the bitmap and the attributes
   \ (what means black ink and black paper).
-  sys-screen /sys-screen erase  ;
+: blackout  ( -- )  sys-screen /sys-screen erase  ;
 
   \ Size of the screen:
-32 constant cols
-24 constant lines
+32 constant cols  24 constant lines
 
+  \ lines 2 / 1- constant middle-line \ XXX OLD
 lines 1- constant bottom-line 
 
   \ Size of the game arena (inside its frame):
-cols 2 - constant arena-cols
+ cols 2 - constant arena-cols
 lines 4 - constant arena-lines
 
   \ Attributes addresses of the arena frame:
-attributes constant top-frame-attributes
+                   attributes constant top-frame-attributes
 attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Center justified texts and title )
@@ -243,8 +239,9 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
 
 : reveal-contents  ( -- )
   \ Set the screen attributes of the contents zone to the
-  \ normal values (white ink).  This is used to show the menu
-  \ and other pages instantaneously after updating them.
+  \ normal values (white ink, black paper).  This is used to
+  \ show the menu and other pages instantaneously after
+  \ updating them.
   contents-attributes white fill  white ink  ;
 
 ( Status bar)
@@ -324,7 +321,7 @@ frame-color black papery + constant frame-attribute
   \ the Forth RAM disk.
   [ top-frame-attributes cols +
     bottom-frame-attributes over - swap ] literal
-  [ 1 disc-scr ] literal literal cmove  ;
+  [ 7 disc-scr ] literal literal cmove  ;
 
 : restore-arena  ( -- )
   \ Restore the attributes of the central zone of the arena

@@ -43,14 +43,13 @@
   \ game.
 0 value caps-shift-key
 
-2 10 thru
+2 9 thru
 
 ( y/n input )
 
-: y/n?  ( c -- f )
   \ Is the given (uppercase) char c
   \ a valid answer for a y/n question?
-  dup 'y' = swap 'n' = or  ;
+: y/n?  ( c -- f )  dup 'y' = swap 'n' = or  ;
 
 : y/n  ( -- c )
   \ Wait for a valid key press for a y/n question
@@ -58,49 +57,36 @@
   begin  akey upperc dup y/n? 0=  while  drop  repeat
   key-sound  ;
 
-: no?  ( -- f )
   \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "N" or "n"?
   \ (or the correspondent letters in the current language).
-  y/n 'n' =  ;
+: no?  ( -- f )  y/n 'n' =  ;
 
-: yes?  ( -- f )
   \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "Y" or "y"?
   \ (or the correspondent letters in the current language).
-  y/n 'y' =  ;
+: yes?  ( -- f )  y/n 'y' =  ;
 
 ( Keyboard messages and prompts )
 
-: wait-any-key  ( -- )
-  500 ms  akey drop key-sound  ;
+: wait-any-key  ( -- )  500 ms  akey drop key-sound  ;
 
-: press-any-key  ( -- )
   \ Print "press any key" in the current language
   \ and wait for a key press.
-  press-any-key$ remark wait-any-key  ;
+: press-any-key  ( -- )  press-any-key$ remark wait-any-key  ;
 
-: more  ( -- )
   \ Wait for a key press and prepare the screen
   \ for a new contents page.
-  reveal-contents press-any-key wipe-contents  ;
-
-: .do-stop  ( -- )
-  \ Print "Do you want to stop?" in the current language.
-  do-stop$ [ lines 2 / 1 - ] literal white ink |linetype|  ;
-
-: do-stop?  ( -- f )
-  \ Ask "Do you want to stop?" in the current language
-  \ and return flag with the answer (true=yes).
-  .do-stop yes?  ;
+: more  ( -- )  reveal-contents press-any-key wipe-contents  ;
 
 ( keys table, rows 1-5 Q-T )
 
 40 constant #keys   \ number of keys of ZX Spectrum
- 6 constant /key    \ bytes per key in the table
+ 5 constant /key    \ bytes per key in the table
 
+  \ XXX OLD
   \ Convert two characters to a 16-bit number.
-: special-key-name  ( c1 c2 -- n )  256 * +  ;
+  \ : special-key-name  ( c1 c2 -- n )  256 * +  ;
 
 here: keys
 
@@ -109,8 +95,7 @@ here: keys
 
   \ +0 = port of the keyboard row (2 bytes)
   \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
-  \ +4 = key name (2 bytes): one letter (the second byte is
-  \      zero and will be ignored) or two letters.
+  \ +4 = key name (1 byte), an ASCII character or an UDG
   
   \ Keys are identified by their absolute address in the table.
   \
@@ -123,84 +108,72 @@ here: keys
   \ player 2 are suitable for the Dvorak keyboard layout (keys
   \ K, X, B, M).
 
-hex                   here left-k0 !    \ "1"
-char 1 01 F7FE , , ,  here right-k0 !   \ "2"
-char 2 02 F7FE , , ,  here up-k0 !      \ "3"
-char 3 04 F7FE , , ,  here down-k0 !    \ "4"
-char 4 08 F7FE , , ,  here left-k1 !    \ "5"
-char 5 10 F7FE , , , 
+hex                    here left-k0 !    \ "1"
+char 1 01 F7FE , , c,  here right-k0 !   \ "2"
+char 2 02 F7FE , , c,  here up-k0 !      \ "3"
+char 3 04 F7FE , , c,  here down-k0 !    \ "4"
+char 4 08 F7FE , , c,  here left-k1 !    \ "5"
+char 5 10 F7FE , , c, 
 
-char Q 01 FBFE , , ,
-char W 02 FBFE , , ,
-char E 04 FBFE , , ,
-char R 08 FBFE , , ,
-char T 10 FBFE , , ,
+char Q 01 FBFE , , c,
+char W 02 FBFE , , c,
+char E 04 FBFE , , c,
+char R 08 FBFE , , c,
+char T 10 FBFE , , c,
 
 ( keys table, rows A-G CS-V 0-6 )
 
-char A 01 FDFE , , ,
-char S 02 FDFE , , ,
-char D 04 FDFE , , ,
-char F 08 FDFE , , ,
-char G 10 FDFE , , ,  here to caps-shift-key
+char A 01 FDFE , , c,
+char S 02 FDFE , , c,
+char D 04 FDFE , , c,
+char F 08 FDFE , , c,
+char G 10 FDFE , , c,  here to caps-shift-key
 
-char C char S special-key-name 01 FEFE , , ,  \ Caps Shift
-char Z 02 FEFE , , ,  here right-k2 ! \ "X"
-char X 04 FEFE , , ,
-char C 08 FEFE , , ,
-char V 10 FEFE , , ,
+    98 01 FEFE , , c,  \ Caps Shift (symbol in UDG)
+char Z 02 FEFE , , c,  here right-k2 ! \ "X"
+char X 04 FEFE , , c,
+char C 08 FEFE , , c,
+char V 10 FEFE , , c,
 
-char 0 01 EFFE , , ,
-char 9 02 EFFE , , ,  here right-k1 ! \ "8"
-char 8 04 EFFE , , ,  here up-k1 !    \ "7"
-char 7 08 EFFE , , ,  here down-k1 !  \ "6"
-char 6 10 EFFE , , ,
+char 0 01 EFFE , , c,
+char 9 02 EFFE , , c,  here right-k1 ! \ "8"
+char 8 04 EFFE , , c,  here up-k1 !    \ "7"
+char 7 08 EFFE , , c,  here down-k1 !  \ "6"
+char 6 10 EFFE , , c,
 
 ( keys table, rows P-Y En-H )
 
-char P 01 DFFE , , ,
-char O 02 DFFE , , ,
-char I 04 DFFE , , ,
-char U 08 DFFE , , ,
-char Y 10 DFFE , , ,
+char P 01 DFFE , , c,
+char O 02 DFFE , , c,
+char I 04 DFFE , , c,
+char U 08 DFFE , , c,
+char Y 10 DFFE , , c,
 
-char E char n special-key-name 01 BFFE , , ,  \ Enter
-char L 02 BFFE , , ,  here left-k2 !  \ "K"
-char K 04 BFFE , , ,
-char J 08 BFFE , , ,
-char H 10 BFFE , , ,
+    99 01 BFFE , , c,  \ Enter (symbol in UDG)
+char L 02 BFFE , , c,  here left-k2 !  \ "K"
+char K 04 BFFE , , c,
+char J 08 BFFE , , c,
+char H 10 BFFE , , c,
 
-( keys table, row Sp-B )
+( keys table, row Sp-B; k#>a key-name )
 
-char S char p special-key-name 01 7FFE , , ,  \ Space
-char S char S special-key-name 02 7FFE , , ,  \ Symbol Shift
+    9A 01 7FFE , , c,  \ Space (symbol in UDG)
+    9B 02 7FFE , , c,  \ Symbol Shift (symbol in UDG)
                       here down-k2 !  \ "M"
-char M 04 7FFE , , ,
-char N 08 7FFE , , ,  here up-k2 !    \ "B"
-char B 10 7FFE , , ,
+char M 04 7FFE , , c,
+char N 08 7FFE , , c,  here up-k2 !    \ "B"
+char B 10 7FFE , , c,
 
 decimal
 
-( k#>a key-name )
+  \ Convert a key number to its key address.
+: k#>a  ( n -- a )  /key * keys +  ;
 
-: k#>a  ( n -- a )
-  \ Convert a key number to its address in `KEYS`.
-  /key * keys +  ;
-
-: c>s  ( c -- ca len )
-  \ Convert a character to a string.
-  pad c! pad 1  ;
-
-: 2c>s  ( n1 -- ca len )
-  \ Convert two characters to a string.
-  \ high byte of n1 = first character
-  \ low byte of n1 = second character
-  pad ! pad 2  ;
-
-: key-name  ( a -- ca len )
-  \ Convert a key identifier to its key name.
+  \ Convert a key address to its key name character.
+  \ Note: `graph-udg` must be used before printing it
+  \ (and `lang-udg` after) because some key names use UDG.
   \ a = key address in the `keys` table
-  4 + @ dup 256 u< if  c>s  else  2c>s  then  ;
+: key-name  ( a -- c )  4 + c@  ;
 
 ( pressed? pressed|break )
 

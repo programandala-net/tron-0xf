@@ -60,7 +60,7 @@
   \ fetch from its pfa one of the three stored cfa depending on
   \ the current language, and execute it:
 
-  does>  ( pfa )  lang >execute  ;
+  does>  ( -- )  ( pfa )  lang >execute  ;
 
 ( Localized menu options)
 
@@ -109,12 +109,12 @@ localized do-stop$  ( -- ca len )
 
 ( Localized texts) 
 
-' es-license$ ' eo-license$ ' en-license$
-localized license$  ( -- ca len )
 
   \ XXX OLD
   \ ' ES-ANOTHER?$ ' EO-ANOTHER?$ ' EN-ANOTHER?$
   \ localized ANOTHER?$  ( -- ca len )
+  \ ' es-license$ ' eo-license$ ' en-license$
+  \ localized license$  ( -- ca len )
 
 ' es-'y' ' eo-'y' ' en-'y' localized 'y'  ( -- c )
 
@@ -127,8 +127,9 @@ localized quit-message  ( -- )
 
 ( Localized texts) 
 
-' es-player$ ' eo-player$ ' en-player$
-localized player$  ( -- ca len )
+  \ XXX OLD
+  \ ' es-player$ ' eo-player$ ' en-player$
+  \ localized player$  ( -- ca len )
 
 ' es-human$ ' eo-human$ ' en-human$
 localized human$  ( -- ca len )
@@ -145,6 +146,9 @@ localized none$  ( -- ca len )
 ' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
 localized pilot-help$   ( -- ca len )
 
+' es-color-help$ ' eo-color-help$ ' en-color-help$
+localized color-help$   ( -- ca len )
+
 ( Localized texts) 
 
 ' es-version$ ' eo-version$ ' en-version$
@@ -152,6 +156,9 @@ localized version$  ( -- ca len )
 
 ' es-vehicle$ ' eo-vehicle$ ' en-vehicle$
 localized vehicle$  ( -- ca len )
+
+' es-color$ ' eo-color$ ' en-color$
+localized color$  ( -- ca len )
 
 ( Conditional texts)
 
@@ -179,8 +186,8 @@ localized authors  ( -- )
   
 : copyright  ( -- )
   ." Tron 0xF (" version$ type space .version [char] ) emit cr
-  cr ." Copyright (C) 2015" cr
-     ." Marcos Cruz (programandala.net)"  ;
+  cr ." Copyright (C) 2015 Marcos Cruz" cr
+     ." (programandala.net)"  ;
 
   \ The letter used to say "no", in the three languages.
 char N constant 'n'

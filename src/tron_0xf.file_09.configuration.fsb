@@ -40,13 +40,14 @@
 
   \ Lines of some parts of the config menu:
 contents-line
- 2+ dup constant sound-line  \ sound
- 2+ dup constant vehicle-line \ vehicle number
- 2+ dup constant pilot-line  \ human or robot
- 2+     constant keys-line   \ top keys row
+2+ dup constant sound-line   2+ dup constant vehicle-line
+2+ dup constant pilot-line   2+ dup constant color-line
+2+     constant keys-line
 
   \ Column of the key description:
 0 constant key-desc-col
+
+: option-pause  ( -- )  125 ms  ;
 
 2 11 thru
 
@@ -80,55 +81,43 @@ contents-line
   \   \ at the right of its region.
   \   over key-desc-col swap - (type-key-desc)  ;
 
-( Key descriptions )
+( Key descriptions and positions )
 
-here: key-descs
-  \  This table contains the cfa of the four texts used
+  \  A table that holds the cfa of the four texts used
   \  to describe the player keys. When executed, they
   \  return a string in the current language.
-  ' up$ cfa , ' down$ cfa , ' left$ cfa , ' right$ cfa ,
+here: key-descs  ] up$ down$ left$ right$ [
 
-: key-desc  ( n -- ca len )
   \ Get the _n_ text from the `key-descs` table.
-  key-descs swap >execute  ;
+: key-desc  ( n -- ca len )  key-descs swap >execute  ;
 
-: key.  ( line col a -- )
   \ Print a key name.
-  \ line col = screen coordinates
   \ a = key address in the keys table
-  key-name 2swap at type  ;
+: key.  ( a -- )  key-name graph-udg emit lang-udg  ;
 
-: player-key.  ( line col n -- )
   \ Print the name of the given key of the current player.
-  \ line col = screen coordinates
   \ n = key number in the table
-  cells player-keys + @ key.  ;
+: player-key.  ( n -- )  cells player-keys + @ key.  ;
 
-( Keys position)
-
-here: key-columns
   \ Columns of the player keys.
-  12 c, 19 c, 26 c,
+here: key-columns  12 c, 19 c, 26 c,
 
-: pilot-col  ( n -- col )
   \ Column of the pilot number _n_.
-  key-columns + c@  ;
+: pilot-col  ( n -- col )  key-columns + c@  ;
 
-: player-col  ( -- col )
-  \ Column of the current player.
-  player pilot-col  ;
+  \ Column of the current player's vehicle.
+: player-col  ( -- col )  player pilot-col  ;
 
-: key#>coords  ( n -- line col )
-  \ Convert a key number (0..3) of the current player
-  \ to the cursor coordinates of the key in the pilots menu.
-  keys-line + player-col ;
+  \ Convert a key number _n_ (0..3) of the current player
+  \ to the cursor coordinates of the key in the pilot menu.
+: key#>coords  ( n -- line col )  keys-line + player-col ;
 
 : (key-prompt)  ( n f -- )
   \ Activate or deactivate the prompt of a key
   \ of the current player.
   \ n = key number in the current players' key table
   \ f = flash?
-  flash dup key#>coords rot player-key.  ;
+  flash dup key#>coords at player-key.  ;
 
 : +key-prompt  ( a n -- )
   \ Activate the prompt of a current player's key.
@@ -138,7 +127,7 @@ here: key-columns
 : -key-prompt  ( a n -- )
   \ Deactivate the prompt of a current player's key.
   \ n = key number in the current players' key table
-  0 (key-prompt) space  ;
+  0 (key-prompt)  ;
 
 ( Pilot -- human, robot or none )
 
@@ -167,8 +156,8 @@ here: pilot-controls  \ table of cfa
 ( Config the pilot )
 
   \ Print the pilot of the current player.
-: at-pilot  ( -- )  pilot-line player-col at  ;
-: .pilot  ( -- )  at-pilot human|robot|none$ type  ;
+: show-pilot  ( -- )
+  pilot-line player-col at  human|robot|none$ type  ;
 
 : player-controls  ( -- )
   \ Init every `player-control` with `player-pilot`;
@@ -188,11 +177,11 @@ here: pilot-controls  \ table of cfa
 
 : change-pilot  ( -- )
   \ Change the pilot of the current player.
-  pilot-help$ remark  1 flash .pilot 0 flash
+  pilot-help$ remark  1 flash show-pilot 0 flash
   pilot-control player-pilot !
-  .pilot  pilot-help$ -remark  ;
+  show-pilot  pilot-help$ -remark  ;
 
-( Redefine the keys )
+( Config the keys )
 
 : valid-game-key  ( -- a )
   \ Check all keys forever until a valid one is pressed.
@@ -200,24 +189,23 @@ here: pilot-controls  \ table of cfa
   \ a = address in the `keys` table
   0 begin  drop pressed dup caps-shift-key <>  until  ;
 
-: redefine-keys  ( -- )
-  \ Redefine the keys of the current player.
+: change-keys  ( -- )
+  \ Change the keys of the current player.
   keys/player 0 do
     i +key-prompt
     512 ms valid-game-key player-keys i cells + !
     i -key-prompt
   loop  ;
 
-( Pilots' keys )
+( Pilot keys )
 
+  \ XXX OLD
   \ Print the number of the current player.
-: at-player  ( -- )  vehicle-line player-col at  ;
-: .player  ( -- )  at-player player .  ;
+  \ : .player  ( -- )  vehicle-line player-col at player .  ;
 
-: pilots-menu-key  ( n -- )
   \ Show a key of the pilots menu,
   \ for the 'n' key of the current player.
-  dup >r keys-line + player-col r> player-key.  ;
+: pilot-menu-key  ( n -- )  dup key#>coords at player-key.  ;
 
 : hide-keys  ( -- )
   \ Hide the keys of the current player.
@@ -227,14 +215,53 @@ here: pilot-controls  \ table of cfa
 
 : show-keys  ( -- )
   \ Show the keys of the current player.
-  keys/player 0 do  i pilots-menu-key  loop  ;
+  keys/player 0 do  i pilot-menu-key  loop  ;
+
+( Color )
+
+  \ Two versions (for humans and robots)
+  \ of the three UDG that form the color icon:
+here: robot-color-icon 156 c, 157 c, 158 c,
+here: human-color-icon 159 c, 160 c, 161 c,
+  \ Color icon selection table:
+here: color-icons robot-color-icon , human-color-icon ,
+
+  \ Position the cursor on the color icon of the current
+  \ player.
+: at-color  ( -- )  color-line player-col at  ;
+
+  \ String with the proper color icon, for humans or robots.
+: color-icon$  ( -- ca len )  color-icons human? cells + @ 3  ;
+
+: show-color  ( -- )
+  \ Print the color icon of the current player.
+  player-color @ ink graph-udg
+  at-color color-icon$ type  lang-udg white ink  ;
+
+  \ Hide the color icon of the current player.
+: hide-color  ( -- )  at-color color-icon$ type-spaces  ;
+
+: color-option  ( -- n )
+  \ Wait for a valid key press for a color option
+  \ and return its value.
+  \ n = 1..7 (color code)
+  begin  akey s" 1234567" char-in-string?  until  1+  ;
+
+: change-color  ( -- )
+  \ Change the color of the current player.
+  \ A digit key is regarded as its correspondent color (0..7);
+  \ a space can be used to change the current color to the
+  \ next one (7 changes to 0 in an endless loop).
+  color-help$ remark  1 flash show-color 0 flash
+  color-option player-color !  option-pause
+  show-color color-help$ -remark  ;
 
 ( Pilots' menu )
 
-: pilots-menu-row-headers  ( -- )
-  \ Show the row headers of the redefine keys menu.
-  red ink
-  vehicle$ vehicle-line 0 at type  pilot$ pilot-line 0 at type
+: pilot-menu-row-headers  ( -- )
+  \ Show the row headers of the config keys menu.
+  red ink  vehicle$ vehicle-line 0 at type
+  pilot$ pilot-line 0 at type  color$ color-line 0 at type
   \ Names of the keys at the left.
   keys/player 0 do  i key-desc keys-line i + |key-desc  loop
   white ink  ;
@@ -242,26 +269,28 @@ here: pilot-controls  \ table of cfa
 : vehicle-numbers  ( f -- )
   \ Print the vehicle numbers at the top of the columns.
   \ f = active pilot menu?
+  \ Note: `0 d.r` is used instead of `d.` because `d.`
+  \ prints and ending space.
   inverse   max-players 0 do
               vehicle-line i pilot-col at i s->d 0 d.r
             loop  0 inverse  ;
 
-: pilots-menu-headers  ( f -- )
+: pilot-menu-headers  ( f -- )
   \ f = active pilot menu?
-  vehicle-numbers pilots-menu-row-headers  ;
+  vehicle-numbers pilot-menu-row-headers  ;
 
-: pilots-menu  ( f -- )
-  \ Show the redefine keys menu.
+: pilot-menu  ( f -- )
+  \ Show the pilot menu.
   \ f = active pilot menu?
-  pilots-menu-headers  max-players 0 do
-    i player! .pilot
+  pilot-menu-headers  max-players 0 do
+    i player! show-pilot show-color
     human? if  show-keys  else  hide-keys  then  loop  ;
 
-( Sound option )
+( Sound option; pilot configuration )
 
 : sound-option$  ( -- ca len )
   option-3$ sound? @ on/off$ s+  ;
-  
+
 : sound-option  ( f -- )
   \ Show the menu option that toggles the sound.
   \ f = Active option?
@@ -271,21 +300,23 @@ here: pilot-controls  \ table of cfa
   \ Toggle the game sounds.
 : toggle-sound  ( -- )  sound? dup 1 toggle @ sound  ;
 
-( Configure )
-
 : config-pilot  ( n -- )
-  \ Config the pilot number _n_.
-  player!  false vehicle-numbers  change-pilot human?
-  if    show-keys redefine-keys
-  else  hide-keys  then
+  \ Config the pilot of vehicle number _n_.
+  player!  false vehicle-numbers  change-pilot none?
+  if  hide-color hide-keys  else  human?
+    if    show-color show-keys change-color change-keys
+    else  show-color hide-keys change-color  then  then
   update-players  players to pilots  true vehicle-numbers  ;
+
+( Configure )
 
 : config-option  ( n -- )
   -dup  if    false sound-option  1- config-pilot
-        else  125 ms toggle-sound  then  true sound-option  ;
+        else  option-pause toggle-sound
+        then  true sound-option  ;
 
 : config-menu  ( -- )
-  wipe-contents white ink true sound-option pilots-menu  ;
+  wipe-contents white ink true sound-option pilot-menu  ;
 
 : configure  ( -- )
   \ Configure the sound and the pilots.

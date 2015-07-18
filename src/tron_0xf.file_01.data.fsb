@@ -295,4 +295,14 @@ player0-data value player-data
   \ n = element of the table (0..x)
   cells + @ execute  ;
 
+  \ Remove a number of chars from a given string if `players`
+  \ is 1 and the current player is a human or a robot.  This is
+  \ used with the pilot help string in every language,
+  \ according to the behaviour of the configuration menu, where
+  \ the "none" option can not be choosen when the currently
+  \ configured player is the only human or robot left.
+  \ ca len = string
+  \ n = chars to remove
+: -none  ( ca len n -- )  players 1 = someone? and * -  ;
+
   \ vim: filetype=abersoftforthafera
