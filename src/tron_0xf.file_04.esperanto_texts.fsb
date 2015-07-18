@@ -62,7 +62,7 @@
 
 : eo-instructions  ( -- )
   \  <------------------------------>
-  ." Ĉiu ludanto veturas motorciklon" cr
+  ." Ĉiu ludanto veturas veturilon" cr
   ." kies nura stirilo ĝin turnas" cr
   ." naŭdek gradojn sen malrapidiĝo." cr cr
   ." Ĉiu veturilo postlasas solidan" cr

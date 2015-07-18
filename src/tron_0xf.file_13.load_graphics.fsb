@@ -47,11 +47,11 @@
   \                     game font (first part, 256 bytes)
   \
   \ screen 9:           game font (second part, 512 bytes)
-  \                     digits UDG (160 bytes)
+  \                     double height digits (160 bytes)
   \                     Esperanto characters (96 bytes)
-  \                     Spanish characters (166 bytes)
-  \                     Default UDG (64 bytes)
-  \                     48 bytes free
+  \                     Spanish characters (144 bytes)
+  \                     Default UDG (96 bytes)
+  \                     38 bytes free
   \
   \ screens 10 and 11:  graphic title (2048 bytes)
 
@@ -68,9 +68,9 @@ eo-udg /eo-udg 0 0 <tape          \ Esperanto characters
 +scroll
 es-udg /es-udg 0 0 <tape          \ Spanish characters
 +scroll
-digits-udg /digits-udg 0 0 <tape  \ score digits
+digits-udg /digits-udg 0 0 <tape  \ double height digits
 +scroll
-udg 0 0 0 <tape                   \ frame graphs
+udg0 0 0 0 <tape                  \ frame graphs
 +scroll
 title-address 0 0 0 <tape         \ graphic title
 +scroll

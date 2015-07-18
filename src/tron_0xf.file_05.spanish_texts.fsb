@@ -66,11 +66,11 @@
 
 : es-instructions  ( -- )
   \  <------------------------------>
-  ." Cada jugador conduce una moto" cr
-  ." cuyo único control la hace girar" cr
+  ." Cada jugador conduce un vehículo"
+  ." cuyo único control lo hace girar" cr
   ." noventa grados sin frenar." cr cr
-  ." Cada moto deja tras de sí una" cr
-  ." pared sólida de luz." cr cr
+  ." Cada vehículo deja tras de sí" cr
+  ." una pared sólida de luz." cr cr
   ." El objetivo del juego es hacer" cr
   ." estrellarse al contrincante con" cr
   ." el laberinto." cr  ;

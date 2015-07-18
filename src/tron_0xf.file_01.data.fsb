@@ -279,7 +279,7 @@ player0-data value player-data
     human? if  0= leave  then
   loop  ;
 
-( Other tools data-related )
+( Other data-related tools)
 
 : char-in-string?  ( c ca len -- n tf | ff )
   \ Is the char _c_ in the  string _ca len_?

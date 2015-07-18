@@ -68,7 +68,7 @@ here: menu-options
 
 : change-language  ( -- )
   \ Change the current language.
-  lang 1+ dup langs < *  dup to lang  +udg wipe-contents  ;
+  lang 1+ dup langs < *  to lang lang-udg wipe-contents  ;
 
   \ : x-toggle-sound  ( -- )  \ XXX OLD
   \   \ Toggle the game sounds.

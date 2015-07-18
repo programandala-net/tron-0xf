@@ -53,7 +53,7 @@
 
 2 11 thru
 
-( Fonts)
+( Font and double height digits)
 
   \ The game fonts are loaded from tape at the end of the
   \ compilation. Words are defined to switch them on and off:
@@ -71,7 +71,7 @@
 : -font  ( -- )  15360 sys-chars ! ;
   
   \ Double height digits are used to print the scores.  They
-  \ are hold in a bank of 20 UDG. The first 10 UDGs are the top
+  \ are hold in a set of 20 UDG. The first 10 UDGs are the top
   \ halves of the digits, the second 10 UDGs are the bottom
   \ halves.  Every set is switched instead of the game font
   \ when needed.
@@ -98,39 +98,39 @@ font /font + constant digits-udg
   [ digits-udg /digits-udg 2 / +  digits>chars ] literal
   sys-chars ! ;
 
-( UDG fonts)
+( Foreign language characters and graphic UDG)
 
-  \ The user defined graphics are used for the Spanish and
-  \ Esperanto characters. Two banks are used. They are loaded
-  \ from tape at the end of the compilation. The correspondent
-  \ UDG bank is switched when the user changes the language in
-  \ the game menu.
-  \
-  \ The UDG data is stored in the Forth RAM disk.
+  \ The graphics, and the Spanish and Esperanto characters are
+  \ stored as UDG sets in the Forth RAM disk, and loaded from
+  \ tape at the end of the compilation. The correspondent UDG
+  \ set is switched when the user changes the language in the
+  \ game menu, or when graphis have to be printed.
 
-  \ UDG bank for the Esperanto letters.
+  \ UDG set for the Esperanto letters.
 12 8 * constant /eo-udg  \ size in bytes
 digits-udg /digits-udg + constant eo-udg
 
-  \ UDG bank for the Spanish letters and characters.
+  \ UDG set for the Spanish letters and characters.
 18 8 * constant /es-udg  \ size in bytes
 eo-udg /eo-udg + constant es-udg
 
-  \ Default UDG bank.
+  \ Default UDG set.  It contains the frame graphs.
 es-udg /es-udg + constant udg0
 
-here: udg-bank
-  \ Addresses of the UDG banks used for every language.
-  udg0 , eo-udg , es-udg ,
+  \ Addresses of the UDG sets.
+here: udg-set  udg0 , eo-udg , es-udg ,
 
-: +udg  ( n -- )
-  \ Set the UDG bank required by the given language number.
-  cells udg-bank + @ sys-udg !  ;
+  \ Activate UDG set number _n_.
+: >udg  ( n -- )  cells udg-set + @ sys-udg !  ;
 
-: -udg  ( -- )
-  \ Set the default UDG bank.
-  \ It contains the frame graphs.
-  0 +udg  ;
+  \ The selection of the UDG set is done with the following two
+  \ words:
+
+  \ Activate the UDG set required for the current language.
+: lang-udg  ( -- )  lang >udg  ;
+
+  \ Activate the default UDG set.
+: graph-udg  ( -- )  0 >udg  ;
   
 ( Screen -- generic)
 
@@ -314,7 +314,7 @@ frame-color black papery + constant frame-attribute
 
 : frame  ( -- )
   \ Draw the arena frame.
-  -udg black ink draw-frame color-frame  lang +udg  ;
+  graph-udg black ink draw-frame color-frame lang-udg  ;
 
 ( Arena -- save, restore, clear, draw; and .initial )
 

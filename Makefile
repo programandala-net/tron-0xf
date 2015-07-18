@@ -45,7 +45,7 @@ all: tron_0xf_compiling.tap
 clean:
 	rm -f graph/title.tap ; \
 	rm -f graph/score_digits.tap ; \
-	rm -f graph/frame_graphs.tap ; \
+	rm -f graph/udg.tap ; \
 	rm -f tron_0xf_compiling.tap ; \
 	rm -f tap/*.tap
 
@@ -55,10 +55,10 @@ graph/score_digits.tap: graph/score_digits.fs
 	bin2code score_digits.bin score_digits.tap ; \
 	cd -
 
-graph/frame_graphs.tap: graph/frame_graphs.fs
+graph/udg.tap: graph/udg.fs
 	cd graph ; \
-	gforth frame_graphs.fs -e bye ; \
-	bin2code frame_graphs.bin frame_graphs.tap ; \
+	gforth udg.fs -e bye ; \
+	bin2code udg.bin udg.tap ; \
 	cd -
 
 graph/title.tap: graph/title.pbm
@@ -82,7 +82,7 @@ tron_0xf_compiling.tap: \
 	$(library_tapes) \
 	$(program_tapes) \
 	graph/score_digits.tap \
-	graph/frame_graphs.tap \
+	graph/udg.tap \
 	graph/title.tap
 	for source in $$(ls -1 src/*.fsb) ; do \
 		make tap/$$(basename $${source%%.fsb}).tap ; \
@@ -129,7 +129,7 @@ tron_0xf_compiling.tap: \
 		graph/font.esperanto_characters.tap \
 		graph/font.spanish_characters.tap \
 		graph/score_digits.tap \
-		graph/frame_graphs.tap \
+		graph/udg.tap \
 		graph/title.tap \
 		> tron_0xf_compiling.tap
 
@@ -145,6 +145,9 @@ backup:
 	tar -cJf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tar.xz \
 		Makefile \
 		src/*.fsb \
+		graph/font.* \
+		graph/*.fs \
+		graph/*.pbm \
 		README.* \
 		tron_0xf.szx \
 		old/*
@@ -223,4 +226,6 @@ zipball:
 #
 # 2015-07-17: Added tarball and zipball recipes for distribution package. File
 # license. The `clean` recipe includes the graphics.
+#
+# 2015-07-18: Updated the `backup` recipe with the sources of the graphs.
 

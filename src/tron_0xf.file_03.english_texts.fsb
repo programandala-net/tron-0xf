@@ -42,16 +42,14 @@
 : en-instructions  ( -- )
 
 
-  \ XXX TODO motorbike --> vehicle
-
   \  <------------------------------>
   \  XXX TODO -- complete:
   \  The aim of the game is to be the last player riding.
-  ." Every player drives a motorbike" cr
+  ." Every player drives a vehicle" cr
   ." whose only control makes it turn" cr
   ." ninety degrees without" cr
   ." deceleration." cr cr
-  ." Every motorbike leaves a solid" cr
+  ." Every vehicle leaves a solid" cr
   ." light trail behind." cr cr
   ." The goal of the game is to make" cr
   ." your adversary crash the" cr
