@@ -29,18 +29,30 @@
 
   \ -----------------------------------------------------------
 
-  \ This is the last RAM-disc loaded from tape during the
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
+  \ This is the last Forth RAM disk loaded from tape during the
   \ compilation of the game. Its space is used to store some
-  \ binary data, with the folling structure:
+  \ binary data (directly loaded from tape or used during the
+  \ game), with the following map:
+
+  \ screen 1:           copy of arena attributes (640 bytes)
+  \                     384 bytes free
   \
-  \ Used as storage space during the game:
-  \
-  \ screen 1:           copy of arena attributes (<768 bytes)
   \ screens 2-8:        copy of a whole screen (6912 bytes)
+  \                     game font (first part, 256 bytes)
   \
-  \ Loaded directly from tape files:
+  \ screen 9:           game font (second part, 512 bytes)
+  \                     digits UDG (160 bytes)
+  \                     Esperanto characters (96 bytes)
+  \                     Spanish characters (166 bytes)
+  \                     Default UDG (64 bytes)
+  \                     48 bytes free
   \
-  \ screen 9:           game font (768 bytes)
   \ screens 10 and 11:  graphic title (2048 bytes)
 
   \ -----------------------------------------------------------

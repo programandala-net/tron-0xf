@@ -29,6 +29,12 @@
 
   \ -----------------------------------------------------------
 
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
   \ `caps-shift-key` will be updated later with the address of
   \ the Caps Shift key in the keys table. It is used to prevent
   \ this key from being chosen in the configuration menu, in

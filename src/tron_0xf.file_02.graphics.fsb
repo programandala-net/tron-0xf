@@ -29,6 +29,12 @@
 
   \ -----------------------------------------------------------
 
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
   \ Address and size of the screen
 16384 constant sys-screen  6912 constant /sys-screen
                            6144 constant /sys-screen-bitmap
@@ -53,8 +59,10 @@
   \ compilation. Words are defined to switch them on and off:
 
   768 constant /font  \ size in bytes
-  \ Screen 9 of the Forth RAM disk is used to store the font.
-9 disc-scr constant font
+  \ The game font is stored in the Forth RAM disk;
+  \ the first 256 bytes at the end of screen 8, and the rest
+  \ 512 bytes at the start of screen 9:
+9 disc-scr 256 - constant font
 
   \ Set the game font:
 : +font  ( -- )  [ font 256 - ] literal sys-chars ! ;
@@ -67,11 +75,11 @@
   \ halves of the digits, the second 10 UDGs are the bottom
   \ halves.  Every set is switched instead of the game font
   \ when needed.
+  \
+  \ The data is stored in the Forth RAM disk, after the font.
 
 10 2 * 8 * constant /digits-udg  \ size in bytes
-  \ /digits-udg buffer: digits-udg  \ XXX OLD
-  \ The unused space above `hi` is used:
-hi 1+ constant digits-udg
+font /font + constant digits-udg
 
 : digits>chars  ( a1 -- a2 )
   \ Convert the address of UDG digits to the address of a fake
@@ -97,20 +105,19 @@ hi 1+ constant digits-udg
   \ from tape at the end of the compilation. The correspondent
   \ UDG bank is switched when the user changes the language in
   \ the game menu.
-
-sys-udg @ constant udg0  \ address of the default UDG bank
+  \
+  \ The UDG data is stored in the Forth RAM disk.
 
   \ UDG bank for the Esperanto letters.
 12 8 * constant /eo-udg  \ size in bytes
-  \ /eo-udg buffer: eo-udg  \ XXX OLD
-  \ The unused space above `hi` is used:
 digits-udg /digits-udg + constant eo-udg
 
   \ UDG bank for the Spanish letters and characters.
 18 8 * constant /es-udg  \ size in bytes
-  \ /es-udg buffer: es-udg
-  \ The unused space above `hi` is used:
 eo-udg /eo-udg + constant es-udg
+
+  \ Default UDG bank.
+es-udg /es-udg + constant udg0
 
 here: udg-bank
   \ Addresses of the UDG banks used for every language.
@@ -319,18 +326,19 @@ frame-color black papery + constant frame-attribute
 : save-arena  ( -- )
   \ Save the attributes of the central zone of the arena
   \ (between the horizontal borders) to the first screen of
-  \ the Forth RAM-disc.
+  \ the Forth RAM disk.
   [ top-frame-attributes cols +
-    bottom-frame-attributes over - swap ]
-    literal lo literal cmove  ;
+    bottom-frame-attributes over - swap ] literal
+  [ 1 disc-scr ] literal literal cmove  ;
 
 : restore-arena  ( -- )
   \ Restore the attributes of the central zone of the arena
   \ (between the horizontal borders) from the first screen of
-  \ the Forth RAM-disc.
-  lo [ top-frame-attributes cols +
-       bottom-frame-attributes over - swap ]
-       literal literal cmove  ;
+  \ the Forth RAM disk.
+  [ 1 disc-scr ] literal
+  [ top-frame-attributes cols +
+    bottom-frame-attributes over - swap ] literal literal
+  cmove  ;
 
 : clear-arena  ( -- )
 
@@ -346,9 +354,8 @@ frame-color black papery + constant frame-attribute
     i 1 at [ cols 2 - ] literal  spaces
   loop  ;
 
-: arena  ( -- )
   \ Draw the arena.
-  blackout frame save-arena status  ;
+: arena  ( -- )  blackout frame save-arena status  ;
 
 ( Text tools )
 

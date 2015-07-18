@@ -2,27 +2,51 @@
 :author: Marcos Cruz (programandala.net)
 :revdate: 2015-07-14
 
+// This file is part of
+// Tron 0xF
+// A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+// http://programandala.net/eo.programo.tron_0xf.html
+
+// Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are
+// preserved.  This file is offered as-is, without any
+// warranty.
+
+// -------------------------------------------------------------
+
+// Ĉi dosiero estas verkita per formato AsciiDoc/Asciidoctor
+// (http://asciidoctor.org).
+
 == Pri la kodo
 
 Tron 0xF estas verkita en Abersoft Forth (fig-Forth 1.1 adaptita al ZX
 Spectrum far John Jones Steele kaj eldonita de Melbourne House en
 1983), uzante la bibliotekon Afera (Marcos Cruz, 2015). Pliaj detaloj
-estas en http://programandala.net/es.programa.tron_0xf.html.
+estas en http://programandala.net/eo.programo.tron_0xf.html.
 
 == Kiel funkciigi
 
-Malfermu la dosieron <tron_0xf.szx> per emulilo de ZX Spectrum.
+Malfermu la dosieron <tron_0xf.szx> per emulilo de ZX Spectrum 48K.
 
 == Kiel kompili
 
 Por traduki la font-dosierojn de Tron 0xF en TAP-dosieron uzeblan de
-Abersoft Forth per emulilo de ZX Spectrum, la tradukilo fsb devas esti
-instalita:
+Abersoft Forth, pluraj programoj devas esti instalitaj (vidu pliajn
+detalojn en <Makefile>):
 
-http://programandala.net/eo.programo.fsb.html
+- Gforth: <http://gnu.org/software/gforth/>.
+- bin2code: <http://metalbrain.speccy.org/link-eng.htm>.
+- fsb: <http://programandala.net/en.program.fsb.html>.
+- head: Ero de _GNU core utilities_
+- pbm2scr: <http://programandala.net/en.program.pbm2scr.html>.
 
 Poste eniru la dosierujon de Tron 0xF kaj ordonu `make`. Tio kreos la
-dosieron <tron_0xf_compiling.tap>. Malfermu ĝin per via emulilo. Ĉe la
-salutekrano de Abersoft Forth tajpu la ordonon `LOADT 1 LOAD`. La
-kompilado daŭros plurajn minutojn je la originala rapido de ZX
+dosieron <tron_0xf_compiling.tap>. Malfermu ĝin normale per via
+emulilo kaj enlegu ĝin (per `LOAD ""` aŭ la menuo de ZX Spectrum 128).
+Ĉe la salutekrano de Abersoft Forth tajpu la ordonon `LOADT 1 LOAD`.
+La kompilado daŭros plurajn minutojn je la originala rapido de ZX
 Spectrum.  La programo ekfunctios je la fino.

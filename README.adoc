@@ -2,6 +2,25 @@
 :author: Marcos Cruz (programandala.net)
 :revdate: 2015-07-14
 
+// This file is part of
+// Tron 0xF
+// A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+// http://programandala.net/en.program.tron_0xf.html
+
+// Copyright (C) 2015 Marcos Cruz (programandala.net)
+
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are
+// preserved.  This file is offered as-is, without any
+// warranty.
+
+// -------------------------------------------------------------
+
+// This file is written in AsciiDoc/Asciidoctor format
+// (http://asciidoctor.org).
+
 == About the code
 
 Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 ported to ZX
@@ -11,19 +30,25 @@ http://programandala.net/en.program.tron_0xf.html.
 
 == How to run
 
-Open the file <tron_0xf.szx> with your ZX Spectrum emulator.
+Open the file <tron_0xf.szx> with your ZX Spectrum emulator de 48K.
 
 == How to compile
 
-In order to convert the sources to a TAP file suitable for
-Abersoft Forth, with a ZX Spectrum emulator, the fsb converter
-has to be installed:
+In order to convert the sources (of code and graphics) to a TAP file
+suitable for Abersoft Forth, several programs have to be installed
+(see <Makefile> for more details):
 
-http://programandala.net/en.program.fsb.html
+- Gforth: <http://gnu.org/software/gforth/>.
+- bin2code: <http://metalbrain.speccy.org/link-eng.htm>.
+- fsb: <http://programandala.net/en.program.fsb.html>.
+- head: Part of the GNU core utilities.
+- pbm2scr: <http://programandala.net/en.program.pbm2scr.html>.
 
 Then enter the Tron 0xF's directory and execute the command `make`.
-That will create the file <tron_0xf_compiling.tap>.  Open it with your
-emulator.  You will see the start screen of Abersoft Forth.  Then type
-the command `LOADT 1 LOAD`. The compilation will take several minutes
-at the original speed of ZX Spectrum. The program will run at the end.
+That will create the file <tron_0xf_compiling.tap>.  Open it as usual
+with your emulator and load it (with the BASIC command `LOAD ""` or
+the menu of the ZX Spectrum 128).  You will see the start screen of
+Abersoft Forth.  Then type the command `LOADT 1 LOAD`. The compilation
+will take several minutes at the original speed of ZX Spectrum. The
+program will run at the end.
 

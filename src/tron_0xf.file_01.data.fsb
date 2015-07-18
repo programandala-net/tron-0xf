@@ -29,6 +29,12 @@
 
   \ -----------------------------------------------------------
 
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
 forth definitions
 
 20150716. 2constant version
@@ -48,7 +54,7 @@ forth definitions
 
 ( Vocabulary, languages, players types)
 
-: task  ;  vocabulary tron immediate  tron definitions
+vocabulary tron immediate  tron definitions
 
   \ Languages
 
@@ -90,10 +96,10 @@ defer (robot)  ' (robot) cfa constant robot
 
 17 cells constant /player-data \ bytes per player data
 
-  \ Buffer that holds the data of all players.
 
 /player-data max-players * constant /players-data
 /players-data buffer: players-data
+
 players-data /players-data erase
 
   \ Pointers to the data of every player.
