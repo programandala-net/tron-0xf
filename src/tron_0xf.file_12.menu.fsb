@@ -79,10 +79,9 @@ here: menu-options
   \   sound? dup 1 toggle @ sound  white ink  ;
 
 : about  ( -- )
-  wipe-contents  copyright cr cr authors more
-  license-1 more  license-2 more  ;
+  whole-page copyright cr cr authors more license more page  ;
 
-: instructions  ( -- )  wipe-contents (instructions) more  ;
+: instructions  ( -- )  whole-page (instructions) more page  ;
 
 : finish  ( -- )  cls0 -font quit-message quit  ;
 

@@ -53,7 +53,7 @@
 
 2 11 thru
 
-( Font)
+( Fonts)
 
   \ The game fonts are loaded from tape at the end of the
   \ compilation. Words are defined to switch them on and off:
@@ -164,15 +164,13 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Center justified texts and title )
 
-: centered  ( len -- column )
   \ Convert a string length to the column required
   \ to print the string centered.
-  cols swap - 2 /  ;
+: centered  ( len -- column )  cols swap - 2 /  ;
 
-: |at|  ( line len -- )
   \ Put the cursor on the given line, at the column
   \ required to center a text of the given length.
-  centered at  ;
+: |at|  ( line len -- )  centered at  ;
 
   \ Type spaces centered on a given line.
 : |linespaces|  ( len line -- )  over |at| spaces  ;
@@ -205,34 +203,33 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \ and setting its color attributes.
   \ The graphic ocuppies the first third of the screen
   \ (2048 bytes of bitmap and 256 bytes of color attributes).
-  title-address sys-screen 2048 cmove
-  22528 256 red fill  ;
+  title-address sys-screen 2048 cmove  22528 256 red fill  ;
 
 : type-spaces  ( ca len -- )  nip spaces  ;
 
-( Contents zone )
+( Contents page )
 
-  \ The zone above the title is called the contents zone.  It
-  \ is used for menus, configuration and information
-  \ (instructions, about, etc.).
-
-8 constant contents-line  \ first usable line
+8 value contents-line  \ first usable line
 
   \ Set ink color and print position ready for new contents.
 : at-contents  ( -- )  contents-line 0 at  black ink  ;
+: >at-contents  ( n -- )  dup to contents-line at-contents  ;
 
   \ Start a new contents page.
-: page  ( -- )  blackout title  at-contents  ;
+: page  ( -- )  blackout title 8 >at-contents  ;
+: whole-page  ( -- ) blackout 0 >at-contents  ;
 
-  \ Calculate the screen attributes zone of the contents zone.
-contents-line cols *  \ bytes to skip
-attributes over +  /attributes rot -  ( a len )
-  2constant contents-attributes
+: contents-attributes  ( -- a len )
+  \ Screen attributes zone of the contents zone.
+  contents-line cols *  \ bytes to skip
+  attributes over +  /attributes rot -  ;
 
-  \ Calculate the screen bitmap zone of the contents zone.
-contents-line cols * 8 *  \ bytes to skip (8 scans/char)
-sys-screen over +  /sys-screen-bitmap rot - ( a len )
-  2constant contents-bitmap
+: contents-bitmap  ( -- a len )
+  \ Screen bitmap zone of the contents zone.
+  contents-line cols * 8 *  \ bytes to skip (8 scans/char)
+  sys-screen over +  /sys-screen-bitmap rot -  ;
+
+( Contents page )
 
 : wipe-contents  ( -- )
   \ Erase the screen attributes of the contents zone (what
@@ -260,9 +257,8 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
   \ using 3 digits and double height characters.
   \ n1 = score
   \ n2 = score column
-  >r
-  status-line r at  s->d <# # # # #> 2dup +hi-digits type
-  status-line 1+ r> at  +lo-digits type +font  ;
+  >r status-line r at  s->d <# # # # #> 2dup +hi-digits type
+     status-line 1+ r> at  +lo-digits type +font  ;
 
 : .score  ( -- )
   \ Print the the current player's score.
@@ -273,9 +269,8 @@ sys-screen over +  /sys-screen-bitmap rot - ( a len )
   \ Show the status bar.
   \ XXX TODO improve (now it shows only the scores)
   last-one? ?exit
-  max-players 0 do
-    i player!  someone? if  .score  then
-  loop  ;
+  max-players 0 do    i player!  someone? if  .score  then
+                loop  ;
 
 : -status  ( -- )
   \ Erase the status bar.
@@ -321,7 +316,7 @@ frame-color black papery + constant frame-attribute
   \ Draw the arena frame.
   -udg black ink draw-frame color-frame  lang +udg  ;
 
-( Arena -- save, restore, clear, draw)
+( Arena -- save, restore, clear, draw; and .initial )
 
 : save-arena  ( -- )
   \ Save the attributes of the central zone of the arena
@@ -345,19 +340,15 @@ frame-color black papery + constant frame-attribute
   \ Clear only the game arena.
 
   \ First, hide the arena instantaneously by restoring the
-  \ saved attributes:
-  restore-arena
+  \ saved attributes.  Second, a slower process, actually clear
+  \ the players' trails by overwritting the arena with spaces.
 
-  \ Second, a slower process, actually clear the players'
-  \ trails by overwritting the arena with spaces:
-  [ arena-lines 1+ ] literal 1 do
-    i 1 at [ cols 2 - ] literal  spaces
-  loop  ;
+  restore-arena [ arena-lines 1+ ] literal 1 do
+                  i 1 at [ cols 2 - ] literal  spaces
+                loop  ;
 
   \ Draw the arena.
 : arena  ( -- )  blackout frame save-arena status  ;
-
-( Text tools )
 
   \ Print the given char as a menu option initial.
 : initial.  ( c -- )  1 inverse emit 0 inverse  ;

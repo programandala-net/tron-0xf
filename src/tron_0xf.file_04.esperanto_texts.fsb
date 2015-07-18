@@ -56,7 +56,7 @@
 
   \ -----------------------------------------------------------
 
-2 8 thru
+-->
 
 ( Instructions )
 
@@ -71,6 +71,8 @@
   ." traŭulon frakasi la labirinton." cr  ;
   \  <------------------------------>
 
+-->
+
 ( Quit and authors )
 
 : eo-quit-message  ( -- )
@@ -81,8 +83,8 @@
 
 : eo-authors  ( -- )
   \  <------------------------------>
-  ." Kodo kaj grafikoj: Marcos Cruz." cr
-  ." Provado: Teo kaj Irene."  cr
+  ." Kodo kaj grafikoj: Marcos Cruz." cr cr
+  ." Provado: Teo kaj Irene." cr cr
   \ XXX TODO
   ." Tiparo: Paul Howard (el FontBox" cr
   ." I, 1995, publika posedaĵo)." cr cr
@@ -93,41 +95,45 @@
   ." <http://programandala.net/eo.programo.tron_0xf.html>" ;
   \  <------------------------------>
 
+-->
+
 ( License -- part 1 )
 
-: eo-license-1  ( -- )
+: eo-license  ( -- )
 
   \  <------------------------------>
-  ." Ĉi tiu programo estas libera; vi" cr
-  ." rajtas reliveri kaŭ modifi ĝin" cr
-  ." sub la kondiĉoj de la GNU-a" cr
-  ." Ĝenerala Publika Permesilo, tia" cr
-  ." kiun publikigas Free Software" cr
+  ." Tron 0xF estas libera; vi rajtas"
+  ." reliveri kaŭ modifi ĝin sub la" cr
+  ." kondiĉoj de la GNU-a Ĝenerala" cr
+  ." Publika Permesilo, tia kiun" cr
+  ." publikigas Free Software" cr
   ." Foundation (Liber-Programara" cr
   ." Fondaĵo), ĉu versio 3 de la" cr
   ." permesilo aŭ, je via prefero, iu" cr
-  ." posta versio."  ;
+  ." posta versio." cr
   \  <------------------------------>
+
+-->
 
 ( License -- part 2 )
 
-: eo-license-2  ( -- )
-
   \  <------------------------------>
-  ." Ĉi tiu programo estas" cr
-  ." distribuita kun espero ke ĝi" cr
-  ." utilu, sed SEN AJNA GARANTIO; eĉ" cr
-  ." sen implicita garantio de" cr
-  ." KOMERCEBLECO or TAŬGECO POR" cr
-  ." PARTIKULARA CELO. Vidu la GNU-an"
-  ." Ĝeneralan Publikan Permesilon" cr
-  ." por pliaj detaloj." cr cr
+  ."   Tron 0xF estas distribuita kun"
+  ." espero ke ĝi utilu, sed SEN AJNA"
+  ." GARANTIO; eĉ sen implicita" cr
+  ." garantio de KOMERCEBLECO or" cr
+  ." TAŬGECO POR PARTIKULARA CELO." cr
+  ." Vidu la GNU-an Ĝeneralan" cr
+  ." Publikan Permesilon por pliaj" cr
+  ." detaloj." cr
   \  <------------------------------>
-  ." Vi devintus ricevi kopion de la" cr
-  ." GNU-a Ĝenerala Publika Permesilo" cr
-  ." kun ĉi tiu programo; alikaze" cr
+  ."   Vi devintus ricevi kopion de" cr
+  ." la GNU-a Ĝenerala Publika" cr
+  ." Permesilo kun Tron 0xF; alikaze" cr
   ." vidu <http://gnu.org/licenses>."  ;
   \  <------------------------------>
+
+-->
 
 ( Keys )
 
@@ -137,6 +143,8 @@
 : eo-right$  ( -- ca len )  s" Dekstren"  ;
 
 char J constant eo-'y'  \ the letter used to say "yes"
+
+-->
 
 ( Menu options )
 
@@ -148,6 +156,8 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-option-5$  ( -- ca len )  s" Eki"  ;
 : eo-option-6$  ( -- ca len )  s" Prio"  ;
 : eo-option-7$  ( -- ca len )  s" Fini"  ;
+
+-->
 
 ( Other )
 

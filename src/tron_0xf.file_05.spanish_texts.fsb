@@ -60,7 +60,7 @@
 
   \ -----------------------------------------------------------
 
-2 8 thru
+-->
 
 ( Instructions )
 
@@ -76,6 +76,8 @@
   ." el laberinto." cr  ;
   \  <------------------------------>
 
+-->
+
 ( Quit and authors )
 
 : es-quit-message  ( -- )
@@ -86,11 +88,12 @@
 
 : es-authors  ( -- )
   \  <------------------------------>
-  ." Código y gráficos: Marcos Cruz." cr
-  ." Pruebas: Teo e Irene." cr 
+  ." Código y gráficos: Marcos Cruz." cr cr
+  ." Pruebas: Teo e Irene." cr cr
   \ XXX TODO
-  ." Tipografía: Paul Howard (de"
-  ." FontBox I, 1995, dominio público)." cr cr
+  ." Tipografía: Paul Howard (de" cr
+  ." FontBox I, 1995, dominio" cr
+  ." público)." cr cr
   ." Escrito en Forth con Abersoft" cr
   ." Forth (Melbourne House, 1983)." cr
   ." y la biblioteca Afera (2015)."  cr cr
@@ -98,41 +101,45 @@
   ." <http://programandala.net/es.programa.tron_0xf.html>" ;
   \  <------------------------------>
 
+-->
+
 ( License -- part 1 )
 
-: es-license-1  ( -- )
+: es-license  ( -- )
 
   \  <------------------------------>
-  ." Este programa es libre; puedes" cr
+  ." Tron 0xF es libre; puedes" cr
   ." redistribuirlo y modificarlo" cr
   ." bajo los términos de la Licencia" cr
   ." Pública General GNU, publicada" cr
   ." por Free Software Foundation" cr
   ." (Fundación para los programas" cr
   ." libres), bien su versión 3 o, a" cr
-  ." tu criterio, otra posterior."  ;
+  ." tu criterio, otra posterior." cr
   \  <------------------------------>
+
+-->
 
 ( License -- part 2 )
 
-: es-license-2  ( -- )
-
   \  <------------------------------>
-  ." Este programa se distribuye con" cr
-  ." la esperanza de que sea útil," cr
-  ." pero SIN GARANTÍA ALGUNA; ni" cr
-  ." siquiera la garantía implícita" cr
-  ." de ser COMERCIALIZABLE o APTO" cr
-  ." PARA un OBJETIVO PARTICULAR." cr
-  ." Para más detalles lee la" cr
-  ." Licencia Pública General GNU." cr cr
+  ."   Tron 0xF se distribuye con la" cr
+  ." esperanza de que sea útil, pero" cr
+  ." SIN GARANTÍA ALGUNA; ni siquiera"
+  ." la garantía implícita de ser" cr
+  ." COMERCIALIZABLE o APTO PARA un" cr
+  ." OBJETIVO PARTICULAR. Para más" cr
+  ." detalles lee la Licencia Pública"
+  ."  General GNU." cr
   \  <------------------------------>
-  ." Deberías haber recibido una" cr
+  ."   Deberías haber recibido una" cr
   ." copia de la Licencia Pública" cr
-  ." General GNU junto con este" cr
-  ." programa; si no es así, léela en" cr
+  ." General GNU junto con Tron 0xF;" cr
+  ." si no es así, léela en" cr
   ." <http://gnu.org/licenses>."  ;
   \  <------------------------------>
+
+-->
 
 ( Keys )
 
@@ -142,6 +149,8 @@
 : es-right$  ( -- ca len )  s" Derecha"  ;
 
 char S constant es-'y'  \ the letter used to say "yes"
+
+-->
 
 ( Menu options )
 
@@ -153,6 +162,8 @@ char S constant es-'y'  \ the letter used to say "yes"
 : es-option-5$  ( -- ca len )  s" Empezar"  ;
 : es-option-6$  ( -- ca len )  s" Acerca de"  ;
 : es-option-7$  ( -- ca len )  s" Salir"  ;
+
+-->
 
 ( Other )
 

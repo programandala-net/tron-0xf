@@ -166,11 +166,8 @@ localized vehicle$  ( -- ca len )
 
 ( Texts that don't need translation)
 
-' es-license-1 ' eo-license-1 ' en-license-1
-localized license-1  ( -- )
-
-' es-license-2 ' eo-license-2 ' en-license-2
-localized license-2  ( -- )
+' es-license ' eo-license ' en-license
+localized license  ( -- )
 
 ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
@@ -182,8 +179,8 @@ localized authors  ( -- )
   
 : copyright  ( -- )
   ." Tron 0xF (" version$ type space .version [char] ) emit cr
-  ." Copyright (C) 2015" cr
-  ." Marcos Cruz (programandala.net)"  ;
+  cr ." Copyright (C) 2015" cr
+     ." Marcos Cruz (programandala.net)"  ;
 
   \ The letter used to say "no", in the three languages.
 char N constant 'n'

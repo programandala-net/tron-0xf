@@ -37,7 +37,7 @@
 
 forth definitions
 
-20150716. 2constant version
+20150718. 2constant version
 
   \ System variables
 
@@ -187,14 +187,14 @@ yellow  7 0 player#-variable color0      \ ink color
   \ These additional definitions point to the first one of
   \ several related fields that sometimes are managed together,
   \ e.g. as a double number (coordinates and coordinates
-  \ incrementes) or a table (keys):
+  \ increments) or a table (keys):
 
 up-k0 constant keys0
 up-k1 constant keys1
 up-k2 constant keys2
-yc0 constant coords0
-yc1 constant coords1
-yc2 constant coords2
+  yc0 constant coords0
+  yc1 constant coords1
+  yc2 constant coords2
 yinc0 constant incs0
 yinc1 constant incs1
 yinc2 constant incs2
@@ -290,8 +290,8 @@ player0-data value player-data
   loop  drop rdrop false  ;
 
 : >execute  ( a n -- )
-  \ Execute a cfa stored in a table.
-  \ a = table
+  \ Execute a cfa stored in an execution table.
+  \ a = execution table
   \ n = element of the table (0..x)
   cells + @ execute  ;
 

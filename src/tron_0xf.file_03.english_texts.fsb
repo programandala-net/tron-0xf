@@ -35,7 +35,7 @@
 
   \ -----------------------------------------------------------
 
-2 8 thru
+-->
 
 ( Instructions )
 
@@ -55,7 +55,7 @@
   ." light trail behind." cr cr
   ." The goal of the game is to make" cr
   ." your adversary crash the" cr
-  ." labyrinth." cr  ;
+  ." labyrinth." cr  ; -->
   \  <------------------------------>
 
 ( Quit and authors )
@@ -68,10 +68,10 @@
 
 : en-authors  ( -- )
   \  <------------------------------>
-  ." Code and graphics: Marcos Cruz." cr
-  ." Tests: Teo and Irene." cr
+  ." Code and graphics: Marcos Cruz." cr cr
+  ." Tests: Teo and Irene." cr cr
   \ XXX TODO
-  ." Font: Paul Howard (from  FontBox"
+  ." Font: Paul Howard (from FontBox" cr
   ." I, 1995, public domain)." cr cr
   ." Written in Forth with Abersoft" cr
   ." Forth (Melbourne House, 1983)" cr
@@ -80,43 +80,45 @@
   ." <http://programandala.net/en.program.tron_0xf.html>" ;
   \  <------------------------------>
 
+-->
+
 ( License -- part 1 )
 
-: en-license-1  ( -- )
+: en-license  ( -- )
 
   \  <------------------------------>
-  ." This program is free software;" cr
-  ." you can redistribute it and/or" cr
+  ." Tron 0xF is free software; you" cr
+  ." can redistribute it and/or" cr
   ." modify it under the terms of the" cr
   ." GNU General Public License as" cr
   ." published by the Free Software" cr
   ." Foundation; either version 3 of" cr
   ." the License, or (at your option)" cr
-  ." any later version."  ;
+  ." any later version."  cr
   \  <------------------------------>
+
+-->
 
 ( License -- part 2 )
 
-: en-license-2  ( -- )
-
-  \ XXX TODO This program --> Tron 0xF
-
   \  <------------------------------>
-  ." This program is distributed in" cr
-  ." the hope that it will be useful," cr
-  ." but WITHOUT ANY WARRANTY; with-" cr
-  ." out even the implied warranty" cr
-  ." of MERCHANTABILITY or FITNESS" cr
-  ." FOR A PARTICULAR PURPOSE. See" cr
-  ." the GNU General Public License" cr
-  ." for more details." cr cr
+  ."   Tron 0xF is distributed in the"
+  ." hope that it will be useful, but" cr
+  ." WITHOUT ANY WARRANTY; without" cr
+  ." even the implied warranty of" cr
+  ." MERCHANTABILITY or FITNESS FOR" cr
+  ." A PARTICULAR PURPOSE. See the" cr
+  ." GNU General Public License for" cr
+  ." more details." cr
   \  <------------------------------>
-  ." You should have received a copy" cr
-  ." of the GNU General Public" cr
-  ." License along with this program;"
-  ." if not, see:" cr
-  ." <http://gnu.org/licenses>."  ;
+  ."   You should have received a" cr
+  ." copy of the GNU General Public" cr
+  ." License along with Tron 0xF; if" cr
+  ." not, see:" cr
+  ." <http://gnu.org/licenses>."  ; 
   \  <------------------------------>
+  
+-->
 
 ( Keys )
 
@@ -126,6 +128,8 @@
 : en-right$  ( -- ca len )  s" Right"  ;
 
 char Y constant en-'y'  \ the letter used to say "yes"
+
+-->
 
 ( Menu options )
 
@@ -137,6 +141,8 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-option-5$  ( -- ca len )  s" Start"  ;
 : en-option-6$  ( -- ca len )  s" About"  ;
 : en-option-7$  ( -- ca len )  s" Quit"  ;
+
+-->
 
 ( Other )
 
