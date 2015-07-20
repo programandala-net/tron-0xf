@@ -186,7 +186,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-pilot-help$  ( -- ca len )
   s" H=human R=robot N=none" 7 -none  ;
 
-: en-color-help$  ( -- ca len )  s" 1-7=color" ;
+: en-color-help$  ( -- ca len )  s" 1-7=color <Enter>=finish" ;
 
 : en-on$   ( -- ca len )  s" Yes"  ;
 : en-off$  ( -- ca len )  s" No "  ;

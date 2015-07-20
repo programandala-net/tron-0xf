@@ -67,20 +67,26 @@ here: color-icons
 
 ( Color)
 
-: color-option  ( -- n )
+  \ Compile a string of 8 chars; the first one is the code of
+  \ Carriage Return; the rest are digits 1-7.
+here: colors$ 8 c, 13 c, char 1 c, char 2 c, char 3 c, char 4
+c, char 5 c, char 6 c, char 7 c,
+
+: color-option  ( -- 0 | n )
   \ Wait for a valid key press for a color option
-  \ and return its value.
+  \ and return its value (or zero if Enter was pressed).
   \ n = 1..7 (color code)
-  begin  akey s" 1234567" char-in-string?  until  1+  ;
+  begin  akey colors$ count char-in-string?  until  ;
 
 : change-color  ( -- )
   \ Change the color of the current player.
   \ A digit key is regarded as its correspondent color (0..7);
   \ a space can be used to change the current color to the
   \ next one (7 changes to 0 in an endless loop).
-  color-help$ remark  1 flash show-color 0 flash
-  color-option player-color !  option-pause
-  show-color color-help$ -remark  ;
+  color-help$ remark  1 flash show-color
+  begin   color-option -dup
+  while   player-color ! option-pause show-color
+  repeat  0 flash show-color color-help$ -remark  ;
 
 ( Pilots' menu )
 

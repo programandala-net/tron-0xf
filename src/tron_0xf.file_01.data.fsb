@@ -37,15 +37,11 @@
 
 forth definitions
 
-  20150720.17 2constant version
-
-  \ System variables
-
-23606 constant sys-chars    23675 constant sys-udg
-23677 constant sys-x-coord  23678 constant sys-y-coord
+  20150720.18 2constant version
 
   \ Color constants
 
+  \ XXX TODO remove the unused
 0 constant black    1 constant blue   2 constant red
 3 constant magenta  4 constant green  5 constant cyan
 6 constant yellow   7 constant white

@@ -203,7 +203,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-pilot-help$  ( -- ca len )
   s" H=homo R=roboto N=neniu" 8 -none ;
 
-: eo-color-help$  ( -- ca len )  s" 1-7=koloro" ;
+: eo-color-help$  ( -- ca len )  s" 1-7=koloro <Enter>=fini" ;
 
 : eo-on$   ( -- ca len )  s" Jes"  ;
 : eo-off$  ( -- ca len )  s" Ne "  ;

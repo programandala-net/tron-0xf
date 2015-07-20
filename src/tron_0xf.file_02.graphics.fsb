@@ -44,12 +44,12 @@
   \ XXX OLD
   \ : save-display  ( -- )
   \   \ Save a copy of the whole display image
-  \   \ to screen 2 of the Forth RAM disk.
+  \   \ to screen 2 of the Forth RAM-disk.
   \   sys-screen [ 2 disc-scr ] literal /sys-screen cmove  ;
 
   \ : restore-display  ( -- )
   \   \ Save the copy of the whole display image
-  \   \ from screen 2 of the Forth RAM disk.
+  \   \ from screen 2 of the Forth RAM-disk.
   \   [ 2 disc-scr ] literal sys-screen /sys-screen cmove  ;
 
 2 11 thru
@@ -58,7 +58,7 @@
 
   \ The font, the Spanish and Esperanto characters and other
   \ UDG sets are loaded from tape at the end of the compilation
-  \ and stored in the Forth RAM disk, in order to save a lot of
+  \ and stored in the Forth RAM-disk, in order to save a lot of
   \ dictionary space.
   \
   \ The required UDG set is switched when the user changes the
@@ -68,11 +68,16 @@
 768 constant /font  \ size in bytes
 8 disc-scr constant font  \ address: RAM-disk screen 8
 
+  \ Set a font.
+  \ a = start of the bitmap of the space character, minus 256
+  \ 23606 is the system variable "CHARS".
+: font!  ( a )  23606 !  ;
+
   \ Set the game font:
-: +font  ( -- )  [ font 256 - ] literal sys-chars ! ;
+: +font  ( -- )  [ font 256 - ] literal font! ;
 
   \ Set the ROM font:
-: -font  ( -- )  15360 sys-chars ! ;
+: -font  ( -- )  15360 font! ;
 
   \ UDG set for the Esperanto letters.
 12 8 * constant /eo-udg  \ size in bytes
@@ -102,13 +107,13 @@ eo-udg /eo-udg + constant es-udg  \ address
 : +hi-digits  ( -- )
   \ Set the high part of the double height digits
   \ as the current font.
-  [ digits-udg digits>chars ] literal sys-chars ! ;
+  [ digits-udg digits>chars ] literal font! ;
 
 : +lo-digits  ( -- )
   \ Set the low part of the double height digits
   \ as the current font.
   [ digits-udg /digits-udg 2 / +  digits>chars ] literal
-  sys-chars ! ;
+  font! ;
 
   \ Misc UDG set.
 18 8 * constant /udg0  \ size in bytes
@@ -118,7 +123,9 @@ digits-udg /digits-udg + constant udg0  \ address
 here: udg-set  udg0 , eo-udg , es-udg ,
 
   \ Activate UDG set number _n_.
-: >udg  ( n -- )  cells udg-set + @ sys-udg !  ;
+  \ 23675 is the system variable "UDG", that holds the address
+  \ of the UDG set.
+: >udg  ( n -- )  cells udg-set + @ 23675 !  ;
 
   \ The selection of the UDG set is done with the following two
   \ words:
@@ -189,7 +196,7 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \   \ Type a string centered on the current line.
   \   dup centered at-col type  ;
 
-  \ The last two screens (10..11) of the Forth RAM disk
+  \ The last two screens (10..11) of the Forth RAM-disk
   \ are used to store the graphic of the title, that 
   \ ocuppies exactly 2 KiB, one third of the bitmap:
 10 disc-scr constant title-address
@@ -326,7 +333,7 @@ top-frame-attributes cols + bottom-frame-attributes over - 2dup
 : save-arena  ( -- ) ( Compiling: a len -- )
   \ Save the attributes of the central zone of the arena
   \ (between the horizontal borders) to the first screen of the
-  \ Forth RAM disk.
+  \ Forth RAM-disk.
   \
   \ `!csp` is needed at the end, because the compilation
   \ consumes values from the stack, else error 20 ("Definition
@@ -337,7 +344,7 @@ top-frame-attributes cols + bottom-frame-attributes over - 2dup
 : restore-arena  ( -- ) ( Compiling: a len -- )
   \ Restore the attributes of the central zone of the arena
   \ (between the horizontal borders) from the first screen of
-  \ the Forth RAM disk.
+  \ the Forth RAM-disk.
   \
   \ `!csp` is needed at the end, because the compilation
   \ consumes values from the stack, else error 20 ("Definition

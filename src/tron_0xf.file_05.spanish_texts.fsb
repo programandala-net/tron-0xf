@@ -212,7 +212,8 @@ char S constant es-'y'  \ the letter used to say "yes"
 : es-pilot-help$  ( -- ca len )
   s" H=humano R=robot N=nadie" 8 -none  ;
 
-: es-color-help$  ( -- ca len ) en-color-help$  ;
+: es-color-help$  ( -- ca len )
+  s" 1-7=color <Enter>=terminar" ;
 
 : es-on$   ( -- ca len )  s" Sí"  ;
 : es-off$  ( -- ca len )  s" No"  ;

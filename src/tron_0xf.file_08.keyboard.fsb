@@ -43,7 +43,7 @@
   \ game.
 0 value caps-shift-key
 
-2 9 thru
+2 6 thru
 
 ( y/n input )
 
@@ -79,12 +79,17 @@
   \ for a new contents page.
 : more  ( -- )  reveal-contents press-any-key wipe-contents  ;
 
-( keys table, rows 1-5 Q-T )
+( keys table )
 
 40 constant #keys   \ number of keys of ZX Spectrum
  5 constant /key    \ bytes per key in the table
 
-here: keys
+  \ Calculate the address of the `keys` table, in screen 7 of
+  \ the Forth RAM-disk, before the players data:
+8 disc-scr /players-data - #keys /key * - constant keys
+
+  \ The `keys` table is initialized in the last RAM-disk loaded
+  \ from tape.
 
   \ Every element of the `keys` table
   \ has the following structure:
@@ -95,78 +100,6 @@ here: keys
 
   \ Keys are identified by their absolute address in the table.
   \
-  \ The players' default keys are set while the table is being
-  \ compiled, by storing the dictionary pointer into a player
-  \ variable.
-  \
-  \ The default keys of players 1 and 3 correspond to the
-  \ Sinclair joysticks (keys 1-4 and 6-9); the default keys of
-  \ player 2 are suitable for the Dvorak keyboard layout (keys
-  \ K, X, B, M).
-
-hex
-char 1 01 F7FE , , c,
-char 2 02 F7FE , , c,
-char 3 04 F7FE , , c,
-char 4 08 F7FE , , c,
-char 5 10 F7FE , , c,
-
-char Q 01 FBFE , , c,
-char W 02 FBFE , , c,
-char E 04 FBFE , , c,
-char R 08 FBFE , , c,
-char T 10 FBFE , , c,
-
-( keys table, rows A-G CS-V 0-6 )
-
-char A 01 FDFE , , c,
-char S 02 FDFE , , c,
-char D 04 FDFE , , c,
-char F 08 FDFE , , c,
-char G 10 FDFE , , c,  here to caps-shift-key
-
-    98 01 FEFE , , c,  \ Caps Shift (symbol in UDG)
-char Z 02 FEFE , , c,
-char X 04 FEFE , , c,
-char C 08 FEFE , , c,
-char V 10 FEFE , , c,
-
-char 0 01 EFFE , , c,
-char 9 02 EFFE , , c,
-char 8 04 EFFE , , c,
-char 7 08 EFFE , , c,
-char 6 10 EFFE , , c,
-
-( keys table, rows P-Y En-H )
-
-char P 01 DFFE , , c,
-char O 02 DFFE , , c,
-char I 04 DFFE , , c,
-char U 08 DFFE , , c,
-char Y 10 DFFE , , c,
-
-    99 01 BFFE , , c,  \ Enter (symbol in UDG)
-char L 02 BFFE , , c,
-char K 04 BFFE , , c,
-char J 08 BFFE , , c,
-char H 10 BFFE , , c,
-
-( keys table, row Sp-B; key#>a key-name )
-
-    9A 01 7FFE , , c,  \ Space (symbol in UDG)
-    9B 02 7FFE , , c,  \ Symbol Shift (symbol in UDG)
-
-char M 04 7FFE , , c,
-char N 08 7FFE , , c,
-char B 10 7FFE , , c,
-
-decimal
-
-  \ Convert a key number to its key address.
-: key#>a  ( n -- a )  /key * keys +  ;
-  \ XXX TODO -- only needed in file_13?
-  \ if so, define and forget it there
-
   \ Convert a key address to its key name character.
   \ Note: `graph-udg` must be used before printing it
   \ (and `lang-udg` after) because some key names use UDG.

@@ -36,13 +36,14 @@
   \ -----------------------------------------------------------
   \ Description
 
-  \ This is the last Forth RAM disk loaded from tape during the
+  \ This is the last Forth RAM-disk loaded from tape during the
   \ compilation of the game. Its space is used to store data
   \ (grapthics directly loaded from tape and players data used
   \ during the game), with the following map:
 
   \ screen 7:           copy of arena attributes (640 bytes)
-  \                     282 bytes free
+  \                     82 bytes free
+  \                     keys table (200 bytes)
   \                     players data (102 bytes)
   \
   \ screen 8:           game font (768 bytes)
@@ -57,6 +58,11 @@
   \ screens 10 and 11:  graphic title (2048 bytes)
 
   \ -----------------------------------------------------------
+
+
+  \ The `tron` vocabulary must be activated, because it was
+  \ changed to `forth` at the end of the previous module.
+tron definitions
 
 -->
 
@@ -78,6 +84,69 @@ title-address 0 0 0 <tape         \ graphic title
 
 -->
 
+( Fill the keyboard table )
+
+  \ Every element of the `keys` table
+  \ has the following structure:
+
+  \ +0 = port of the keyboard row (2 bytes)
+  \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
+  \ +4 = key name (1 byte), an ASCII character or an UDG
+
+  \ Temporary word to compile the data of a key.
+: key,  ( c n1 n2 -- )  , , c,  ;
+  \ c = key name (1 byte), an ASCII character or an UDG
+  \ n1 = bitmask of the key (2 bytes, but only the LSB is used)
+  \ n2 = port of the keyboard row (2 bytes)
+
+  \ The dictionary pointer is changed temporarily in order to
+  \ compile the data into `keys` without using specific code.
+here  keys dp !  hex
+
+  \ Row 1-5
+char 1 01 F7FE key, char 2 02 F7FE key,
+char 3 04 F7FE key, char 4 08 F7FE key, char 5 10 F7FE key,
+
+  \ Row Q-T
+char Q 01 FBFE key, char W 02 FBFE key,
+char E 04 FBFE key, char R 08 FBFE key, char T 10 FBFE key,
+
+  \ Row A-G
+char A 01 FDFE key, char S 02 FDFE key,
+char D 04 FDFE key, char F 08 FDFE key, char G 10 FDFE key,
+
+  \ Row CS-V
+  \ 0x98 is the UDG for Caps Shift
+here to caps-shift-key  \ needed by the configuration menu
+    98 01 FEFE key, char Z 02 FEFE key, char X 04 FEFE key,
+char C 08 FEFE key, char V 10 FEFE key,
+
+  \ Row 0-6
+char 0 01 EFFE key, char 9 02 EFFE key, char 8 04 EFFE key,
+char 7 08 EFFE key, char 6 10 EFFE key,  -->
+
+( Fill the keyboard table )
+
+
+  \ Row P-Y
+char P 01 DFFE key, char O 02 DFFE key, char I 04 DFFE key,
+char U 08 DFFE key, char Y 10 DFFE key,
+
+  \ Row Enter-H
+  \ 0x99 is the UDG for Enter
+    99 01 BFFE key, char L 02 BFFE key, char K 04 BFFE key,
+char J 08 BFFE key, char H 10 BFFE key,
+
+  \ Row Space-B
+  \ 0x9A is the UDG for Space
+  \ 0x9B is the UDG for Symbol Shift
+    9A 01 7FFE key,     9B 02 7FFE key, char M 04 7FFE key,
+char N 08 7FFE key, char B 10 7FFE key,
+  
+  \ Restore the dictionary pointer and forget the useless
+  \ `key,`.
+dp !  forget key,  decimal -->
+
 ( Init the players data )
 
 players-data /players-data erase
@@ -85,6 +154,14 @@ players-data /players-data erase
 robot pilot0 !  robot control0 !    blue color0 !
 human pilot1 !  human control1 !   green color1 !
 robot pilot2 !  robot control2 !    cyan color2 !
+
+  \ Temporary word to convert a key number to its address.
+: key#>a  ( n -- a )  /key * keys +  ;
+
+  \ The player keys could be initialized during the compilation
+  \ of the keyboard table above, by storing the dictionary
+  \ pointer into the correspondent player variable, but it
+  \ looks cleaner this way.
 
   \ Player 0 default keys: 1=left, 2=right, 3=up, 4=down
   \ (Sinclair joystick)
@@ -101,16 +178,17 @@ robot pilot2 !  robot control2 !    cyan color2 !
 32 key#>a left-k2 !  17 key#>a right-k2 !
 39 key#>a up-k2 !    37 key#>a down-k2 !
 
--->
+forget key#>a  -->
 
 ( Stop loading and boot )
 
-  \ After the binary files have been loaded into the RAM disk,
-  \ the loader must stop immediately, else it would erase the
-  \ contents of the RAM disk before loading the next RAM disk
-  \ from tape (see the Afera module <loader.fsb>). That's why
-  \ the Afera module <loaded_execute.fsb> is not used to stop
-  \ the loader at the end of the compilation.
+  \ After the binary files have been loaded into the RAM-disk,
+  \ and the other data has been stored into it, the loader must
+  \ stop immediately, else it would erase the contents of the
+  \ RAM-disk before loading the next RAM-disk from tape (see
+  \ the Afera module <loader.fsb>). That's why the Afera module
+  \ <loaded_execute.fsb> is not used to stop the loader at the
+  \ end of the compilation.
 
   \ First method: make the loader stop and execute `run`:
   \ ' run cfa loaded !
