@@ -84,19 +84,15 @@
 40 constant #keys   \ number of keys of ZX Spectrum
  5 constant /key    \ bytes per key in the table
 
-  \ XXX OLD
-  \ Convert two characters to a 16-bit number.
-  \ : special-key-name  ( c1 c2 -- n )  256 * +  ;
-
 here: keys
 
-  \ Every element of the `keys` table 
+  \ Every element of the `keys` table
   \ has the following structure:
 
   \ +0 = port of the keyboard row (2 bytes)
   \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
   \ +4 = key name (1 byte), an ASCII character or an UDG
-  
+
   \ Keys are identified by their absolute address in the table.
   \
   \ The players' default keys are set while the table is being
@@ -108,12 +104,12 @@ here: keys
   \ player 2 are suitable for the Dvorak keyboard layout (keys
   \ K, X, B, M).
 
-hex                    here left-k0 !    \ "1"
-char 1 01 F7FE , , c,  here right-k0 !   \ "2"
-char 2 02 F7FE , , c,  here up-k0 !      \ "3"
-char 3 04 F7FE , , c,  here down-k0 !    \ "4"
-char 4 08 F7FE , , c,  here left-k1 !    \ "5"
-char 5 10 F7FE , , c, 
+hex
+char 1 01 F7FE , , c,
+char 2 02 F7FE , , c,
+char 3 04 F7FE , , c,
+char 4 08 F7FE , , c,
+char 5 10 F7FE , , c,
 
 char Q 01 FBFE , , c,
 char W 02 FBFE , , c,
@@ -130,15 +126,15 @@ char F 08 FDFE , , c,
 char G 10 FDFE , , c,  here to caps-shift-key
 
     98 01 FEFE , , c,  \ Caps Shift (symbol in UDG)
-char Z 02 FEFE , , c,  here right-k2 ! \ "X"
+char Z 02 FEFE , , c,
 char X 04 FEFE , , c,
 char C 08 FEFE , , c,
 char V 10 FEFE , , c,
 
 char 0 01 EFFE , , c,
-char 9 02 EFFE , , c,  here right-k1 ! \ "8"
-char 8 04 EFFE , , c,  here up-k1 !    \ "7"
-char 7 08 EFFE , , c,  here down-k1 !  \ "6"
+char 9 02 EFFE , , c,
+char 8 04 EFFE , , c,
+char 7 08 EFFE , , c,
 char 6 10 EFFE , , c,
 
 ( keys table, rows P-Y En-H )
@@ -150,24 +146,26 @@ char U 08 DFFE , , c,
 char Y 10 DFFE , , c,
 
     99 01 BFFE , , c,  \ Enter (symbol in UDG)
-char L 02 BFFE , , c,  here left-k2 !  \ "K"
+char L 02 BFFE , , c,
 char K 04 BFFE , , c,
 char J 08 BFFE , , c,
 char H 10 BFFE , , c,
 
-( keys table, row Sp-B; k#>a key-name )
+( keys table, row Sp-B; key#>a key-name )
 
     9A 01 7FFE , , c,  \ Space (symbol in UDG)
     9B 02 7FFE , , c,  \ Symbol Shift (symbol in UDG)
-                      here down-k2 !  \ "M"
+
 char M 04 7FFE , , c,
-char N 08 7FFE , , c,  here up-k2 !    \ "B"
+char N 08 7FFE , , c,
 char B 10 7FFE , , c,
 
 decimal
 
   \ Convert a key number to its key address.
-: k#>a  ( n -- a )  /key * keys +  ;
+: key#>a  ( n -- a )  /key * keys +  ;
+  \ XXX TODO -- only needed in file_13?
+  \ if so, define and forget it there
 
   \ Convert a key address to its key name character.
   \ Note: `graph-udg` must be used before printing it
@@ -212,7 +210,7 @@ decimal
   \ Check all keys.
   \ If a key is pressed, return its address in the `keys` table
   \ and a true flag; else return a false flag.
-  \ a = address in the `keys` table
+  \ a = address of the pressed key in the `keys` table
   false  \ default
   [ keys #keys /key * bounds swap ] literal literal do
     i pressed? if  drop i true unloop exit  then
@@ -220,8 +218,7 @@ decimal
 
 : pressed  ( -- a )
   \ Check all keys forever until one of them is pressed.
-  \ Return its address in the `keys` table.
-  \ a = address in the `keys` table
+  \ a = address of the pressed key in the `keys` table
   begin  (pressed)  until  ;
 
   \ vim: filetype=abersoftforthafera

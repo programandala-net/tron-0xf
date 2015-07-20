@@ -62,18 +62,40 @@
 
 -->
 
-( Instructions )
+( Instructions -- part 1 )
 
 : es-instructions  ( -- )
   \  <------------------------------>
   ." Cada jugador conduce un vehículo"
   ." cuyo único control lo hace girar" cr
-  ." noventa grados sin frenar." cr cr
+  ." noventa grados sin frenar." cr
   ." Cada vehículo deja tras de sí" cr
-  ." una pared sólida de luz." cr cr
-  ." El objetivo del juego es hacer" cr
-  ." estrellarse al contrincante con" cr
-  ." el laberinto." cr  ;
+  ." una pared sólida de luz." cr
+  ."   El objetivo del juego es hacer"
+  ." estrellarse al contrincante." cr
+  ."   Pueden competir de 1 a 3 vehí-"
+  ." culos, con pilotos robots o hu-" cr
+  ." manos en cualquier combinación." cr
+  \  <------------------------------>
+
+-->
+
+( Instructions -- part 2 )
+
+; --> \ XXX TODO -- not enough memory yet
+
+  \  <------------------------------>
+  ."   Los robots no conducen de for-"
+  ." ma muy inteligente, pero sí muy" cr
+  ." precisa." cr
+  ."   El superviviente del duelo ga-"
+  ." na un punto. Los duelos se suce-"
+  ." den sin fin. No hay vidas ni lí-"
+  ." mite de puntuación Tú decides" cr
+  ." las condiciones para terminar." cr
+  ."   Para salir del juego pulsa la" cr
+  ." tecla <Break> (<Mayúsculas>+" cr
+  ." <Espacio>) y confirma." cr  ;
   \  <------------------------------>
 
 -->

@@ -179,10 +179,8 @@ localized license  ( -- )
 ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
 
-: .version  ( -- )
   \ Print the version number, stored as a double number.
-  version
-  <# # # [char] - hold # # [char] - hold #s #>  type  ;
+: .version  ( -- )  version <# #s #> type  ;
   
 : copyright  ( -- )
   ." Tron 0xF (" version$ type space .version [char] ) emit cr

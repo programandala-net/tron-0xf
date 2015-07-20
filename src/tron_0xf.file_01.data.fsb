@@ -37,7 +37,7 @@
 
 forth definitions
 
-20150718. 2constant version
+  20150720.17 2constant version
 
   \ System variables
 
@@ -96,11 +96,14 @@ defer (robot)  ' (robot) cfa constant robot
 
 17 cells constant /player-data \ bytes per player data
 
-
 /player-data max-players * constant /players-data
-/players-data buffer: players-data
+  \ /players-data buffer: players-data \ XXX OLD
 
-players-data /players-data erase
+  \ The players data are stored at the end of screen 7
+  \ of the Forth RAM-disk:
+8 disc-scr /players-data - constant players-data
+
+  \ players-data /players-data erase \ XXX OLD
 
   \ Pointers to the data of every player.
 
@@ -111,7 +114,7 @@ player1-data /player-data + constant player2-data
   \ Table to access the players' data addresses.
 here: player#-data player0-data , player1-data , player2-data ,
 
-: player#-variable  ( value field player "name" -- )
+: player#-variable  ( field player "name" -- )
 
   \ Create a player# variable.
 
@@ -122,65 +125,64 @@ here: player#-data player0-data , player1-data , player2-data ,
   \ double numbers, for speed; erase the whole zone, etc.).
 
   /player-data * players-data +  \ player data address
-  swap cells +                   \ field address
-  dup constant !  ;              \ do it
+  swap cells + constant  ;
 
 ( Player 0 data fields)
 
- robot  0 0 player#-variable pilot0      \ human, robot, none
- robot  1 0 player#-variable control0    \ human, robot, noop
-     0  2 0 player#-variable score0      \ score
-     0  3 0 player#-variable yc0         \ Y coordinate
-     0  4 0 player#-variable xc0         \ X coordinate
-     0  5 0 player#-variable yinc0       \ Y inc (-1..1)
-     0  6 0 player#-variable xinc0       \ X inc (-1..1)
-yellow  7 0 player#-variable color0      \ ink color
-     0  8 0 player#-variable up-k0       \ up key
-     0  9 0 player#-variable down-k0     \ down key
-     0 10 0 player#-variable left-k0     \ left key
-     0 11 0 player#-variable right-k0    \ right key
-     0 12 0 player#-variable score-col0  \ score column
-     \ Double number fields:
-     0 13 0 player#-variable start-incs0    \ start incs
-     0 15 0 player#-variable start-coords0  \ start coords
+ 0 0 player#-variable pilot0      \ human, robot, none
+ 1 0 player#-variable control0    \ human, robot, noop
+ 2 0 player#-variable score0      \ score
+ 3 0 player#-variable yc0         \ Y coordinate
+ 4 0 player#-variable xc0         \ X coordinate
+ 5 0 player#-variable yinc0       \ Y inc (-1..1)
+ 6 0 player#-variable xinc0       \ X inc (-1..1)
+ 7 0 player#-variable color0      \ ink color
+ 8 0 player#-variable up-k0       \ up key
+ 9 0 player#-variable down-k0     \ down key
+10 0 player#-variable left-k0     \ left key
+11 0 player#-variable right-k0    \ right key
+12 0 player#-variable score-col0  \ score column
+  \ Double number fields:
+13 0 player#-variable start-incs0    \ start incs
+15 0 player#-variable start-coords0  \ start coords
 
 ( Player 1 data fields)
 
- human  0 1 player#-variable pilot1      \ human or robot
- human  1 1 player#-variable control1    \ human, robot, noop
-     0  2 1 player#-variable score1      \ score
-     0  3 1 player#-variable yc1         \ Y coordinate
-     0  4 1 player#-variable xc1         \ X coordinate
-     0  5 1 player#-variable yinc1       \ Y inc (-1..1)
-     0  6 1 player#-variable xinc1       \ X inc (-1..1)
-  cyan  7 1 player#-variable color1      \ ink color
-     0  8 1 player#-variable up-k1       \ up key
-     0  9 1 player#-variable down-k1     \ down key
-     0 10 1 player#-variable left-k1     \ left key
-     0 11 1 player#-variable right-k1    \ right key
-     0 12 1 player#-variable score-col1  \ score column
-     \ Double number fields:
-     0 13 1 player#-variable start-incs1    \ start incs
-     0 15 1 player#-variable start-coords1  \ start coords
+ 0 1 player#-variable pilot1      \ human or robot
+ 1 1 player#-variable control1    \ human, robot, noop
+ 2 1 player#-variable score1      \ score
+ 3 1 player#-variable yc1         \ Y coordinate
+ 4 1 player#-variable xc1         \ X coordinate
+ 5 1 player#-variable yinc1       \ Y inc (-1..1)
+ 6 1 player#-variable xinc1       \ X inc (-1..1)
+ 7 1 player#-variable color1      \ ink color
+ 8 1 player#-variable up-k1       \ up key
+ 9 1 player#-variable down-k1     \ down key
+10 1 player#-variable left-k1     \ left key
+11 1 player#-variable right-k1    \ right key
+12 1 player#-variable score-col1  \ score column
+  \ Double number fields:
+13 1 player#-variable start-incs1    \ start incs
+15 1 player#-variable start-coords1  \ start coords
 
 ( Player 2 data fields)
 
- robot  0 2 player#-variable pilot2      \ human, robot, none
- robot  1 2 player#-variable control2    \ human, robot, noop
-     0  2 2 player#-variable score2      \ score
-     0  3 2 player#-variable yc2         \ Y coordinate
-     0  4 2 player#-variable xc2         \ X coordinate
-     0  5 2 player#-variable yinc2       \ Y inc (-1..1)
-     0  6 2 player#-variable xinc2       \ X inc (-1..1)
- green  7 2 player#-variable color2      \ ink color
-     0  8 2 player#-variable up-k2       \ up key
-     0  9 2 player#-variable down-k2     \ down key
-     0 10 2 player#-variable left-k2     \ left key
-     0 11 2 player#-variable right-k2    \ right key
-     0 12 2 player#-variable score-col2  \ score column
-     \ Double number fields:
-     0 13 2 player#-variable start-incs2    \ start incs
-     0 15 2 player#-variable start-coords2  \ start coords
+ 0 2 player#-variable pilot2      \ human, robot, none
+ 1 2 player#-variable control2    \ human, robot, noop
+ 2 2 player#-variable score2      \ score
+ 3 2 player#-variable yc2         \ Y coordinate
+ 4 2 player#-variable xc2         \ X coordinate
+ 5 2 player#-variable yinc2       \ Y inc (-1..1)
+ 6 2 player#-variable xinc2       \ X inc (-1..1)
+ 7 2 player#-variable color2      \ ink color
+ 8 2 player#-variable up-k2       \ up key
+ 9 2 player#-variable down-k2     \ down key
+10 2 player#-variable left-k2     \ left key
+11 2 player#-variable right-k2    \ right key
+12 2 player#-variable score-col2  \ score column
+  \ Double number fields:
+13 2 player#-variable start-incs2    \ start incs
+15 2 player#-variable start-coords2  \ start coords
 
 ( Double or table fields )
 
@@ -208,7 +210,7 @@ yinc2 constant incs2
 player0-data value player-data
 
 : player!  ( n -- )
-  \ Set the current player to 'n'.
+  \ Set the current player to _n_.
   \ n = 0..2
   dup to player  cells player#-data + @ to player-data  ;
 

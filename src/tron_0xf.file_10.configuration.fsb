@@ -1,0 +1,154 @@
+.( Tron 0xF: configuration -- part 2 )
+
+\ tron_0xf.file_10.configuration.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ License: GPL 3
+
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
+
+  \ -----------------------------------------------------------
+
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
+2 6 thru
+
+( Color )
+
+  \ 3-UDG icons are used to represent the vehicle color in the
+  \ configuration table. There are two versions: for robots and
+  \ humans.
+
+3 constant /icon  \ chars per color icon
+
+here: color-icons
+      156 c, 157 c, 158 c,  \ for robots
+      159 c, 160 c, 161 c,  \ for humans
+
+  \ Position the cursor on the color icon of the current
+  \ player.
+: at-color  ( -- )  color-line player-col at  ;
+
+  \ String with the proper color icon for the current player.
+: color-icon$  ( -- ca len )
+  color-icons human? /icon * + /icon  ;
+
+: show-color  ( -- )
+  \ Print the color icon of the current player.
+  player-color @ ink graph-udg
+  at-color color-icon$ type  lang-udg white ink  ;
+
+  \ Hide the color icon of the current player.
+: hide-color  ( -- )  at-color /icon spaces  ;
+
+( Color)
+
+: color-option  ( -- n )
+  \ Wait for a valid key press for a color option
+  \ and return its value.
+  \ n = 1..7 (color code)
+  begin  akey s" 1234567" char-in-string?  until  1+  ;
+
+: change-color  ( -- )
+  \ Change the color of the current player.
+  \ A digit key is regarded as its correspondent color (0..7);
+  \ a space can be used to change the current color to the
+  \ next one (7 changes to 0 in an endless loop).
+  color-help$ remark  1 flash show-color 0 flash
+  color-option player-color !  option-pause
+  show-color color-help$ -remark  ;
+
+( Pilots' menu )
+
+: pilot-menu-row-headers  ( -- )
+  \ Show the row headers of the config keys menu.
+  red ink  vehicle$ vehicle-line 0 at type
+  pilot$ pilot-line 0 at type  color$ color-line 0 at type
+  \ Names of the keys at the left.
+  keys/player 0 do  i key-desc keys-line i + |key-desc  loop
+  white ink  ;
+
+: vehicle-numbers  ( f -- )
+  \ Print the vehicle numbers at the top of the columns.
+  \ f = active pilot menu?
+  \ Note: `0 d.r` is used instead of `d.` because `d.`
+  \ prints and ending space.
+  inverse   max-players 0 do
+              vehicle-line i pilot-col at i s->d 0 d.r
+            loop  0 inverse  ;
+
+: pilot-menu-headers  ( f -- )
+  \ f = active pilot menu?
+  vehicle-numbers pilot-menu-row-headers  ;
+
+: pilot-menu  ( f -- )
+  \ Show the pilot menu.
+  \ f = active pilot menu?
+  pilot-menu-headers  max-players 0 do
+    i player! show-pilot show-color
+    human? if  show-keys  else  hide-keys  then  loop  ;
+
+( Sound option; pilot configuration )
+
+: sound-option$  ( -- ca len )
+  option-3$ sound? @ on/off$ s+  ;
+
+: sound-option  ( f -- )
+  \ Show the menu option that toggles the sound.
+  \ f = Active option?
+  sound-line 0 at sound-option$
+  rot if  over c@ upperc initial. 1 /string  then  type  ;
+
+  \ Toggle the game sounds.
+: toggle-sound  ( -- )  sound? dup 1 toggle @ sound  ;
+
+: config-pilot  ( n -- )
+  \ Config the pilot of vehicle number _n_.
+  player!  false vehicle-numbers  change-pilot none?
+  if  hide-color hide-keys  else  human?
+    if    show-color show-keys change-color change-keys
+    else  show-color hide-keys change-color  then  then
+  update-players  players to pilots  true vehicle-numbers  ;
+
+( Configure )
+
+: config-option  ( n -- )
+  -dup  if    false sound-option  1- config-pilot
+        else  option-pause toggle-sound
+        then  true sound-option  ;
+
+: config-menu  ( -- )
+  wipe-contents white ink true sound-option pilot-menu  ;
+
+: configure  ( -- )
+  \ Configure the sound and the pilots.
+  true config-menu  begin  ?terminal 0=  while
+    akey key-sound s" S012" char-in-string?
+    if  config-option  then
+  repeat  wipe-contents  ;
+
+  \ vim: filetype=abersoftforthafera

@@ -58,19 +58,39 @@
 
 -->
 
-( Instructions )
+( Instructions -- part 1 )
 
 : eo-instructions  ( -- )
   \  <------------------------------>
   ." Ĉiu ludanto veturas veturilon" cr
   ." kies nura stirilo ĝin turnas" cr
-  ." naŭdek gradojn sen malrapidiĝo." cr cr
+  ." naŭdek gradojn sen malrapidiĝo." cr
   ." Ĉiu veturilo postlasas solidan" cr
-  ." lumo-muron." cr cr
-  ." La ludocelo estas igi la kon-" cr
-  ." traŭulon frakasi la labirinton." cr  ;
+  ." lumo-muron." cr
+  ."   La ludocelo estas igi la kon-" cr
+  ." traŭulon frakasi." cr
+  ."   Povas konkuri 1-3 veturiloj," cr
+  ." kun ajna kombino de homaj kaj" cr
+  ." robotaj pilotoj." cr
   \  <------------------------------>
 
+-->
+
+( Instructions -- part 2 )
+
+; --> \ XXX TODO -- not enough memory yet
+  \  <------------------------------>
+  ."   Robotoj veturas ne tre inteli-"
+  ." gente, sed ja tre precize." cr
+  ."   La pluvivanto ricevas unu po-" cr
+  ." enton. La dueloj pluas senĉese." cr
+  ." Ne estas kromvivoj aŭ finiga po-"
+  ." ento. Vi decidas la finigajn" cr
+  ." kondiĉojn." cr 
+  ."  Por eliri el la ludo premu la" cr
+  ." klavon <Break> (<Majuskligo>+" cr
+  ." <Spaco>) kaj konfirmu." cr  ;
+  \  <------------------------------>
 -->
 
 ( Quit and authors )

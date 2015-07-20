@@ -37,24 +37,43 @@
 
 -->
 
-( Instructions )
+( Instructions -- part 1 )
 
 : en-instructions  ( -- )
 
-
   \  <------------------------------>
-  \  XXX TODO -- complete:
-  \  The aim of the game is to be the last player riding.
   ." Every player drives a vehicle" cr
   ." whose only control makes it turn" cr
-  ." ninety degrees without" cr
-  ." deceleration." cr cr
-  ." Every vehicle leaves a solid" cr
-  ." light trail behind." cr cr
-  ." The goal of the game is to make" cr
-  ." your adversary crash the" cr
-  ." labyrinth." cr  ; -->
+  ." ninety degrees without decelera-"
+  ." tion. Every vehicle leaves a so-"
+  ." lid light trail behind." cr
+  ."   The goal of the game is to ma-"
+  ." ke your adversary crash." cr
+  ."   One, two or three drivers can" cr
+  ." compete, in any combination of" cr
+  ." human or robot pilots." cr
   \  <------------------------------>
+
+-->
+
+( Instructions -- part 2 )
+
+; --> \ XXX TODO -- not enough memory yet
+  \  <------------------------------>
+  ."  Robots don't drive very inte-" cr
+  ." lligently, but they are very" cr
+  ." precise." cr
+  ."   The survivor gets one point." cr
+  ." Duels repeat forever. There are" cr
+  ." no extra lifes or final score." cr
+  ." You decide the conditions to" cr
+  ." quit." cr
+  ." To abort the game, press <Break>"
+  ." (<Caps Shift>+<Space>) and con-" cr
+  ." firm." cr  ;
+  \  <------------------------------>
+
+-->
 
 ( Quit and authors )
 

@@ -1,6 +1,6 @@
-.( Tron 0xF: load graphic files )
+.( Tron 0xF: storage )
 
-\ tron_0xf.file_13.load_graphics.fsb
+\ tron_0xf.file_14.storage.fsb
 
 \ This file is part of
 \ Tron 0xF
@@ -34,14 +34,16 @@
   \ <http://programandala.net>.
 
   \ -----------------------------------------------------------
+  \ Description
 
   \ This is the last Forth RAM disk loaded from tape during the
-  \ compilation of the game. Its space is used to store some
-  \ binary data (directly loaded from tape or used during the
-  \ game), with the following map:
+  \ compilation of the game. Its space is used to store data
+  \ (grapthics directly loaded from tape and players data used
+  \ during the game), with the following map:
 
   \ screen 7:           copy of arena attributes (640 bytes)
-  \                     384 bytes free
+  \                     282 bytes free
+  \                     players data (102 bytes)
   \
   \ screen 8:           game font (768 bytes)
   \                     Esperanto characters (96 bytes)
@@ -58,7 +60,7 @@
 
 -->
 
-( Fonts, UDG, title )
+( Load fonts, UDG sets and graphic title )
 
 +scroll
 font /font 0 0 <tape              \ main font
@@ -73,6 +75,35 @@ udg0 0 0 0 <tape                  \ frame graphs
 +scroll
 title-address 0 0 0 <tape         \ graphic title
 +scroll
+
+-->
+
+( Init the players data )
+
+players-data /players-data erase
+
+robot pilot0 !  robot control0 !    blue color0 !
+human pilot1 !  human control1 !   green color1 !
+robot pilot2 !  robot control2 !    cyan color2 !
+
+  \ Player 0 default keys: 1=left, 2=right, 3=up, 4=down
+  \ (Sinclair joystick)
+0 key#>a left-k0 !  1 key#>a right-k0 !
+2 key#>a up-k0 !    3 key#>a down-k0 !
+
+  \ Player 1 default keys: 5=left, 6=down, 7=up, 8=right
+  \ (cursor keys)
+ 4 key#>a left-k1 !  22 key#>a right-k1 !
+23 key#>a up-k1 !    24 key#>a down-k1 !
+
+  \ Player 2 default keys: K=left, B=up, M=down, X=right
+  \ (central bottom keys on a Dvorak keyboard layout)
+32 key#>a left-k2 !  17 key#>a right-k2 !
+39 key#>a up-k2 !    37 key#>a down-k2 !
+
+-->
+
+( Stop loading and boot )
 
   \ After the binary files have been loaded into the RAM disk,
   \ the loader must stop immediately, else it would erase the

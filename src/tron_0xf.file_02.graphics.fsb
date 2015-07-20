@@ -315,22 +315,35 @@ frame-color black papery + constant frame-attribute
 
 ( Arena -- save, restore, clear, draw; and .initial )
 
-: save-arena  ( -- )
-  \ Save the attributes of the central zone of the arena
-  \ (between the horizontal borders) to the first screen of
-  \ the Forth RAM disk.
-  [ top-frame-attributes cols +
-    bottom-frame-attributes over - swap ] literal
-  [ 7 disc-scr ] literal literal cmove  ;
+  \ Calculate the address and length of the arena attributes
+  \ Calculate the screen attributes address
+  \ of the central zone of the arena
+  \ (between the horizontal borders), used during the
+  \ compilation of `save-arena` and `restore-arena`.
+top-frame-attributes cols + bottom-frame-attributes over - 2dup
+  ( a len a len )
 
-: restore-arena  ( -- )
+: save-arena  ( -- ) ( Compiling: a len -- )
+  \ Save the attributes of the central zone of the arena
+  \ (between the horizontal borders) to the first screen of the
+  \ Forth RAM disk.
+  \
+  \ `!csp` is needed at the end, because the compilation
+  \ consumes values from the stack, else error 20 ("Definition
+  \ not finished") will happen.
+
+  [ 7 disc-scr rot ] literal literal literal cmove [ !csp ]  ;
+
+: restore-arena  ( -- ) ( Compiling: a len -- )
   \ Restore the attributes of the central zone of the arena
   \ (between the horizontal borders) from the first screen of
   \ the Forth RAM disk.
-  [ 1 disc-scr ] literal
-  [ top-frame-attributes cols +
-    bottom-frame-attributes over - swap ] literal literal
-  cmove  ;
+  \
+  \ `!csp` is needed at the end, because the compilation
+  \ consumes values from the stack, else error 20 ("Definition
+  \ not finished") will happen.
+
+  [ swap 7 disc-scr ] literal literal literal cmove [ !csp ]  ;
 
 : clear-arena  ( -- )
 
