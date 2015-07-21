@@ -1,0 +1,49 @@
+= Tron 0xF To-Do
+:author: Marcos Cruz (programandala.net)
+:revdate: 2015-07-14
+
+.2015-07-05
+
+- do not accept keys already used
+  (consider the robots keys free to be used by a human player).
+
+.2015-07-12
+
+Possible text in "About":
+
+This is free software; see the source for copying conditions.  There
+is  NO  warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+.2015-07-14:
+
+New: Key to use automatic pilot, until a control key is pressed!
+
+New: `case:` (from F83) for several cases. Search for `@ execute` in the sources.
+
+Fix: 1 player runs faster than 2; 2 run faster than 3.
+
+.2015-07-15:
+
+Change: rename the related values and fields:
+
+- pilots and players
+- player-pilot and player-control
+
+.2015-07-18:
+
+Fix: the speed of the players should be the same from the start, no
+matter a player dies.
+
+Improve: move the players data to the RAM-disk. This will save 102
+bytes.  The default data could be init after the last RAM-disk has
+been loaded, but what about the keys that are stored on the fly while
+the keyboard table is created? How to save the key addresses to be
+used by the data init later, without wasting memory?  They have to be
+calculated.
+
+Improve: combine <score_digits.fs> and <udg.fs>, factoring the common code.
+
+Change: move the comments of one-liners below the definition?
+
+Improve: use Enter to confirm the color.

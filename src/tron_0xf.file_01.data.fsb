@@ -41,7 +41,7 @@ forth definitions
 
   \ Color constants
 
-  \ XXX TODO remove the unused
+  \ XXX TODO remove the unused colors
 0 constant black    1 constant blue   2 constant red
 3 constant magenta  4 constant green  5 constant cyan
 6 constant yellow   7 constant white
@@ -66,16 +66,15 @@ en value lang      \ current language
 
 4 constant keys/player  \ keys per player
 
-  \ Type of players. The cfa of the control word is stored into
-  \ the correspondent player variable, ready to be executed
-  \ during the game. `none` is a special case, used to ignore
-  \ the player in the game loop.
-
 defer (human)  ' (human) cfa constant human
 defer (robot)  ' (robot) cfa constant robot
                            0 constant none
                            0 constant dead
-
+  \ Type of players. The cfa of the control word is stored into
+  \ the correspondent player variable, ready to be executed
+  \ during the game. `none` is a special case, used to ignore
+  \ the player in the game loop.
+  \
   \ There are two similar player fields the constants above are
   \ used with:
   \
