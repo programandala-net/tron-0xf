@@ -73,16 +73,14 @@
   ." una pared sólida de luz." cr
   ."   El objetivo del juego es hacer"
   ." estrellarse al contrincante." cr
-  ."   Pueden competir de 1 a 3 vehí-"
-  ." culos, con pilotos robots o hu-" cr
-  ." manos en cualquier combinación." cr
+  ."   Puede haber de 1 a 3 vehículos"
+  ." con pilotos robots o humanos en" cr
+  ." cualquier combinación." cr
   \  <------------------------------>
 
 -->
 
 ( Instructions -- part 2 )
-
-; --> \ XXX TODO -- not enough memory yet
 
   \  <------------------------------>
   ."   Los robots no conducen de for-"
@@ -91,7 +89,7 @@
   ."   El superviviente del duelo ga-"
   ." na un punto. Los duelos se suce-"
   ." den sin fin. No hay vidas ni lí-"
-  ." mite de puntuación Tú decides" cr
+  ." mite de puntuación. Tú decides" cr
   ." las condiciones para terminar." cr
   ."   Para salir del juego pulsa la" cr
   ." tecla <Break> (<Mayúsculas>+" cr
@@ -125,43 +123,51 @@
 
 -->
 
-( License -- part 1 )
+( License )
+
+  \ The text is stored in screens 6 and 9 of the Forth RAM-disk.
 
 : es-license  ( -- )
+  [ 6 disc-scr c/l 7 * + ] literal [ 8 c/l * ] literal type
+  [ 9 disc-scr c/l 13 * + ] literal [ 3 c/l * ] literal type  ;
 
-  \  <------------------------------>
-  ." Tron 0xF es libre; puedes" cr
-  ." redistribuirlo y modificarlo" cr
-  ." bajo los términos de la Licencia" cr
-  ." Pública General GNU, publicada" cr
-  ." por Free Software Foundation" cr
-  ." (Fundación para los programas" cr
-  ." libres), bien su versión 3 o, a" cr
-  ." tu criterio, otra posterior." cr
-  \  <------------------------------>
+  \ XXX OLD
 
--->
+  \ : es-license  ( -- )
 
-( License -- part 2 )
+  \   \  <------------------------------>
+  \   ." Tron 0xF es libre; puedes" cr
+  \   ." redistribuirlo y modificarlo" cr
+  \   ." bajo los términos de la Licencia" cr
+  \   ." Pública General GNU, publicada" cr
+  \   ." por Free Software Foundation" cr
+  \   ." (Fundación para los programas" cr
+  \   ." libres), bien su versión 3 o, a" cr
+  \   ." tu criterio, otra posterior." cr
+  \   \  <------------------------------>
 
-  \  <------------------------------>
-  ."   Tron 0xF se distribuye con la" cr
-  ." esperanza de que sea útil, pero" cr
-  ." SIN GARANTÍA ALGUNA; ni siquiera"
-  ." la garantía implícita de ser" cr
-  ." COMERCIALIZABLE o APTO PARA un" cr
-  ." OBJETIVO PARTICULAR. Para más" cr
-  ." detalles lee la Licencia Pública"
-  ."  General GNU." cr
-  \  <------------------------------>
-  ."   Deberías haber recibido una" cr
-  ." copia de la Licencia Pública" cr
-  ." General GNU junto con Tron 0xF;" cr
-  ." si no es así, léela en" cr
-  ." <http://gnu.org/licenses>."  ;
-  \  <------------------------------>
+  \ -->
 
--->
+  \ ( License -- part 2 )
+
+  \   \  <------------------------------>
+  \   ."   Tron 0xF se distribuye con la" cr
+  \   ." esperanza de que sea útil, pero" cr
+  \   ." SIN GARANTÍA ALGUNA; ni siquiera"
+  \   ." la garantía implícita de ser" cr
+  \   ." COMERCIALIZABLE o APTO PARA un" cr
+  \   ." OBJETIVO PARTICULAR. Para más" cr
+  \   ." detalles lee la Licencia Pública"
+  \   ."  General GNU." cr
+  \   \  <------------------------------>
+  \   ."   Deberías haber recibido una" cr
+  \   ." copia de la Licencia Pública" cr
+  \   ." General GNU junto con Tron 0xF;" cr
+  \   ." si no es así, léela en" cr
+  \   ." <http://gnu.org/licenses>."  ;
+  \   \  <------------------------------>
+
+  -->
 
 ( Keys )
 
@@ -174,7 +180,7 @@ char S constant es-'y'  \ the letter used to say "yes"
 
 -->
 
-( Menu options )
+( Menu options and help )
 
   \ XXX TODO update
 : es-option-0$  ( -- ca len )  s" No en español"  ;
@@ -184,6 +190,9 @@ char S constant es-'y'  \ the letter used to say "yes"
 : es-option-5$  ( -- ca len )  s" Empezar"  ;
 : es-option-6$  ( -- ca len )  s" Acerca de"  ;
 : es-option-7$  ( -- ca len )  s" Salir"  ;
+
+: es-menu-help$  ( -- ca len )
+  s" <Mayúsculas>+<Espacio>=salir" ;
 
 -->
 
@@ -206,8 +215,8 @@ char S constant es-'y'  \ the letter used to say "yes"
   \ These three strings must be padded with spaces
   \ to the length of the longest one:
 : es-human$  ( -- ca len )  s" Humano"  ;
-: es-robot$  ( -- ca len )  en-robot$  ;
-: es-none$  ( -- ca len )  s" Nadie "  ;
+: es-robot$  ( -- ca len )  s" Robot "  ;
+: es-none$   ( -- ca len )  s" Nadie "  ;
 
 : es-pilot-help$  ( -- ca len )
   s" H=humano R=robot N=nadie" 8 -none  ;

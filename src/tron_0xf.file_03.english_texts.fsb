@@ -49,8 +49,8 @@
   ." lid light trail behind." cr
   ."   The goal of the game is to ma-"
   ." ke your adversary crash." cr
-  ."   One, two or three drivers can" cr
-  ." compete, in any combination of" cr
+  ."   There can be one, two or three"
+  ." vehicles, in any combination of" cr
   ." human or robot pilots." cr
   \  <------------------------------>
 
@@ -58,7 +58,6 @@
 
 ( Instructions -- part 2 )
 
-; --> \ XXX TODO -- not enough memory yet
   \  <------------------------------>
   ."  Robots don't drive very inte-" cr
   ." lligently, but they are very" cr
@@ -99,43 +98,50 @@
 
 -->
 
-( License -- part 1 )
+( License )
+
+  \ The text is stored in screen 5 of the Forth RAM-disk.
 
 : en-license  ( -- )
+  [ 5 disc-scr c/l + ] literal [ 11 c/l * ] literal type  ;
 
-  \  <------------------------------>
-  ." Tron 0xF is free software; you" cr
-  ." can redistribute it and/or" cr
-  ." modify it under the terms of the" cr
-  ." GNU General Public License as" cr
-  ." published by the Free Software" cr
-  ." Foundation; either version 3 of" cr
-  ." the License, or (at your option)" cr
-  ." any later version."  cr
-  \  <------------------------------>
+  \ XXX OLD
 
--->
+  \ : en-license  ( -- )
 
-( License -- part 2 )
+  \   \  <------------------------------>
+  \   ." Tron 0xF is free software; you" cr
+  \   ." can redistribute it and/or" cr
+  \   ." modify it under the terms of the" cr
+  \   ." GNU General Public License as" cr
+  \   ." published by the Free Software" cr
+  \   ." Foundation; either version 3 of" cr
+  \   ." the License, or (at your option)" cr
+  \   ." any later version."  cr
+  \   \  <------------------------------>
 
-  \  <------------------------------>
-  ."   Tron 0xF is distributed in the"
-  ." hope that it will be useful, but" cr
-  ." WITHOUT ANY WARRANTY; without" cr
-  ." even the implied warranty of" cr
-  ." MERCHANTABILITY or FITNESS FOR" cr
-  ." A PARTICULAR PURPOSE. See the" cr
-  ." GNU General Public License for" cr
-  ." more details." cr
-  \  <------------------------------>
-  ."   You should have received a" cr
-  ." copy of the GNU General Public" cr
-  ." License along with Tron 0xF; if" cr
-  ." not, see:" cr
-  ." <http://gnu.org/licenses>."  ; 
-  \  <------------------------------>
-  
--->
+  \ -->
+
+  \ ( License -- part 2 )
+
+  \   \  <------------------------------>
+  \   ."   Tron 0xF is distributed in the"
+  \   ." hope that it will be useful, but" cr
+  \   ." WITHOUT ANY WARRANTY; without" cr
+  \   ." even the implied warranty of" cr
+  \   ." MERCHANTABILITY or FITNESS FOR" cr
+  \   ." A PARTICULAR PURPOSE. See the" cr
+  \   ." GNU General Public License for" cr
+  \   ." more details." cr
+  \   \  <------------------------------>
+  \   ."   You should have received a" cr
+  \   ." copy of the GNU General Public" cr
+  \   ." License along with Tron 0xF; if" cr
+  \   ." not, see:" cr
+  \   ." <http://gnu.org/licenses>."  ; 
+  \   \  <------------------------------>
+    
+  -->
 
 ( Keys )
 
@@ -148,7 +154,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 
 -->
 
-( Menu options )
+( Menu options and help )
 
   \ XXX TODO update
 : en-option-0$  ( -- ca len )  s" Not in English"  ;
@@ -158,6 +164,9 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-option-5$  ( -- ca len )  s" Start"  ;
 : en-option-6$  ( -- ca len )  s" About"  ;
 : en-option-7$  ( -- ca len )  s" Quit"  ;
+
+: en-menu-help$  ( -- ca len )
+  s" <Caps Shift>+<Space>=quit" ;
 
 -->
 
@@ -181,7 +190,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
   \ to the length of the longest one:
 : en-human$  ( -- ca len )  s" Human"  ;
 : en-robot$  ( -- ca len )  s" Robot"  ;
-: en-none$  ( -- ca len )  s" None "  ;
+: en-none$   ( -- ca len )  s" None "  ;
 
 : en-pilot-help$  ( -- ca len )
   s" H=human R=robot N=none" 7 -none  ;

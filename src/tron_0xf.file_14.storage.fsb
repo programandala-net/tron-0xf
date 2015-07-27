@@ -41,6 +41,10 @@
   \ (grapthics directly loaded from tape and players data used
   \ during the game), with the following map:
 
+  \ screen 5:           license note in English
+  \                     license note in Esperanto (part 1)
+  \ screen 6:           license note in Esperanto (part 2)
+  \                     license note in Spanish (part 1)
   \ screen 7:           copy of arena attributes (640 bytes)
   \                     82 bytes free
   \                     keys table (200 bytes)
@@ -53,12 +57,52 @@
   \
   \ screen 9:           double height digits (160 bytes)
   \                     UDG (144 bytes)
-  \                     720 bytes free
+  \                     528 bytes free
+  \                     license note in Spanish (part 2) (192
+  \                     bytes)
   \
   \ screens 10 and 11:  graphic title (2048 bytes)
 
   \ -----------------------------------------------------------
+  \ fsb directives
 
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDGs.
+
+  \ Esperanto letters:
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ Spanish letters and signs:
+  \ #vim %substitute@Á@\=nr2char(144)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
+
+  \ -----------------------------------------------------------
 
   \ The `tron` vocabulary must be activated, because it was
   \ changed to `forth` at the end of the previous module.
@@ -94,64 +138,51 @@ title-address 0 0 0 <tape         \ graphic title
   \ +4 = key name (1 byte), an ASCII character or an UDG
 
   \ Temporary word to compile the data of a key.
-: key,  ( c n1 n2 -- )  , , c,  ;
+: k,  ( c n1 n2 -- )  , , c,  ;
   \ c = key name (1 byte), an ASCII character or an UDG
   \ n1 = bitmask of the key (2 bytes, but only the LSB is used)
   \ n2 = port of the keyboard row (2 bytes)
 
   \ The dictionary pointer is changed temporarily in order to
   \ compile the data into `keys` without using specific code.
-here  keys dp !  hex
 
+  \ The keyboard rows are compiled in the following order:
   \ Row 1-5
-char 1 01 F7FE key, char 2 02 F7FE key,
-char 3 04 F7FE key, char 4 08 F7FE key, char 5 10 F7FE key,
-
   \ Row Q-T
-char Q 01 FBFE key, char W 02 FBFE key,
-char E 04 FBFE key, char R 08 FBFE key, char T 10 FBFE key,
-
   \ Row A-G
-char A 01 FDFE key, char S 02 FDFE key,
-char D 04 FDFE key, char F 08 FDFE key, char G 10 FDFE key,
-
-  \ Row CS-V
-  \ 0x98 is the UDG for Caps Shift
-here to caps-shift-key  \ needed by the configuration menu
-    98 01 FEFE key, char Z 02 FEFE key, char X 04 FEFE key,
-char C 08 FEFE key, char V 10 FEFE key,
-
+  \ Row CS-V  (0x98 = UDG for Caps Shift)
   \ Row 0-6
-char 0 01 EFFE key, char 9 02 EFFE key, char 8 04 EFFE key,
-char 7 08 EFFE key, char 6 10 EFFE key,  -->
-
-( Fill the keyboard table )
-
-
   \ Row P-Y
-char P 01 DFFE key, char O 02 DFFE key, char I 04 DFFE key,
-char U 08 DFFE key, char Y 10 DFFE key,
+  \ Row Enter-H (0x99 = UDG for Enter)
+  \ Row Space-B (0x9A = UDG for Space; 0x9B for Symbol Shift)
 
-  \ Row Enter-H
-  \ 0x99 is the UDG for Enter
-    99 01 BFFE key, char L 02 BFFE key, char K 04 BFFE key,
-char J 08 BFFE key, char H 10 BFFE key,
+  \ The address of Caps Shift is stored in `caps-shift-key`
+  \ because it's needed by the configuration menu.
 
-  \ Row Space-B
-  \ 0x9A is the UDG for Space
-  \ 0x9B is the UDG for Symbol Shift
-    9A 01 7FFE key,     9B 02 7FFE key, char M 04 7FFE key,
-char N 08 7FFE key, char B 10 7FFE key,
-  
+here  keys dp !  hex char 1 01 F7FE k, char 2 02 F7FE k, char 3
+04 F7FE k, char 4 08 F7FE k, char 5 10 F7FE k, char Q 01 FBFE
+k, char W 02 FBFE k, char E 04 FBFE k, char R 08 FBFE k, char T
+10 FBFE k, char A 01 FDFE k, char S 02 FDFE k, char D 04 FDFE
+k, char F 08 FDFE k, char G 10 FDFE k, here to caps-shift-key
+98 01 FEFE k, char Z 02 FEFE k, char X 04 FEFE k, char C 08
+FEFE k, char V 10 FEFE k, char 0 01 EFFE k, char 9 02 EFFE k,
+char 8 04 EFFE k, char 7 08 EFFE k, char 6 10 EFFE k, char P 01
+DFFE k, char O 02 DFFE k, char I 04 DFFE k, char U 08 DFFE k,
+char Y 10 DFFE k, 99 01 BFFE k, char L 02 BFFE k, char K 04
+BFFE k, char J 08 BFFE k, char H 10 BFFE k, 9A 01 7FFE k,
+9B 02 7FFE k, char M 04 7FFE k, char N 08 7FFE k, char B 10
+7FFE k,
+
   \ Restore the dictionary pointer and forget the useless
   \ `key,`.
-dp !  forget key,  decimal -->
 
-( Init the players data )
+dp !  forget k,  decimal -->
+
+( Init the players data, then boot )
 
 players-data /players-data erase
 
-robot pilot0 !  robot control0 !    blue color0 !
+robot pilot0 !  robot control0 !  yellow color0 !
 human pilot1 !  human control1 !   green color1 !
 robot pilot2 !  robot control2 !    cyan color2 !
 
@@ -178,9 +209,9 @@ robot pilot2 !  robot control2 !    cyan color2 !
 32 key#>a left-k2 !  17 key#>a right-k2 !
 39 key#>a up-k2 !    37 key#>a down-k2 !
 
-forget key#>a  -->
+forget key#>a
 
-( Stop loading and boot )
+  \ Stop loading and boot
 
   \ After the binary files have been loaded into the RAM-disk,
   \ and the other data has been stored into it, the loader must
@@ -195,5 +226,71 @@ forget key#>a  -->
 
   \ Second method: Clear the return stack and execute `run`:
 rp! run
+
+( License ) \ scr 5
+
+  \ --------------------------->
+Tron 0xF is free software; you can redistribute it and/or
+modify it under the terms of theGNU General Public License as
+published by the Free Software  Foundation; either version 3 of
+the License, or (at your option)any later version.
+  \ --------------------------->
+  Tron 0xF is distributed in thehope that it will be useful,
+but WITHOUT ANY WARRANTY; with- out even the implied warranty
+of MERCHANTABILITY or FITNESS   FOR A PARTICULAR PURPOSE. See
+the GNU General Public License  for more details.
+  \ --------------------------->
+  You should have received a    copy of the GNU General Public
+License along with Tron 0xF; if not, see:
+<http://gnu.org/licenses>.
+  \ --------------------------->
+Tron 0xF estas libera; vi rajtasreliveri kaŭ modifi ĝin sub la
+kondiĉoj de la GNU-a Ĝenerala   Publika Permesilo, publikigita
+de Free Software Foundation     (Liber-Programara Fondaĵo), ĉu
+versio 3 de la permesilo aŭ, je via prefero, iu posta versio.
+( License ) \ scr 6
+  \ --------------------------->
+  Tron 0xF estas distribuita kunespero ke ĝi utilu, sed SEN
+AJNA GARANTIO; eĉ sen implicita garantio de KOMERCEBLECO or
+TAŬGECO POR PARTIKULARA CELO.   Vidu la GNU-an Ĝeneralan
+Publikan Permesilon por pliaj   detaloj.
+  \ --------------------------->
+  Vi devintus ricevi kopion de  la GNU-a Ĝenerala Publika
+Permesilo kun Tron 0xF; alikaze vidu <http://gnu.org/licenses>.
+  \ --------------------------->
+Tron 0xF es libre; puedes       redistribuirlo y modificarlo
+bajo los términos de la LicenciaPública General GNU, publicada
+por Free Software Foundation    (Fundación para los programas
+libres), bien su versión 3 o, a tu criterio, otra posterior.
+  Tron 0xF se distribuye con la esperanza de que sea útil, pero
+SIN GARANTÍA ALGUNA; ni siquierala garantía implícita de ser
+COMERCIALIZABLE o APTO PARA un  OBJETIVO PARTICULAR. Para más
+detalles lee la Licencia PúblicaGeneral GNU.
+
+( ... ) \ screen 7
+
+( ... ) \ screen 8
+
+( ... ) \ screen 9
+
+  \ Note: Fake comments are added in order to make sure the
+  \ text occupies the last three lines of the screen.
+
+\ line 1
+\ line 2
+\ line 3
+\ line 4
+\ line 5
+\ line 6
+\ line 7
+\ line 8
+\ line 9
+\ line 10
+\ line 11
+\ line 12
+
+  Deberías haber recibido una   copia de la Licencia Pública
+General GNU junto con Tron 0xF; si no es así, léela en
+<http://gnu.org/licenses>.
 
   \ vim: filetype=abersoftforthafera

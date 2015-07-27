@@ -69,8 +69,9 @@ here: color-icons
 
   \ Compile a string of 8 chars; the first one is the code of
   \ Carriage Return; the rest are digits 1-7.
-here: colors$ 8 c, 13 c, char 1 c, char 2 c, char 3 c, char 4
-c, char 5 c, char 6 c, char 7 c,
+here: colors$ 8 c,
+              13 c, char 1 c, char 2 c, char 3 c,
+                    char 4 c, char 5 c, char 6 c, char 7 c,
 
 : color-option  ( -- 0 | n )
   \ Wait for a valid key press for a color option
@@ -143,7 +144,8 @@ c, char 5 c, char 6 c, char 7 c,
 ( Configure )
 
 : config-option  ( n -- )
-  -dup  if    false sound-option  1- config-pilot
+  -dup  if    menu-help$ -remark
+              false sound-option  1- config-pilot
         else  option-pause toggle-sound
         then  true sound-option  ;
 
@@ -152,7 +154,8 @@ c, char 5 c, char 6 c, char 7 c,
 
 : configure  ( -- )
   \ Configure the sound and the pilots.
-  true config-menu  begin  ?terminal 0=  while
+  true config-menu
+  begin  menu-help$ remark ?terminal 0=  while
     akey key-sound s" S012" char-in-string?
     if  config-option  then
   repeat  wipe-contents  ;

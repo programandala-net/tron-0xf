@@ -69,16 +69,15 @@
   ." lumo-muron." cr
   ."   La ludocelo estas igi la kon-" cr
   ." traŭulon frakasi." cr
-  ."   Povas konkuri 1-3 veturiloj," cr
-  ." kun ajna kombino de homaj kaj" cr
-  ." robotaj pilotoj." cr
+  ."   Povas esti 1-3 veturiloj, kun" cr
+  ." ajna kombino de homaj kaj robo-" cr
+  ." taj pilotoj." cr
   \  <------------------------------>
 
 -->
 
 ( Instructions -- part 2 )
 
-; --> \ XXX TODO -- not enough memory yet
   \  <------------------------------>
   ."   Robotoj veturas ne tre inteli-"
   ." gente, sed ja tre precize." cr
@@ -119,40 +118,48 @@
 
 ( License -- part 1 )
 
+  \ The text is stored in screens 5 and 6 of the Forth RAM-disk.
+
 : eo-license  ( -- )
+  [ 5 disc-scr c/l 12 * + ] literal [ 4 c/l * ] literal type
+  [ 6 disc-scr c/l + ] literal [ 6 c/l * ] literal type  ;
 
-  \  <------------------------------>
-  ." Tron 0xF estas libera; vi rajtas"
-  ." reliveri kaŭ modifi ĝin sub la" cr
-  ." kondiĉoj de la GNU-a Ĝenerala" cr
-  ." Publika Permesilo, publikigita" cr
-  ." de Free Software Foundation" cr
-  ." (Liber-Programara Fondaĵo), ĉu" cr
-  ." versio 3 de la permesilo aŭ, je" cr
-  ." via prefero, iu posta versio." cr
-  \  <------------------------------>
+  \ XXX OLD
 
--->
+  \ : eo-license  ( -- )
 
-( License -- part 2 )
+  \   \  <------------------------------>
+  \   ." Tron 0xF estas libera; vi rajtas"
+  \   ." reliveri kaŭ modifi ĝin sub la" cr
+  \   ." kondiĉoj de la GNU-a Ĝenerala" cr
+  \   ." Publika Permesilo, publikigita" cr
+  \   ." de Free Software Foundation" cr
+  \   ." (Liber-Programara Fondaĵo), ĉu" cr
+  \   ." versio 3 de la permesilo aŭ, je" cr
+  \   ." via prefero, iu posta versio." cr
+  \   \  <------------------------------>
 
-  \  <------------------------------>
-  ."   Tron 0xF estas distribuita kun"
-  ." espero ke ĝi utilu, sed SEN AJNA"
-  ." GARANTIO; eĉ sen implicita" cr
-  ." garantio de KOMERCEBLECO or" cr
-  ." TAŬGECO POR PARTIKULARA CELO." cr
-  ." Vidu la GNU-an Ĝeneralan" cr
-  ." Publikan Permesilon por pliaj" cr
-  ." detaloj." cr
-  \  <------------------------------>
-  ."   Vi devintus ricevi kopion de" cr
-  ." la GNU-a Ĝenerala Publika" cr
-  ." Permesilo kun Tron 0xF; alikaze" cr
-  ." vidu <http://gnu.org/licenses>."  ;
-  \  <------------------------------>
+  \ -->
 
--->
+  \ ( License -- part 2 )
+
+  \   \  <------------------------------>
+  \   ."   Tron 0xF estas distribuita kun"
+  \   ." espero ke ĝi utilu, sed SEN AJNA"
+  \   ." GARANTIO; eĉ sen implicita" cr
+  \   ." garantio de KOMERCEBLECO or" cr
+  \   ." TAŬGECO POR PARTIKULARA CELO." cr
+  \   ." Vidu la GNU-an Ĝeneralan" cr
+  \   ." Publikan Permesilon por pliaj" cr
+  \   ." detaloj." cr
+  \   \  <------------------------------>
+  \   ."   Vi devintus ricevi kopion de" cr
+  \   ." la GNU-a Ĝenerala Publika" cr
+  \   ." Permesilo kun Tron 0xF; alikaze" cr
+  \   ." vidu <http://gnu.org/licenses>."  ;
+  \   \  <------------------------------>
+
+  -->
 
 ( Keys )
 
@@ -165,7 +172,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
 
 -->
 
-( Menu options )
+( Menu options and help )
 
   \ XXX TODO update
 : eo-option-0$  ( -- ca len )  s" Ne en Esperanto"  ;
@@ -175,6 +182,9 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-option-5$  ( -- ca len )  s" Eki"  ;
 : eo-option-6$  ( -- ca len )  s" Prio"  ;
 : eo-option-7$  ( -- ca len )  s" Fini"  ;
+
+: eo-menu-help$  ( -- ca len )
+  s" <Majuskligo>+<Spaco>=fini" ;
 
 -->
 
@@ -198,7 +208,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
   \ to the length of the longest one:
 : eo-human$  ( -- ca len )  s" Homo  "  ;
 : eo-robot$  ( -- ca len )  s" Roboto"  ;
-: eo-none$  ( -- ca len )  s" Neniu "  ;
+: eo-none$   ( -- ca len )  s" Neniu "  ;
 
 : eo-pilot-help$  ( -- ca len )
   s" H=homo R=roboto N=neniu" 8 -none ;

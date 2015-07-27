@@ -40,7 +40,7 @@
 
   \ Lines of some parts of the config menu:
 contents-line
-2+ dup constant sound-line   2+ dup constant vehicle-line
+1+ dup constant sound-line   2+ dup constant vehicle-line
 2+ dup constant pilot-line   2+ dup constant color-line
 2+     constant keys-line
 

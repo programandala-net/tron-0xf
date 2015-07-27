@@ -160,6 +160,9 @@ localized vehicle$  ( -- ca len )
 ' es-color$ ' eo-color$ ' en-color$
 localized color$  ( -- ca len )
 
+' es-menu-help$ ' eo-menu-help$ ' en-menu-help$
+localized menu-help$  ( -- ca len )
+
 ( Conditional texts)
 
 : human|robot|none$  ( -- ca len )
@@ -179,11 +182,13 @@ localized license  ( -- )
 ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
 
-  \ Print the version number, stored as a double number.
-: .version  ( -- )  version <# #s #> type  ;
+  \ Print the version number, stored as two double numbers.
+: .version  ( -- )
+  version 0 s->d d.r [char] . emit 0 s->d d.r [char] . emit
+  release <# #s #> type ;
   
 : copyright  ( -- )
-  ." Tron 0xF (" version$ type space .version [char] ) emit cr
+  ." Tron 0xF" cr version$ type space .version cr
   cr ." Copyright (C) 2015 Marcos Cruz" cr
      ." (programandala.net)"  ;
 
