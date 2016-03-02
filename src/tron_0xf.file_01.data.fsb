@@ -38,7 +38,7 @@
 forth definitions
 
   0 1 swap 2constant version
-  20150727.11 2constant release
+  20151125. 2constant release
 
   \ Color constants
 

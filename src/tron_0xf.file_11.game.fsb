@@ -71,6 +71,12 @@
   \ Increase the score of the current player.
   \ if the result is greater than the maximum score,
   \ set the score to zero.
+ 
+  \ XXX TMP -- this line is only used for doing tests during
+  \ the development, running the game with 2 or 3 robots (no
+  \ human pilot), until one of them reaches the highest score:
+  player-score @ max-score = if  quit  then
+  
   player-score @ 1+ dup max-score > 0= * player-score !  ;
 
 : duel-end  ( -- )
@@ -125,7 +131,14 @@ here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
 :noname
   \ ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
   \ Start screen position and increments, for three players.
-  215 127 left-incs  126 40 up-incs  40 127 right-incs ;
+
+  \ XXX OLD
+  \  215 127 left-incs  126 40 up-incs  40 127 right-incs ;
+
+  \ XXX OLD
+  \ 215 127 left-incs  127 40 up-incs  40 127 right-incs ;
+
+  215 127 left-incs  128 40 up-incs  40 127 right-incs ;
 
 :noname
   \ ( -- x1 y1 x-inc1 y-inc1 x0 y0 x-inc0 y-inc0 )
@@ -166,13 +179,21 @@ here: start-positions
 
 : ready  ( -- )
   \ Show all active players at their start positions.
+
+  \ XXX TODO -- it seems the robot scores are more even when
+  \ the loop is countdown
+
   max-players 0 do
+  \ -1 max-players 1- do  \ XXX TMP
+
     i player!  player-control @ if
       player-start-coords 2@ player-coords 2!
       player-start-incs 2@ player-incs 2!
       paint
     then 
+
   loop  ;
+  \ -1 +loop  ;  \ XXX TMP
 
 : duel-init  ( -- )
   \ Init a duel.

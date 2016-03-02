@@ -1,6 +1,6 @@
 = Pri Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-07-14
+:revdate: 2015-11-25
 
 // This file is part of
 // Tron 0xF
@@ -30,7 +30,8 @@ estas en http://programandala.net/eo.programo.tron_0xf.html.
 
 == Kiel funkciigi
 
-Malfermu la dosieron <tron_0xf.szx> per emulilo de ZX Spectrum 48K.
+Malfermu la dosieron <tron_0xf.szx> per via plej ŝatata emulilo de ZX
+Spectrum 48K.
 
 == Kiel kompili
 
@@ -49,4 +50,4 @@ dosieron <tron_0xf_compiling.tap>. Malfermu ĝin normale per via
 emulilo kaj enlegu ĝin (per `LOAD ""` aŭ la menuo de ZX Spectrum 128).
 Ĉe la salutekrano de Abersoft Forth tajpu la ordonon `LOADT 1 LOAD`.
 La kompilado daŭros plurajn minutojn je la originala rapido de ZX
-Spectrum.  La programo ekfunctios je la fino.
+Spectrum.  La programo ekfunkcios je la fino.

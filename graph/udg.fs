@@ -6,19 +6,27 @@
 \ Tron 0xF
 \ A ZX Spectrum game written in Abersoft Forth
 
+\ http://programandala.net/en.program.tron_0xf.html
+
 \ This program, written in Forth for Gforth, creates the user defined
-\ graphics.
+\ graphics of Tron 0xF.
 
 \ Copyright (C) 2015 Marcos Cruz (programandala.net)
-\ License: GPL 3
 
-\ http://programandala.net/en.program.tron_0xf.html
+\ You may do whatever you want with this file, so long as you retain
+\ the copyright notice(s) and this license in all redistributed copies
+\ and derived works. There is no warranty.
+
+\ --------------------------------------------------------------
+\ History
 
 \ 2015-04-22: Start, with the frame graphics.
 \
 \ 2015-07-18: Added the key names. Renamed the file. Pasted
 \ `unslurp-file` instead of including it, because Galope is not
 \ published yet.
+\
+\ 2015-11-25: Updated the header.
 
 \ --------------------------------------------------------------
 \ Requirements

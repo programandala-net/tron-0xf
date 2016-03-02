@@ -109,7 +109,7 @@
 : es-authors  ( -- )
   \  <------------------------------>
   ." Código y gráficos: Marcos Cruz." cr cr
-  ." Pruebas: Teo e Irene." cr cr
+  ." Pruebas: Teo Albert e Irene" cr ." Albert." cr cr
   \ XXX TODO
   ." Tipografía: Paul Howard (de" cr
   ." FontBox I, 1995, dominio" cr

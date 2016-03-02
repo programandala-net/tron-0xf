@@ -35,7 +35,7 @@
 
   \ -----------------------------------------------------------
 
-2 8 thru
+2 9 thru
 
 ( -1|1 )
 
@@ -44,6 +44,7 @@ create -1|1  ( -- -1 | 1 )
   hex
 
   \ XXX OLD -- first version, with memory address as seed
+
   \   here 1+             \ local_seed: equ $+1
   \   21 c, 0 ,           \ ld hl,the_seed ; patched
   \   5C76 @ over ! \ patch the_seed with system FRAMES
@@ -53,38 +54,113 @@ create -1|1  ( -- -1 | 1 )
 
   \ XXX NEW -- second version, with register R
   \ (not better results, but faster and smaller code)
-  ED c, 5F C,         \ ld a,r
 
-  E6 c, 01 c,         \ and 1 ; bit 0 only
-  26 c, 00 c,         \ ld h,0
-  68 07 + c,          \ ld l,a
-  C2 c, pushhl ,      \ jp nz,PUSHHL ; return 1
-  2B c,               \ dec hl
-  C3 c, pushhl ,      \ jp pushhl ; return -1
+  ED c, 5F C,  E6 c, 01 c,
+    \ ld a,r
+    \ and 1 ; bit 0 only
+  26 c, 00 c,  68 07 + c,  C2 c, pushhl ,
+    \ ld h,0
+    \ ld l,a
+    \ jp nz,PUSHHL ; return 1
+  2B c,  C3 c, pushhl ,
+    \ dec hl
+    \ jp pushhl ; return -1
   smudge decimal
 
-( incs2* )
+  \ 2015-11-25: This bench shows the proportion of 1 and -1 is
+  \ 50%:
+
+  \ : test  ( times -- )
+  \   0  \ count
+  \   swap 0 do  -1|1 +  loop  .  ;
+  \ 32700 test
+
+
+  \ XXX OLD -- not used
+  \ create 0|1  ( -- 0 | 1 )
+
+  \   hex
+
+  \   ED c, 5F C,  E6 c, 01 c,
+  \     \ ld a,r
+  \     \ and 1 ; bit 0 only
+  \   26 c, 00 c,  68 07 + c,
+  \     \ ld h,0
+  \     \ ld l,a
+  \   C3 c, pushhl ,
+  \     \ jp pushhl
+  \   smudge decimal
+
+create 0|2  ( -- 0 | 2 )
+
+  hex
+
+  ED c, 5F C,  E6 c, 02 c,
+    \ ld a,r
+    \ and 2 ; bit 2 only
+  26 c, 00 c,  68 07 + c,
+    \ ld h,0
+    \ ld l,a
+  C3 c, pushhl ,
+    \ jp pushhl
+  smudge decimal
+
+( radar )
 
 create incs2*  ( b1 b2 -- b1' b2' )  hex
   \ Double the coordinate increments b1 and b2
   \ by shifting them left directly on the stack.
   \ b1' = b1 2*
   \ b2' = b2 2*
-  21 c, 0 ,       \ ld hl,0
-  39 c,           \ add hl,sp ; low byte of TOS
-  CB c, 26 c,     \ sla (hl)
-  23 c,           \ inc hl ; high byte of TOS
-  23 c,           \ inc hl ; low byte of 2TOS
-  CB c, 26 c,     \ sla (hl)
+  21 c, 0 ,  39 c,  CB c, 26 c,
+    \ ld hl,0
+    \ add hl,sp ; low byte of TOS
+    \ sla (hl)
+  23 c,  23 c,  CB c, 26 c,
+    \ inc hl ; high byte of TOS
+    \ inc hl ; low byte of 2TOS
+    \ sla (hl)
   C3 c, next ,    \ jp next
   smudge decimal
+
+create incs4*  ( b1 b2 -- b1' b2' )  hex
+  \ Multiply by 4 the coordinate increments b1 and b2
+  \ by shifting them left directly on the stack.
+  \ b1' = b1 4 *
+  \ b2' = b2 4 *
+  21 c, 0 ,  39 c,  CB c, 26 c,  CB c, 26 c,
+    \ ld hl,0
+    \ add hl,sp ; low byte of TOS
+    \ sla (hl)
+    \ sla (hl)
+  23 c,  23 c,  CB c, 26 c,  CB c, 26 c,
+    \ inc hl ; high byte of TOS
+    \ inc hl ; low byte of 2TOS
+    \ sla (hl)
+    \ sla (hl)
+  C3 c, next ,    \ jp next
+  smudge decimal
+
+  \ Execution table for `radar`:
+here: radars  ( -- a )
+  ' incs2* cfa ,  ' incs4* cfa ,
+
+: radar  ( xinc yinc -- xinc' yinc' )
+  \ Multiply the given coordinate increments (-1..+1)
+  \ by 2 or 4.
+  radars 0|2 + @ execute  ;
 
 ( Robot pilot)
 
 : crashing?  ( xinc yinc -- f )
   \ Considering the given coordinate increments
-  \ for the current player,
-  \ is the second next position occupied?
+  \ for the current player, is he crashing?
+  \ In other words, is the next position occupied?
+  \ The distance of the next position is randomly
+  \ chosen.
+ 
+  \ XXX TODO
+  \ radar player-yc @ + swap player-xc @ + swap point  ;
   incs2* player-yc @ + swap player-xc @ + swap point  ;
 
 : dodged?  ( xinc yinc -- f )
@@ -129,7 +205,7 @@ create incs2*  ( b1 b2 -- b1' b2' )  hex
   player-left-k @ pressed? if
     player-yinc @ if  left-incs turn  then  exit  then
   player-right-k @ pressed? if
-    player-yinc @ if  right-incs turn  then  then 
+    player-yinc @ if  right-incs turn  then  then
   ; is (human)
 
 ( duel )

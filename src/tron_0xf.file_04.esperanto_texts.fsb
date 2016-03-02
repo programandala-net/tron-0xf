@@ -103,7 +103,7 @@
 : eo-authors  ( -- )
   \  <------------------------------>
   ." Kodo kaj grafikoj: Marcos Cruz." cr cr
-  ." Provado: Teo kaj Irene." cr cr
+  ." Provado: Teo Albert kaj Irene" cr ." Albert." cr cr
   \ XXX TODO
   ." Tiparo: Paul Howard (el FontBox" cr
   ." I, 1995, publika posedaĵo)." cr cr
@@ -184,7 +184,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-option-7$  ( -- ca len )  s" Fini"  ;
 
 : eo-menu-help$  ( -- ca len )
-  s" <Majuskligo>+<Spaco>=fini" ;
+  s" <Majuskligo>+<Spaco>=eliri" ;
 
 -->
 

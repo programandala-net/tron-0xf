@@ -1,19 +1,11 @@
 = Tron 0xF To-Do
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-07-14
+:revdate: 2016-03-02
 
 .2015-07-05
 
 - do not accept keys already used
   (consider the robots keys free to be used by a human player).
-
-.2015-07-12
-
-Possible text in "About":
-
-This is free software; see the source for copying conditions.  There
-is  NO  warranty; not even for MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.
 
 .2015-07-14:
 
@@ -32,12 +24,12 @@ Change: rename the related values and fields:
 
 .2015-07-18:
 
-Fix: the speed of the players should be the same from the start, no
-matter a player dies.
+Fix: the speed of every player should be the same from the start, no
+matter if a player dies.
 
 Improve: move the players data to the RAM-disk. This will save 102
 bytes.  The default data could be init after the last RAM-disk has
-been loaded, but what about the keys that are stored on the fly while
+been loaded. But what about the keys that are stored on the fly while
 the keyboard table is created? How to save the key addresses to be
 used by the data init later, without wasting memory?  They have to be
 calculated.
@@ -46,4 +38,49 @@ Improve: combine <score_digits.fs> and <udg.fs>, factoring the common code.
 
 Change: move the comments of one-liners below the definition?
 
-Improve: use Enter to confirm the color.
+.2015-11-25:
+
+Fix: fsb issues an error because some lines of
+<tron_0xf.file_14.storage.fsb> are too long... because they contain
+UTF-8 chars! How to solve this?
+
+Scores of robots-only tests:
+
+|===
+| Setting   | Left        | Middle     | Right
+
+| 1         | 486 (1.00)  | 401 (0.82) | 242 (0.49)
+| 2         | 189 (0.61)  |  54 (0.17) | 309 (1.00)
+| 3         | 185 (0.54)  |  54 (0.18) | 288 (1.00)
+| 4         |  33 (0.67)  |  49 (1.00) |  41 (0.83)
+| 4         | 322 (1.00)  | 226 (0.70) | 299 (0.92)
+| 5 (best)  | 200 (1.00)  | 159 (0.79) | 151 (0.75)
+|===
+
+// | x         |     ( .  )  |     ( .  ) |     ( .  )
+
+|===
+| Setting         | Left        | Right
+
+| 1 or 5          | 316 (1.00)  | 106 (0.33)
+| 2               | 185 (0.80)  | 231 (1.00)
+| 3 or 4 (best)   | 154 (0.92)  | 167 (1.00)
+| 3 or 4          | 579 (1.00)  | 731 (0.79)
+| 1 or 5          | 614 (1.00)  | 153 (0.24)
+|===
+
+Settings:
+
+1. `2*` radar. Players loop from 0 to max.
+   The x coordinate of the middle robot is 126.
+2. Random radar (`2*` or `4 *`). Players loop from max to 0.
+   The x coordinate of the middle robot is 127.
+3. Random radar (`2*` or `4 *`). Players loop from 0 to max.
+   The x coordinate of the middle robot is 127.
+4. Random radar (`2*` or `4 *`). Players loop from 0 to max.
+   The x coordinate of the middle robot is 128.
+5. `2*` radar. Players loop from 0 to max.
+   The x coordinate of the middle robot is 128.
+
+Note: When radar is random (2 or 4 pixels range), the duels of 2
+robots are more even, but robots crash much easier.

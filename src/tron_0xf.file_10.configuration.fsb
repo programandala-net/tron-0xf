@@ -41,7 +41,7 @@
 
   \ 3-UDG icons are used to represent the vehicle color in the
   \ configuration table. There are two versions: for robots and
-  \ humans.
+  \ for humans.
 
 3 constant /icon  \ chars per color icon
 

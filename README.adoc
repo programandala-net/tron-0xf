@@ -1,6 +1,6 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-07-14
+:revdate: 2015-11-25
 
 // This file is part of
 // Tron 0xF
@@ -30,7 +30,7 @@ http://programandala.net/en.program.tron_0xf.html.
 
 == How to run
 
-Open the file <tron_0xf.szx> with your ZX Spectrum emulator de 48K.
+Open the file <tron_0xf.szx> with your favorite ZX Spectrum 48K emulator.
 
 == How to compile
 

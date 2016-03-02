@@ -5,6 +5,6 @@ fuse \
   --no-divide \
   --no-sound \
   --tape tron_0xf_compiling.tap \
-  --speed 1000 \
+  --speed 250 \
   &
 

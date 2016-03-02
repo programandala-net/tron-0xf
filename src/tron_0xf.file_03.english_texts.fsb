@@ -85,7 +85,7 @@
 : en-authors  ( -- )
   \  <------------------------------>
   ." Code and graphics: Marcos Cruz." cr cr
-  ." Tests: Teo and Irene." cr cr
+  ." Tests: Teo Albert and Irene" cr ." Albert." cr cr
   \ XXX TODO
   ." Font: Paul Howard (from FontBox" cr
   ." I, 1995, public domain)." cr cr
@@ -166,7 +166,7 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-option-7$  ( -- ca len )  s" Quit"  ;
 
 : en-menu-help$  ( -- ca len )
-  s" <Caps Shift>+<Space>=quit" ;
+  s" <Caps Shift>+<Space>=exit" ;
 
 -->
 

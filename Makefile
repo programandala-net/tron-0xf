@@ -6,7 +6,7 @@
 
 # http://programandala.net/en.program.tron_0xf.html
 
-# Copyright (C) 2015 Marcos Cruz (programandala.net)
+# Copyright (C) 2015, 2016 Marcos Cruz (programandala.net)
 
 # Copying and distribution of this file, with or without modification, are
 # permitted in any medium without royalty provided the copyright notice and
@@ -69,7 +69,7 @@ graph/title.tap: graph/title.pbm
 	cd -
 
 tap/%.tap: src/%.fsb
-	fsb2abersoft  $< && \
+	fsb-abersoft  $< && \
 	mv src/$*.tap tap/
 
 library_tapes=$(wildcard lib/*.tap)
@@ -155,7 +155,6 @@ backup:
 # ##############################################################
 # Packages for distribution
 
-
 .PHONEY: packages
 packages: tarball zipball
 
@@ -169,7 +168,8 @@ tarball:
 		tron_0xf/graph/* \
 		tron_0xf/lib/* \
 		tron_0xf/src/*.fsb \
-		tron_0xf/tron_0xf.szx ; \
+		tron_0xf/tron_0xf.szx \
+		tron_0xf/tron_0xf_compiling.* ; \
 	cd -
 
 zipball:
@@ -228,4 +228,6 @@ zipball:
 # license. The `clean` recipe includes the graphics.
 #
 # 2015-07-18: Updated the `backup` recipe with the sources of the graphs.
+#
+# 2016-02-03: Fixed the tarball recipe: <tron_0xf_compiling.*> was missing.
 
