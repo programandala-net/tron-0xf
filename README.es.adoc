@@ -1,6 +1,6 @@
 = Acerca de Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-11-25
+:revdate: 2016-03-03
 
 // This file is part of
 // Tron 0xF
@@ -8,7 +8,7 @@
 
 // http://programandala.net/es.programa.tron_0xf.html
 
-// Copyright (C) 2015 Marcos Cruz (programandala.net)
+// Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 
 // Copying and distribution of this file, with or without
 // modification, are permitted in any medium without royalty
@@ -21,35 +21,78 @@
 // Este fichero está escrito en formato AsciiDoc/Asciidoctor
 // (http://asciidoctor.org).
 
+Este documento está disponible también en link:README.adoc[inglés]
+y link:README.eo.adoc[esperanto].
+
+== Descripción
+
+Tron 0xF es un sencillo juego de tipo Tron para ZX Spectrum (modelo de
+48 KiB o posterior), con las siguientes características:
+
+. 1, 2 o 3 pilotos, en cualquier combinación de humanos y robots.
+. El color de los pilotos es configurable.
+. Las teclas los pilotos humanos son configurables.
+. Cuando algún participante es humano, cada carrera empieza con la
+  primera pulsación de una tecla. Cuando todos los participantes son
+  robots, las carreras empiezan automáticamente.
+. El juego nunca termina. Cuando un marcador llega a 999, vuelve a
+  empezar desde cero. Los jugadores humanos deben acordar las
+  condiciones de finalización.
+
+Las instrucciones de juego están incluidas en el programa.
+
 == Acerca del código
 
-Tron 0xF está escrito en Abersoft Forth (un fig-Forth 1.1 llevado a ZX
-Spectrum por John Jones Steele y publicado por Melbourne House en
-1983), con módulos de la biblioteca Afera (Marcos Cruz, 2015). Puedes
-encontrar más detalles en
-http://programandala.net/es.programa.tron_0xf.html.
+Tron 0xF está escrito en Abersoft Forth (un sistema fig-Forth 1.1
+llevado a ZX Spectrum por John Jones Steele y publicado por Melbourne
+House en 1983), con módulos de la biblioteca Afera (Marcos Cruz,
+2015). Puedes encontrar más detalles en la
+http://programandala.net/es.programa.tron_0xf.html[página de Tron
+0xF].
 
 == Cómo ejecutarlo
 
 Abre el fichero <tron_0xf.szx> con tu emulador de ZX Spectrum 48K favorito.
 
-== Cómo compilarlo
+== Cómo crear el programa a partir de las fuentes
+
+Si quieres modificar el programa debes seguir las siguientes instrucciones.
+Si solo quieres probar a reconstruirlo a partir de las fuentes originales,
+puedes ir directamente al <<paso2, paso2 >>.
+
+=== Paso 1: Crear el fichero TAP
 
 Para convertir los ficheros fuente (de código y de gráficos) en un
 fichero TAP utilizable por Abersoft Forth, es preciso tener instalados
-varios programas:
+varios programas (véanse más detalles en el fichero
+link:Makefile[Makefile]):
 
-- Gforth: <http://gnu.org/software/gforth/>.
-- bin2code: <http://metalbrain.speccy.org/link-eng.htm>.
-- fsb: <http://programandala.net/en.program.fsb.html>.
-- head: Componente de _GNU core utilities_.
-- pbm2scr: <http://programandala.net/en.program.pbm2scr.html>.
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/es.programa.fsb.html[fsb]
+- head (componente de _GNU core utilities_)
+- http://programandala.net/es.programa.pbm2scr.html[pbm2scr]
 
 Después entra en el directorio de Tron 0xF y ejecuta el comando
-`make`.  Esto creará el fichero <tron_0xf_compiling.tap>.  Ábrelo
-normalmente con tu emulador y cárgalo (con el comando de BASIC `LOAD
-""` o el menú de ZX Spectrum 128). Saldrá la pantalla inicial de
-Abersoft Forth.  Entonces teclea el comando `LOADT 1 LOAD`. La
-compilación durará unos minutos, a la velocidad original de ZX
-Spectrum. El programa se pondrá en marcha al final.
+`make`.  Esto creará el fichero <tron_0xf_compiling.tap>.
+
+[id=paso2]
+=== Paso 2: Interpretar las fuentes
+
+Ábre el fichero <tron_0xf_compiling.tap> con tu emulador de la forma
+habitual. Contiene Abersoft Forth, seguido de las fuentes de la
+biblioteca Afera y del programa.
+
+Como ejemplo se incluyen dos lanzadores para el emulador Fuse:
+<tron_0xf_compiling_128_fuse.sh> y <tron_0xf_compiling_48_fuse.sh>,
+cuya única diferencia es el modelo de Spectrum emulado, lo que no
+afecta al programa.
+
+Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú de
+ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.
+A continuación teclea el comando `LOADT 1 LOAD`. La interpretación durará
+unos minutos, a la velocidad original de ZX Spectrum. El programa se
+pondrá en marcha al final.  Entonces podrás usar tu emulador para
+guardar una instantánea del sistema en cualquier formato (SZX, SNA,
+Z80...).
 

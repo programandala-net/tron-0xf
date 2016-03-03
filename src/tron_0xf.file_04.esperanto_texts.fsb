@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -62,16 +62,16 @@
 
 : eo-instructions  ( -- )
   \  <------------------------------>
-  ." Ĉiu ludanto veturas veturilon" cr
+  ." Ĉiu ludanto kondukas veturilon" cr
   ." kies nura stirilo ĝin turnas" cr
   ." naŭdek gradojn sen malrapidiĝo." cr
   ." Ĉiu veturilo postlasas solidan" cr
   ." lumo-muron." cr
-  ."   La ludocelo estas igi la kon-" cr
-  ." traŭulon frakasi." cr
+  ."   La ludo-celo estas koliziigi" cr
+  ." la kontraŭulojn." cr
   ."   Povas esti 1-3 veturiloj, kun" cr
   ." ajna kombino de homaj kaj robo-" cr
-  ." taj pilotoj." cr
+  ." taj kondukistoj." cr
   \  <------------------------------>
 
 -->
@@ -85,7 +85,7 @@
   ." enton. La dueloj pluas senĉese." cr
   ." Ne estas kromvivoj aŭ finiga po-"
   ." ento. Vi decidas la finigajn" cr
-  ." kondiĉojn." cr 
+  ." kondiĉojn." cr
   ."  Por eliri el la ludo premu la" cr
   ." klavon <Break> (<Majuskligo>+" cr
   ." <Spaco>) kaj konfirmu." cr  ;
@@ -201,7 +201,7 @@ char J constant eo-'y'  \ the letter used to say "yes"
 : eo-do-stop$  ( -- ca len )  s" Ĉu vi volas fini? (J/N)"  ;
 
 : eo-vehicle$  ( -- ca len )  s" Veturilo:"  ;
-: eo-pilot$  ( -- ca len )  s" Piloto:"  ;
+: eo-pilot$  ( -- ca len )  s" Kondukisto:"  ;
 : eo-color$  ( -- ca len )  s" Koloro:"  ;
 
   \ These three strings must be padded with spaces

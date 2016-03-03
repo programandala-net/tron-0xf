@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -55,7 +55,7 @@ options buffer: menu-keys
   \   option-3$ sound? @ on/off$ s+  ;
 
 here: menu-options
-  
+
   \ Table that holds the cfa of the words that return the
   \ localized texts of the menu options.
 
@@ -121,14 +121,14 @@ here: menu-commands
 ( Option)
 
 : option  ( n -- )
-  \ Print menu option number n. 
+  \ Print menu option number n.
 
   \ XXX TODO -- make it simpler and faster: calculate
   \ the coordinates when the strings are created, and
   \ store them in a table.
 
   dup >r                  ( n ) ( R: n )
-  dup option>line         ( n line ) 
+  dup option>line         ( n line )
   >r option>string        ( ca len ) ( R: n line )
   dup centered            ( ca len col )
   r> swap                 ( ca len line col ) ( R: n )

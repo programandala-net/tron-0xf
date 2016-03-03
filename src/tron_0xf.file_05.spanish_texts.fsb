@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -72,7 +72,7 @@
   ." Cada vehículo deja tras de sí" cr
   ." una pared sólida de luz." cr
   ."   El objetivo del juego es hacer"
-  ." estrellarse al contrincante." cr
+  ." estrellarse a los contrincantes." cr
   ."   Puede haber de 1 a 3 vehículos"
   ." con pilotos robots o humanos en" cr
   ." cualquier combinación." cr

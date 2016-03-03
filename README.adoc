@@ -1,6 +1,6 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2015-11-25
+:revdate: 2016-03-03
 
 // This file is part of
 // Tron 0xF
@@ -8,7 +8,7 @@
 
 // http://programandala.net/en.program.tron_0xf.html
 
-// Copyright (C) 2015 Marcos Cruz (programandala.net)
+// Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 
 // Copying and distribution of this file, with or without
 // modification, are permitted in any medium without royalty
@@ -21,34 +21,72 @@
 // This file is written in AsciiDoc/Asciidoctor format
 // (http://asciidoctor.org).
 
+This document is available also in link:README.es.adoc[Spanish] and
+link:README.eo.adoc[Esperanto].
+
+== Description
+
+Tron 0xF is a simple Tron-like game for ZX Spectrum (48 KiB model or
+later), with the following features:
+
+. 1, 2 or 3 riders, in any combination of human and robots.
+. Riders' color is configurable.
+. Human riders' keys are configurable.
+. When at least one human rider plays, the ride start at the first
+  keypress. When no human rider plays, the rides start automatically.
+. The game never ends. When a score is greater than 999, it starts
+  back from zero. Human players must agree when to finish.
+
+The game instructions are included in the program.
+
 == About the code
 
-Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 ported to ZX
-Spectrum by John Jones Steele and published by Melbourne House in
-1983), using the Afera libray (Marcos Cruz, 2015). See more details in
-http://programandala.net/en.program.tron_0xf.html.
+Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 system ported
+to ZX Spectrum by John Jones Steele and published by Melbourne House
+in 1983), using the Afera libray (Marcos Cruz, 2015). See more details
+in the http://programandala.net/en.program.tron_0xf.html[Tron 0xF
+homepage].
 
 == How to run
 
 Open the file <tron_0xf.szx> with your favorite ZX Spectrum 48K emulator.
 
-== How to compile
+== How to build the program from the sources
+
+If you want to modify the program you must follow the following instructions.
+If you just want to rebuild it from the original sources, you can skip to
+<<step2>>.
+
+=== Step 1: Make the TAP file
 
 In order to convert the sources (of code and graphics) to a TAP file
 suitable for Abersoft Forth, several programs have to be installed
-(see <Makefile> for more details):
+(see the link:Makefile[Makefile] for more details):
 
-- Gforth: <http://gnu.org/software/gforth/>.
-- bin2code: <http://metalbrain.speccy.org/link-eng.htm>.
-- fsb: <http://programandala.net/en.program.fsb.html>.
-- head: Part of the GNU core utilities.
-- pbm2scr: <http://programandala.net/en.program.pbm2scr.html>.
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/en.program.fsb.html[fsb]
+- head (part of the GNU core utilities)
+- http://programandala.net/en.program.pbm2scr.html[pbm2scr]
 
 Then enter the Tron 0xF's directory and execute the command `make`.
-That will create the file <tron_0xf_compiling.tap>.  Open it as usual
-with your emulator and load it (with the BASIC command `LOAD ""` or
-the menu of the ZX Spectrum 128).  You will see the start screen of
-Abersoft Forth.  Then type the command `LOADT 1 LOAD`. The compilation
-will take several minutes at the original speed of ZX Spectrum. The
-program will run at the end.
+That will create the file <tron_0xf_compiling.tap>.
+
+[id=step2]
+=== Step 2: Interpret the sources
+
+Open <tron_0xf_compiling.tap> normally with your emulator. It contains
+Abersoft Forth, followed by the Afera library and program sources.
+
+Two launchers for the Fuse emulator are provided as example:
+<tron_0xf_compiling_128_fuse.sh> and <tron_0xf_compiling_48_fuse.sh>,
+the only difference being the emulated Spectrum model, which doesn't
+affect the program.
+
+Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
+menu of the ZX Spectrum 128).  You will see the start screen of
+Abersoft Forth.  Then type the command `LOADT 1 LOAD`. The
+interpretation will take several minutes at the original speed of ZX
+Spectrum. The program will run at the end.  Then you can use your
+emulator to save a snapshot in any format (SZX, Z80, SNA...).
 

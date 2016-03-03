@@ -6,7 +6,11 @@
 *.pbm linguist-vendored
 *.scr binary
 *.scr linguist-vendored
+*.sna binary
+*.sna linguist-vendored
 *.szx binary
 *.szx linguist-vendored
 *.tap binary
 *.tap linguist-vendored
+*.z80 binary
+*.z80 linguist-vendored

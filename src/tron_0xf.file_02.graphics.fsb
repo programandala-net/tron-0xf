@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -135,7 +135,7 @@ here: udg-set  udg0 , eo-udg , es-udg ,
 
   \ Activate the default UDG set.
 : graph-udg  ( -- )  0 >udg  ;
-  
+
 ( Screen -- generic)
 
 : tron-colors  ( -- )
@@ -155,7 +155,7 @@ here: udg-set  udg0 , eo-udg , es-udg ,
 32 constant cols  24 constant lines
 
   \ lines 2 / 1- constant middle-line \ XXX OLD
-lines 1- constant bottom-line 
+lines 1- constant bottom-line
 
   \ Size of the game arena (inside its frame):
  cols 2 - constant arena-cols
@@ -197,7 +197,7 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \   dup centered at-col type  ;
 
   \ The last two screens (10..11) of the Forth RAM-disk
-  \ are used to store the graphic of the title, that 
+  \ are used to store the graphic of the title, that
   \ ocuppies exactly 2 KiB, one third of the bitmap:
 10 disc-scr constant title-address
 

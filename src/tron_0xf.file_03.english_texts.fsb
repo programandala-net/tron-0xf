@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -48,7 +48,7 @@
   ." tion. Every vehicle leaves a so-"
   ." lid light trail behind." cr
   ."   The goal of the game is to ma-"
-  ." ke your adversary crash." cr
+  ." ke your adversaries crash." cr
   ."   There can be one, two or three"
   ." vehicles, in any combination of" cr
   ." human or robot pilots." cr
@@ -138,9 +138,9 @@
   \   ." copy of the GNU General Public" cr
   \   ." License along with Tron 0xF; if" cr
   \   ." not, see:" cr
-  \   ." <http://gnu.org/licenses>."  ; 
+  \   ." <http://gnu.org/licenses>."  ;
   \   \  <------------------------------>
-    
+
   -->
 
 ( Keys )
@@ -201,5 +201,5 @@ char Y constant en-'y'  \ the letter used to say "yes"
 : en-off$  ( -- ca len )  s" No "  ;
 
 : en-version$  ( -- ca len )  s" Version"  ;
-  
+
   \ vim: filetype=abersoftforthafera

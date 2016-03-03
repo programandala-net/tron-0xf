@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -36,7 +36,7 @@
   \ -----------------------------------------------------------
 
 2 8 thru
-  
+
 ( Crash check and effect )
 
 : borders  ( -- )
@@ -71,12 +71,12 @@
   \ Increase the score of the current player.
   \ if the result is greater than the maximum score,
   \ set the score to zero.
- 
+
   \ XXX TMP -- this line is only used for doing tests during
   \ the development, running the game with 2 or 3 robots (no
   \ human pilot), until one of them reaches the highest score:
   player-score @ max-score = if  quit  then
-  
+
   player-score @ 1+ dup max-score > 0= * player-score !  ;
 
 : duel-end  ( -- )
@@ -105,7 +105,7 @@
 
   \ Execution table for `get-score-columns`.
 here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
- 
+
 : get-score-columns ( -- col2 col1 col0 | col1 col0 | col0 )
   \ Return one, two or three score columns.
   players 1- score-columns swap >execute  ;
@@ -122,7 +122,7 @@ here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
  \ Coordinate increments.
  \ Double constants are used for speed.
 
- \ X  Y 
+ \ X  Y
    0  1 2constant up-incs
    0 -1 2constant down-incs
   -1  0 2constant left-incs
@@ -190,7 +190,7 @@ here: start-positions
       player-start-coords 2@ player-coords 2!
       player-start-incs 2@ player-incs 2!
       paint
-    then 
+    then
 
   loop  ;
   \ -1 +loop  ;  \ XXX TMP
@@ -198,7 +198,7 @@ here: start-positions
 : duel-init  ( -- )
   \ Init a duel.
   \ XXX TODO message
-  update-players set-start-positions 
+  update-players set-start-positions
   clear-arena status ready
   robots-only? if  1000 ms  else  akey drop  then  ;
 

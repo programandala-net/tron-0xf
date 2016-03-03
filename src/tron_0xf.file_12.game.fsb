@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -158,7 +158,7 @@ here: radars  ( -- a )
   \ In other words, is the next position occupied?
   \ The distance of the next position is randomly
   \ chosen.
- 
+
   \ XXX TODO
   \ radar player-yc @ + swap player-xc @ + swap point  ;
   incs2* player-yc @ + swap player-xc @ + swap point  ;

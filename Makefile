@@ -165,6 +165,7 @@ tarball:
 		tron_0xf/LICENSE.txt \
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
+		tron_0xf/TO-DO.* \
 		tron_0xf/graph/* \
 		tron_0xf/lib/* \
 		tron_0xf/src/*.fsb \
@@ -178,6 +179,7 @@ zipball:
 		tron_0xf/LICENSE.txt \
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
+		tron_0xf/TO-DO.* \
 		tron_0xf/graph/* \
 		tron_0xf/lib/* \
 		tron_0xf/src/*.fsb \
@@ -192,7 +194,7 @@ zipball:
 #
 # 2015-03-24: 4th part of the sources.
 #
-# 2015-03-28: Partial TAPs are hold in the tmp directory. 
+# 2015-03-28: Partial TAPs are hold in the tmp directory.
 #
 # 2015-03-30: Two recipes only, no individual files specified any more.
 #
@@ -230,4 +232,6 @@ zipball:
 # 2015-07-18: Updated the `backup` recipe with the sources of the graphs.
 #
 # 2016-02-03: Fixed the tarball recipe: <tron_0xf_compiling.*> was missing.
+#
+# 2016-03-02: Added <TO-DO.adoc>.
 

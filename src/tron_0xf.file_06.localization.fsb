@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -107,7 +107,7 @@ localized press-any-key$  ( -- ca len )
 ' es-do-stop$ ' eo-do-stop$ ' en-do-stop$
 localized do-stop$  ( -- ca len )
 
-( Localized texts) 
+( Localized texts)
 
 
   \ XXX OLD
@@ -125,7 +125,7 @@ localized quit-message  ( -- )
 
 ' es-off$ ' eo-off$ ' en-off$ localized off$  ( -- ca len )
 
-( Localized texts) 
+( Localized texts)
 
   \ XXX OLD
   \ ' es-player$ ' eo-player$ ' en-player$
@@ -149,7 +149,7 @@ localized pilot-help$   ( -- ca len )
 ' es-color-help$ ' eo-color-help$ ' en-color-help$
 localized color-help$   ( -- ca len )
 
-( Localized texts) 
+( Localized texts)
 
 ' es-version$ ' eo-version$ ' en-version$
 localized version$  ( -- ca len )
@@ -166,7 +166,7 @@ localized menu-help$  ( -- ca len )
 ( Conditional texts)
 
 : human|robot|none$  ( -- ca len )
-  player-pilot @ case 
+  player-pilot @ case
     human of  human$  endof
     robot of  robot$  endof
     none$ rot  \ default
@@ -182,14 +182,17 @@ localized license  ( -- )
 ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
 
-  \ Print the version number, stored as two double numbers.
+  \ Print the version number.
 : .version  ( -- )
-  version 0 s->d d.r [char] . emit 0 s->d d.r [char] . emit
-  release <# #s #> type ;
-  
+  version-major 0 .r [char] . emit
+  version-minor 0 .r [char] . emit
+  version-patch 0 .r [char] + emit
+  version-release <# #s #> type  ;
+
 : copyright  ( -- )
   ." Tron 0xF" cr version$ type space .version cr
-  cr ." Copyright (C) 2015 Marcos Cruz" cr
+      \ <------------------------------>
+  cr ." (C) 2015,2106 Marcos Cruz" cr
      ." (programandala.net)"  ;
 
   \ The letter used to say "no", in the three languages.
