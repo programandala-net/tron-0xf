@@ -1,6 +1,6 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-03
+:revdate: 2016-03-05
 
 // This file is part of
 // Tron 0xF
@@ -29,7 +29,7 @@ link:README.eo.adoc[Esperanto].
 Tron 0xF is a simple Tron-like game for ZX Spectrum (48 KiB model or
 later), with the following features:
 
-. 1, 2 or 3 riders, in any combination of human and robots.
+. 1, 2 or 3 riders, in any combination of humans and robots.
 . Riders' color is configurable.
 . Human riders' keys are configurable.
 . When at least one human rider plays, the ride start at the first
@@ -86,7 +86,32 @@ affect the program.
 Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
 menu of the ZX Spectrum 128).  You will see the start screen of
 Abersoft Forth.  Then type the command `LOADT 1 LOAD`. The
-interpretation will take several minutes at the original speed of ZX
+interpretation will take about 13 minutes at the original speed of ZX
 Spectrum. The program will run at the end.  Then you can use your
-emulator to save a snapshot in any format (SZX, Z80, SNA...).
+emulator to save a snapshot in any format, e.g. SZX, Z80, SNA.
+
+== Screen saver
+
+As a side effect, the game can be used as screen saver: Configure it
+with three robot raiders, set the desired speed on your ZX Spectrum
+emulator, turn whole screen mode on, and start the game. It will not
+stop.
+
+== Known issues
+
+The robots are pretty stupid. I tried several approaches to make them
+smarter without slowing the game but didn't get clear results.
+
+Sound is rudimentary, and it affects the game speed: two riders run
+faster than three when sound is enabled.  In order to get a decent
+result from the beeper of the ZX Spectrum 48, sound should be
+implemented by an interrupt driven routine.
+
+The link:./TO-DO.adoc[to-do list] contains other minor issues and some
+testings about the robots.
+
+The main issues will be solved in a future improved version for ZX
+Spectrum 128, which has a dedicated sound chip, and
+http://programandala.net/en.program.solo_forth.html[Solo Forth], which
+is much faster and powerful than Abersoft Forth.
 

@@ -1,6 +1,6 @@
 = Pri Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-03
+:revdate: 2016-03-05
 
 // This file is part of
 // Tron 0xF
@@ -86,9 +86,27 @@ Du lanĉiloj por la emulilo Fuse estas inkluditaj:
 <tron_0xf_compiling_48_fuse.sh>, kies nura diferenco estas la emulita
 modelo de Spectrum, kio neniel influas la programon.
 
-Enlegu Abersoft Forth per la BASIC-komando `LOAD ""` (aŭ per la menuo de ZX
-Spectrum 128).  Ĉe la salutekrano de Abersoft Forth tajpu la ordonon
-`LOADT 1 LOAD`.  La interpretado daŭros plurajn minutojn je la
-originala rapido de ZX Spectrum.  La programo ekfunkcios je la fino.
-Tiam vi povos registri ĝin kiel sistem-kaptaĵon en ajna formato (SZX,
-SNA, Z80...).
+Enlegu Abersoft Forth per la BASIC-komando `LOAD ""` (aŭ per la menuo
+de ZX Spectrum 128).  Ĉe la salutekrano de Abersoft Forth tajpu la
+ordonon `LOADT 1 LOAD`.  La interpretado daŭros pli malpi 13 minutojn
+je la originala rapido de ZX Spectrum.  La programo ekfunkcios je la
+fino.  Tiam vi povos registri ĝin kiel sistem-kaptaĵon en ajna
+formato, ekzemple SZX, SNA, Z80.
+
+== Konataj misoj
+
+Robotoj estas iom stultaj. Mi klopodis plurajn metodojn
+pliinteligentigi ilin sen malrapidigi la ludon, sed ne atingis klaran
+rezulton.
+
+Sono estas rudimenta, kaj influas la ludo-rapidon: Dum sono aktivas,
+du veturiloj pli rapidas ol tri. Por atingi decan sonon el ZX Spectrum
+48 necesas verki interrompo-traktilon por ĝi.
+
+La link:./TO-DO.adoc[lista de farendaĵoj] enhavas aliajn malgravajn
+aferojn, kaj provojn pri robotaj.
+
+La precipaj misoj estas riparotaj en onta plibonigita versio por ZX
+Spectrum 128, kiu enhavas son-dediĉitan blaton, kaj
+http://programandala.net/eo.programo.solo_forth.html[Solo Forth], kiu
+pli rapidas ol Abersoft Forth.

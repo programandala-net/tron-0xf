@@ -75,7 +75,8 @@
   \ XXX TMP -- this line is only used for doing tests during
   \ the development, running the game with 2 or 3 robots (no
   \ human pilot), until one of them reaches the highest score:
-  player-score @ max-score = if  quit  then
+  \
+  \ player-score @ max-score = if  quit  then
 
   player-score @ 1+ dup max-score > 0= * player-score !  ;
 

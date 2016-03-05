@@ -1,6 +1,6 @@
 = Acerca de Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-03
+:revdate: 2016-03-05
 
 // This file is part of
 // Tron 0xF
@@ -88,11 +88,30 @@ Como ejemplo se incluyen dos lanzadores para el emulador Fuse:
 cuya única diferencia es el modelo de Spectrum emulado, lo que no
 afecta al programa.
 
-Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú de
-ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.
-A continuación teclea el comando `LOADT 1 LOAD`. La interpretación durará
-unos minutos, a la velocidad original de ZX Spectrum. El programa se
-pondrá en marcha al final.  Entonces podrás usar tu emulador para
-guardar una instantánea del sistema en cualquier formato (SZX, SNA,
-Z80...).
+Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú
+de ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.  A
+continuación teclea el comando `LOADT 1 LOAD`. La interpretación
+durará unos 13 minutos, a la velocidad original de ZX Spectrum. El
+programa se pondrá en marcha al final.  Entonces podrás usar tu
+emulador para guardar una instantánea del sistema en cualquier
+formato, por ejemplo SZX, SNA, Z80.
+
+== Fallos conocidos
+
+Los robots son bastante tontos. He intentado varios métodos para
+hacerlos algo más listos sin ralentizar el juego pero no he obtenido
+resultados claros.
+
+El sonido es rudimentario, y afecta a la velocidad del juego: cuando
+está activado, dos corredores van más rápido que tres.  Para lograr un
+sonido decente en ZX Spectrum 48 habría que implementarlo con una
+rutina activada por interrupciones.
+
+La link:./TO-DO.adoc[lista de tareas pendientes] contiene algunas
+otras cosas menores, y algunas pruebas hechas con los robots.
+
+Los principales fallos serán corregidos en una futura versión mejorada
+para ZX Spectrum 128, que tiene un chip específico de sonido, y
+http://programandala.net/es.programa.solo_forth.html[Solo Forth], que
+es más rápido y potente que Abersoft Forth.
 

@@ -38,7 +38,7 @@
 
   \ This is the last Forth RAM-disk loaded from tape during the
   \ compilation of the game. Its space is used to store data
-  \ (grapthics directly loaded from tape and players data used
+  \ (graphics directly loaded from tape and players data used
   \ during the game), with the following map:
 
   \ screen 5:           license note in English
