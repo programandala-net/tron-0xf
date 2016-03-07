@@ -1,6 +1,6 @@
 = Acerca de Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-05
+:revdate: 2016-03-07
 
 // This file is part of
 // Tron 0xF
@@ -79,7 +79,7 @@ Después entra en el directorio de Tron 0xF y ejecuta el comando
 [id=paso2]
 === Paso 2: Interpretar las fuentes
 
-Ábre el fichero <tron_0xf_compiling.tap> con tu emulador de la forma
+Abre el fichero <tron_0xf_compiling.tap> con tu emulador de la forma
 habitual. Contiene Abersoft Forth, seguido de las fuentes de la
 biblioteca Afera y del programa.
 

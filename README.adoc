@@ -32,7 +32,7 @@ later), with the following features:
 . 1, 2 or 3 riders, in any combination of humans and robots.
 . Riders' color is configurable.
 . Human riders' keys are configurable.
-. When at least one human rider plays, the ride start at the first
+. When at least one human rider plays, the ride starts at the first
   keypress. When no human rider plays, the rides start automatically.
 . The game never ends. When a score is greater than 999, it starts
   back from zero. Human players must agree when to finish.
