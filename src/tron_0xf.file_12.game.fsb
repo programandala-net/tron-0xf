@@ -1,4 +1,4 @@
-.( Tron 0xF: game -- part 2 )
+.( Tron 0xF: game -- part 1 )
 
 \ tron_0xf.file_12.game.fsb
 
@@ -35,222 +35,180 @@
 
   \ -----------------------------------------------------------
 
-2 9 thru
+2 8 thru
 
-( -1|1 )
+( Crash check and effect )
 
-create -1|1  ( -- -1 | 1 )
-  \ Return a random increment for a graphic coordinate.
-  hex
+: borders  ( -- )
+  \ Change the border using all colors from white to black.
+  [ black 1- ] literal white do  i border  -1 +loop  ;
 
-  \ XXX OLD -- first version, with memory address as seed
-
-  \   here 1+             \ local_seed: equ $+1
-  \   21 c, 0 ,           \ ld hl,the_seed ; patched
-  \   5C76 @ over ! \ patch the_seed with system FRAMES
-  \   7E c,               \ ld a,(hl)
-  \   23 c,               \ inc hl
-  \   22 c, ,             \ ld (local_seed),hl
-
-  \ XXX NEW -- second version, with register R
-  \ (not better results, but faster and smaller code)
-
-  ED c, 5F C,  E6 c, 01 c,
-    \ ld a,r
-    \ and 1 ; bit 0 only
-  26 c, 00 c,  68 07 + c,  C2 c, pushhl ,
-    \ ld h,0
-    \ ld l,a
-    \ jp nz,PUSHHL ; return 1
-  2B c,  C3 c, pushhl ,
-    \ dec hl
-    \ jp pushhl ; return -1
-  smudge decimal
-
-  \ 2015-11-25: This bench shows the proportion of 1 and -1 is
-  \ 50%:
-
-  \ : test  ( times -- )
-  \   0  \ count
-  \   swap 0 do  -1|1 +  loop  .  ;
-  \ 32700 test
-
-
-  \ XXX OLD -- not used
-  \ create 0|1  ( -- 0 | 1 )
-
-  \   hex
-
-  \   ED c, 5F C,  E6 c, 01 c,
-  \     \ ld a,r
-  \     \ and 1 ; bit 0 only
-  \   26 c, 00 c,  68 07 + c,
-  \     \ ld h,0
-  \     \ ld l,a
-  \   C3 c, pushhl ,
-  \     \ jp pushhl
-  \   smudge decimal
-
-create 0|2  ( -- 0 | 2 )
-
-  hex
-
-  ED c, 5F C,  E6 c, 02 c,
-    \ ld a,r
-    \ and 2 ; bit 2 only
-  26 c, 00 c,  68 07 + c,
-    \ ld h,0
-    \ ld l,a
-  C3 c, pushhl ,
-    \ jp pushhl
-  smudge decimal
-
-( radar )
-
-create incs2*  ( b1 b2 -- b1' b2' )  hex
-  \ Double the coordinate increments b1 and b2
-  \ by shifting them left directly on the stack.
-  \ b1' = b1 2*
-  \ b2' = b2 2*
-  21 c, 0 ,  39 c,  CB c, 26 c,
-    \ ld hl,0
-    \ add hl,sp ; low byte of TOS
-    \ sla (hl)
-  23 c,  23 c,  CB c, 26 c,
-    \ inc hl ; high byte of TOS
-    \ inc hl ; low byte of 2TOS
-    \ sla (hl)
-  C3 c, next ,    \ jp next
-  smudge decimal
-
-create incs4*  ( b1 b2 -- b1' b2' )  hex
-  \ Multiply by 4 the coordinate increments b1 and b2
-  \ by shifting them left directly on the stack.
-  \ b1' = b1 4 *
-  \ b2' = b2 4 *
-  21 c, 0 ,  39 c,  CB c, 26 c,  CB c, 26 c,
-    \ ld hl,0
-    \ add hl,sp ; low byte of TOS
-    \ sla (hl)
-    \ sla (hl)
-  23 c,  23 c,  CB c, 26 c,  CB c, 26 c,
-    \ inc hl ; high byte of TOS
-    \ inc hl ; low byte of 2TOS
-    \ sla (hl)
-    \ sla (hl)
-  C3 c, next ,    \ jp next
-  smudge decimal
-
-  \ Execution table for `radar`:
-here: radars  ( -- a )
-  ' incs2* cfa ,  ' incs4* cfa ,
-
-: radar  ( xinc yinc -- xinc' yinc' )
-  \ Multiply the given coordinate increments (-1..+1)
-  \ by 2 or 4.
-  radars 0|2 + @ execute  ;
-
-( Robot pilot)
-
-: crashing?  ( xinc yinc -- f )
-  \ Considering the given coordinate increments
-  \ for the current player, is he crashing?
-  \ In other words, is the next position occupied?
-  \ The distance of the next position is randomly
-  \ chosen.
-
+: crash-effect  ( -- )
   \ XXX TODO
-  \ radar player-yc @ + swap player-xc @ + swap point  ;
-  incs2* player-yc @ + swap player-xc @ + swap point  ;
+  100 50 do  11 i ?bleep borders  loop  ;
 
-: dodged?  ( xinc yinc -- f )
-  \ Considering the given coordinate increments
-  \ for the current player,
-  \ is the second next position free?
-  crashing? 0=  ;
+: crash  ( -- )
+  \ Do a visual effect; then wait until a key is pressed.
+  crash-effect  begin  inkey?  until  drop  ;
 
-: dodge-y  ( -- 0 yinc )
-  \ Choose random increments to start moving on the Y axis.
-  0 -1|1 2dup dodged? ?exit  minus  ;
+: crash?  ( -- f )
+  \ Is the next position of the current player occupied?
+  player-xinc @ player-xc @ +
+  \ dup 0 0 at .  \  XXX INFORMER
+  player-yinc @ player-yc @ +
+  \ dup 0 15 at .  \  XXX INFORMER
+  point  ;
 
-: dodge-x  ( -- xinc 0 )
-  \ Choose random increments to start moving on the X axis.
-  -1|1 0 2dup dodged? ?exit  swap minus swap  ;
+: killed  ( -- )
+  \ Kill the current player.
+  dead player-control !  players 1- to players  ;
 
-: dodge  ( -- )
-  \ Change the direction of the current player.
-  set-turn-sound player-xinc @   \ moving on the X axis?
-  if  dodge-y  else  dodge-x  then  player-incs 2!  ;
+( Scores )
 
-:noname  ( -- )
-  \ Control procedure for robot pilots.
-  \ Update the coordinate increments
-  \ of the current (robot) player:
-  \ If there's something ahead, change the direction.
-  player-incs 2@ crashing?  if  dodge  then
-  ; is (robot)
+999 constant max-score
 
-( Human pilot)
+: +score   ( -- )
+  \ Increase the score of the current player.
+  \ if the result is greater than the maximum score,
+  \ set the score to zero.
 
-: turn  ( d -- )  player-incs 2! set-turn-sound  ;
+  \ XXX TMP -- this line is only used for doing tests during
+  \ the development, running the game with 2 or 3 robots (no
+  \ human pilot), until one of them reaches the highest score:
+  \
+  \ player-score @ max-score = if  quit  then
 
-:noname  ( -- )
-  \ Control procedure for human pilots.
-  \ Update the coordinate increments
-  \ of the current (human) player.
-  player-up-k @ pressed?  if
-    player-xinc @ if  up-incs turn  then  exit  then
-  player-down-k @ pressed? if
-    player-xinc @ if  down-incs turn  then  exit  then
-  player-left-k @ pressed? if
-    player-yinc @ if  left-incs turn  then  exit  then
-  player-right-k @ pressed? if
-    player-yinc @ if  right-incs turn  then  then
-  ; is (human)
+  player-score @ 1+ dup max-score > 0= * player-score !  ;
 
-( duel )
+: duel-end  ( -- )
+  \ XXX TODO simpler
+  2000 pilots 1 > * ms  robots-only? 0=
+  if  -status colors0 press-any-key then  -status  ;
 
-: forward  ( -- )
-  \ Update the coordinates of the current player.
-  player-xinc @ player-xc +!  player-yinc @ player-yc +!  ;
+: winner  ( -- )
+  \ Search for the winner and increase the score,
+  \ showing the new score with flashing digits.
+  max-players 0 do
+    i player! alive?
+    if  +score 1 flash .score 0 flash leave  then
+  loop  duel-end  ;
 
-  \ Ask "Do you want to stop?" in the current language
-  \ and return a flag with the answer (true=yes).
-  \ Erase the message at the end.
-: do-stop?  ( -- f )
-  white ink do-stop$ 2dup remark yes? >r -remark r>  ;
+: -scores  ( -- )
+  \ Reset all scores.
+  max-players 0 do  i player!  player-score off  loop  ;
 
-: stop?  ( -- f )
-  \ Check if the Break key has been pressed; if so, confirm it.
-  \ f = confirmed Break key?
-  false  ?terminal 0= ?exit   \ no Break key, exit
-  drop -status do-stop?       \ ask for confirmation
-  dup 0= if  status  then  ;  \ restore the status bar
+( Score columns execution table )
 
-( duel )
+  \ Score columns
+:noname ( -- col2 col1 col0 )  28 14 01 ;  \ three players
+:noname ( -- col1 col0 )  28 01 ;  \ two players
+:noname ( -- col0 )  14  ; \ one player
 
-: duel  ( -- f )
-  \ Game duel. Stop when a player crashes
-  \ or the break key is pressed and confirmed.
-  \ f = Break key pressed and confirmed?
-  duel-init  begin
-    max-players 0 do  i player!
-      player-control @ -dup if
-        execute crash? if
-          killed last-one? if  winner unloop false exit  then
-        else  forward paint noise  then
-      then
-    loop
-  stop? until  true  ;
+  \ Execution table for `get-score-columns`.
+here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
 
-( game )
+: get-score-columns ( -- col2 col1 col0 | col1 col0 | col0 )
+  \ Return one, two or three score columns.
+  players 1- score-columns swap >execute  ;
 
-: ?duel-end  ( f -- )
-  \ XXX TMP
-  ?exit  akey drop  ;
+: set-score-columns  ( -- )
+  \ Set the players' score columns.
+  get-score-columns
+  max-players 0 do  i player!
+    player-control @ if  player-score-col !  then
+  loop  ;
 
-: game  ( -- )
-  \ Game loop.
-  game-init begin  duel dup 0= ?duel-end  until  page   ;
+( Start positions execution table )
+
+ \ Coordinate increments.
+ \ Double constants are used for speed.
+
+ \ X  Y
+   0  1 2constant up-incs
+   0 -1 2constant down-incs
+  -1  0 2constant left-incs
+   1  0 2constant right-incs
+
+:noname
+  \ ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
+  \ Start screen position and increments, for three players.
+
+  \ XXX OLD
+  \  215 127 left-incs  126 40 up-incs  40 127 right-incs ;
+
+  \ XXX OLD
+  \ 215 127 left-incs  127 40 up-incs  40 127 right-incs ;
+
+  215 127 left-incs  128 40 up-incs  40 127 right-incs ;
+
+:noname
+  \ ( -- x1 y1 x-inc1 y-inc1 x0 y0 x-inc0 y-inc0 )
+  \ Start screen position and increments, for two players.
+  215 88 left-incs  40 88 right-incs  ;
+
+:noname
+  \ ( -- x0 y0 x-inc0 y-inc0 )
+  \ Start screen position and increments, for one player.
+  127 88 up-incs  ;
+
+here: start-positions
+  \ Execution table for `get-start-positions`.
+  \ ( cfa2 cfa1 cfa0 )
+  , , ,
+
+( Start positions and paint )
+
+: get-start-positions ( -- ... col x y x-inc y-inc )
+  \ Return one, two or three sets of player positions
+  \ (score column, start screen position and increments).
+  \ Note: only one set is shown in the stack notation above.
+  players 1- start-positions swap >execute  ;
+
+: set-start-positions  ( -- )
+  \ Set the players' start positions.
+  get-start-positions
+  max-players 0 do  i player!
+    player-control @ if
+      player-start-incs 2!  player-start-coords 2!
+    then
+  loop  ;
+
+  \ Paint the current player.
+: paint  ( -- )  player-color @ ink player-coords 2@ plot  ;
+
+( Duel init )
+
+: ready  ( -- )
+  \ Show all active players at their start positions.
+
+  \ XXX TODO -- it seems the robot scores are more even when
+  \ the loop is countdown
+
+  max-players 0 do
+  \ -1 max-players 1- do  \ XXX TMP
+
+    i player!  player-control @ if
+      player-start-coords 2@ player-coords 2!
+      player-start-incs 2@ player-incs 2!
+      paint
+    then
+
+  loop  ;
+  \ -1 +loop  ;  \ XXX TMP
+
+: duel-init  ( -- )
+  \ Init a duel.
+  \ XXX TODO message
+  update-players set-start-positions
+  clear-arena status ready
+  robots-only? if  1000 ms  else  akey drop  then  ;
+
+( Game init )
+
+: game-init  ( -- )
+  \ Init the game.
+  set-motor-sound  sound? @ sound  -scores
+  update-players set-score-columns
+  cls0 arena save-arena  ;
 
   \ vim: filetype=abersoftforthafera

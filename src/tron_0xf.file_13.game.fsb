@@ -1,0 +1,256 @@
+.( Tron 0xF: game -- part 2 )
+
+\ tron_0xf.file_13.game.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ License: GPL 3
+
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
+
+  \ -----------------------------------------------------------
+
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+
+2 9 thru
+
+( -1|1 )
+
+create -1|1  ( -- -1 | 1 )
+  \ Return a random increment for a graphic coordinate.
+  hex
+
+  \ XXX OLD -- first version, with memory address as seed
+
+  \   here 1+             \ local_seed: equ $+1
+  \   21 c, 0 ,           \ ld hl,the_seed ; patched
+  \   5C76 @ over ! \ patch the_seed with system FRAMES
+  \   7E c,               \ ld a,(hl)
+  \   23 c,               \ inc hl
+  \   22 c, ,             \ ld (local_seed),hl
+
+  \ XXX NEW -- second version, with register R
+  \ (not better results, but faster and smaller code)
+
+  ED c, 5F C,  E6 c, 01 c,
+    \ ld a,r
+    \ and 1 ; bit 0 only
+  26 c, 00 c,  68 07 + c,  C2 c, pushhl ,
+    \ ld h,0
+    \ ld l,a
+    \ jp nz,PUSHHL ; return 1
+  2B c,  C3 c, pushhl ,
+    \ dec hl
+    \ jp pushhl ; return -1
+  smudge decimal
+
+  \ 2015-11-25: This bench shows the proportion of 1 and -1 is
+  \ 50%:
+
+  \ : test  ( times -- )
+  \   0  \ count
+  \   swap 0 do  -1|1 +  loop  .  ;
+  \ 32700 test
+
+
+  \ XXX OLD -- not used
+  \ create 0|1  ( -- 0 | 1 )
+
+  \   hex
+
+  \   ED c, 5F C,  E6 c, 01 c,
+  \     \ ld a,r
+  \     \ and 1 ; bit 0 only
+  \   26 c, 00 c,  68 07 + c,
+  \     \ ld h,0
+  \     \ ld l,a
+  \   C3 c, pushhl ,
+  \     \ jp pushhl
+  \   smudge decimal
+
+create 0|2  ( -- 0 | 2 )
+
+  hex
+
+  ED c, 5F C,  E6 c, 02 c,
+    \ ld a,r
+    \ and 2 ; bit 2 only
+  26 c, 00 c,  68 07 + c,
+    \ ld h,0
+    \ ld l,a
+  C3 c, pushhl ,
+    \ jp pushhl
+  smudge decimal
+
+( radar )
+
+create incs2*  ( b1 b2 -- b1' b2' )  hex
+  \ Double the coordinate increments b1 and b2
+  \ by shifting them left directly on the stack.
+  \ b1' = b1 2*
+  \ b2' = b2 2*
+  21 c, 0 ,  39 c,  CB c, 26 c,
+    \ ld hl,0
+    \ add hl,sp ; low byte of TOS
+    \ sla (hl)
+  23 c,  23 c,  CB c, 26 c,
+    \ inc hl ; high byte of TOS
+    \ inc hl ; low byte of 2TOS
+    \ sla (hl)
+  C3 c, next ,    \ jp next
+  smudge decimal
+
+create incs4*  ( b1 b2 -- b1' b2' )  hex
+  \ Multiply by 4 the coordinate increments b1 and b2
+  \ by shifting them left directly on the stack.
+  \ b1' = b1 4 *
+  \ b2' = b2 4 *
+  21 c, 0 ,  39 c,  CB c, 26 c,  CB c, 26 c,
+    \ ld hl,0
+    \ add hl,sp ; low byte of TOS
+    \ sla (hl)
+    \ sla (hl)
+  23 c,  23 c,  CB c, 26 c,  CB c, 26 c,
+    \ inc hl ; high byte of TOS
+    \ inc hl ; low byte of 2TOS
+    \ sla (hl)
+    \ sla (hl)
+  C3 c, next ,    \ jp next
+  smudge decimal
+
+  \ Execution table for `radar`:
+here: radars  ( -- a )
+  ' incs2* cfa ,  ' incs4* cfa ,
+
+: radar  ( xinc yinc -- xinc' yinc' )
+  \ Multiply the given coordinate increments (-1..+1)
+  \ by 2 or 4.
+  radars 0|2 + @ execute  ;
+
+( Robot pilot)
+
+: crashing?  ( xinc yinc -- f )
+  \ Considering the given coordinate increments
+  \ for the current player, is he crashing?
+  \ In other words, is the next position occupied?
+  \ The distance of the next position is randomly
+  \ chosen.
+
+  \ XXX TODO
+  \ radar player-yc @ + swap player-xc @ + swap point  ;
+  incs2* player-yc @ + swap player-xc @ + swap point  ;
+
+: dodged?  ( xinc yinc -- f )
+  \ Considering the given coordinate increments
+  \ for the current player,
+  \ is the second next position free?
+  crashing? 0=  ;
+
+: dodge-y  ( -- 0 yinc )
+  \ Choose random increments to start moving on the Y axis.
+  0 -1|1 2dup dodged? ?exit  minus  ;
+
+: dodge-x  ( -- xinc 0 )
+  \ Choose random increments to start moving on the X axis.
+  -1|1 0 2dup dodged? ?exit  swap minus swap  ;
+
+: dodge  ( -- )
+  \ Change the direction of the current player.
+  set-turn-sound player-xinc @   \ moving on the X axis?
+  if  dodge-y  else  dodge-x  then  player-incs 2!  ;
+
+:noname  ( -- )
+  \ Control procedure for robot pilots.
+  \ Update the coordinate increments
+  \ of the current (robot) player:
+  \ If there's something ahead, change the direction.
+  player-incs 2@ crashing?  if  dodge  then
+  ; is (robot)
+
+( Human pilot)
+
+: turn  ( d -- )  player-incs 2! set-turn-sound  ;
+
+:noname  ( -- )
+  \ Control procedure for human pilots.
+  \ Update the coordinate increments
+  \ of the current (human) player.
+  player-up-k @ pressed?  if
+    player-xinc @ if  up-incs turn  then  exit  then
+  player-down-k @ pressed? if
+    player-xinc @ if  down-incs turn  then  exit  then
+  player-left-k @ pressed? if
+    player-yinc @ if  left-incs turn  then  exit  then
+  player-right-k @ pressed? if
+    player-yinc @ if  right-incs turn  then  then
+  ; is (human)
+
+( duel )
+
+: forward  ( -- )
+  \ Update the coordinates of the current player.
+  player-xinc @ player-xc +!  player-yinc @ player-yc +!  ;
+
+  \ Ask "Do you want to stop?" in the current language
+  \ and return a flag with the answer (true=yes).
+  \ Erase the message at the end.
+: do-stop?  ( -- f )
+  white ink do-stop$ 2dup remark yes? >r -remark r>  ;
+
+: stop?  ( -- f )
+  \ Check if the Break key has been pressed; if so, confirm it.
+  \ f = confirmed Break key?
+  false  ?terminal 0= ?exit   \ no Break key, exit
+  drop -status do-stop?       \ ask for confirmation
+  dup 0= if  status  then  ;  \ restore the status bar
+
+( duel )
+
+: duel  ( -- f )
+  \ Game duel. Stop when a player crashes
+  \ or the break key is pressed and confirmed.
+  \ f = Break key pressed and confirmed?
+  duel-init  begin
+    max-players 0 do  i player!
+      player-control @ -dup if
+        execute crash? if
+          killed last-one? if  winner unloop false exit  then
+        else  forward paint noise  then
+      then
+    loop
+  stop? until  true  ;
+
+( game )
+
+: ?duel-end  ( f -- )
+  \ XXX TMP
+  ?exit  akey drop  ;
+
+: game  ( -- )
+  \ Game loop.
+  game-init begin  duel dup 0= ?duel-end  until  page   ;
+
+  \ vim: filetype=abersoftforthafera
