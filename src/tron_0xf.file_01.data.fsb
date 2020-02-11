@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -43,9 +43,8 @@ forth definitions
 
   \ Color constants
 
-  \ XXX TODO remove the unused colors
-0 constant black    1 constant blue   2 constant red
-3 constant magenta  4 constant green  5 constant cyan
+0 constant black    2 constant red
+4 constant green    5 constant cyan
 6 constant yellow   7 constant white
 
 2 11 thru
