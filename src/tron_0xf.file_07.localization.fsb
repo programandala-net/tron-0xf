@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -39,13 +39,14 @@
 
 ( localized )
 
-: localized  ( pfa1 pfa2 pfa3 "name" -- )
+: localized  ( pfa0 pfa1 pfa2 pfa3 "name" -- )
 
   \ Create a word that will execute another word from a list of
-  \ three, depending on the current language.
+  \ four, depending on the current language.
 
   \ Parameters are the parameter field addresses of the
   \ localized versions, in reverse order of ISO language code:
+  \ pfa0 = pfa of the Interlingue word (IE)
   \ pfa1 = pfa of the Spanish word (ES)
   \ pfa2 = pfa of the Esperanto word (EO)
   \ pfa3 = pfa of the English word (EN)
@@ -54,7 +55,7 @@
   \ given name, and store the three cfa (cofe field
   \ addresses) of the given words into its own pfa:
 
-  <builds cfa , cfa , cfa ,
+  <builds cfa , cfa , cfa , cfa ,
 
   \ Second, define what the new word will do when executed:
   \ fetch from its pfa one of the three stored cfa depending on
@@ -69,42 +70,42 @@
   \ what is slow.
 
   \ XXX TODO update
-' es-option-0$ ' eo-option-0$ ' en-option-0$
+' ie-option-0$ ' es-option-0$ ' eo-option-0$ ' en-option-0$
   localized option-0$  ( -- ca len )
-' es-option-1$ ' eo-option-1$ ' en-option-1$
+' ie-option-1$ ' es-option-1$ ' eo-option-1$ ' en-option-1$
   localized option-1$  ( -- ca len )
-' es-option-3$ ' eo-option-3$ ' en-option-3$
+' ie-option-3$ ' es-option-3$ ' eo-option-3$ ' en-option-3$
   localized option-3$  ( -- ca len )
-' es-option-4$ ' eo-option-4$ ' en-option-4$
+' ie-option-4$ ' es-option-4$ ' eo-option-4$ ' en-option-4$
   localized option-4$  ( -- ca len )
 
 ( Localized menu options)
 
-' es-option-5$ ' eo-option-5$ ' en-option-5$
+' ie-option-5$ ' es-option-5$ ' eo-option-5$ ' en-option-5$
   localized option-5$  ( -- ca len )
-' es-option-6$ ' eo-option-6$ ' en-option-6$
+' ie-option-6$ ' es-option-6$ ' eo-option-6$ ' en-option-6$
   localized option-6$  ( -- ca len )
-' es-option-7$ ' eo-option-7$ ' en-option-7$
+' ie-option-7$ ' es-option-7$ ' eo-option-7$ ' en-option-7$
   localized option-7$  ( -- ca len )
 
 ( Localized texts)
 
-' es-instructions ' eo-instructions ' en-instructions
-localized (instructions)  ( -- )
+' ie-instructions ' es-instructions ' eo-instructions
+' en-instructions localized (instructions)  ( -- )
 
-' es-up$ ' eo-up$ ' en-up$
+' ie-up$ ' es-up$ ' eo-up$ ' en-up$
   localized up$  ( -- ca len )
-' es-down$ ' eo-down$ ' en-down$
+' ie-down$ ' es-down$ ' eo-down$ ' en-down$
   localized down$  ( -- ca len )
-' es-left$ ' eo-left$ ' en-left$
+' ie-left$ ' es-left$ ' eo-left$ ' en-left$
   localized left$  ( -- ca len )
-' es-right$ ' eo-right$ ' en-right$
+' ie-right$ ' es-right$ ' eo-right$ ' en-right$
   localized right$  ( -- ca len )
 
-' es-press-any-key$ ' eo-press-any-key$ ' en-press-any-key$
-localized press-any-key$  ( -- ca len )
+' ie-press-any-key$ ' es-press-any-key$ ' eo-press-any-key$
+' en-press-any-key$ localized press-any-key$  ( -- ca len )
 
-' es-do-stop$ ' eo-do-stop$ ' en-do-stop$
+' ie-do-stop$ ' es-do-stop$ ' eo-do-stop$ ' en-do-stop$
 localized do-stop$  ( -- ca len )
 
 ( Localized texts)
@@ -116,14 +117,15 @@ localized do-stop$  ( -- ca len )
   \ ' es-license$ ' eo-license$ ' en-license$
   \ localized license$  ( -- ca len )
 
-' es-'y' ' eo-'y' ' en-'y' localized 'y'  ( -- c )
+' ie-'y' ' es-'y' ' eo-'y' ' en-'y' localized 'y'  ( -- c )
 
-' es-quit-message ' eo-quit-message ' en-quit-message
-localized quit-message  ( -- )
+' ie-quit-message ' es-quit-message ' eo-quit-message
+' en-quit-message localized quit-message  ( -- )
 
-' es-on$ ' eo-on$ ' en-on$ localized on$  ( -- ca len )
+' ie-on$ ' es-on$ ' eo-on$ ' en-on$ localized on$ ( -- ca len )
 
-' es-off$ ' eo-off$ ' en-off$ localized off$  ( -- ca len )
+' ie-off$ ' es-off$ ' eo-off$ ' en-off$
+localized off$  ( -- ca len )
 
 ( Localized texts)
 
@@ -131,36 +133,36 @@ localized quit-message  ( -- )
   \ ' es-player$ ' eo-player$ ' en-player$
   \ localized player$  ( -- ca len )
 
-' es-human$ ' eo-human$ ' en-human$
+' ie-human$ ' es-human$ ' eo-human$ ' en-human$
 localized human$  ( -- ca len )
 
-' es-robot$ ' eo-robot$ ' en-robot$
+' ie-robot$ ' es-robot$ ' eo-robot$ ' en-robot$
 localized robot$  ( -- ca len )
 
-' es-pilot$ ' eo-pilot$ ' en-pilot$
+' ie-pilot$ ' es-pilot$ ' eo-pilot$ ' en-pilot$
 localized pilot$  ( -- ca len )
 
-' es-none$ ' eo-none$ ' en-none$
+' ie-none$ ' es-none$ ' eo-none$ ' en-none$
 localized none$  ( -- ca len )
 
-' es-pilot-help$ ' eo-pilot-help$ ' en-pilot-help$
-localized pilot-help$   ( -- ca len )
+' ie-pilot-help$ ' es-pilot-help$ ' eo-pilot-help$
+' en-pilot-help$ localized pilot-help$   ( -- ca len )
 
-' es-color-help$ ' eo-color-help$ ' en-color-help$
-localized color-help$   ( -- ca len )
+' ie-color-help$ ' es-color-help$ ' eo-color-help$
+' en-color-help$ localized color-help$   ( -- ca len )
 
 ( Localized texts)
 
-' es-version$ ' eo-version$ ' en-version$
+' ie-version$ ' es-version$ ' eo-version$ ' en-version$
 localized version$  ( -- ca len )
 
-' es-vehicle$ ' eo-vehicle$ ' en-vehicle$
+' ie-vehicle$ ' es-vehicle$ ' eo-vehicle$ ' en-vehicle$
 localized vehicle$  ( -- ca len )
 
-' es-color$ ' eo-color$ ' en-color$
+' ie-color$ ' es-color$ ' eo-color$ ' en-color$
 localized color$  ( -- ca len )
 
-' es-menu-help$ ' eo-menu-help$ ' en-menu-help$
+' ie-menu-help$ ' es-menu-help$ ' eo-menu-help$ ' en-menu-help$
 localized menu-help$  ( -- ca len )
 
 ( Conditional texts)
@@ -176,10 +178,10 @@ localized menu-help$  ( -- ca len )
 
 ( Texts that don't need translation)
 
-' es-license ' eo-license ' en-license
+' ie-license ' es-license ' eo-license ' en-license
 localized license  ( -- )
 
-' es-authors ' eo-authors ' en-authors
+' ie-authors ' es-authors ' eo-authors ' en-authors
 localized authors  ( -- )
 
   \ Print the version number.
@@ -192,7 +194,7 @@ localized authors  ( -- )
 : copyright  ( -- )
   ." Tron 0xF" cr version$ type space .version cr
       \ <------------------------------>
-  cr ." (C) 2015,2106 Marcos Cruz" cr
+  cr ." (C) 2015,2106,2020 Marcos Cruz" cr
      ." (programandala.net)"  ;
 
   \ The letter used to say "no", in the three languages.
