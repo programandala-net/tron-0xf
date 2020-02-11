@@ -1,6 +1,4 @@
-_dev
-_doc
-_fsb
-_meta
+_meta/
+000-info.txt
 tron_0xf.tar.gz
 tron_0xf.zip
