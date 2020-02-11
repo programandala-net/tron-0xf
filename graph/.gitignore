@@ -1,0 +1,4 @@
+*.tap
+!font.esperanto_characters.tap
+!font.spanish_characters.tap
+!font.tap

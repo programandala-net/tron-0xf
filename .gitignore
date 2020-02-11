@@ -2,7 +2,6 @@
 *.tap
 000-info.txt
 _meta/
-graph/*.tap
 tap/
 tron_0xf.tar.gz
 tron_0xf.zip
