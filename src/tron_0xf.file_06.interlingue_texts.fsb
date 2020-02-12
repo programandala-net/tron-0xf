@@ -121,11 +121,10 @@
 
 ( License )
 
-  \ The text is stored in screens 6 and 9 of the Forth RAM-disk.
-  \ XXX TODO 
+  \ The text is stored in screen 6 of the Forth RAM-disk.
+
 : ie-license  ( -- )
-  [ 6 disc-scr c/l 7 * + ] literal [ 8 c/l * ] literal type
-  [ 9 disc-scr c/l 13 * + ] literal [ 3 c/l * ] literal type  ;
+  [ 6 disc-scr c/l 7 * + ] literal [ 6 c/l * ] literal type ;
 
   -->
 

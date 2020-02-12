@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -103,43 +103,7 @@
   \ The text is stored in screen 5 of the Forth RAM-disk.
 
 : en-license  ( -- )
-  [ 5 disc-scr c/l + ] literal [ 11 c/l * ] literal type  ;
-
-  \ XXX OLD
-
-  \ : en-license  ( -- )
-
-  \   \  <------------------------------>
-  \   ." Tron 0xF is free software; you" cr
-  \   ." can redistribute it and/or" cr
-  \   ." modify it under the terms of the" cr
-  \   ." GNU General Public License as" cr
-  \   ." published by the Free Software" cr
-  \   ." Foundation; either version 3 of" cr
-  \   ." the License, or (at your option)" cr
-  \   ." any later version."  cr
-  \   \  <------------------------------>
-
-  \ -->
-
-  \ ( License -- part 2 )
-
-  \   \  <------------------------------>
-  \   ."   Tron 0xF is distributed in the"
-  \   ." hope that it will be useful, but" cr
-  \   ." WITHOUT ANY WARRANTY; without" cr
-  \   ." even the implied warranty of" cr
-  \   ." MERCHANTABILITY or FITNESS FOR" cr
-  \   ." A PARTICULAR PURPOSE. See the" cr
-  \   ." GNU General Public License for" cr
-  \   ." more details." cr
-  \   \  <------------------------------>
-  \   ."   You should have received a" cr
-  \   ." copy of the GNU General Public" cr
-  \   ." License along with Tron 0xF; if" cr
-  \   ." not, see:" cr
-  \   ." <http://gnu.org/licenses>."  ;
-  \   \  <------------------------------>
+  [ 5 disc-scr c/l + ] literal [ 6 c/l * ] literal type  ;
 
   -->
 

@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -42,9 +42,9 @@
   \ during the game), with the following map:
 
   \ screen 5:           license note in English
-  \                     license note in Esperanto (part 1)
-  \ screen 6:           license note in Esperanto (part 2)
-  \                     license note in Spanish (part 1)
+  \                     license note in Esperanto
+  \ screen 6:           license note in Spanish
+  \                     license note in Interlingue
   \ screen 7:           copy of arena attributes (640 bytes)
   \                     82 bytes free
   \                     keys table (200 bytes)
@@ -57,9 +57,7 @@
   \
   \ screen 9:           double height digits (160 bytes)
   \                     UDG (144 bytes)
-  \                     528 bytes free
-  \                     license note in Spanish (part 2) (192
-  \                     bytes)
+  \                     720 bytes free
   \
   \ screens 10 and 11:  graphic title (2048 bytes)
 
@@ -84,7 +82,7 @@
   \ #vim %substitute@Ŭ@\=nr2char(154)@g
   \ #vim %substitute@ŭ@\=nr2char(155)@g
 
-  \ Spanish letters and signs:
+  \ Spanish and Interlingue letters:
   \ #vim %substitute@Á@\=nr2char(144)@g
   \ #vim %substitute@á@\=nr2char(145)@g
   \ #vim %substitute@É@\=nr2char(146)@g
@@ -95,6 +93,8 @@
   \ #vim %substitute@ó@\=nr2char(151)@g
   \ #vim %substitute@Ú@\=nr2char(152)@g
   \ #vim %substitute@ú@\=nr2char(153)@g
+
+  \ Spanish letters and signs:
   \ #vim %substitute@Ü@\=nr2char(154)@g
   \ #vim %substitute@ü@\=nr2char(155)@g
   \ #vim %substitute@Ñ@\=nr2char(156)@g
@@ -235,62 +235,42 @@ modify it under the terms of theGNU General Public License as
 published by the Free Software  Foundation; either version 3 of
 the License, or (at your option)any later version.
   \ --------------------------->
-  Tron 0xF is distributed in thehope that it will be useful,
-but WITHOUT ANY WARRANTY; with- out even the implied warranty
-of MERCHANTABILITY or FITNESS   FOR A PARTICULAR PURPOSE. See
-the GNU General Public License  for more details.
-  \ --------------------------->
-  You should have received a    copy of the GNU General Public
-License along with Tron 0xF; if not, see:
+See the GNU General Public      License for more details:
 <http://gnu.org/licenses>.
   \ --------------------------->
 Tron 0xF estas libera; vi rajtasreliveri kaŭ modifi ĝin sub la
 kondiĉoj de la GNU-a Ĝenerala   Publika Permesilo, publikigita
 de Free Software Foundation     (Liber-Programara Fondaĵo), ĉu
 versio 3 de la permesilo aŭ, je via prefero, iu posta versio.
+  \ --------------------------->
+Vidu la GNU-an Ĝeneralan        Publikan Permesilon por pliaj
+detaloj:                        <http://gnu.org/licenses>.
+  \ --------------------------->
+
 ( License ) \ scr 6
-  \ --------------------------->
-  Tron 0xF estas distribuita kunespero ke ĝi utilu, sed SEN
-AJNA GARANTIO; eĉ sen implicita garantio de KOMERCEBLECO aŭ
-TAŬGECO POR PARTIKULARA CELO.   Vidu la GNU-an Ĝeneralan
-Publikan Permesilon por pliaj   detaloj.
-  \ --------------------------->
-  Vi devintus ricevi kopion de  la GNU-a Ĝenerala Publika
-Permesilo kun Tron 0xF; alikaze vidu <http://gnu.org/licenses>.
+
   \ --------------------------->
 Tron 0xF es libre; puedes       redistribuirlo y modificarlo
 bajo los términos de la LicenciaPública General GNU, publicada
 por Free Software Foundation    (Fundación para los programas
 libres), bien su versión 3 o, a tu criterio, otra posterior.
-  Tron 0xF se distribuye con la esperanza de que sea útil, pero
-SIN GARANTÍA ALGUNA; ni siquierala garantía implícita de ser
-COMERCIALIZABLE o APTO PARA un  OBJETIVO PARTICULAR. Para más
-detalles lee la Licencia PúblicaGeneral GNU.
+  \ --------------------------->
+Para más detalles lee la        Licencia Pública General GNU:
+<http://gnu.org/licenses>.
+  \ --------------------------->
+Tron 0xF es líber; vu posse     redistribuer e modificar it
+sub li conditiones del Licentie Publica General GNU, publicat
+de Free Software Foundation     (Fundation por li programmas
+líber), sive su version 3 o, je vor criterie, altri posteriori.
+  \ --------------------------->
+Por plu detallies, lee li       Licentie Publica General GNU:
+<http://gnu.org/licenses>.
+  \ --------------------------->
 
 ( ... ) \ screen 7
 
 ( ... ) \ screen 8
 
 ( ... ) \ screen 9
-
-  \ Note: Fake comments are added in order to make sure the
-  \ text occupies the last three lines of the screen.
-
-\ line 1
-\ line 2
-\ line 3
-\ line 4
-\ line 5
-\ line 6
-\ line 7
-\ line 8
-\ line 9
-\ line 10
-\ line 11
-\ line 12
-
-  Deberías haber recibido una   copia de la Licencia Pública
-General GNU junto con Tron 0xF; si no es así, léela en
-<http://gnu.org/licenses>.
 
   \ vim: filetype=abersoftforthafera

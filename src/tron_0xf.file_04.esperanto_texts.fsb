@@ -118,46 +118,10 @@
 
 ( License -- part 1 )
 
-  \ The text is stored in screens 5 and 6 of the Forth RAM-disk.
+  \ The text is stored in screen 5 of the Forth RAM-disk.
 
 : eo-license  ( -- )
-  [ 5 disc-scr c/l 12 * + ] literal [ 4 c/l * ] literal type
-  [ 6 disc-scr c/l + ] literal [ 6 c/l * ] literal type  ;
-
-  \ XXX OLD
-
-  \ : eo-license  ( -- )
-
-  \   \  <------------------------------>
-  \   ." Tron 0xF estas libera; vi rajtas"
-  \   ." reliveri kaŭ modifi ĝin sub la" cr
-  \   ." kondiĉoj de la GNU-a Ĝenerala" cr
-  \   ." Publika Permesilo, publikigita" cr
-  \   ." de Free Software Foundation" cr
-  \   ." (Liber-Programara Fondaĵo), ĉu" cr
-  \   ." versio 3 de la permesilo aŭ, je" cr
-  \   ." via prefero, iu posta versio." cr
-  \   \  <------------------------------>
-
-  \ -->
-
-  \ ( License -- part 2 )
-
-  \   \  <------------------------------>
-  \   ."   Tron 0xF estas distribuita kun"
-  \   ." espero ke ĝi utilu, sed SEN AJNA"
-  \   ." GARANTIO; eĉ sen implicita" cr
-  \   ." garantio de KOMERCEBLECO or" cr
-  \   ." TAŬGECO POR PARTIKULARA CELO." cr
-  \   ." Vidu la GNU-an Ĝeneralan" cr
-  \   ." Publikan Permesilon por pliaj" cr
-  \   ." detaloj." cr
-  \   \  <------------------------------>
-  \   ."   Vi devintus ricevi kopion de" cr
-  \   ." la GNU-a Ĝenerala Publika" cr
-  \   ." Permesilo kun Tron 0xF; alikaze" cr
-  \   ." vidu <http://gnu.org/licenses>."  ;
-  \   \  <------------------------------>
+  [ 5 disc-scr c/l 7 * + ] literal [ 6 c/l * ] literal type ;
 
   -->
 
