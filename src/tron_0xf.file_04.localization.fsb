@@ -1,0 +1,284 @@
+.( Tron 0xF: localization - 2nd part)
+
+\ tron_0xf.file_04.localization.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
+\ License: GPL 3
+
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
+
+  \ -----------------------------------------------------------
+
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDGs.
+
+  \ Spanish and Interlingue letters:
+  \
+  \ #vim %substitute@Á@\=nr2char(144)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \
+  \ Spanish letters and punctuation:
+  \
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
+  \
+  \ Esperanto letters:
+  \
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ -----------------------------------------------------------
+
+( English instructions )
+
+:noname ( -- )
+
+  \  <------------------------------>
+  ." Every player drives a vehicle" cr
+  ." whose only control makes it turn" cr
+  ." ninety degrees without decelera-"
+  ." tion. Every vehicle leaves a so-"
+  ." lid light trail behind." cr
+  ."   The goal of the game is to ma-"
+  ." ke your adversaries crash." cr
+  ."   There can be one, two or three"
+  ." vehicles, in any combination of" cr
+  ." human or robot pilots." cr
+  \  <------------------------------>
+
+-->
+
+( English instructions )
+
+  \  <------------------------------>
+  ."  Robots don't drive very inte-" cr
+  ." lligently, but they are very" cr
+  ." precise." cr
+  ."   The survivor gets one point." cr
+  ." Duels repeat forever. There are" cr
+  ." no extra lifes or final score." cr
+  ." You decide the conditions to" cr
+  ." quit." cr
+  ." To abort the game, press <Break>"
+  ." (<Caps Shift>+<Space>) and con-" cr
+  ." firm." cr ;
+  \  <------------------------------>
+
+localized (instructions) ( -- )
+
+-->
+
+( Keys )
+
+:noname ( -- ca len ) s" Infra:" ;
+:noname ( -- ca len ) s" Abajo:" ;
+:noname ( -- ca len ) s" Malsupren:" ;
+:noname ( -- ca len ) s" Down:" ;
+localized down$ ( -- ca len )
+
+:noname ( -- ca len ) s" Levul:" ;
+:noname ( -- ca len ) s" Izquierda:" ;
+:noname ( -- ca len ) s" Maldektren:" ;
+:noname ( -- ca len ) s" Left:" ;
+localized left$ ( -- ca len )
+
+:noname ( -- ca len ) s" Dextri:" ;
+:noname ( -- ca len ) s" Derecha:" ;
+:noname ( -- ca len ) s" Dekstren:" ;
+:noname ( -- ca len ) s" Right:" ;
+localized right$ ( -- ca len )  -->
+
+( Keys )
+
+:noname ( -- ca len ) s" Supra:" ;
+:noname ( -- ca len ) s" Arriba:" ;
+:noname ( -- ca len ) s" Supren:" ;
+:noname ( -- ca len ) s" Up:" ;
+localized up$ ( -- ca len )
+
+:noname ( -- ca len ) s" Presse un taste" ;
+:noname ( -- ca len ) s" Pulsa una tecla" ;
+:noname ( -- ca len ) s" Premu klavon" ;
+:noname ( -- ca len ) s" Press any key" ;
+localized press-any-key$ ( -- ca len )
+
+:noname ( -- c ) [char] Y ; dup
+:noname ( -- c ) [char] S ;
+:noname ( -- c ) [char] J ; rot
+  \ English=Interlingue
+localized 'y' ( -- c )
+
+char N constant 'n'  -->
+  \ The letter used to say "no", in the four languages.
+
+( Question and answers)
+
+:noname ( -- ca len ) s" Esque vu vole finir? (J/N)" ;
+:noname ( -- ca len ) s" ¿Quieres terminar? (S/N)" ;
+:noname ( -- ca len ) s" Ĉu vi volas fini? (J/N)" ;
+:noname ( -- ca len ) s" Do you want to stop? (Y/N)" ;
+localized do-stop$ ( -- ca len )
+
+:noname ( -- ca len ) s" Yes" ; dup
+:noname ( -- ca len ) s" Sí" ;
+:noname ( -- ca len ) s" Jes" ; rot
+  \ English=Interlingue
+localized on$ ( -- ca len )
+
+:noname ( -- ca len ) s" Ne" ;
+:noname ( -- ca len ) s" No" ; 2dup
+  \ Esperanto=Interlingue, English=Spanish
+localized off$ ( -- ca len )
+
+-->
+
+( Quit message; human)
+
+               \  <------------------------------>
+:noname ( -- ) ." Por luder ancor un vez: RUN" cr
+               ." Por surtir de Forth: BYE" cr ;
+               \  <------------------------------>
+:noname ( -- ) ." Para jugar otra vez: RUN" cr
+               ." Para salir de Forth: BYE" cr ;
+               \  <------------------------------>
+:noname ( -- ) ." Por reludi: RUN" cr
+               ." Por eliri el Fortho: BYE" cr ;
+               \  <------------------------------>
+:noname ( -- ) ." To play again: RUN" cr
+               ." To exit Forth: BYE" cr ;
+               \  <------------------------------>
+localized quit-message ( -- )
+
+:noname ( -- ca len ) s" Hom" ;
+:noname ( -- ca len ) s" Humano" ;
+:noname ( -- ca len ) s" Homo" ;
+:noname ( -- ca len ) s" Human" ;
+localized human$ ( -- ca len )
+
+-->
+
+( Robot, pilot, none)
+
+:noname ( -- ca len ) s" Robot" ; dup
+:noname ( -- ca len ) s" Roboto" ; over
+  \ Spanish=Interlingue=English
+localized robot$ ( -- ca len )
+
+:noname ( -- ca len ) s" Pilot" ; dup
+:noname ( -- ca len ) s" Piloto" ; dup rot
+  \ Esperanto=Spanish, English=Interlingue
+localized pilot$ ( -- ca len )
+
+:noname ( -- ca len ) s" Nequí" ;
+:noname ( -- ca len ) s" Nadie" ;
+:noname ( -- ca len ) s" Neniu" ;
+:noname ( -- ca len ) s" None" ;
+localized none$ ( -- ca len )
+
+-->
+
+( Help messages)
+
+:noname ( -- ca len ) s" H=hom R=robot N=nequí" 8 -none ;
+:noname ( -- ca len ) s" H=humano R=robot N=nadie" 8 -none ;
+:noname ( -- ca len ) s" H=homo R=roboto N=neniu" 8 -none ;
+:noname ( -- ca len ) s" H=human R=robot N=none" 7 -none ;
+localized pilot-help$  ( -- ca len )
+
+:noname ( -- ca len ) s" 1-7=color <Enter>=terminar" ; dup
+:noname ( -- ca len ) s" 1-7=koloro <Enter>=fini" ;
+:noname ( -- ca len ) s" 1-7=color <Enter>=finish" ;
+  \ Spanish=Interlingue
+localized color-help$  ( -- ca len )
+
+:noname ( -- ca len ) s" <Majuscules>+<Spacie>=surtir" ;
+:noname ( -- ca len ) s" <Mayúsculas>+<Espacio>=salir" ;
+:noname ( -- ca len ) s" <Majuskligo>+<Spaco>=eliri" ;
+:noname ( -- ca len ) s" <Caps Shift>+<Space>=exit" ;
+localized menu-help$ ( -- ca len )
+
+-->
+
+( Version, vehicle, color)
+
+:noname ( -- ca len ) s" Version" ;
+:noname ( -- ca len ) s" Versión" ;
+:noname ( -- ca len ) s" Versio" ;
+:noname ( -- ca len ) s" Version" ;
+localized version$ ( -- ca len )
+
+:noname ( -- ca len ) s" Vehicul:" ;
+:noname ( -- ca len ) s" Vehículo:" ;
+:noname ( -- ca len ) s" Veturilo:" ;
+:noname ( -- ca len ) s" Vehicle:" ;
+localized vehicle$ ( -- ca len )
+
+:noname ( -- ca len ) s" Color:" ; dup dup
+:noname ( -- ca len ) s" Koloro:" ;
+  \ English=Spanish=Interlingue
+localized color$ ( -- ca len )
+
+-->
+
+( Conditional texts)
+
+: human|robot|none$ ( -- ca len )
+  player-pilot @ case
+    human of  human$  endof
+    robot of  robot$  endof
+    none$ rot  \ default
+  endcase ;
+
+: on/off$ ( f -- ca len ) if  on$  else  off$  then ;
+
+  \ vim: filetype=abersoftforthafera

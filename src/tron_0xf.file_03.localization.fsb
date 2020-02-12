@@ -1,0 +1,267 @@
+.( Tron 0xF: localization - 1st part)
+
+\ tron_0xf.file_03.localization.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
+\ License: GPL 3
+
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
+
+  \ -----------------------------------------------------------
+
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDGs.
+
+  \ Spanish and Interlingue letters:
+  \
+  \ #vim %substitute@Á@\=nr2char(144)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \
+  \ Spanish letters and punctuation:
+  \
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
+  \
+  \ Esperanto letters:
+  \
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ -----------------------------------------------------------
+
+( localized )
+
+: localized ( cfa0 cfa1 cfa2 cfa3 "name" -- )
+
+  \ Create a word that will execute another word from a list of
+  \ four, depending on the current language.
+
+  \ Parameters are the parameter field addresses of the
+  \ localized versions, in reverse order of ISO language code:
+  \ cfa0 = cfa of the Interlingue word (IE)
+  \ cfa1 = cfa of the Spanish word (ES)
+  \ cfa2 = cfa of the Esperanto word (EO)
+  \ cfa3 = cfa of the English word (EN)
+
+  \ First, create a new word in the current dictionary with the
+  \ given name, and store the four given cfa (code field
+  \ addresses) into its own pfa:
+
+  <builds , , , ,
+
+  \ Second, define what the new word will do when executed:
+  \ fetch from its pfa one of the three stored cfa depending on
+  \ the current language, and execute it:
+
+  does> ( -- ) ( pfa ) lang >execute ;
+
+-->
+
+( Menu options)
+
+  \ XXX TODO Calculate the column to center every option and
+  \ store it into a table. Now it's calculated at run-time,
+  \ what is slow.
+
+:noname ( -- ca len ) s" Ne in Interlingue" ;
+:noname ( -- ca len ) s" No en español" ;
+:noname ( -- ca len ) s" Ne en Esperanto" ;
+:noname ( -- ca len ) s" Not in English" ;
+localized option-0$ ( -- ca len )
+
+:noname ( -- ca len ) s" Instructiones" ;
+:noname ( -- ca len ) s" Instrucciones" ;
+:noname ( -- ca len ) s" Instrukcioj" ;
+:noname ( -- ca len ) s" Instructions" ;
+localized option-1$ ( -- ca len )
+
+:noname ( -- ca len ) s" Son: " ;
+:noname ( -- ca len ) s" Sonido: " ;
+:noname ( -- ca len ) s" Sono: " ;
+:noname ( -- ca len ) s" Sound: " ;
+localized option-3$ ( -- ca len ) -->
+
+( Menu options)
+
+:noname ( -- ca len ) s" Configurar" ;
+:noname ( -- ca len ) s" Configurar" ;
+:noname ( -- ca len ) s" Konfiguri" ;
+:noname ( -- ca len ) s" Configure" ;
+localized option-4$ ( -- ca len )
+
+:noname ( -- ca len ) s" Comensar" ;
+:noname ( -- ca len ) s" Empezar" ;
+:noname ( -- ca len ) s" Eki" ;
+:noname ( -- ca len ) s" Start" ;
+localized option-5$ ( -- ca len )
+
+:noname ( -- ca len ) s" Pri" ;
+:noname ( -- ca len ) s" Acerca de" ;
+:noname ( -- ca len ) s" Prio" ;
+:noname ( -- ca len ) s" About" ;
+localized option-6$ ( -- ca len ) -->
+
+( Menu options)
+
+:noname ( -- ca len ) s" Surtir" ;
+:noname ( -- ca len ) s" Salir" ;
+:noname ( -- ca len ) s" Fini" ;
+:noname ( -- ca len ) s" Quit" ;
+localized option-7$ ( -- ca len ) -->
+
+( Interlingue instructions )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Chascun lusor chofera un vehicul"
+  ." con un controlator quel torna it" cr
+  ." ninant gradus sin frenar." cr
+  ." Li vehicules lassa pos ili self" cr
+  ." un mur solid de luce." cr
+  ."   Li scope del lude es far"
+  ." li concurrentes colider." cr
+  ."   1, 2 o 3 vehicules mey luder"
+  ." con pilotes robotic o human in" cr
+  ." qualcunc combination." cr
+  \  <------------------------------>
+
+-->
+
+( Interlingue instructions )
+
+  \  <------------------------------>
+  ."   Li robotes ne chofera tre"
+  ." inteligentmen, ma con mult" cr
+  ." precision." cr
+  ."   Li supervivente del duelle ga-"
+  ." nia un punctu. Li duelles repeti"
+  ." se sin fine. Ne hay vives ni lí-"
+  ." mite de punctuation. Vu decide" cr
+  ." li conditiones por terminar." cr
+  ."   Por surtir del lude presse li" cr
+  ." taste <Break> (<Majuscules>+" cr
+  ." <Spacie>) e confirma." cr ;
+  \  <------------------------------>
+
+-->
+
+( Spanish instructions )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Cada jugador conduce un vehículo"
+  ." cuyo único control lo hace girar" cr
+  ." noventa grados sin frenar." cr
+  ." Cada vehículo deja tras de sí" cr
+  ." una pared sólida de luz." cr
+  ."   El objetivo del juego es hacer"
+  ." estrellarse a los contrincantes." cr
+  ."   Puede haber de 1 a 3 vehículos"
+  ." con pilotos robots o humanos en" cr
+  ." cualquier combinación." cr
+  \  <------------------------------>
+
+-->
+
+( Spanish instructions )
+
+  \  <------------------------------>
+  ."   Los robots no conducen de for-"
+  ." ma muy inteligente, pero sí muy" cr
+  ." precisa." cr
+  ."   El superviviente del duelo ga-"
+  ." na un punto. Los duelos se suce-"
+  ." den sin fin. No hay vidas ni lí-"
+  ." mite de puntuación. Tú decides" cr
+  ." las condiciones para terminar." cr
+  ."   Para salir del juego pulsa la" cr
+  ." tecla <Break> (<Mayúsculas>+" cr
+  ." <Espacio>) y confirma." cr ;
+  \  <------------------------------>
+
+-->
+
+( Esperanto instructions )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Ĉiu ludanto kondukas veturilon" cr
+  ." kies nura stirilo ĝin turnas" cr
+  ." naŭdek gradojn sen malrapidiĝo." cr
+  ." Ĉiu veturilo postlasas solidan" cr
+  ." lumo-muron." cr
+  ."   La ludo-celo estas koliziigi" cr
+  ." la kontraŭulojn." cr
+  ."   Povas esti 1-3 veturiloj, kun" cr
+  ." ajna kombino de homaj kaj robo-" cr
+  ." taj kondukistoj." cr
+  \  <------------------------------>
+
+-->
+
+( Esperanto instructions )
+
+  \  <------------------------------>
+  ."   Robotoj veturas ne tre inteli-"
+  ." gente, sed ja tre precize." cr
+  ."   La pluvivanto ricevas unu po-" cr
+  ." enton. La dueloj pluas senĉese." cr
+  ." Ne estas kromvivoj aŭ finiga po-"
+  ." ento. Vi decidas la finigajn" cr
+  ." kondiĉojn." cr
+  ."  Por eliri el la ludo premu la" cr
+  ." klavon <Break> (<Majuskligo>+" cr
+  ." <Spaco>) kaj konfirmu." cr ;
+  \  <------------------------------>
+
+  \ vim: filetype=abersoftforthafera

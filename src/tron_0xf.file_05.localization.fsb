@@ -1,0 +1,188 @@
+.( Tron 0xF: localization - 3rd part)
+
+\ tron_0xf.file_05.localization.fsb
+
+\ This file is part of
+\ Tron 0xF
+\ A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+\ http://programandala.net/en.program.tron_0xf.html
+
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
+\ License: GPL 3
+
+  \ Tron 0xF is free software; you can redistribute it
+  \ and/or modify it under the terms of the GNU General Public
+  \ License as published by the Free Software Foundation;
+  \ either version 3 of the License, or (at your option) any
+  \ later version.
+  \
+  \ Tron 0xF is distributed in the hope that it will be
+  \ useful, but WITHOUT ANY WARRANTY; without even the implied
+  \ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  \ PURPOSE.  See the GNU General Public License for more
+  \ details.
+  \
+  \ You should have received a copy of the GNU General Public
+  \ License along with Tron 0xF; if not, see
+  \ <http://gnu.org/licenses>.
+
+  \ -----------------------------------------------------------
+
+  \ The author would be grateful for any constructive
+  \ suggestions and bug-reports, via
+  \ <http://programandala.net>.
+
+  \ -----------------------------------------------------------
+  \ fsb directives
+
+  \ The following '#vim' directives, processed by fsb,
+  \ translate the UTF-8 chars in this source file to ZX
+  \ Spectrum UDGs.
+
+  \ Spanish and Interlingue letters:
+  \
+  \ #vim %substitute@Á@\=nr2char(144)@g
+  \ #vim %substitute@á@\=nr2char(145)@g
+  \ #vim %substitute@É@\=nr2char(146)@g
+  \ #vim %substitute@é@\=nr2char(147)@g
+  \ #vim %substitute@Í@\=nr2char(148)@g
+  \ #vim %substitute@í@\=nr2char(149)@g
+  \ #vim %substitute@Ó@\=nr2char(150)@g
+  \ #vim %substitute@ó@\=nr2char(151)@g
+  \ #vim %substitute@Ú@\=nr2char(152)@g
+  \ #vim %substitute@ú@\=nr2char(153)@g
+  \
+  \ Spanish letters and punctuation:
+  \
+  \ #vim %substitute@Ü@\=nr2char(154)@g
+  \ #vim %substitute@ü@\=nr2char(155)@g
+  \ #vim %substitute@Ñ@\=nr2char(156)@g
+  \ #vim %substitute@ñ@\=nr2char(157)@g
+  \ #vim %substitute@¿@\=nr2char(158)@g
+  \ #vim %substitute@¡@\=nr2char(159)@g
+  \
+  \ Esperanto letters:
+  \
+  \ #vim %substitute@Ĉ@\=nr2char(144)@g
+  \ #vim %substitute@ĉ@\=nr2char(145)@g
+  \ #vim %substitute@Ĝ@\=nr2char(146)@g
+  \ #vim %substitute@ĝ@\=nr2char(147)@g
+  \ #vim %substitute@Ĥ@\=nr2char(148)@g
+  \ #vim %substitute@ĥ@\=nr2char(149)@g
+  \ #vim %substitute@Ĵ@\=nr2char(150)@g
+  \ #vim %substitute@ĵ@\=nr2char(151)@g
+  \ #vim %substitute@Ŝ@\=nr2char(152)@g
+  \ #vim %substitute@ŝ@\=nr2char(153)@g
+  \ #vim %substitute@Ŭ@\=nr2char(154)@g
+  \ #vim %substitute@ŭ@\=nr2char(155)@g
+
+  \ -----------------------------------------------------------
+
+( License)
+
+  \ The license is stored in the Forth RAM-disk.
+
+:noname ( -- )
+  [ 6 disc-scr c/l 7 * + ] literal [ 6 c/l * ] literal type ;
+:noname ( -- )
+  [ 6 disc-scr c/l + ] literal [ 6 c/l * ] literal type ;
+:noname ( -- )
+  [ 5 disc-scr c/l 7 * + ] literal [ 6 c/l * ] literal type ;
+:noname ( -- )
+  [ 5 disc-scr c/l + ] literal [ 6 c/l * ] literal type ;
+localized license ( -- )
+
+-->
+
+( Interlingue credits )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Code e picturas: Marcos Cruz." cr cr
+  ." Provas: Teo Albert e Irene" cr ." Albert." cr cr
+  ." Tipografie: Paul Howard (de" cr
+  ." FontBox I, 1995, public" cr
+  ." dominia)." cr cr
+  ." Scrit in Forth per Abersoft" cr
+  ." Forth (Melbourne House, 1983)." cr
+  ." e li biblioteca Afera (2015)."  cr cr
+  ." Plu detallies:" cr
+  ." <http://programandala.net/es.programa.tron_0xf.html>" ;
+  \  <------------------------------>
+
+-->
+
+( Spanish credits )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Código y gráficos: Marcos Cruz." cr cr
+  ." Pruebas: Teo Albert e Irene" cr ." Albert." cr cr
+  \ XXX TODO
+  ." Tipografía: Paul Howard (de" cr
+  ." FontBox I, 1995, dominio" cr
+  ." público)." cr cr
+  ." Escrito en Forth con Abersoft" cr
+  ." Forth (Melbourne House, 1983)." cr
+  ." y la biblioteca Afera (2015)."  cr cr
+  ." Más detalles:" cr
+  ." <http://programandala.net/es.programa.tron_0xf.html>" ;
+  \  <------------------------------>
+
+-->
+
+( Esperanto credits )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Kodo kaj grafikoj: Marcos Cruz." cr cr
+  ." Provado: Teo Albert kaj Irene" cr ." Albert." cr cr
+  \ XXX TODO
+  ." Tiparo: Paul Howard (el FontBox" cr
+  ." I, 1995, publika posedaĵo)." cr cr
+  ." Verkita en Fortho per Abersoft" cr
+  ." Forth (Melbourne House, 1983)" cr
+  ." kaj la biblioteko Afera (2015)." cr cr
+  ." Pliaj detaloj:" cr
+  ." <http://programandala.net/eo.programo.tron_0xf.html>" ;
+  \  <------------------------------>
+
+-->
+
+( English credits )
+
+:noname ( -- )
+  \  <------------------------------>
+  ." Code and graphics: Marcos Cruz." cr cr
+  ." Tests: Teo Albert and Irene" cr ." Albert." cr cr
+  \ XXX TODO
+  ." Font: Paul Howard (from FontBox" cr
+  ." I, 1995, public domain)." cr cr
+  ." Written in Forth with Abersoft" cr
+  ." Forth (Melbourne House, 1983)" cr
+  ." and the Afera library (2015)." cr cr
+  ." More details:" cr
+  ." <http://programandala.net/en.program.tron_0xf.html>" ;
+  \  <------------------------------>
+
+localized authors ( -- )
+
+-->
+
+( Display version, copyright )
+
+  \ Print the version number.
+: .version ( -- )
+  version-major 0 .r [char] . emit
+  version-minor 0 .r [char] . emit
+  version-patch 0 .r [char] + emit
+  version-release <# #s #> type ;
+
+: copyright ( -- )
+  ." Tron 0xF" cr version$ type space .version cr
+      \ <------------------------------>
+  cr ." (C) 2015,2106,2020 Marcos Cruz" cr
+     ." (programandala.net)" ;
+
+  \ vim: filetype=abersoftforthafera

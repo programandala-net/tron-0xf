@@ -55,10 +55,11 @@ vocabulary tron immediate  tron definitions
 
   \ Languages
 
- 3 constant langs  \ number of languages
+ 4 constant langs  \ number of languages
  0 constant en     \ English
  1 constant eo     \ Esperanto
  2 constant es     \ Spanish
+ 3 constant ie     \ Interlingue
 en value lang      \ current language
 
 3 constant max-players  \ maximum number of players
