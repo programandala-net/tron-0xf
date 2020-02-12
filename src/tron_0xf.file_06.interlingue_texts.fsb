@@ -40,7 +40,7 @@
   \ translate the UTF-8 chars in this source file to ZX
   \ Spectrum UDGs.
 
-  \ Spanish letters and signs:
+  \ Interlingue letters:
   \ #vim %substitute@Á@\=nr2char(144)@g
   \ #vim %substitute@á@\=nr2char(145)@g
   \ #vim %substitute@É@\=nr2char(146)@g
@@ -59,18 +59,17 @@
 ( Instructions -- part 1 )
 
 : ie-instructions  ( -- )
-  \ XXX TODO Translate.
   \  <------------------------------>
-  ." Cada jugador conduce un vehículo"
-  ." cuyo único control lo hace girar" cr
-  ." noventa grados sin frenar." cr
-  ." Cada vehículo deja tras de sí" cr
-  ." una pared sólida de luz." cr
-  ."   El objetivo del juego es hacer"
-  ." estrellarse a los contrincantes." cr
-  ."   Puede haber de 1 a 3 vehículos"
-  ." con pilotos robots o humanos en" cr
-  ." cualquier combinación." cr
+  ." Chascun lusor chofera un vehicul"
+  ." con un controlator quel torna it" cr
+  ." ninant gradus sin frenar." cr
+  ." Li vehicules lassa pos ili self" cr
+  ." un mur solid de luce." cr
+  ."   Li scope del lude es far"
+  ." li concurrentes colider." cr
+  ."   1, 2 o 3 vehicules mey luder"
+  ." con pilotes robotic o human in" cr
+  ." qualcunc combination." cr
   \  <------------------------------>
 
 -->
@@ -78,18 +77,17 @@
 ( Instructions -- part 2 )
 
   \  <------------------------------>
-  \ XXX TODO Translate.
-  ."   Los robots no conducen de for-"
-  ." ma muy inteligente, pero sí muy" cr
-  ." precisa." cr
-  ."   El superviviente del duelo ga-"
-  ." na un punto. Los duelos se suce-"
-  ." den sin fin. No hay vidas ni lí-"
-  ." mite de puntuación. Tú decides" cr
-  ." las condiciones para terminar." cr
-  ."   Para salir del juego pulsa la" cr
-  ." tecla <Break> (<Mayúsculas>+" cr
-  ." <Espacio>) y confirma." cr  ;
+  ."   Li robotes ne chofera tre"
+  ." inteligentmen, ma con mult" cr
+  ." precision." cr
+  ."   Li supervivente del duelle ga-"
+  ." nia un punctu. Li duelles repeti"
+  ." se sin fine. Ne hay vives ni lí-"
+  ." mite de punctuation. Vu decide" cr
+  ." li conditiones por terminar." cr
+  ."   Por surtir del lude presse li" cr
+  ." taste <Break> (<Majuscules>+" cr
+  ." <Spacie>) e confirma." cr  ;
   \  <------------------------------>
 
 -->
@@ -98,18 +96,17 @@
 
 : ie-quit-message  ( -- )
   \  <------------------------------>
-  ." Para jugar otra vez: RUN" cr
-  ." Para salir de Forth: BYE" cr  ;
+  ." Por luder ancor un vez: RUN" cr
+  ." Por surtir de Forth: BYE" cr  ;
   \  <------------------------------>
 
 : ie-authors  ( -- )
   \  <------------------------------>
   ." Code e picturas: Marcos Cruz." cr cr
   ." Provas: Teo Albert e Irene" cr ." Albert." cr cr
-  \ XXX TODO
   ." Tipografie: Paul Howard (de" cr
-  ." FontBox I, 1995, dominio" cr
-  ." público)." cr cr
+  ." FontBox I, 1995, public" cr
+  ." dominia)." cr cr
   ." Scrit in Forth per Abersoft" cr
   ." Forth (Melbourne House, 1983)." cr
   ." e li biblioteca Afera (2015)."  cr cr
