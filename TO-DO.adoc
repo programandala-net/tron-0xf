@@ -1,6 +1,6 @@
 = Tron 0xF To-Do
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-03
+:revdate: 2020-02-14
 
 .2015-07-05
 
@@ -36,8 +36,6 @@ used by the data init later, without wasting memory?  They have to be
 calculated.
 
 Improve: combine <score_digits.fs> and <udg.fs>, factoring the common code.
-
-Change: move the comments of one-liners below the definition?
 
 .2015-11-25:
 
@@ -81,3 +79,9 @@ Settings:
 
 Note: When radar is random (2 or 4 pixels range), the duels of 2
 robots are more even, but robots crash much easier.
+
+.2020-02-14:
+
+- Fix: Make the pilot tipe (human/robot) overwrite the previous one in
+  all languages, without making the trailing spaces flash.
+- Update the source style: spacing, position of comments, etc.
