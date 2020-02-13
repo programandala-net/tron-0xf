@@ -14,3 +14,5 @@
 *.tap linguist-vendored
 *.z80 binary
 *.z80 linguist-vendored
+*.zsf binary
+*.zsf linguist-vendored

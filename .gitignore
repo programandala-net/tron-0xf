@@ -1,7 +1,8 @@
-*.szx
 *.sna
-*.z80
+*.szx
 *.tap
+*.z80
+*.zsf
 000-info.txt
 _meta/
 tron_0xf.tar.gz
