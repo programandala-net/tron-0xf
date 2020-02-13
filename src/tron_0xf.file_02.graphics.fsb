@@ -120,7 +120,7 @@ eo-udg /eo-udg + constant es-udg  \ address
 digits-udg /digits-udg + constant udg0  \ address
 
   \ Addresses of the UDG sets.
-here: udg-set  udg0 , eo-udg , es-udg ,
+here: udg-set  udg0 , eo-udg , es-udg , es-udg ,
 
   \ Activate UDG set number _n_.
   \ 23675 is the system variable "UDG", that holds the address
