@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -79,11 +79,11 @@
   \ Set the ROM font:
 : -font  ( -- )  15360 font! ;
 
-  \ UDG set for the Esperanto letters.
+  \ UDG set with the Esperanto characters. 
 12 8 * constant /eo-udg  \ size in bytes
 font /font + constant eo-udg  \ address
 
-  \ UDG set for the Spanish letters and characters.
+  \ UDG set with the Spanish and Interlingue characters.
 18 8 * constant /es-udg  \ size in bytes
 eo-udg /eo-udg + constant es-udg  \ address
 
