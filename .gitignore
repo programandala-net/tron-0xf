@@ -1,4 +1,6 @@
 *.szx
+*.sna
+*.z80
 *.tap
 000-info.txt
 _meta/
