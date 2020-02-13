@@ -79,6 +79,8 @@
 
   \ -----------------------------------------------------------
 
+-->
+
 ( localized )
 
 : localized ( cfa0 cfa1 cfa2 cfa3 "name" -- )
@@ -168,9 +170,9 @@ localized option-7$ ( -- ca len ) -->
   ." ninant gradus sin frenar." cr
   ." Li vehicules lassa pos ili self" cr
   ." un mur solid de luce." cr
-  ."   Li scope del lude es far"
+  ."   Li scope del lude es far" cr
   ." li concurrentes colider." cr
-  ."   1, 2 o 3 vehicules mey luder"
+  ."   1, 2 o 3 vehicules mey luder" cr
   ." con pilotes robotic o human in" cr
   ." qualcunc combination." cr
   \  <------------------------------>
@@ -180,7 +182,7 @@ localized option-7$ ( -- ca len ) -->
 ( Interlingue instructions )
 
   \  <------------------------------>
-  ."   Li robotes ne chofera tre"
+  ."   Li robotes ne chofera tre" cr
   ." inteligentmen, ma con mult" cr
   ." precision." cr
   ."   Li supervivente del duelle ga-"
