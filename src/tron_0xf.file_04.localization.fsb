@@ -165,7 +165,7 @@ char N constant 'n'  -->
 
 ( Question and answers)
 
-:noname ( -- ca len ) s" Esque vu vole finir? (J/N)" ;
+:noname ( -- ca len ) s" Esque vu vole finir? (Y/N)" ;
 :noname ( -- ca len ) s" ¿Quieres terminar? (S/N)" ;
 :noname ( -- ca len ) s" Ĉu vi volas fini? (J/N)" ;
 :noname ( -- ca len ) s" Do you want to stop? (Y/N)" ;

@@ -141,10 +141,10 @@ localized option-3$ ( -- ca len ) -->
 :noname ( -- ca len ) s" Configure" ;
 localized option-4$ ( -- ca len )
 
-:noname ( -- ca len ) s" Comensar" ;
-:noname ( -- ca len ) s" Empezar" ;
-:noname ( -- ca len ) s" Eki" ;
-:noname ( -- ca len ) s" Start" ;
+:noname ( -- ca len ) s" Luder" ;
+:noname ( -- ca len ) s" Jugar" ;
+:noname ( -- ca len ) s" Ludi" ;
+:noname ( -- ca len ) s" Play" ;
 localized option-5$ ( -- ca len )
 
 :noname ( -- ca len ) s" Pri" ;
