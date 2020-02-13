@@ -89,8 +89,8 @@
   ." Every player drives a vehicle" cr
   ." whose only control makes it turn" cr
   ." ninety degrees without decelera-"
-  ." tion. Every vehicle leaves a so-"
-  ." lid light trail behind." cr
+  ." tion. The vehicles leave a solid"
+  ." light trail behind." cr
   ."   The goal of the game is to ma-"
   ." ke your adversaries crash." cr
   ."   There can be one, two or three"
@@ -103,8 +103,8 @@
 ( English instructions )
 
   \  <------------------------------>
-  ."  Robots don't drive very inte-" cr
-  ." lligently, but they are very" cr
+  ."   The robots don't drive very" cr
+  ." intelligently, but they are very"
   ." precise." cr
   ."   The survivor gets one point." cr
   ." Duels repeat forever. There are" cr
