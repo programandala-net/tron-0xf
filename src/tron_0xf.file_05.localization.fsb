@@ -184,7 +184,7 @@ localized authors ( -- )
 : copyright ( -- )
   ." Tron 0xF" cr version$ type space .version cr
       \ <------------------------------>
-  cr ." (C) 2015,2106,2020 Marcos Cruz" cr
+  cr ." (C) 2015,2016,2020 Marcos Cruz" cr
      ." (programandala.net)" ;
 
   \ vim: filetype=abersoftforthafera
