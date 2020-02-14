@@ -35,13 +35,16 @@
 VPATH = ./:src:lib
 MAKEFLAGS = --no-print-directory
 
+VERSION = $(shell grep version\# src/tron_0xf.file_01.data.fsb | sed -e "s/.\+s\" \(.\+\)+.\+/\1/")
+TARGET = target/tron_0xf_v$(VERSION)_compilable.tap
+
 .ONESHELL:
 
 .PHONEY: all
-all: tron_0xf_compiling.tap
+all: $(TARGET)
 
 clean:
-	rm -f tron_0xf_compiling.tap ; \
+	rm -f $(TARGET) ; \
 	rm -f tmp/*
 
 # ==============================================================
@@ -82,7 +85,7 @@ tmp/%.tap: src/%.fsb
 library_tapes=$(wildcard lib/*.tap)
 program_tapes=$(wildcard tmp/*.tap)
 
-tron_0xf_compiling.tap: \
+$(TARGET): \
 	$(library_tapes) \
 	$(program_tapes) \
 	tmp/score_digits.tap \
@@ -135,7 +138,7 @@ tron_0xf_compiling.tap: \
 		tmp/score_digits.tap \
 		tmp/udg.tap \
 		tmp/title.tap \
-		> tron_0xf_compiling.tap
+		> $(TARGET)
 
 # XXX -- Optional modules, for debugging
 #		lib/dot-s.tap \
@@ -173,7 +176,7 @@ tarball:
 		tron_0xf/lib/* \
 		tron_0xf/src/*.fsb \
 		tron_0xf/tron_0xf.szx \
-		tron_0xf/tron_0xf_compiling.* ; \
+		tron_0xf/$(TARGET) ; \
 	cd -
 
 zipball:
@@ -187,7 +190,7 @@ zipball:
 		tron_0xf/lib/* \
 		tron_0xf/src/*.fsb \
 		tron_0xf/tron_0xf.szx \
-		tron_0xf/tron_0xf_compiling.* ; \
+		tron_0xf/$(TARGET) ; \
 	cd -
 
 # ==============================================================
@@ -240,5 +243,6 @@ zipball:
 #
 # 2020-02-14: Update: remove <old>, which has been deleted, from the backups;
 # rename <tap> to <tmp>. Make all of the temporary TAP files in the <tmp>
-# directory.
+# directory. Add the current version (extracted from the sources) to the name
+# of the target file.
 
