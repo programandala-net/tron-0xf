@@ -169,9 +169,9 @@ localized option-7$ ( -- ca len ) -->
   ." un mur solid de luce." cr
   ."   Li scope del lude es far li" cr
   ." concurrentes colider." cr
-  ."   1, 2 o 3 vehicules mey luder" cr
-  ." con pilotes robotic o human in" cr
-  ." qualcunc combination." cr
+  ."   Un, du o tri vehicules posse" cr
+  ." luder con pilotes human o robo-" cr
+  ." tic in qualcunc combination." cr
   \  <------------------------------>
 
 -->
@@ -184,9 +184,9 @@ localized option-7$ ( -- ca len ) -->
   ." precision." cr
   ."   Li supervivente del duelle ga-"
   ." nia un punctu. Li duelles repeti"
-  ." se sin fine. Ne hay vives ni lí-"
-  ." mite de punctuation. Vu decide" cr
-  ." li conditiones por terminar." cr
+  ." se sin fine. Ne hay extra vives" cr
+  ." ni límite de punctuation. Vu de-"
+  ." cide li conditiones por finir." cr
   ."   Por surtir del lude presse li" cr
   ." taste <Break> (<Majuscules>+" cr
   ." <Spacie>) e confirma." cr ;

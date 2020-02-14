@@ -216,8 +216,8 @@ localized human$ ( -- ca len )
   \ Spanish=Interlingue=English
 localized robot$ ( -- ca len )
 
-:noname ( -- ca len ) s" Pilot" ; dup
-:noname ( -- ca len ) s" Piloto" ; dup rot
+:noname ( -- ca len ) s" Pilot:" ; dup
+:noname ( -- ca len ) s" Piloto:" ; dup rot
   \ Esperanto=Spanish, English=Interlingue
 localized pilot$ ( -- ca len )
 
