@@ -82,6 +82,4 @@ robots are more even, but robots crash much easier.
 
 .2020-02-14:
 
-- Fix: Make the pilot tipe (human/robot) overwrite the previous one in
-  all languages, without making the trailing spaces flash.
 - Update the source style: spacing, position of comments, etc.

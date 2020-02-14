@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -155,18 +155,22 @@ here: pilot-controls  \ table of cfa
 
 ( Config the pilot )
 
+  \ Move the cursor to the pilot of the current player.
+: at-pilot ( -- ) pilot-line player-col at ;
+
+  \ Erase the pilot of the current player.
+: erase-pilot  ( -- ) at-pilot 6 spaces  ;
+
   \ Print the pilot of the current player.
-: show-pilot  ( -- )
-  pilot-line player-col at  human|robot|none$ type  ;
+: show-pilot  ( -- ) at-pilot human|robot|none$ type  ;
 
 : player-controls  ( -- )
   \ Init every `player-control` with `player-pilot`;
   \ `player-pilot` holds the permanent type of pilot, while
   \ `player-control` holds a temporaray copy that may
   \ change during the game.
-  max-players 0 do
-    i player!  player-pilot @ player-control !
-  loop  ;
+  max-players 0 do i player!
+                   player-pilot @ player-control !  loop  ;
 
 : update-players  ( -- )
   \ Update the number of actual players,
@@ -177,7 +181,7 @@ here: pilot-controls  \ table of cfa
 
 : change-pilot  ( -- )
   \ Change the pilot of the current player.
-  pilot-help$ remark  1 flash show-pilot 0 flash
+  pilot-help$ remark  erase-pilot 1 flash show-pilot 0 flash
   pilot-control player-pilot !
   show-pilot  pilot-help$ -remark  ;
 

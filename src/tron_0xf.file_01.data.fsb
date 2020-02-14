@@ -39,7 +39,7 @@ forth definitions
 
 0 constant version-major
 1 constant version-minor
-1 constant version-patch  20200213. 2constant version-release
+1 constant version-patch  20200214. 2constant version-release
 
   \ Color constants
 
