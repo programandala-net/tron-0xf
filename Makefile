@@ -13,7 +13,7 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-# Last modified 202002142303.
+# Last modified 202002142320.
 # See change log at the end of the file.
 
 # ==============================================================
@@ -50,24 +50,24 @@ clean:
 # ==============================================================
 # Make TAP files from the graphics
 
-tmp/score_digits.tap: graph/score_digits.fs
-	cd graph ; \
+tmp/score_digits.tap: graphics/score_digits.fs
+	cd graphics ; \
 	gforth score_digits.fs -e bye ; \
 	bin2code score_digits.bin ../$@ ; \
 	rm -f score_digits.bin ; \
 	cd -
 
-tmp/udg.tap: graph/udg.fs
-	cd graph ; \
+tmp/udg.tap: graphics/udg.fs
+	cd graphics ; \
 	gforth udg.fs -e bye ; \
 	bin2code udg.bin ../$@ ; \
 	rm -f udg.bin ; \
 	cd -
 
-tmp/title.tap: graph/title.pbm
-	cd graph ; \
+tmp/title.tap: graphics/title.pbm
+	cd graphics ; \
 	pbm2scr title.pbm ; \
- 	head --bytes=2048 title.scr > title.bin ; \
+	head --bytes=2048 title.scr > title.bin ; \
 	bin2code title.bin ../$@ ; \
 	rm -f title.scr title.bin ; \
 	cd -
@@ -84,13 +84,13 @@ tmp/%.tap: src/%.fsb
 
 library_tapes=$(wildcard lib/*.tap)
 program_tapes=$(wildcard tmp/*.tap)
+graphic_tapes=$(wildcard graphics/*.tap) \
+	tmp/score_digits.tap tmp/udg.tap tmp/title.tap
 
 $(TARGET): \
 	$(library_tapes) \
 	$(program_tapes) \
-	tmp/score_digits.tap \
-	tmp/udg.tap \
-	tmp/title.tap
+	$(graphic_tapes)
 	for source in $$(ls -1 src/*.fsb) ; do \
 		make tmp/$$(basename $${source%%.fsb}).tap ; \
 	done ; \
@@ -132,9 +132,9 @@ $(TARGET): \
 		lib/qexit.tap \
 		lib/rdrop.tap \
 		tmp/tron_0xf.file_*.tap \
-		graph/font.tap \
-		graph/font.esperanto_characters.tap \
-		graph/font.spanish_characters.tap \
+		graphics/font.tap \
+		graphics/font.eo.tap \
+		graphics/font.es.tap \
 		tmp/score_digits.tap \
 		tmp/udg.tap \
 		tmp/title.tap \
@@ -142,21 +142,8 @@ $(TARGET): \
 
 # XXX -- Optional modules, for debugging
 #		lib/dot-s.tap \
-		lib/cswap.tap \
+#		lib/cswap.tap \
 #		lib/dump.tap \
-
-# ==============================================================
-# Backups
-
-backup:
-	tar -cJf backups/$$(date +%Y%m%d%H%M)_tron_0xf.tar.xz \
-		Makefile \
-		src/*.fsb \
-		graph/font.* \
-		graph/*.fs \
-		graph/*.pbm \
-		README.* \
-		tron_0xf.szx
 
 # ==============================================================
 # Archives for distribution
@@ -172,7 +159,7 @@ tarball:
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
 		tron_0xf/TO-DO.* \
-		tron_0xf/graph/* \
+		tron_0xf/graphics/* \
 		tron_0xf/lib/* \
 		tron_0xf/src/* \
 		tron_0xf/target/* ; \
@@ -185,7 +172,7 @@ zipball:
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
 		tron_0xf/TO-DO.* \
-		tron_0xf/graph/* \
+		tron_0xf/graphics/* \
 		tron_0xf/lib/* \
 		tron_0xf/src/* \
 		tron_0xf/target/* ; \
@@ -243,3 +230,4 @@ zipball:
 # rename <tap> to <tmp>. Make all of the temporary TAP files in the <tmp>
 # directory. Add the current version (extracted from the sources) to the names
 # of the target and archive files. Use directories <target> and <archives>.
+# Update the directory name <graph> to <graphics>. Remove the old "backup" rule.
