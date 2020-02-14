@@ -1,0 +1,119 @@
+= Pri Tron 0xF
+:author: Marcos Cruz (programandala.net)
+:revdate: 2020-02-14
+
+// This file is part of
+// Tron 0xF
+// A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+// http://programandala.net/es.programa.tron_0xf.html
+
+// Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are
+// preserved.  This file is offered as-is, without any
+// warranty.
+
+// -------------------------------------------------------------
+
+// Ti document es scrit in formate AsciiDoc/Asciidoctor
+// (http://asciidoctor.org).
+
+- link:README.adoc[English version]
+- link:README.eo.adoc[Esperanto-versio]
+- link:README.es.adoc[Versión en Español]
+
+== Description
+
+Tron 0xF es un simplic lude de tip Tron por ZX Spectrum (modelle con
+48 KiB o posteriori), con li sequent trates:
+
+. 1, 2 o 3 pilotes, in alquel combination de homes e robotes.
+. Li color del pilotes es configurabil.
+. Li tastes del pilotes homal es configurabil.
+. Quande alquel lusor es homal, chascun currida comensa per li unesim
+  pression de un taste. Quande omni lusores es robotes, li curridas
+  comensa automaticmen.
+. Li lude nequande fini. Quando li punctus de alquí es 999, ili
+  recomensa de null. Li homal lusores deve consentir li conditiones de
+  finition.
+
+Li instructiones del lude es includet in li programma.
+
+== Pri li code
+
+Tron 0xF es scrit in Abersoft Forth (un sistema fig-Forth 1.1
+adaptat a ZX Spectrum de John Jones Steele e publicat de Melbourne
+House in 1983), con partes del biblioteca Afera (Marcos Cruz,
+2015). Vu posse trovar plu detallies en li
+http://programandala.net/es.programa.tron_0xf.html[web-págine de Tron
+0xF].
+
+== Qualmen far functionar it
+
+Aperte li document <tron_0xf.szx> per vor favorit emulator de ZX
+Spectrum 48K.
+
+== Qualment crear li programma ex li font-documentes
+
+Si vu vole modificar li programma, vu deve sequer li sequent
+instructiones.
+Si vu solmen vole provar recrear it ex li original font-documentes,
+vu posse ear directmen al <<passu2, passu2 >>.
+
+=== Passu 1: Crear li document TAP
+
+Por converter li font-documentes (codal e pictural) a un document
+TAP usabil por Abersoft Forth, on deve haver pluri programmas installat
+(on posse vider plu detallies in li document link:Makefile[Makefile]):
+
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/es.programa.fsb.html[fsb]
+- head (parte de _GNU core utilities_)
+- http://programandala.net/es.programa.pbm2scr.html[pbm2scr]
+
+Tande inea li documentiere de Tron 0xF e usu li comande `make`.  Ti va
+crear crear li document <tron_0xf_compiling.tap>.
+
+[id=passu2]
+=== Passu 2: Interpreter li font-documentes
+
+Aperte li document <tron_0xf_compiling.tap> per vor emulator secun li
+metode ordinari.  It contene Abersoft Forth, sequet del
+font-documentes del biblioteca Afera e del programma.
+
+Du lansatores por li emulator Fuse es includet quam exemple:
+<tron_0xf_compiling_128_fuse.sh> e <tron_0xf_compiling_48_fuse.sh>, de
+queles li sol diferentie es li emulat modelle de ZX Spectrum, quo ne
+afecte li programma.
+
+
+Carga Abersoft Forth per li comande de BASIC `LOAD ""` (o per li menú
+de ZX Spectrum 128). Li ecran initial de Abersoft Forth va aparir.
+Tande usu li comande `LOADT 1 LOAD`. Li interpretation va durar circa
+13 minutes, secún li rapiditá original del ZX Spectrum. Finalment li
+programma va comensar.  Tande vu va posser usar vor emulator por
+conservar un copie del sistema in qualcunc formate, por exemple SZX,
+SNA, Z80.
+
+== Defectes conosset
+
+Li robotes es sat stult. Y provat pluri metodes por far les un poc plu
+habil sin lentisar li lude, ma yo ne ha atinget clar resultates.
+resultados claros.
+
+Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
+du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
+on vell dever programmar it per un rutine activat per interruptiones.
+
+Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene altri
+quelc altri coses minori, e alcun provas fat pri li robotes.
+
+Li defectes principal va esser corectet in un futur version ameliorat
+por ZX Spectrum 128, quel have un chip specific por li son, e
+http://programandala.net/es.programa.solo_forth.html[Solo Forth], quel
+es plu rapid e potent quam Abersoft Forth.
+

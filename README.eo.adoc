@@ -1,6 +1,6 @@
 = Pri Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-05
+:revdate: 2020-02-14
 
 // This file is part of
 // Tron 0xF
@@ -21,8 +21,9 @@
 // Ĉi dosiero estas verkita per formato AsciiDoc/Asciidoctor
 // (http://asciidoctor.org).
 
-Ĉi tiu dokumento legeblas ankaŭ en la link:README.adoc[angla] kaj la
-link:README.es.adoc[hispana].
+- link:README.adoc[English version]
+- link:README.es.adoc[Versión en Español]
+- link:README.ie.adoc[Version in Interlingue]
 
 == Priskribo
 
@@ -84,7 +85,7 @@ Afera kaj de la programo.
 Du lanĉiloj por la emulilo Fuse estas inkluditaj:
 <tron_0xf_compiling_128_fuse.sh> kaj
 <tron_0xf_compiling_48_fuse.sh>, kies nura diferenco estas la emulita
-modelo de Spectrum, kio neniel influas la programon.
+modelo de ZX Spectrum, kio neniel influas la programon.
 
 Enlegu Abersoft Forth per la BASIC-komando `LOAD ""` (aŭ per la menuo
 de ZX Spectrum 128).  Ĉe la salutekrano de Abersoft Forth tajpu la

@@ -1,6 +1,6 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2016-03-05
+:revdate: 2020-02-14
 
 // This file is part of
 // Tron 0xF
@@ -21,8 +21,9 @@
 // This file is written in AsciiDoc/Asciidoctor format
 // (http://asciidoctor.org).
 
-This document is available also in link:README.es.adoc[Spanish] and
-link:README.eo.adoc[Esperanto].
+- link:README.eo.adoc[Esperanto-versio]
+- link:README.es.adoc[Versión en Español]
+- link:README.ie.adoc[Version in Interlingue]
 
 == Description
 
@@ -80,7 +81,7 @@ Abersoft Forth, followed by the Afera library and program sources.
 
 Two launchers for the Fuse emulator are provided as example:
 <tron_0xf_compiling_128_fuse.sh> and <tron_0xf_compiling_48_fuse.sh>,
-the only difference being the emulated Spectrum model, which doesn't
+the only difference being the emulated ZX Spectrum model, which doesn't
 affect the program.
 
 Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
