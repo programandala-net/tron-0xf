@@ -13,7 +13,7 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-# Last modified 202002142049.
+# Last modified 202002142303.
 # See change log at the end of the file.
 
 # ==============================================================
@@ -159,38 +159,36 @@ backup:
 		tron_0xf.szx
 
 # ==============================================================
-# Packages for distribution
+# Archives for distribution
 
-.PHONEY: packages
-packages: tarball zipball
+.PHONEY: archives
+archives: tarball zipball
 
 tarball:
 	cd .. ; \
 	tar \
-		-czf tron_0xf/tron_0xf.tar.gz \
+		-czf tron_0xf/archives/tron_0xf_$(VERSION).tar.gz \
 		tron_0xf/LICENSE.txt \
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
 		tron_0xf/TO-DO.* \
 		tron_0xf/graph/* \
 		tron_0xf/lib/* \
-		tron_0xf/src/*.fsb \
-		tron_0xf/tron_0xf.szx \
-		tron_0xf/$(TARGET) ; \
+		tron_0xf/src/* \
+		tron_0xf/target/* ; \
 	cd -
 
 zipball:
 	cd .. ; \
-	zip -9 tron_0xf/tron_0xf.zip \
+	zip -9 tron_0xf/archives/tron_0xf_$(VERSION).zip \
 		tron_0xf/LICENSE.txt \
 		tron_0xf/Makefile \
 		tron_0xf/README.* \
 		tron_0xf/TO-DO.* \
 		tron_0xf/graph/* \
 		tron_0xf/lib/* \
-		tron_0xf/src/*.fsb \
-		tron_0xf/tron_0xf.szx \
-		tron_0xf/$(TARGET) ; \
+		tron_0xf/src/* \
+		tron_0xf/target/* ; \
 	cd -
 
 # ==============================================================
@@ -243,6 +241,5 @@ zipball:
 #
 # 2020-02-14: Update: remove <old>, which has been deleted, from the backups;
 # rename <tap> to <tmp>. Make all of the temporary TAP files in the <tmp>
-# directory. Add the current version (extracted from the sources) to the name
-# of the target file.
-
+# directory. Add the current version (extracted from the sources) to the names
+# of the target and archive files. Use directories <target> and <archives>.
