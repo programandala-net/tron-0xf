@@ -183,7 +183,7 @@ here: pilot-controls  \ table of cfa
   \ Change the pilot of the current player.
   pilot-help$ remark  erase-pilot 1 flash show-pilot 0 flash
   pilot-control player-pilot !
-  show-pilot  pilot-help$ -remark  ;
+  erase-pilot show-pilot  pilot-help$ -remark  ;
 
 ( Config the keys )
 

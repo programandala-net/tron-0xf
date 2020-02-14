@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -116,7 +116,7 @@ here: colors$ 8 c,
   \ Show the pilot menu.
   \ f = active pilot menu?
   pilot-menu-headers  max-players 0 do
-    i player! show-pilot show-color
+    i player! erase-pilot show-pilot show-color
     human? if  show-keys  else  hide-keys  then  loop  ;
 
 ( Sound option; pilot configuration )
