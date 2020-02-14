@@ -84,11 +84,6 @@ Abre el fichero <tron_0xf_compiling.tap> con tu emulador de la forma
 habitual. Contiene Abersoft Forth, seguido de las fuentes de la
 biblioteca Afera y del programa.
 
-Como ejemplo se incluyen dos lanzadores para el emulador Fuse:
-<tron_0xf_compiling_128_fuse.sh> y <tron_0xf_compiling_48_fuse.sh>,
-cuya única diferencia es el modelo de ZX Spectrum emulado, lo que no
-afecta al programa.
-
 Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú
 de ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.  A
 continuación teclea el comando `LOADT 1 LOAD`. La interpretación

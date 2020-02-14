@@ -77,12 +77,7 @@ That will create the file <tron_0xf_compiling.tap>.
 === Step 2: Interpret the sources
 
 Open <tron_0xf_compiling.tap> normally with your emulator. It contains
-Abersoft Forth, followed by the Afera library and program sources.
-
-Two launchers for the Fuse emulator are provided as example:
-<tron_0xf_compiling_128_fuse.sh> and <tron_0xf_compiling_48_fuse.sh>,
-the only difference being the emulated ZX Spectrum model, which doesn't
-affect the program.
+Abersoft Forth, followed by the Afera library and the program sources.
 
 Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
 menu of the ZX Spectrum 128).  You will see the start screen of

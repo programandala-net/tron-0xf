@@ -85,12 +85,6 @@ Aperte li document <tron_0xf_compiling.tap> per vor emulator secun li
 metode ordinari.  It contene Abersoft Forth, sequet del
 font-documentes del biblioteca Afera e del programma.
 
-Du lansatores por li emulator Fuse es includet quam exemple:
-<tron_0xf_compiling_128_fuse.sh> e <tron_0xf_compiling_48_fuse.sh>, de
-queles li sol diferentie es li emulat modelle de ZX Spectrum, quo ne
-afecte li programma.
-
-
 Carga Abersoft Forth per li comande de BASIC `LOAD ""` (o per li menú
 de ZX Spectrum 128). Li ecran initial de Abersoft Forth va aparir.
 Tande usu li comande `LOADT 1 LOAD`. Li interpretation va durar circa

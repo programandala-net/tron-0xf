@@ -82,11 +82,6 @@ Malfermu normale la dosieron <tron_0xf_compiling.tap> per via emulilo.
 Ĝi enhavas unue Abersoft Forth, kaj poste la fontojn de la biblioteko
 Afera kaj de la programo.
 
-Du lanĉiloj por la emulilo Fuse estas inkluditaj:
-<tron_0xf_compiling_128_fuse.sh> kaj
-<tron_0xf_compiling_48_fuse.sh>, kies nura diferenco estas la emulita
-modelo de ZX Spectrum, kio neniel influas la programon.
-
 Enlegu Abersoft Forth per la BASIC-komando `LOAD ""` (aŭ per la menuo
 de ZX Spectrum 128).  Ĉe la salutekrano de Abersoft Forth tajpu la
 ordonon `LOADT 1 LOAD`.  La interpretado daŭros pli malpi 13 minutojn
