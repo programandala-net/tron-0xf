@@ -6,7 +6,7 @@
 
 # http://programandala.net/en.program.tron_0xf.html
 
-# Copyright (C) 2015, 2016 Marcos Cruz (programandala.net)
+# Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 
 # Copying and distribution of this file, with or without modification, are
 # permitted in any medium without royalty provided the copyright notice and
@@ -149,8 +149,7 @@ backup:
 		graph/*.fs \
 		graph/*.pbm \
 		README.* \
-		tron_0xf.szx \
-		old/*
+		tron_0xf.szx
 
 # ##############################################################
 # Packages for distribution
@@ -234,4 +233,6 @@ zipball:
 # 2016-02-03: Fixed the tarball recipe: <tron_0xf_compiling.*> was missing.
 #
 # 2016-03-02: Added <TO-DO.adoc>.
+#
+# 2020-02-14: Update: remove <old>, which has been deleted, from the backups.
 
