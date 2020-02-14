@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -35,123 +35,121 @@
 
   \ -----------------------------------------------------------
 
+0 value caps-shift-key
   \ `caps-shift-key` will be updated later with the address of
   \ the Caps Shift key in the keys table. It is used to prevent
   \ this key from being chosen in the configuration menu, in
   \ order to make it impossible to press the Break key (Caps
   \ Shift + 1 or Caps Shift + Space) unintentionally during the
   \ game.
-0 value caps-shift-key
 
 2 6 thru
 
 ( y/n input )
 
+: y/n? ( c -- f ) dup 'y' = swap 'n' = or ;
   \ Is the given (uppercase) char c
   \ a valid answer for a y/n question?
-: y/n?  ( c -- f )  dup 'y' = swap 'n' = or  ;
 
-: y/n  ( -- c )
+: y/n ( -- c ) begin  akey upperc dup y/n? 0=
+               while  drop
+               repeat key-sound ;
   \ Wait for a valid key press for a y/n question
   \ and return its code.
-  begin  akey upperc dup y/n? 0=  while  drop  repeat
-  key-sound  ;
 
+: no? ( -- f ) y/n 'n' = ;
   \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "N" or "n"?
   \ (or the correspondent letters in the current language).
-: no?  ( -- f )  y/n 'n' =  ;
 
+: yes? ( -- f ) y/n 'y' = ;
   \ Wait for a valid key press for a y/n question
   \ and return a flag: Was it "Y" or "y"?
   \ (or the correspondent letters in the current language).
-: yes?  ( -- f )  y/n 'y' =  ;
 
 ( Keyboard messages and prompts )
 
-: wait-any-key  ( -- )  500 ms  akey drop key-sound  ;
+: wait-any-key ( -- ) 500 ms  akey drop key-sound ;
 
+: press-any-key ( -- ) press-any-key$ remark wait-any-key ;
   \ Print "press any key" in the current language
   \ and wait for a key press.
-: press-any-key  ( -- )  press-any-key$ remark wait-any-key  ;
 
+: more ( -- ) reveal-contents press-any-key wipe-contents ;
   \ Wait for a key press and prepare the screen
   \ for a new contents page.
-: more  ( -- )  reveal-contents press-any-key wipe-contents  ;
 
 ( keys table )
 
 40 constant #keys   \ number of keys of ZX Spectrum
  5 constant /key    \ bytes per key in the table
 
-  \ Calculate the address of the `keys` table, in screen 7 of
-  \ the Forth RAM-disk, before the players data:
 8 disc-scr /players-data - #keys /key * - constant keys
-
+  \ Address of the `keys` table, in screen 7 of
+  \ the Forth RAM-disk, before the players data.
+  \
   \ The `keys` table is initialized in the last RAM-disk loaded
   \ from tape.
-
+  \
   \ Every element of the `keys` table
   \ has the following structure:
-
+  \
   \ +0 = port of the keyboard row (2 bytes)
   \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
   \ +4 = key name (1 byte), an ASCII character or an UDG
-
-  \ Keys are identified by their absolute address in the table.
   \
+  \ Keys are identified by their absolute address in the table.
+
+: key-name ( a -- c ) 4 + c@ ;
   \ Convert a key address to its key name character.
   \ Note: `graph-udg` must be used before printing it
   \ (and `lang-udg` after) because some key names use UDG.
   \ a = key address in the `keys` table
-: key-name  ( a -- c )  4 + c@  ;
 
 ( pressed? pressed|break )
 
-: pressed?  ( a -- f )
+: pressed? ( a -- f ) 2@ inp and 0= ;
   \ Is a key pressed?
   \ a = key address in the `keys` table
-  2@ inp and 0=  ;
 
-;S  \ ignore the rest of the screen
+;S \ ignore the rest of the screen
 
   \ XXX OLD -- not used any more
 
-: (pressed|break)  ( -- a tf | ff tf | ff )
+: (pressed|break) ( -- a tf | ff tf | ff )
+  false \ default
+  [ keys #keys /key * bounds swap ] literal literal do
+    ?terminal if  true unloop exit  then
+    i pressed? if  drop i true unloop exit  then
+  /key +loop ;
   \ Check all keys.
   \ If a key is pressed, return its address in the `keys` table
   \ and a true flag; if "Break" is pressed, return a false flag
   \ and a true flag; else return a false flag.
-  false  \ default
-  [ keys #keys /key * bounds swap ] literal literal do
-    ?terminal if  true unloop exit  then
-    i pressed? if  drop i true unloop exit  then
-  /key +loop  ;
 
-: pressed|break  ( -- a | ff )
+: pressed|break ( -- a | ff )
+  begin  (pressed|break)  until ;
   \ Check all keys forever until one of them,
   \ or the "Break" key, is pressed.
   \ If a valid key was pressed, return its address
   \ in the `keys` table; if the "Break" key was pressed,
   \ return a false flag.
   \ a = address in the `keys` table
-  begin  (pressed|break)  until  ;
 
 ( pressed )
 
-: (pressed)  ( -- a tf | ff )
+: (pressed) ( -- a tf | ff )
+  false \ default
+  [ keys #keys /key * bounds swap ] literal literal do
+    i pressed? if  drop i true unloop exit  then
+  /key +loop ;
   \ Check all keys.
   \ If a key is pressed, return its address in the `keys` table
   \ and a true flag; else return a false flag.
   \ a = address of the pressed key in the `keys` table
-  false  \ default
-  [ keys #keys /key * bounds swap ] literal literal do
-    i pressed? if  drop i true unloop exit  then
-  /key +loop  ;
 
-: pressed  ( -- a )
+: pressed ( -- a ) begin (pressed) until ;
   \ Check all keys forever until one of them is pressed.
   \ a = address of the pressed key in the `keys` table
-  begin  (pressed)  until  ;
 
   \ vim: filetype=abersoftforthafera

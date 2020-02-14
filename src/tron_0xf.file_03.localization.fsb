@@ -84,28 +84,25 @@
 ( localized )
 
 : localized ( cfa0 cfa1 cfa2 cfa3 "name" -- )
-
+  <builds , , , ,
+  does> ( -- ) ( pfa ) lang >execute ;
   \ Create a word that will execute another word from a list of
   \ four, depending on the current language.
-
+  \
   \ Parameters are the parameter field addresses of the
   \ localized versions, in reverse order of ISO language code:
   \ cfa0 = cfa of the Interlingue word (IE)
   \ cfa1 = cfa of the Spanish word (ES)
   \ cfa2 = cfa of the Esperanto word (EO)
   \ cfa3 = cfa of the English word (EN)
-
-  \ First, create a new word in the current dictionary with the
-  \ given name, and store the four given cfa (code field
-  \ addresses) into its own pfa:
-
-  <builds , , , ,
-
-  \ Second, define what the new word will do when executed:
-  \ fetch from its pfa one of the three stored cfa depending on
-  \ the current language, and execute it:
-
-  does> ( -- ) ( pfa ) lang >execute ;
+  \
+  \ First, use `<builds` to create a new word in the current
+  \ dictionary with the given name, and store the four given
+  \ cfa (code field addresses) into its own pfa:
+  \
+  \ Second, use `does>` to define what the new word will do
+  \ when executed: fetch from its pfa one of the three stored
+  \ cfa depending on the current language, and execute it:
 
 -->
 

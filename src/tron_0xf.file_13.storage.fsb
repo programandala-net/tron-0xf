@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -113,17 +113,17 @@ tron definitions
 ( Load fonts, UDG sets and graphic title )
 
 +scroll
-font /font 0 0 <tape              \ main font
+font /font 0 0 <tape             \ main font
 +scroll
-eo-udg /eo-udg 0 0 <tape          \ Esperanto characters
+eo-udg /eo-udg 0 0 <tape         \ Esperanto characters
 +scroll
-es-udg /es-udg 0 0 <tape          \ Spanish characters
+es-udg /es-udg 0 0 <tape         \ Spanish characters
 +scroll
-digits-udg /digits-udg 0 0 <tape  \ double height digits
+digits-udg /digits-udg 0 0 <tape \ double height digits
 +scroll
-udg0 0 0 0 <tape                  \ frame graphs
+udg0 0 0 0 <tape                 \ frame graphs
 +scroll
-title-address 0 0 0 <tape         \ graphic title
+title-address 0 0 0 <tape        \ graphic title
 +scroll
 
 -->
@@ -137,27 +137,12 @@ title-address 0 0 0 <tape         \ graphic title
   \ +2 = bitmask of the key (2 bytes, but only the LSB is used)
   \ +4 = key name (1 byte), an ASCII character or an UDG
 
+: k,  ( c n1 n2 -- )  , , c, ;
   \ Temporary word to compile the data of a key.
-: k,  ( c n1 n2 -- )  , , c,  ;
+  \
   \ c = key name (1 byte), an ASCII character or an UDG
   \ n1 = bitmask of the key (2 bytes, but only the LSB is used)
   \ n2 = port of the keyboard row (2 bytes)
-
-  \ The dictionary pointer is changed temporarily in order to
-  \ compile the data into `keys` without using specific code.
-
-  \ The keyboard rows are compiled in the following order:
-  \ Row 1-5
-  \ Row Q-T
-  \ Row A-G
-  \ Row CS-V  (0x98 = UDG for Caps Shift)
-  \ Row 0-6
-  \ Row P-Y
-  \ Row Enter-H (0x99 = UDG for Enter)
-  \ Row Space-B (0x9A = UDG for Space; 0x9B for Symbol Shift)
-
-  \ The address of Caps Shift is stored in `caps-shift-key`
-  \ because it's needed by the configuration menu.
 
 here  keys dp !  hex char 1 01 F7FE k, char 2 02 F7FE k, char 3
 04 F7FE k, char 4 08 F7FE k, char 5 10 F7FE k, char Q 01 FBFE
@@ -172,11 +157,25 @@ char Y 10 DFFE k, 99 01 BFFE k, char L 02 BFFE k, char K 04
 BFFE k, char J 08 BFFE k, char H 10 BFFE k, 9A 01 7FFE k,
 9B 02 7FFE k, char M 04 7FFE k, char N 08 7FFE k, char B 10
 7FFE k,
-
-  \ Restore the dictionary pointer and forget the useless
-  \ `key,`.
+  \ The dictionary pointer is changed temporarily in order to
+  \ compile the data into `keys` without using specific code.
+  \
+  \ The keyboard rows are compiled in the following order:
+  \ Row 1-5
+  \ Row Q-T
+  \ Row A-G
+  \ Row CS-V  (0x98 = UDG for Caps Shift)
+  \ Row 0-6
+  \ Row P-Y
+  \ Row Enter-H (0x99 = UDG for Enter)
+  \ Row Space-B (0x9A = UDG for Space; 0x9B for Symbol Shift)
+  \
+  \ The address of Caps Shift is stored in `caps-shift-key`
+  \ because it's needed by the configuration menu.
 
 dp !  forget k,  decimal -->
+  \ Restore the dictionary pointer and forget the useless
+  \ `key,`.
 
 ( Init the players data, then boot )
 
@@ -186,32 +185,32 @@ robot pilot0 !  robot control0 !  yellow color0 !
 human pilot1 !  human control1 !   green color1 !
 robot pilot2 !  robot control2 !    cyan color2 !
 
+: key#>a  ( n -- a )  /key * keys + ;
   \ Temporary word to convert a key number to its address.
-: key#>a  ( n -- a )  /key * keys +  ;
 
   \ The player keys could be initialized during the compilation
   \ of the keyboard table above, by storing the dictionary
   \ pointer into the correspondent player variable, but it
   \ looks cleaner this way.
 
-  \ Player 0 default keys: 1=left, 2=right, 3=up, 4=down
-  \ (Sinclair joystick)
 0 key#>a left-k0 !  1 key#>a right-k0 !
 2 key#>a up-k0 !    3 key#>a down-k0 !
+  \ Player 0 default keys: 1=left, 2=right, 3=up, 4=down
+  \ (Sinclair joystick).
 
-  \ Player 1 default keys: 5=left, 6=down, 7=up, 8=right
-  \ (cursor keys)
  4 key#>a left-k1 !  22 key#>a right-k1 !
 23 key#>a up-k1 !    24 key#>a down-k1 !
+  \ Player 1 default keys: 5=left, 6=down, 7=up, 8=right
+  \ (cursor keys).
 
-  \ Player 2 default keys: K=left, B=up, M=down, X=right
-  \ (central bottom keys on a Dvorak keyboard layout)
 32 key#>a left-k2 !  17 key#>a right-k2 !
 39 key#>a up-k2 !    37 key#>a down-k2 !
+  \ Player 2 default keys: K=left, B=up, M=down, X=right
+  \ (central bottom keys on a Dvorak keyboard layout).
 
 forget key#>a
 
-  \ Stop loading and boot
+  \ Stop loading and boot:
 
   \ After the binary files have been loaded into the RAM-disk,
   \ and the other data has been stored into it, the loader must

@@ -37,12 +37,10 @@
 
 forth definitions
 
-  \ Version number
+: version#$ ( -- ca len ) s" 0.1.1+202002141759" ;
+  \ Version number.
 
-: version#$ ( -- ca len ) s" 0.1.1+202002141537" ;
-
-  \ Color constants
-
+  \ Color constants:
 0 constant black  2 constant red     4 constant green
 5 constant cyan   6 constant yellow  7 constant white
 
@@ -52,8 +50,7 @@ forth definitions
 
 vocabulary tron immediate  tron definitions
 
-  \ Languages
-
+  \ Languages:
  4 constant langs  \ number of languages
  0 constant en     \ English
  1 constant eo     \ Esperanto
@@ -93,35 +90,30 @@ defer (robot)  ' (robot) cfa constant robot
 17 cells constant /player-data \ bytes per player data
 
 /player-data max-players * constant /players-data
-  \ /players-data buffer: players-data \ XXX OLD
 
-  \ The players data are stored at the end of screen 7
-  \ of the Forth RAM-disk:
 8 disc-scr /players-data - constant players-data
-
-  \ players-data /players-data erase \ XXX OLD
-
-  \ Pointers to the data of every player.
+  \ The players data are stored at the end of screen 7
+  \ of the Forth RAM-disk.
 
 players-data constant player0-data
 player0-data /player-data + constant player1-data
 player1-data /player-data + constant player2-data
+  \ Pointers to the data of every player.
 
-  \ Table to access the players' data addresses.
 here: player#-data player0-data , player1-data , player2-data ,
+  \ Table to access the players' data addresses.
 
-: player#-variable  ( field player "name" -- )
-
+: player#-variable ( field player "name" -- )
+  /player-data * players-data +  \ player data address
+  swap cells + constant ;
   \ Create a player# variable.
-
+  \
   \ A player# variable is a constant that points to a data
   \ field of a specific player. This way it works like an
   \ ordinary variable, but the player data can be manipulated
   \ also as a whole (e.g. store and fetch the coordinates with
   \ double numbers, for speed; erase the whole zone, etc.).
 
-  /player-data * players-data +  \ player data address
-  swap cells + constant  ;
 
 ( Player 0 data fields)
 
@@ -199,28 +191,25 @@ yinc2 constant incs2
 
 ( Current player's data fields )
 
-  \ Number of the current player (0..2).
 0 value player
+  \ Number of the current player (0..2).
 
-  \ Address of the current player's data.
 player0-data value player-data
+  \ Address of the current player's data.
 
-: player!  ( n -- )
+: player! ( n -- )
+  dup to player  cells player#-data + @ to player-data ;
   \ Set the current player to _n_.
   \ n = 0..2
-  dup to player  cells player#-data + @ to player-data  ;
 
-: player-variable  ( field "name" -- )
-
+: player-variable ( field "name" -- )
+  <builds ( n "name" ) cells c,
+  does>   ( -- a ) ( pfa ) c@ player-data + ;
   \ Create a player variable.
-
+  \
   \ A player variable returns the address of a player data
   \ field, depending on the content of `player-data`.  This way
   \ one single word can be used to manage any player.
-
-  <builds   ( n "name" )  cells c,
-  does>     ( -- a ) ( pfa )
-    c@ player-data +  ;
 
 ( Current player data fields )
 
@@ -243,7 +232,7 @@ player0-data value player-data
 
 ( Current player special fields )
 
-  \ Double or table fields
+  \ Double or table fields:
 
   \ These additional definitions point to the first one of
   \ several related fields that sometimes are managed together,
@@ -254,45 +243,44 @@ player0-data value player-data
 3 player-variable player-coords     \ both coordinates
 8 player-variable player-keys       \ keys table
 
-  \ Calculated fields
+  \ Calculated fields:
 
+: human? ( -- f ) player-pilot @ human = ;
   \ Is the current player a human pilot?
-: human?  ( -- f )  player-pilot @ human =  ;
 
+: none? ( -- f ) player-pilot @ none = ;
   \ Is the current player "none"?
-: none?  ( -- f )  player-pilot @ none =  ;
 
+: someone? ( -- f ) none? 0= ;
   \ Is the current player "someone"? (human or robot).
-: someone?  ( -- f )  none? 0=  ;
 
+: alive? ( -- f ) player-control @ dead <> ;
   \ Is the current player alive?
-: alive?  ( -- f )  player-control @ dead <>  ;
 
+: last-one? ( -- f ) players 2 < ;
   \ Only one player alive, o no-one?
-: last-one?  ( -- f )  players 2 <  ;
 
-  \ Are all the configured players robots?
-: robots-only?  ( -- f )
+: robots-only? ( -- f )
   true max-players 0 do  i player!
     human? if  0= leave  then
-  loop  ;
+  loop ;
+  \ Are all the configured players robots?
 
 ( Other data-related tools)
 
-: char-in-string?  ( c ca len -- n tf | ff )
+: char-in-string? ( c ca len -- n tf | ff )
+  over >r bounds do
+    dup i c@ = if  drop i unloop r> - true exit  then
+  loop  drop rdrop false ;
   \ Is the char _c_ in the  string _ca len_?
   \ If so, return its position and a true flag,
   \ else return a false flag.
-  over >r bounds do
-    dup i c@ = if  drop i unloop r> - true exit  then
-  loop  drop rdrop false  ;
 
-: >execute  ( a n -- )
-  \ Execute a cfa stored in an execution table.
-  \ a = execution table
-  \ n = element of the table (0..x)
-  cells + @ execute  ;
+: >execute ( a n -- ) cells + @ execute ;
+  \ Execute a cfa stored in element _n_ (0..x) of execution
+  \ table _a_.
 
+: -none ( ca len n -- ) players 1 = someone? and * - ;
   \ Remove a number of chars from a given string if `players`
   \ is 1 and the current player is a human or a robot.  This is
   \ used with the pilot help string in every language,
@@ -301,6 +289,5 @@ player0-data value player-data
   \ configured player is the only human or robot left.
   \ ca len = string
   \ n = chars to remove
-: -none  ( ca len n -- )  players 1 = someone? and * -  ;
 
   \ vim: filetype=abersoftforthafera

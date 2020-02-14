@@ -278,7 +278,7 @@ localized color$ ( -- ca len )
   player-pilot @ case
     human of  human$  endof
     robot of  robot$  endof
-    none$ rot  \ default
+    none$ rot \ default
   endcase ;
 
 : on/off$ ( f -- ca len ) if  on$  else  off$  then ;

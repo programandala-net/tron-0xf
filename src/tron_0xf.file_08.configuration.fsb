@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -35,190 +35,165 @@
 
   \ -----------------------------------------------------------
 
-  \ Max length of a player key description in any language:
 11 constant /key-desc
+  \ Max length of a player key description in any language.
 
-  \ Lines of some parts of the config menu:
 contents-line
 1+ dup constant sound-line   2+ dup constant vehicle-line
 2+ dup constant pilot-line   2+ dup constant color-line
 2+     constant keys-line
+  \ Lines of some parts of the config menu.
 
-  \ Column of the key description:
-0 constant key-desc-col
+0 constant key-desc-col \ column of the key description
 
-: option-pause  ( -- )  125 ms  ;
+: option-pause ( -- ) 125 ms ;
 
 2 11 thru
 
 ( Key descriptions )
 
-: +key-desc-col  ( ca len line -- ca len line col' )
+: +key-desc-col ( ca len line -- ca len line col' )
+  over /key-desc swap - ;
   \ Relative column of a key description,
   \ depending on its length; it's relative to
   \ the absolute column of the key descriptions.
-  over /key-desc swap -  ;
 
-: (type-key-desc)  ( ca len line col -- )
+: (type-key-desc) ( ca len line col -- )
+  key-desc-col + at type ;
   \ Print a key description, on the given line.
   \ col = columns from the left margin of its region.
-  key-desc-col + at type  ;
 
-  \ XXX OLD -- not used
-  \ : |key-desc|  ( ca len line -- )
-  \   \ Print a key description, on the given line,
-  \   \ centered on its region.
-  \   +key-desc-col 2 / (type-key-desc)  ;
-
-: |key-desc  ( ca len line -- )
+: |key-desc ( ca len line -- )
+  0 (type-key-desc) ;
   \ Print a key description, on the given line,
   \ at the left of its region.
-  0 (type-key-desc)  ;
-
-  \ XXX OLD -- not used
-  \ : key-desc|  ( ca len line -- )
-  \   \ Print a key description, on the given line,
-  \   \ at the right of its region.
-  \   over key-desc-col swap - (type-key-desc)  ;
 
 ( Key descriptions and positions )
 
+here: key-descs  ] up$ down$ left$ right$ [
   \  A table that holds the cfa of the four texts used
   \  to describe the player keys. When executed, they
   \  return a string in the current language.
-here: key-descs  ] up$ down$ left$ right$ [
 
+: key-desc ( n -- ca len ) key-descs swap >execute ;
   \ Get the _n_ text from the `key-descs` table.
-: key-desc  ( n -- ca len )  key-descs swap >execute  ;
 
+: key. ( a -- ) key-name graph-udg emit lang-udg ;
   \ Print a key name.
   \ a = key address in the keys table
-: key.  ( a -- )  key-name graph-udg emit lang-udg  ;
 
+: player-key. ( n -- ) cells player-keys + @ key. ;
   \ Print the name of the given key of the current player.
   \ n = key number in the table
-: player-key.  ( n -- )  cells player-keys + @ key.  ;
 
-  \ Columns of the player keys.
 here: key-columns  12 c, 19 c, 26 c,
+  \ Columns of the player keys.
 
+: pilot-col ( n -- col ) key-columns + c@ ;
   \ Column of the pilot number _n_.
-: pilot-col  ( n -- col )  key-columns + c@  ;
 
+: player-col ( -- col ) player pilot-col ;
   \ Column of the current player's vehicle.
-: player-col  ( -- col )  player pilot-col  ;
 
+: key#>coords ( n -- line col ) keys-line + player-col ;
   \ Convert a key number _n_ (0..3) of the current player
   \ to the cursor coordinates of the key in the pilot menu.
-: key#>coords  ( n -- line col )  keys-line + player-col ;
 
-: (key-prompt)  ( n f -- )
+: (key-prompt) ( n f -- )
+  flash dup key#>coords at player-key. ;
   \ Activate or deactivate the prompt of a key
   \ of the current player.
   \ n = key number in the current players' key table
   \ f = flash?
-  flash dup key#>coords at player-key.  ;
 
-: +key-prompt  ( a n -- )
+: +key-prompt ( a n -- ) 1 (key-prompt) 0 flash ;
   \ Activate the prompt of a current player's key.
   \ n = key number in the current players' key table
-  1 (key-prompt) 0 flash  ;
 
-: -key-prompt  ( a n -- )
+: -key-prompt ( a n -- ) 0 (key-prompt) ;
   \ Deactivate the prompt of a current player's key.
   \ n = key number in the current players' key table
-  0 (key-prompt)  ;
 
 ( Pilot -- human, robot or none )
 
-here: pilot-controls  \ table of cfa
-  human , robot , none ,
+here: pilot-controls human , robot , none ,
+  \ Execution table.
 
-: pilot-key?  ( c -- n tf | ff )
+: pilot-key? ( c -- n tf | ff )
+  s" HRN" \ valid keys (the same in the three languages)
+  players 1 = minus + \ remove "N" if players=1
+  char-in-string? ;
   \ Is the given (uppercase) char _c_
   \ a valid answer for a pilot option?
-  s" HRN"  \ valid keys (the same in the three languages)
-  players 1 = minus +  \ remove "N" if players=1
-  char-in-string?  ;
 
-: pilot-option  ( -- n )
+: pilot-option ( -- n ) begin akey upperc pilot-key? until ;
   \ Wait for a valid key press for a pilot option
   \ and return its index (0..2) in the `pilot-controls`
   \ table.
-  begin  akey upperc pilot-key?  until  ;
 
-: pilot-control  ( -- cfa | 0 )
+: pilot-control ( -- cfa | 0 )
+  pilot-option cells pilot-controls + @ ;
   \ Wait for a valid key press for a pilot option
   \ and return the cfa of the correspondent control
   \ word (for human or robot), or zero (for none).
-  pilot-option cells pilot-controls + @  ;
 
 ( Config the pilot )
 
-  \ Move the cursor to the pilot of the current player.
 : at-pilot ( -- ) pilot-line player-col at ;
+  \ Move the cursor to the pilot of the current player.
 
+: erase-pilot ( -- ) at-pilot 6 spaces ;
   \ Erase the pilot of the current player.
-: erase-pilot  ( -- ) at-pilot 6 spaces  ;
 
+: show-pilot ( -- ) at-pilot human|robot|none$ type ;
   \ Print the pilot of the current player.
-: show-pilot  ( -- ) at-pilot human|robot|none$ type  ;
 
-: player-controls  ( -- )
+: player-controls ( -- )
+  max-players 0 do i player!
+                   player-pilot @ player-control !  loop ;
   \ Init every `player-control` with `player-pilot`;
   \ `player-pilot` holds the permanent type of pilot, while
   \ `player-control` holds a temporaray copy that may
   \ change during the game.
-  max-players 0 do i player!
-                   player-pilot @ player-control !  loop  ;
 
-: update-players  ( -- )
-  \ Update the number of actual players,
-  \ by counting how many players are human or robot.
+: update-players ( -- )
   player-controls  0  max-players 0 do
                         i player!  player-control @ 0<> +
-                      loop  to players  ;
+                      loop  to players ;
+  \ Update the number of actual players,
+  \ by counting how many players are human or robot.
 
-: change-pilot  ( -- )
-  \ Change the pilot of the current player.
+: change-pilot ( -- )
   pilot-help$ remark  erase-pilot 1 flash show-pilot 0 flash
   pilot-control player-pilot !
-  erase-pilot show-pilot  pilot-help$ -remark  ;
+  erase-pilot show-pilot  pilot-help$ -remark ;
+  \ Change the pilot of the current player.
 
-( Config the keys )
+( Config the keys; pilot keys )
 
-: valid-game-key  ( -- a )
+: valid-game-key ( -- a )
+  0 begin drop pressed dup caps-shift-key <> until ;
   \ Check all keys forever until a valid one is pressed.
   \ Return its address in the `keys` table.
   \ a = address in the `keys` table
-  0 begin  drop pressed dup caps-shift-key <>  until  ;
 
-: change-keys  ( -- )
-  \ Change the keys of the current player.
+: change-keys ( -- )
   keys/player 0 do
-    i +key-prompt
-    512 ms valid-game-key player-keys i cells + !
+    i +key-prompt 512 ms valid-game-key player-keys i cells + !
     i -key-prompt
-  loop  ;
+  loop ;
+  \ Change the keys of the current player.
 
-( Pilot keys )
-
-  \ XXX OLD
-  \ Print the number of the current player.
-  \ : .player  ( -- )  vehicle-line player-col at player .  ;
-
+: pilot-menu-key ( n -- ) dup key#>coords at player-key. ;
   \ Show a key of the pilots menu,
   \ for the 'n' key of the current player.
-: pilot-menu-key  ( n -- )  dup key#>coords at player-key.  ;
 
-: hide-keys  ( -- )
+: hide-keys ( -- ) keys/player 0 do
+                     keys-line i + player-col at 2 spaces
+                   loop ;
   \ Hide the keys of the current player.
-  keys/player 0 do
-    keys-line i + player-col at 2 spaces
-  loop  ;
 
-: show-keys  ( -- )
+: show-keys ( -- ) keys/player 0 do i pilot-menu-key loop ;
   \ Show the keys of the current player.
-  keys/player 0 do  i pilot-menu-key  loop  ;
 
   \ vim: filetype=abersoftforthafera

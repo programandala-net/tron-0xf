@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -39,176 +39,141 @@
 
 ( Crash check and effect )
 
-: borders  ( -- )
+: borders ( -- )
+  [ black 1- ] literal white do i border -1 +loop ;
   \ Change the border using all colors from white to black.
-  [ black 1- ] literal white do  i border  -1 +loop  ;
 
-: crash-effect  ( -- )
+: crash-effect ( -- ) 100 50 do  11 i ?bleep borders  loop ;
   \ XXX TODO
-  100 50 do  11 i ?bleep borders  loop  ;
 
-: crash  ( -- )
+: crash ( -- ) crash-effect begin inkey? until drop ;
   \ Do a visual effect; then wait until a key is pressed.
-  crash-effect  begin  inkey?  until  drop  ;
 
-: crash?  ( -- f )
+: crash? ( -- f ) player-xinc @ player-xc @ +
+                  player-yinc @ player-yc @ + point ;
   \ Is the next position of the current player occupied?
-  player-xinc @ player-xc @ +
-  \ dup 0 0 at .  \  XXX INFORMER
-  player-yinc @ player-yc @ +
-  \ dup 0 15 at .  \  XXX INFORMER
-  point  ;
 
-: killed  ( -- )
+: killed ( -- ) dead player-control !  players 1- to players ;
   \ Kill the current player.
-  dead player-control !  players 1- to players  ;
 
 ( Scores )
 
 999 constant max-score
 
-: +score   ( -- )
+: +score  ( -- )
+  \ player-score @ max-score = if quit then
+  \ XXX TMP -- the line above is used for testing during
+  \ the development, running the game with 2 or 3 robots (no
+  \ human pilot), until one of them reaches the highest score.
+  \
+  player-score @ 1+ dup max-score > 0= * player-score ! ;
   \ Increase the score of the current player.
   \ if the result is greater than the maximum score,
   \ set the score to zero.
 
-  \ XXX TMP -- this line is only used for doing tests during
-  \ the development, running the game with 2 or 3 robots (no
-  \ human pilot), until one of them reaches the highest score:
-  \
-  \ player-score @ max-score = if  quit  then
-
-  player-score @ 1+ dup max-score > 0= * player-score !  ;
-
-: duel-end  ( -- )
-  \ XXX TODO simpler
+: duel-end ( -- )
   2000 pilots 1 > * ms  robots-only? 0=
-  if  -status colors0 press-any-key then  -status  ;
+  if -status colors0 press-any-key then -status ;
+  \ XXX TODO simpler
 
-: winner  ( -- )
-  \ Search for the winner and increase the score,
-  \ showing the new score with flashing digits.
+: winner ( -- )
   max-players 0 do
     i player! alive?
-    if  +score 1 flash .score 0 flash leave  then
-  loop  duel-end  ;
+    if +score 1 flash .score 0 flash leave then
+  loop duel-end ;
+  \ Search for the winner and increase the score,
+  \ showing the new score with flashing digits.
 
-: -scores  ( -- )
+: -scores ( -- )
+  max-players 0 do i player! player-score off loop ;
   \ Reset all scores.
-  max-players 0 do  i player!  player-score off  loop  ;
 
 ( Score columns execution table )
 
+:noname ( -- col2 col1 col0 ) 28 14 01 ; \ three players
+:noname ( -- col1 col0 ) 28 01 ; \ two players
+:noname ( -- col0 ) 14 ; \ one player
   \ Score columns
-:noname ( -- col2 col1 col0 )  28 14 01 ;  \ three players
-:noname ( -- col1 col0 )  28 01 ;  \ two players
-:noname ( -- col0 )  14  ; \ one player
 
+here: score-columns ( cfa2 cfa1 cfa0 ) , , ,
   \ Execution table for `get-score-columns`.
-here: score-columns  ( cfa2 cfa1 cfa0 )  , , ,
 
 : get-score-columns ( -- col2 col1 col0 | col1 col0 | col0 )
+  players 1- score-columns swap >execute ;
   \ Return one, two or three score columns.
-  players 1- score-columns swap >execute  ;
 
-: set-score-columns  ( -- )
+: set-score-columns ( -- )
+  get-score-columns  max-players 0 do
+    i player! player-control @ if player-score-col ! then
+  loop ;
   \ Set the players' score columns.
-  get-score-columns
-  max-players 0 do  i player!
-    player-control @ if  player-score-col !  then
-  loop  ;
 
 ( Start positions execution table )
 
- \ Coordinate increments.
- \ Double constants are used for speed.
 
  \ X  Y
    0  1 2constant up-incs
    0 -1 2constant down-incs
   -1  0 2constant left-incs
    1  0 2constant right-incs
+  \ Coordinate increments.
+  \ Double constants are used for speed.
 
-:noname
-  \ ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
+:noname ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
+  215 127 left-incs  128 40 up-incs  40 127 right-incs ;
   \ Start screen position and increments, for three players.
 
-  \ XXX OLD
-  \  215 127 left-incs  126 40 up-incs  40 127 right-incs ;
-
-  \ XXX OLD
-  \ 215 127 left-incs  127 40 up-incs  40 127 right-incs ;
-
-  215 127 left-incs  128 40 up-incs  40 127 right-incs ;
-
-:noname
-  \ ( -- x1 y1 x-inc1 y-inc1 x0 y0 x-inc0 y-inc0 )
+:noname ( -- x1 y1 x-inc1 y-inc1 x0 y0 x-inc0 y-inc0 )
+  215 88 left-incs  40 88 right-incs ;
   \ Start screen position and increments, for two players.
-  215 88 left-incs  40 88 right-incs  ;
 
-:noname
-  \ ( -- x0 y0 x-inc0 y-inc0 )
+:noname ( -- x0 y0 x-inc0 y-inc0 ) 127 88 up-incs ;
   \ Start screen position and increments, for one player.
-  127 88 up-incs  ;
 
-here: start-positions
+here: start-positions ( cfa2 cfa1 cfa0 ) , , ,
   \ Execution table for `get-start-positions`.
-  \ ( cfa2 cfa1 cfa0 )
-  , , ,
 
 ( Start positions and paint )
 
 : get-start-positions ( -- ... col x y x-inc y-inc )
+  players 1- start-positions swap >execute ;
   \ Return one, two or three sets of player positions
   \ (score column, start screen position and increments).
   \ Note: only one set is shown in the stack notation above.
-  players 1- start-positions swap >execute  ;
 
-: set-start-positions  ( -- )
+: set-start-positions ( -- )
+  get-start-positions  max-players 0 do  i player!
+    player-control @ if player-start-incs   2!
+                        player-start-coords 2! then loop ;
   \ Set the players' start positions.
-  get-start-positions
-  max-players 0 do  i player!
-    player-control @ if
-      player-start-incs 2!  player-start-coords 2!
-    then
-  loop  ;
 
+: paint ( -- ) player-color @ ink player-coords 2@ plot ;
   \ Paint the current player.
-: paint  ( -- )  player-color @ ink player-coords 2@ plot  ;
 
-( Duel init )
+( Duel init; game init )
 
-: ready  ( -- )
+: ready ( -- )
+  max-players 0 do
+    \ -1 max-players 1- do \ XXX TMP
+    i player!  player-control @ if
+      player-start-coords 2@ player-coords 2!
+      player-start-incs   2@ player-incs   2!
+      paint then loop ;
   \ Show all active players at their start positions.
-
+  \
   \ XXX TODO -- it seems the robot scores are more even when
   \ the loop is countdown
 
-  max-players 0 do
-  \ -1 max-players 1- do  \ XXX TMP
-
-    i player!  player-control @ if
-      player-start-coords 2@ player-coords 2!
-      player-start-incs 2@ player-incs 2!
-      paint
-    then
-
-  loop  ;
-  \ -1 +loop  ;  \ XXX TMP
-
-: duel-init  ( -- )
-  \ Init a duel.
-  \ XXX TODO message
+: duel-init ( -- )
   update-players set-start-positions
   clear-arena status ready
-  robots-only? if  1000 ms  else  akey drop  then  ;
+  robots-only? if 1000 ms else akey drop then ;
+  \ Init a duel.
+  \ XXX TODO message
 
-( Game init )
-
-: game-init  ( -- )
+: game-init ( -- ) set-motor-sound  sound? @ sound  -scores
+                   update-players set-score-columns
+                   cls0 arena save-arena ;
   \ Init the game.
-  set-motor-sound  sound? @ sound  -scores
-  update-players set-score-columns
-  cls0 arena save-arena  ;
 
   \ vim: filetype=abersoftforthafera

@@ -8,7 +8,7 @@
 
 \ http://programandala.net/en.program.tron_0xf.html
 
-\ Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 \ License: GPL 3
 
   \ Tron 0xF is free software; you can redistribute it
@@ -39,8 +39,8 @@
 
 ( Menu -- data )
 
-6 constant options       \ number of menu options
-2 constant lines/option  \ lines occupied per menu option
+6 constant options      \ number of menu options
+2 constant lines/option \ lines occupied per menu option
 
 contents-line 2+ constant menu-line
 
@@ -49,46 +49,30 @@ options buffer: menu-keys
   \ the current language. This table is updated every time the
   \ menu is printed, using the initials of the menu options.
 
-  \ XXX OLD
-  \ :noname  ( -- ca len )
-  \   \ Menu option 3 with the status of the sound.
-  \   option-3$ sound? @ on/off$ s+  ;
-
 here: menu-options
-
-  \ Table that holds the cfa of the words that return the
-  \ localized texts of the menu options.
-
-  ' option-0$ cfa ,   ' option-1$ cfa ,
-  \ , \ option 3 created with `:noname` above \ XXX OLD
+  ' option-0$ cfa ,  ' option-1$ cfa ,
   ' option-4$ cfa ,  ' option-5$ cfa ,
-  ' option-6$ cfa ,   ' option-7$ cfa ,
+  ' option-6$ cfa ,  ' option-7$ cfa ,
+  \ A table that holds the cfa of the words that return the
+  \ localized texts of the menu options.
 
 ( Menu -- language and commands)
 
-: change-language  ( -- )
+: change-language ( -- )
+  lang 1+ dup langs < *  to lang lang-udg wipe-contents ;
   \ Change the current language.
-  lang 1+ dup langs < *  to lang lang-udg wipe-contents  ;
 
-  \ : x-toggle-sound  ( -- )  \ XXX OLD
-  \   \ Toggle the game sounds.
-  \   \ White ink has to be set at the end in order to
-  \   \ prevent flickering when updating the menu,
-  \   \ because the way the screen is uptaded sets black ink
-  \   \ as default.
-  \   sound? dup 1 toggle @ sound  white ink  ;
+: about ( -- )
+  whole-page copyright cr cr authors more license more page ;
 
-: about  ( -- )
-  whole-page copyright cr cr authors more license more page  ;
+: instructions ( -- ) whole-page (instructions) more page ;
 
-: instructions  ( -- )  whole-page (instructions) more page  ;
-
-: finish  ( -- )  cls0 -font greeting cr quit-message quit  ;
+: finish ( -- ) cls0 -font greeting cr quit-message quit ;
 
 ( Menu commands and options)
 
 here: menu-commands
-
+  ] change-language instructions configure game about finish [
   \ Execution table of the menu commands.
   \
   \ Every command must leave the screen ready to print the
@@ -97,90 +81,83 @@ here: menu-commands
   \ `wipe-contents` (or `more`, that calls it); commands that
   \ change only their own menu option must set ink to white.
 
-  ] change-language instructions configure game about finish [
-
-: initial!  ( n c -- )
+: initial! ( n c -- ) swap menu-keys + c! ;
   \ Store char 'c' into the 'n' position of the
   \ `menu-keys` table.
-  swap menu-keys + c!  ;
 
-: option-initial  ( ca n -- )
+: option-initial ( ca n -- )
+  swap c@ upperc dup initial. initial! ;
   \ Print the initial of the menu option number n,
   \ stored in the given address, and also store it
   \ into the `menu-keys` table.
-  swap c@ upperc dup initial. initial!  ;
 
-: option>line  (  n -- line )
+: option>line (  n -- line ) lines/option * menu-line + ;
   \ Convert a menu option number to its line.
-  lines/option * menu-line +  ;
 
-: option>string  ( n -- ca len )
+: option>string ( n -- ca len ) menu-options swap >execute ;
   \ Convert a menu option number to its localized text.
-  menu-options swap >execute  ;
 
 ( Option)
 
-: option  ( n -- )
-  \ Print menu option number n.
-
+: option ( n -- )
+  dup >r                 ( n ) ( R: n )
+  dup option>line        ( n line )
+  >r option>string       ( ca len ) ( R: n line )
+  dup centered           ( ca len col )
+  r> swap                ( ca len line col ) ( R: n )
+  2dup at 2over drop r>  ( ca len line col ca n ) ( R: )
+  option-initial         ( ca len line col )
+  1+ at 1 /string type ;
+  \ Print menu option number _n_.
+  \
   \ XXX TODO -- make it simpler and faster: calculate
   \ the coordinates when the strings are created, and
   \ store them in a table.
 
-  dup >r                  ( n ) ( R: n )
-  dup option>line         ( n line )
-  >r option>string        ( ca len ) ( R: n line )
-  dup centered            ( ca len col )
-  r> swap                 ( ca len line col ) ( R: n )
-  2dup at 2over drop r>   ( ca len line col ca n ) ( R: )
-  option-initial          ( ca len line col )
-  1+ at 1 /string type  ;
-
 ( Menu)
 
-: menu  ( -- )
+: menu ( -- )
+  options 0 do  i option  loop  reveal-contents 256 ms ;
   \ Print the menu.
-  options 0 do  i option  loop  reveal-contents 256 ms  ;
 
 ( Valid option)
 
-: valid-option?  ( c -- cfa tf | ff )
+: valid-option? ( c -- cfa tf | ff )
+  upperc
+  false swap \ default exit flag
+  options 0 do
+    dup menu-keys i + c@ = \ valid key?
+    if 2drop menu-commands i cells + @ true dup leave then
+  loop drop ;
   \ Is the given character a valid menu option in the current
   \ language? If so, return the cfa of its associated command
   \ and a true flag; otherwise return a false flag.
-  upperc
-  false swap  \ default exit flag
-  options 0 do
-    dup menu-keys i + c@ =  \ valid key?
-    if  2drop menu-commands i cells + @ true dup leave  then
-  loop  drop  ;
 
-: valid-option  ( -- cfa )
+: valid-option ( -- cfa )
+  begin akey valid-option? until key-sound ;
   \ Wait until a valid menu option is chosen and then
   \ return the cfa of its associated command.
-  begin  akey valid-option?  until  key-sound  ;
 
 ( Boot)
 
-  \ XXX TODO use the RAM-disk
+128 allot-csb
   \ Init the circular string-buffer.
-  128 allot-csb
+  \ XXX TODO use the RAM-disk
 
-: init  ( -- )  +screen +font cls0 page  ;
+: init ( -- ) +screen +font cls0 page ;
 
 forth definitions
 
-: bye  ( -- )  mon  ;
+: bye ( -- ) mon ;
 
-: run  ( -- )
+: run ( -- ) tron [compile] tron
+             init begin menu valid-option execute again ;
   \ Endless loop: Show the menu and execute the chosen option.
   \ Note: `tron` must be executed because fig-Forth
   \ sets `context` to `current` before compiling a definition.
   \ Beside, `tron` must be compiled in order to let the user
   \ execute the game after being exited to BASIC.
-  tron [compile] tron
-  init begin  menu valid-option execute  again  ;
 
-extend  \ protect the code from `cold`
+extend \ protect the code from `cold`
 
   \ vim: filetype=abersoftforthafera

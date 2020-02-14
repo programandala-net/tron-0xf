@@ -11,7 +11,7 @@
 \ This program, written in Forth for Gforth, creates the user defined
 \ graphics of Tron 0xF.
 
-\ Copyright (C) 2015 Marcos Cruz (programandala.net)
+\ Copyright (C) 2015,2020 Marcos Cruz (programandala.net)
 
 \ You may do whatever you want with this file, so long as you retain
 \ the copyright notice(s) and this license in all redistributed copies
@@ -27,6 +27,8 @@
 \ published yet.
 \
 \ 2015-11-25: Updated the header.
+\
+\ 2020-02-14: Update the source style.
 
 \ --------------------------------------------------------------
 \ Requirements
@@ -35,12 +37,11 @@
 \ (http://programandala.net/en.program.galope.html):
 
 : unslurp-file  ( ca1 len1 ca2 len2 -- )
-  \ ca1 len1 = content to write to the file
-  \ ca2 len2 = filename
   w/o create-file throw >r
   r@ write-file throw
-  r> close-file throw
-  ;
+  r> close-file throw ;
+  \ ca1 len1 = content to write to the file
+  \ ca2 len2 = filename
 
 \ --------------------------------------------------------------
 \ Main
@@ -50,21 +51,19 @@
 characters /character * chars constant /font
 create font /font allot
 
-: (>font)  ( b a n scan -- )
+: (>font)  ( b a n scan -- ) 8 swap - swap /character * + + c! ;
   \ Save a character scan into the font.
   \ b = character scan
   \ a = address of the font
   \ n = position of the character in the font (0 is the first)
   \ scan = 1..8
-  8 swap -  swap /character * + + c!
-  ;
+
 : >font  ( b0..b7 n -- )
+  { character }
+  9 1 do font character i (>font) loop ;
   \ Save a character definition into the font.
   \ b0..b7 = scans
   \ n = position of the character in the font (0 is the first)
-  { character }
-  9 1 do  font character i (>font)  loop
-  ;
 
 \ --------------------------------------------------------------
 \ Graphics
