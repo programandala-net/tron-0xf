@@ -79,7 +79,3 @@ Settings:
 
 Note: When radar is random (2 or 4 pixels range), the duels of 2
 robots are more even, but robots crash much easier.
-
-.2020-02-14:
-
-- Update the source style: spacing, position of comments, etc.
