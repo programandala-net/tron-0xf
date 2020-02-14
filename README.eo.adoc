@@ -22,7 +22,7 @@
 // (http://asciidoctor.org).
 
 - link:README.adoc[English version]
-- link:README.es.adoc[Versión en Español]
+- link:README.es.adoc[Versión en español]
 - link:README.ie.adoc[Version in Interlingue]
 
 == Priskribo
