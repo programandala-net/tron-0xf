@@ -172,17 +172,10 @@ localized authors ( -- )
 
 -->
 
-( Display version, copyright )
-
-  \ Print the version number.
-: .version ( -- )
-  version-major 0 .r [char] . emit
-  version-minor 0 .r [char] . emit
-  version-patch 0 .r [char] + emit
-  version-release <# #s #> type ;
+( Display copyright )
 
 : copyright ( -- )
-  ." Tron 0xF" cr version$ type space .version cr
+  ." Tron 0xF" cr version$ type space version#$ type cr
       \ <------------------------------>
   cr ." (C) 2015,2016,2020 Marcos Cruz" cr
      ." (programandala.net)" ;

@@ -37,15 +37,14 @@
 
 forth definitions
 
-0 constant version-major
-1 constant version-minor
-1 constant version-patch  20200214. 2constant version-release
+  \ Version number
+
+: version#$ ( -- ca len ) s" 0.1.1+202002141537" ;
 
   \ Color constants
 
-0 constant black    2 constant red
-4 constant green    5 constant cyan
-6 constant yellow   7 constant white
+0 constant black  2 constant red     4 constant green
+5 constant cyan   6 constant yellow  7 constant white
 
 2 11 thru
 
