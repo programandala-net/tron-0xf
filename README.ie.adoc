@@ -36,7 +36,7 @@ Tron 0xF es un simplic lude de tip Tron por ZX Spectrum (modelle con
 . Quande alquel lusor es homal, chascun currida comensa per li unesim
   pression de un taste. Quande omni lusores es robotes, li curridas
   comensa automaticmen.
-. Li lude nequande fini. Quando li punctus de alquí es 999, ili
+. Li lude nequande fini. Quande li punctus de alquí es 999, ili
   recomensa de null. Li homal lusores deve consentir li conditiones de
   finition.
 
@@ -75,7 +75,7 @@ TAP usabil por Abersoft Forth, on deve haver pluri programmas installat
 - head (parte de _GNU core utilities_)
 - http://programandala.net/es.programa.pbm2scr.html[pbm2scr]
 
-Tande inea li documentiere de Tron 0xF e usu li comande `make`.  Ti va
+Tande inea li documentiere de Tron 0xF e usa li comande `make`.  Ti va
 crear crear li document <tron_0xf_compiling.tap>.
 
 [id=passu2]
@@ -101,19 +101,17 @@ SNA, Z80.
 
 == Defectes conosset
 
-Li robotes es sat stult. Y provat pluri metodes por far les un poc plu
+Li robotes es sat stult. Yo provat pluri metodes por far les un poc plu
 habil sin lentisar li lude, ma yo ne ha atinget clar resultates.
-resultados claros.
 
 Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
 du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
 on vell dever programmar it per un rutine activat per interruptiones.
 
-Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene altri
+Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene
 quelc altri coses minori, e alcun provas fat pri li robotes.
 
 Li defectes principal va esser corectet in un futur version ameliorat
 por ZX Spectrum 128, quel have un chip specific por li son, e
 http://programandala.net/es.programa.solo_forth.html[Solo Forth], quel
 es plu rapid e potent quam Abersoft Forth.
-
