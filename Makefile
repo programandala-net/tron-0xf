@@ -13,7 +13,10 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-################################################################
+# Last modified 202002142049.
+# See change log at the end of the file.
+
+# ==============================================================
 # Requirements
 
 # Gforth
@@ -27,12 +30,7 @@
 # pbm2scr
 # 	<http://programandala.net/en.program.pbm2scr.html>
 
-################################################################
-# History of this file
-
-# See at the end of the file.
-
-################################################################
+# ==============================================================
 
 VPATH = ./:src:lib
 MAKEFLAGS = --no-print-directory
@@ -43,49 +41,55 @@ MAKEFLAGS = --no-print-directory
 all: tron_0xf_compiling.tap
 
 clean:
-	rm -f graph/title.tap ; \
-	rm -f graph/score_digits.tap ; \
-	rm -f graph/udg.tap ; \
 	rm -f tron_0xf_compiling.tap ; \
-	rm -f tap/*.tap
+	rm -f tmp/*
 
-graph/score_digits.tap: graph/score_digits.fs
+# ==============================================================
+# Make TAP files from the graphics
+
+tmp/score_digits.tap: graph/score_digits.fs
 	cd graph ; \
 	gforth score_digits.fs -e bye ; \
-	bin2code score_digits.bin score_digits.tap ; \
+	bin2code score_digits.bin ../$@ ; \
+	rm -f score_digits.bin ; \
 	cd -
 
-graph/udg.tap: graph/udg.fs
+tmp/udg.tap: graph/udg.fs
 	cd graph ; \
 	gforth udg.fs -e bye ; \
-	bin2code udg.bin udg.tap ; \
+	bin2code udg.bin ../$@ ; \
+	rm -f udg.bin ; \
 	cd -
 
-graph/title.tap: graph/title.pbm
+tmp/title.tap: graph/title.pbm
 	cd graph ; \
 	pbm2scr title.pbm ; \
  	head --bytes=2048 title.scr > title.bin ; \
-	bin2code title.bin title.tap ; \
+	bin2code title.bin ../$@ ; \
+	rm -f title.scr title.bin ; \
 	cd -
 
-tap/%.tap: src/%.fsb
+# ==============================================================
+# Make TAP files from the program sources
+
+tmp/%.tap: src/%.fsb
 	fsb-abersoft  $< && \
-	mv src/$*.tap tap/
+	mv src/$*.tap tmp/
+
+# ==============================================================
+# Make the main TAP file
 
 library_tapes=$(wildcard lib/*.tap)
-program_tapes=$(wildcard tap/*.tap)
-
-# XXX OLD
-#		@make tap/$$(basename $${source%%.fsb}).tap ;
+program_tapes=$(wildcard tmp/*.tap)
 
 tron_0xf_compiling.tap: \
 	$(library_tapes) \
 	$(program_tapes) \
-	graph/score_digits.tap \
-	graph/udg.tap \
-	graph/title.tap
+	tmp/score_digits.tap \
+	tmp/udg.tap \
+	tmp/title.tap
 	for source in $$(ls -1 src/*.fsb) ; do \
-		make tap/$$(basename $${source%%.fsb}).tap ; \
+		make tmp/$$(basename $${source%%.fsb}).tap ; \
 	done ; \
 	cat \
 		sys/abersoft_forth.tap \
@@ -124,21 +128,21 @@ tron_0xf_compiling.tap: \
 		lib/noname.tap \
 		lib/qexit.tap \
 		lib/rdrop.tap \
-		tap/tron_0xf.file_*.tap \
+		tmp/tron_0xf.file_*.tap \
 		graph/font.tap \
 		graph/font.esperanto_characters.tap \
 		graph/font.spanish_characters.tap \
-		graph/score_digits.tap \
-		graph/udg.tap \
-		graph/title.tap \
+		tmp/score_digits.tap \
+		tmp/udg.tap \
+		tmp/title.tap \
 		> tron_0xf_compiling.tap
 
 # XXX -- Optional modules, for debugging
 #		lib/dot-s.tap \
-#		lib/cswap.tap \
+		lib/cswap.tap \
 #		lib/dump.tap \
 
-# ##############################################################
+# ==============================================================
 # Backups
 
 backup:
@@ -151,7 +155,7 @@ backup:
 		README.* \
 		tron_0xf.szx
 
-# ##############################################################
+# ==============================================================
 # Packages for distribution
 
 .PHONEY: packages
@@ -186,8 +190,8 @@ zipball:
 		tron_0xf/tron_0xf_compiling.* ; \
 	cd -
 
-################################################################
-# History of this file
+# ==============================================================
+# Change log
 
 # 2015-03-23: Start.
 #
@@ -234,5 +238,7 @@ zipball:
 #
 # 2016-03-02: Added <TO-DO.adoc>.
 #
-# 2020-02-14: Update: remove <old>, which has been deleted, from the backups.
+# 2020-02-14: Update: remove <old>, which has been deleted, from the backups;
+# rename <tap> to <tmp>. Make all of the temporary TAP files in the <tmp>
+# directory.
 
