@@ -1,6 +1,6 @@
 = Tron 0xF To-Do
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-14
+:revdate: 2020-02-15
 
 .2015-07-05
 
@@ -79,3 +79,7 @@ Settings:
 
 Note: When radar is random (2 or 4 pixels range), the duels of 2
 robots are more even, but robots crash much easier.
+
+.2020-02-15:
+
+Separate the paragraphs of the license note, by printing them apart.
