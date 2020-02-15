@@ -13,7 +13,7 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-# Last modified 202002142320.
+# Last modified 202002151442.
 # See change log at the end of the file.
 
 # ==============================================================
@@ -35,7 +35,7 @@
 VPATH = ./:src:lib
 MAKEFLAGS = --no-print-directory
 
-VERSION = $(shell grep version\# src/tron_0xf.file_01.data.fsb | sed -e "s/.\+s\" \(.\+\)+.\+/\1/")
+VERSION = $(shell grep version\# src/tron_0xf.file_01.data.fsb | sed -e 's@.\+s" \(.\+\)".\+@\1@')
 TARGET = target/tron_0xf_v$(VERSION)_compilable.tap
 
 .ONESHELL:
@@ -230,4 +230,8 @@ zipball:
 # rename <tap> to <tmp>. Make all of the temporary TAP files in the <tmp>
 # directory. Add the current version (extracted from the sources) to the names
 # of the target and archive files. Use directories <target> and <archives>.
-# Update the directory name <graph> to <graphics>. Remove the old "backup" rule.
+# Update the directory name <graph> to <graphics>. Remove the old "backup"
+# rule.
+#
+# 2020-02-15: Modify the calcutation of `VERSION` to include also the release
+# date string.
