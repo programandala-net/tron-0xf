@@ -170,7 +170,7 @@ localized option-7$ ( -- ca len ) -->
   ."   Li scope del lude es far li" cr
   ." concurrentes colider." cr
   ."   Un, du o tri vehicules posse" cr
-  ." luder con pilotes human o robo-" cr
+  ." luder, con pilotes human o robo-"
   ." tic in qualcunc combination." cr
   \  <------------------------------>
 
@@ -204,10 +204,10 @@ localized option-7$ ( -- ca len ) -->
   ." vehículos dejan tras de sí una" cr
   ." pared sólida de luz." cr
   ."   El objetivo del juego es hacer"
-  ." estrellarse a los contrincantes." cr
-  ."   Puede haber de 1 a 3 vehículos"
-  ." con pilotos robots o humanos en" cr
-  ." cualquier combinación." cr
+  ." estrellarse a los contrincantes."
+  ."   Puede haber hasta tres vehícu-"
+  ." los, con pilotos robots o huma-" cr
+  ." nos en cualquier combinación." cr
   \  <------------------------------>
 
 -->
@@ -220,8 +220,8 @@ localized option-7$ ( -- ca len ) -->
   ." precisa." cr
   ."   El superviviente del duelo ga-"
   ." na un punto. Los duelos se suce-"
-  ." den sin fin. No hay vidas ni lí-"
-  ." mite de puntuación. Tú decides" cr
+  ." den sin fin. No hay vidas extra" cr
+  ." ni puntuación límite. Tú decides"
   ." las condiciones para terminar." cr
   ."   Para salir del juego pulsa la" cr
   ." tecla <Break> (<Mayúsculas>+" cr
