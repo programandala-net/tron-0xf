@@ -83,4 +83,3 @@ robots are more even, but robots crash much easier.
 .2020-02-15:
 
 - Separate the paragraphs of the license note, by printing them apart.
-- Make the initial coordinates a bit random in a range.

@@ -13,7 +13,7 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-# Last modified 202002151442.
+# Last modified 202002160118.
 # See change log at the end of the file.
 
 # ==============================================================
@@ -111,6 +111,7 @@ $(TARGET): \
 		lib/cell.tap \
 		lib/at-fetch.tap \
 		lib/plusscreen.tap \
+		lib/random.tap \
 		lib/scroll.tap \
 		lib/strings.tap \
 		lib/csb.tap \
@@ -235,3 +236,5 @@ zipball:
 #
 # 2020-02-15: Modify the calcutation of `VERSION` to include also the release
 # date string.
+#
+# 2020-02-16: Add Afera's random module.

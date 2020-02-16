@@ -119,15 +119,23 @@ here: score-columns ( cfa2 cfa1 cfa0 ) , , ,
   \ Coordinate increments.
   \ Double constants are used for speed.
 
+: -4..4 ( -- n ) -4 [ 5 -4 - ] literal random + ;
+  \ Return a random number _n_ from -4 (min) to 4 (max).
+
+: near ( x y -- x' y' ) -4..4 + swap -4..4 + swap ;
+  \ Modify screen position _x y_ in an random range -4..4,
+  \ resulting _x' y'_.
+
 :noname ( -- x2 y2 x-inc2 y-inc2 ... x0 y0 x-inc0 y-inc0 )
-  215 127 left-incs  128 40 up-incs  40 127 right-incs ;
+  215 127 near left-incs  128 40 near up-incs
+   40 127 near right-incs ;
   \ Start screen position and increments, for three players.
 
 :noname ( -- x1 y1 x-inc1 y-inc1 x0 y0 x-inc0 y-inc0 )
-  215 88 left-incs  40 88 right-incs ;
+  215 88 near left-incs  40 88 near right-incs ;
   \ Start screen position and increments, for two players.
 
-:noname ( -- x0 y0 x-inc0 y-inc0 ) 127 88 up-incs ;
+:noname ( -- x0 y0 x-inc0 y-inc0 ) 127 88 near up-incs ;
   \ Start screen position and increments, for one player.
 
 here: start-positions ( cfa2 cfa1 cfa0 ) , , ,
