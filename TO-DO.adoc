@@ -1,6 +1,6 @@
 = Tron 0xF To-Do
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-19
+:revdate: 2020-02-20
 
 .2015-07-05
 
@@ -96,3 +96,16 @@ Add configuration of the start positions:
 
 Also, add an extra option to start every round from the last position
 of the previous one.
+
+.2020-02-20:
+
+- Rename `mon` to `bye` instead of redefining it, to save a bit of
+  memory. Or remove it.
+- Move the circular string buffer to the RAM-disk.
+- Simplify `option`.
+- Rewrite `crash-effect`.
+- Simplify `duel-end`.
+- Add a message to `duel-init`.
+- Calculate the position of menu options at compile-time, in
+  <tron_0xf.file_03.localization.fsb>.
+- Improve `status`.
