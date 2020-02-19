@@ -85,14 +85,18 @@
 
   \ The license is stored in the Forth RAM-disk.
 
-:noname ( -- )
-  [ 6 disc-scr c/l 8 * + ] literal [ 7 c/l * ] literal type ;
-:noname ( -- )
-  [ 6 disc-scr c/l + ] literal [ 7 c/l * ] literal type ;
-:noname ( -- )
-  [ 5 disc-scr c/l 8 * + ] literal [ 7 c/l * ] literal type ;
-:noname ( -- )
-  [ 5 disc-scr c/l + ] literal [ 7 c/l * ] literal type ;
+: lines ( n -- len ) c/l * ;
+  \ Return length _len_ of _n_ block lines.
+
+: .lines ( block line lines -- )
+  lines >r lines swap disc-scr + r> type ;
+  \ Display certain _lines_ of the given _block_ in the Forth
+  \ RAM-disk, starting from _line_.
+
+:noname ( -- ) 6 7 4 .lines cr cr 6 11 2 .lines ;
+:noname ( -- ) 6 1 4 .lines cr cr 6  5 2 .lines ;
+:noname ( -- ) 5 7 4 .lines cr cr 5 11 2 .lines ;
+:noname ( -- ) 5 1 4 .lines cr cr 5  5 2 .lines ;
 localized license ( -- )
 
 -->
