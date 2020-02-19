@@ -1,0 +1,46 @@
+= Tron 0xF versions
+:author: Marcos Cruz (programandala.net)
+:revdate: 2020-02-19
+
+// This file is part of
+// Tron 0xF
+// A ZX Spectrum game written in fig-Forth with Abersoft Forth
+
+// http://programandala.net/en.program.tron_0xf.html
+
+// Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
+
+// Copying and distribution of this file, with or without
+// modification, are permitted in any medium without royalty
+// provided the copyright notice and this notice are
+// preserved.  This file is offered as-is, without any
+// warranty.
+
+// -------------------------------------------------------------
+
+// This file is written in AsciiDoc/Asciidoctor format
+// (http://asciidoctor.org).
+
+
+== Version 0.2.0
+
+Under development. Started on 2020-02-11.
+
+- Interlingue translation.
+- The start coordinates are random in a 4-pixel range.
+- Fixed/improved texts.
+- Improved documentation.
+- Improved instructions.
+
+== Version 0.1.1
+
+Released on 2016-03-03.
+
+- Fixed/improved texts.
+- Improved documentation.
+
+== Version 0.1.0
+
+Released on 2016-03-02.
+
+First public release.
