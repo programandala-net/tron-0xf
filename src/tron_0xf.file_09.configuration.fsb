@@ -48,7 +48,7 @@
 here: color-icons 156 c, 157 c, 158 c, \ for robots
                   159 c, 160 c, 161 c, \ for humans
 
-: at-color ( -- ) color-line player-col at ;
+: at-color ( -- ) color-row player-col at ;
   \ Position the cursor on the color icon of the current
   \ player.
 
@@ -90,16 +90,16 @@ here: colors$ 8 c,
 ( Pilots' menu )
 
 : pilot-menu-row-headers ( -- )
-  red ink  vehicle$ vehicle-line 0 at type
-  pilot$ pilot-line 0 at type  color$ color-line 0 at type
-  keys/player 0 do  i key-desc keys-line i + |key-desc  loop
+  red ink  vehicle$ vehicle-row 0 at type
+  pilot$ pilot-row 0 at type  color$ color-row 0 at type
+  keys/player 0 do  i key-desc keys-row i + |key-desc  loop
   white ink ;
   \ Show the row headers of the config keys menu, with
   \ the names of the keys at the left.
 
 : vehicle-numbers ( f -- )
   inverse max-players 0 do
-            vehicle-line i pilot-col at i s->d 0 d.r
+            vehicle-row i pilot-col at i s->d 0 d.r
           loop 0 inverse ;
   \ Print the vehicle numbers at the top of the columns.
   \ f = active pilot menu?
@@ -124,7 +124,7 @@ here: colors$ 8 c,
   option-3$ sound? @ on/off$ s+ ;
 
 : sound-option ( f -- )
-  sound-line 0 at sound-option$
+  sound-row 0 at sound-option$
   rot if over c@ upperc initial. 1 /string then type ;
   \ Show the menu option that toggles the sound.
   \ f = Active option?

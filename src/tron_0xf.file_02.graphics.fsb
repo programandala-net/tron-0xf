@@ -141,17 +141,17 @@ here: udg-set  udg0 , eo-udg , es-udg , es-udg ,
   \ both the bitmap and the attributes
   \ (what means black ink and black paper).
 
-32 constant cols  24 constant lines
+32 constant cols  24 constant rows
   \ Size of the screen.
 
-lines 1- constant bottom-line
+rows 1- constant bottom-row
 
- cols 2 - constant arena-cols
-lines 4 - constant arena-lines
+cols 2 - constant arena-cols
+rows 4 - constant arena-rows
   \ Size of the game arena (inside its frame).
 
                    attributes constant top-frame-attributes
-attributes cols lines 3 - * + constant bottom-frame-attributes
+attributes cols rows 3 - * + constant bottom-frame-attributes
   \ Attributes addresses of the arena frame.
 
 ( Center justified texts and title )
@@ -160,25 +160,25 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \ Convert a string length to the column required
   \ to print the string centered.
 
-: |at| ( line len -- ) centered at ;
-  \ Put the cursor on the given line, at the column
+: |at| ( row len -- ) centered at ;
+  \ Put the cursor on the given row, at the column
   \ required to center a text of the given length.
 
-: |linespaces| ( len line -- ) over |at| spaces ;
-  \ Type spaces centered on a given line.
+: |rowspaces| ( len row -- ) over |at| spaces ;
+  \ Type spaces centered on a given row.
 
-: |linetype| ( ca len line -- ) over |at| type ;
-  \ Type a string centered on a given line.
+: |rowtype| ( ca len row -- ) over |at| type ;
+  \ Type a string centered on a given row.
 
-: remark ( ca len -- ) bottom-line |linetype| ;
-  \ Type a string centered on the last line.
+: remark ( ca len -- ) bottom-row |rowtype| ;
+  \ Type a string centered on the last row.
 
-: -remark ( ca len -- ) nip bottom-line |linespaces| ;
-  \ Erase a string centered on the last line.
+: -remark ( ca len -- ) nip bottom-row |rowspaces| ;
+  \ Erase a string centered on the last row.
 
 : at-col ( col -- ) AT@ drop swap at ;
   \ Move the cursor position to the given column
-  \ of the current line.
+  \ of the current row.
 
 10 disc-scr constant title-address
   \ The last two screens (10..11) of the Forth RAM-disk
@@ -196,13 +196,13 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Contents page )
 
-8 value contents-line \ first usable line
+8 value contents-row \ first usable row
 
-: at-contents ( -- ) contents-line 0 at  black ink ;
+: at-contents ( -- ) contents-row 0 at  black ink ;
   \ Set ink color and print position ready for new contents.
 
-: >at-contents ( n -- ) dup to contents-line at-contents ;
-  \ Set ink color and print position at line _n_, ready for new
+: >at-contents ( n -- ) dup to contents-row at-contents ;
+  \ Set ink color and print position at row _n_, ready for new
   \ contents.
 
 : page ( -- ) blackout title 8 >at-contents ;
@@ -212,12 +212,12 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \ Start a new contents page without title.
 
 : contents-attributes ( -- a len )
-  contents-line cols * \ bytes to skip
+  contents-row cols * \ bytes to skip
   attributes over +  /attributes rot - ;
   \ Screen attributes zone of the contents zone.
 
 : contents-bitmap ( -- a len )
-  contents-line cols * 8 * \ bytes to skip (8 scans/char)
+  contents-row cols * 8 * \ bytes to skip (8 scans/char)
   sys-screen over +  /sys-screen-bitmap rot - ;
   \ Screen bitmap zone of the contents zone.
 
@@ -239,11 +239,11 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
 
 ( Status bar)
 
-22 constant status-line
+22 constant status-row
 
 : (.score) ( n1 n2 -- )
-  >r status-line r at  s->d <# # # # #> 2dup +hi-digits type
-     status-line 1+ r> at  +lo-digits type +font ;
+  >r status-row r at  s->d <# # # # #> 2dup +hi-digits type
+     status-row 1+ r> at  +lo-digits type +font ;
   \ Print the content _n1_ of a score variable at colum _n2_
   \ using 3 digits and double height characters.
 
@@ -260,7 +260,7 @@ attributes cols lines 3 - * + constant bottom-frame-attributes
   \ XXX TODO improve (now it shows only the scores)
 
 : -status ( -- )
-  status-line 0 at  [ cols 2* ] literal spaces ;
+  status-row 0 at  [ cols 2* ] literal spaces ;
   \ Erase the status bar.
 
 ( color-frame )
@@ -329,7 +329,7 @@ bottom-frame-attributes over - 2dup ( a len a len )
   [ swap 7 disc-scr ] literal literal literal cmove [ !csp ] ;
 
 : clear-arena ( -- )
-  restore-arena [ arena-lines 1+ ] literal 1 do
+  restore-arena [ arena-rows 1+ ] literal 1 do
                   i 1 at [ cols 2 - ] literal  spaces
                 loop ;
   \ Clear only the game arena.

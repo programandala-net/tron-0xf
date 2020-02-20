@@ -39,10 +39,10 @@
 
 ( Menu -- data )
 
-6 constant options      \ number of menu options
-2 constant lines/option \ lines occupied per menu option
+6 constant options     \ number of menu options
+2 constant rows/option \ rows occupied per menu option
 
-contents-line 2+ constant menu-line
+contents-row 2+ constant menu-row
 
 options buffer: menu-keys
   \ A table to store the menu keys. They change depending on
@@ -91,8 +91,8 @@ here: menu-commands
   \ stored in the given address, and also store it
   \ into the `menu-keys` table.
 
-: option>line (  n -- line ) lines/option * menu-line + ;
-  \ Convert a menu option number to its line.
+: option>row (  n -- row ) rows/option * menu-row + ;
+  \ Convert a menu option number to its row.
 
 : option>string ( n -- ca len ) menu-options swap >execute ;
   \ Convert a menu option number to its localized text.
@@ -100,13 +100,13 @@ here: menu-commands
 ( Option)
 
 : option ( n -- )
-  dup >r                 ( n ) ( R: n )
-  dup option>line        ( n line )
-  >r option>string       ( ca len ) ( R: n line )
-  dup centered           ( ca len col )
-  r> swap                ( ca len line col ) ( R: n )
-  2dup at 2over drop r>  ( ca len line col ca n ) ( R: )
-  option-initial         ( ca len line col )
+  dup >r                ( n ) ( R: n )
+  dup option>row        ( n row )
+  >r option>string      ( ca len ) ( R: n row )
+  dup centered          ( ca len col )
+  r> swap               ( ca len row col ) ( R: n )
+  2dup at 2over drop r> ( ca len row col ca n ) ( R: )
+  option-initial        ( ca len row col )
   1+ at 1 /string type ;
   \ Print menu option number _n_.
   \

@@ -38,11 +38,11 @@
 11 constant /key-desc
   \ Max length of a player key description in any language.
 
-contents-line
-1+ dup constant sound-line   2+ dup constant vehicle-line
-2+ dup constant pilot-line   2+ dup constant color-line
-2+     constant keys-line
-  \ Lines of some parts of the config menu.
+contents-row
+1+ dup constant sound-row   2+ dup constant vehicle-row
+2+ dup constant pilot-row   2+ dup constant color-row
+2+     constant keys-row
+  \ Rows of some parts of the config menu.
 
 0 constant key-desc-col \ column of the key description
 
@@ -52,20 +52,20 @@ contents-line
 
 ( Key descriptions )
 
-: +key-desc-col ( ca len line -- ca len line col' )
+: +key-desc-col ( ca len row -- ca len row col' )
   over /key-desc swap - ;
   \ Relative column of a key description,
   \ depending on its length; it's relative to
   \ the absolute column of the key descriptions.
 
-: (type-key-desc) ( ca len line col -- )
+: (type-key-desc) ( ca len row col -- )
   key-desc-col + at type ;
-  \ Print a key description, on the given line.
+  \ Print a key description, on the given row.
   \ col = columns from the left margin of its region.
 
-: |key-desc ( ca len line -- )
+: |key-desc ( ca len row -- )
   0 (type-key-desc) ;
-  \ Print a key description, on the given line,
+  \ Print a key description, on the given row,
   \ at the left of its region.
 
 ( Key descriptions and positions )
@@ -95,7 +95,7 @@ here: key-columns  12 c, 19 c, 26 c,
 : player-col ( -- col ) player pilot-col ;
   \ Column of the current player's vehicle.
 
-: key#>coords ( n -- line col ) keys-line + player-col ;
+: key#>coords ( n -- row col ) keys-row + player-col ;
   \ Convert a key number _n_ (0..3) of the current player
   \ to the cursor coordinates of the key in the pilot menu.
 
@@ -139,7 +139,7 @@ here: pilot-controls human , robot , none ,
 
 ( Config the pilot )
 
-: at-pilot ( -- ) pilot-line player-col at ;
+: at-pilot ( -- ) pilot-row player-col at ;
   \ Move the cursor to the pilot of the current player.
 
 : erase-pilot ( -- ) at-pilot 6 spaces ;
@@ -189,7 +189,7 @@ here: pilot-controls human , robot , none ,
   \ for the 'n' key of the current player.
 
 : hide-keys ( -- ) keys/player 0 do
-                     keys-line i + player-col at 2 spaces
+                     keys-row i + player-col at 2 spaces
                    loop ;
   \ Hide the keys of the current player.
 
