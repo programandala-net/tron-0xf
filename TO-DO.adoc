@@ -11,9 +11,6 @@ Fix: do not accept keys already used
 
 New: Key to use automatic pilot, until a control key is pressed!
 
-New: `case:` (from F83) for several cases. Search for `@ execute` in
-the sources.
-
 Fix: 1 player runs faster than 2; 2 run faster than 3.
 
 .2015-07-15:
