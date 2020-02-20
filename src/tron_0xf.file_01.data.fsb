@@ -37,7 +37,7 @@
 
 forth definitions
 
-: version#$ ( -- ca len ) s" 0.2.0-rc.7+202002202236" ;
+: version#$ ( -- ca len ) s" 0.2.0-rc.8+202002202251" ;
   \ Version number.
 
   \ Color constants:

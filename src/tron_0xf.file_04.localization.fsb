@@ -172,13 +172,13 @@ char N constant 'n'  -->
 localized do-stop$ ( -- ca len )
 
 :noname ( -- ca len ) s" Yes" ; dup
-:noname ( -- ca len ) s" Sí" ;
+:noname ( -- ca len ) s" Sí " ;
 :noname ( -- ca len ) s" Jes" ; rot
   \ English=Interlingue
 localized on$ ( -- ca len )
 
-:noname ( -- ca len ) s" Ne" ;
-:noname ( -- ca len ) s" No" ; 2dup
+:noname ( -- ca len ) s" Ne " ;
+:noname ( -- ca len ) s" No " ; 2dup
   \ Esperanto=Interlingue, English=Spanish
 localized off$ ( -- ca len )
 
