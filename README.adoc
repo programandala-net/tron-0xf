@@ -63,11 +63,16 @@ emulator:
 - <target/tron_0xf_{program_version}.sna>
 
 There are many ZX Spectrum emulators, for almost any kind of operating
-systems.  I can recommend the following ones, which work on GNU/Linux,
-Windows and other systems:
+systems.  In case you never used such a program, I can recommend the
+following ones, which work on GNU/Linux, Windows and other systems:
 
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
+
+If you prefer not to install a program, you can use this on-line
+emulator just visiting its address with a modern browser:
+
+- http://torinak.com/qaop[Qaop/JS]
 
 // How to build the program from the sources {{{2
 === How to build the program from the sources
@@ -140,10 +145,10 @@ is much faster and powerful than Abersoft Forth.
 // Priskribo {{{2
 === Priskribo
 
-Tron 0xF estas Tron-stila ludo por ZX Spectrum (modelo de 48 KiB aŭ
+Tron 0xF estas Tron-speca ludo por ZX Spectrum (modelo de 48 KiB aŭ
 posta), de jenaj ecoj:
 
-. 1, 2 aŭ 3 veturantoj, laŭ ajna kombino de homoj kaj robotoj.
+. 1, 2 aŭ 3 veturantoj, en ajna kombino de homoj kaj robotoj.
 . Konfigureblaj koloroj kaj klavoj de la veturantoj.
 . La ludo neniam finiĝas. Se poentaro iĝas 999, ĝi rekomencas de nulo.
   Homaj veturantoj devas interkonsenti pri fin-kondiĉoj.
@@ -174,11 +179,17 @@ de ZX Spectrum:
 - <target/tron_0xf_{program_version}.sna>
 
 Estas multaj emuliloj de ZX Spectrum, por preskaŭ ĉia operaciumo
-(mastruma programo).  Mi povas rekomendi la sekvantajn, kiuj funkcias
-en sistemoj GNU/Linukso, Vindozo kaj aliaj:
+(mastruma programo).   Se vi neniam uzis tian programon, mi povas
+rekomendi la sekvantajn, kiuj funkcias en sistemoj GNU/Linukso,
+Vindozo kaj aliaj:
 
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
+
+Se vi preferas ne instali programon, vi povas uzi tiun ĉi retan
+emulilon nur vizitante ĝian retadreson per moderna retpaĝumilo:
+
+- http://torinak.com/qaop[Qaop/JS]
 
 // Kiel konstrui la programon el la fonto {{{2
 === Kiel konstrui la programon el la fonto
@@ -230,7 +241,7 @@ Sono estas rudimenta, kaj influas la ludo-rapidon: Dum sono aktivas,
 du veturiloj pli rapidas ol tri. Por atingi decan sonon el ZX Spectrum
 48 necesas verki interrompo-traktilon por ĝi.
 
-La link:./TO-DO.adoc[listo de farendaĵoj] enhavas aliajn malgravajn
+La link:./TO-DO.adoc[listo de farendaĵoj (en la angla)] enhavas aliajn malgravajn
 aferojn, kaj provojn pri la robotoj.
 
 La precipaj misoj estas riparotaj en onta plibonigita versio por ZX
@@ -280,11 +291,17 @@ Spectrum favorito:
 - <target/tron_0xf_{program_version}.sna>
 
 Hay muchos emuladores de ZX Spectrum, casi para todo tipo de sistema
-operativo. Puedo recomendar los siguientes, que funcionan en sistemas
-GNU/Linux, Windows y otros:
+operativo. Si nunca has usado este tipo de programas, puedo
+recomendarte los siguientes, que funcionan en sistemas GNU/Linux,
+Windows y otros:
 
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
+
+Si prefieres no instalar un programa, puedes usar un emulador en línea
+tan solo entrando en su página con un navegador moderno:
+
+- http://torinak.com/qaop[Qaop/JS]
 
 // Cómo crear el programa a partir de las fuentes {{{2
 === Cómo crear el programa a partir de las fuentes
@@ -339,8 +356,8 @@ está activado, dos corredores van más rápido que tres.  Para lograr un
 sonido decente en ZX Spectrum 48 habría que implementarlo con una
 rutina activada por interrupciones.
 
-La link:./TO-DO.adoc[lista de tareas pendientes] contiene algunas
-otras cosas menores, y algunas pruebas hechas con los robots.
+La link:./TO-DO.adoc[lista de tareas pendientes (en inglés)] contiene
+algunas otras cosas menores, y algunas pruebas hechas con los robots.
 
 Los principales fallos serán corregidos en una futura versión mejorada
 para ZX Spectrum 128, que tiene un chip específico de sonido, y
@@ -356,16 +373,16 @@ es más rápido y potente que Abersoft Forth.
 Tron 0xF es un lude de tipe Tron por ZX Spectrum (modelle con 48 KiB o
 posteriori), con li sequent trates:
 
-. 1, 2 o 3 pilotes, in alqual combination de homes e robotes.
+. 1, 2 o 3 pilotes, in quelcunc combination de homes e robotes.
 . Li color e li tastes del pilotes es configurabil.
 . Li lude nequande fini. Quande li punctus de alquí es 999, ili
   recomensa de null. Li homal lusores deve consentir li conditiones de
   finition.
-. Quande hay un pilote homal, li currida comensa per li unesim pression
-  de un taste; quande omni pilotes es robotes, li curridas comensa
-  automaticmen.
+. Quande hay un pilote homal, li currida comensa per li unesim
+  pression de un taste; quande omni pilotes es robotes, li curridas
+  comensa automaticmen.
 
-Li instructiones del lude es includet in li programma.
+Li instructiones del lude es includet in li programa.
 
 // Pri li code {{{2
 === Pri li code
@@ -389,16 +406,21 @@ ZX Spectrum:
 - <target/tron_0xf_{program_version}.sna>
 
 Hay mult emulatores de ZX Spectrum, presc por qualcunc tip de sistema
-operativ. Yo posse recomandar li sequentes, queles functiona in sistemas
-GNU/Linux, Windows e altris:
+operativ. Si vu nequande usat un programa tal, yo posse recomandar li
+sequentes, queles functiona in sistemas GNU/Linux, Windows e altris:
 
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
 
-// Qualmen crear li programma ex li font-documentes {{{2
-=== Qualmen crear li programma ex li font-documentes
+Si vu prefere ne instalar un programa, vu posse usar un emulator web,
+solmen visitante su adresse per un navigator modern:
 
-Si vu vole modificar li programma, vu deve sequer li sequent
+- http://torinak.com/qaop[Qaop/JS]
+
+// Qualmen crear li programa ex li font-documentes {{{2
+=== Qualmen crear li programa ex li font-documentes
+
+Si vu vole modificar li programa, vu deve sequer li sequent
 instructiones.
 Si vu solmen vole provar recrear it ex li original font-documentes,
 vu posse ear directmen al <<passu2, passu2 >>.
@@ -407,7 +429,7 @@ vu posse ear directmen al <<passu2, passu2 >>.
 ==== Passu 1: Crear li document TAP
 
 Por converter li font-documentes (codal o pictural) in un document TAP
-usabil por Abersoft Forth, on deve haver pluri programmas installat
+usabil por Abersoft Forth, on deve haver pluri programas installat
 (on posse vider plu detallies in li document link:Makefile[Makefile]):
 
 - http://gnu.org/software/gforth/[Gforth]
@@ -426,13 +448,13 @@ version actual).
 
 Aperte li document <tron_0xf_{program_version}_compilable.tap> per vor
 emulator secun li metode ordinari.  It contene Abersoft Forth, sequet
-del font-documentes del biblioteca Afera e del programma.
+del font-documentes del biblioteca Afera e del programa.
 
 Carga Abersoft Forth per li comande de BASIC `LOAD ""` (o per li menú
 de ZX Spectrum 128). Li ecran initial de Abersoft Forth va aparir.
 Tande usu li comande `LOADT 1 LOAD`. Li interpretation va durar circa
 13 minutes, secún li rapiditá original del ZX Spectrum. Finalment li
-programma va comensar.  Tande vu va posser usar vor emulator por
+programa va comensar.  Tande vu va posser usar vor emulator por
 conservar un copie del sistema in qualcunc formate, por exemple SZX,
 SNA, Z80.
 
@@ -444,7 +466,7 @@ habil sin lentisar li lude, ma yo ne ha atinget clar resultates.
 
 Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
 du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
-on vell dever programmar it per un rutine activat per interruptiones.
+on vell dever programar it per un rutine activat per interruptiones.
 
 Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene
 quelc altri coses minori, e alcun provas fat pri li robotes.
