@@ -111,9 +111,9 @@
   ." no extra lifes or final score." cr
   ." You decide the conditions to" cr
   ." quit." cr
-  ." To abort the game, press <Break>"
-  ." (<Caps Shift>+<Space>) and con-" cr
-  ." firm." cr ;
+  ."   To abort the game, press" cr
+  ." <Break> (<Caps Shift>+<Space>)" cr
+  ." and confirm." cr ;
   \  <------------------------------>
 
 localized (instructions) ( -- )

@@ -258,7 +258,7 @@ localized option-7$ ( -- ca len ) -->
   ." Ne estas kromvivoj aŭ finiga po-"
   ." ento. Vi decidas la finigajn" cr
   ." kondiĉojn." cr
-  ."  Por eliri el la ludo premu la" cr
+  ."   Por eliri el la ludo premu la" cr
   ." klavon <Break> (<Majuskligo>+" cr
   ." <Spaco>) kaj konfirmu." cr ;
   \  <------------------------------>
