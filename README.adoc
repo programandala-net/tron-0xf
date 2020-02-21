@@ -1,6 +1,10 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-14
+:revdate: 2020-02-21
+:toc:
+:toc-title: Contents/Enhavo/Contenido/Contenete
+
+:program_version: v0.2.0+20200221
 
 // This file is part of
 // Tron 0xF
@@ -8,7 +12,7 @@
 
 // http://programandala.net/en.program.tron_0xf.html
 
-// Copyright (C) 2015,2016 Marcos Cruz (programandala.net)
+// Copyright (C) 2015,2016,2020 Marcos Cruz (programandala.net)
 
 // Copying and distribution of this file, with or without
 // modification, are permitted in any medium without royalty
@@ -18,49 +22,64 @@
 
 // -------------------------------------------------------------
 
-// This file is written in AsciiDoc/Asciidoctor format
+// This file is written in Asciidoctor format
 // (http://asciidoctor.org).
 
-- link:README.eo.adoc[Esperanto-versio]
-- link:README.es.adoc[Versión en español]
-- link:README.ie.adoc[Version in Interlingue]
+// English (en) {{{1
+== English (en)
 
-== Description
+// Description {{{2
+=== Description
 
-Tron 0xF is a simple Tron-like game for ZX Spectrum (48 KiB model or
-later), with the following features:
+Tron 0xF is a Tron-like game for ZX Spectrum (48 KiB model or later),
+with the following features:
 
 . 1, 2 or 3 riders, in any combination of humans and robots.
-. Riders' color is configurable.
-. Human riders' keys are configurable.
-. When at least one human rider plays, the ride starts at the first
-  keypress. When no human rider plays, the rides start automatically.
+. Riders' color and keys are configurable.
 . The game never ends. When a score is greater than 999, it starts
   back from zero. Human players must agree when to finish.
+. When there's a human rider, the ride starts at the first keypress;
+  when all riders are robots, the rides start automatically.
 
 The game instructions are included in the program.
 
-== About the code
+// About the code {{{2
+=== About the code
 
 Tron 0xF is written in Abersoft Forth (a fig-Forth 1.1 system ported
 to ZX Spectrum by John Jones Steele and published by Melbourne House
-in 1983), using the Afera libray (Marcos Cruz, 2015). See more details
-in the http://programandala.net/en.program.tron_0xf.html[Tron 0xF
-homepage].
+in 1983), using the http://programandala.net/en.program.afera[Afera
+libray] (Marcos Cruz, 2015). See more details in the
+http://programandala.net/en.program.tron_0xf.html[Tron 0xF homepage].
 
-== How to run
+// How to run {{{2
+=== How to run
 
-Open the file <tron_0xf.szx> with your favorite ZX Spectrum 48K emulator.
+Open any of the following files with your favourite ZX Spectrum
+emulator:
 
-== How to build the program from the sources
+- <target/tron_0xf_{program_version}.szx>
+- <target/tron_0xf_{program_version}.z80>
+- <target/tron_0xf_{program_version}.sna>
+
+There are many ZX Spectrum emulators, for almost any kind of operating
+systems.  I can recommend the following ones, which work on GNU/Linux,
+Windows and other systems:
+
+- http://fuse-emulator.sourceforge.net[Fuse]
+- https://github.com/chernandezba/zesarux[ZEsarUX]
+
+// How to build the program from the sources {{{2
+=== How to build the program from the sources
 
 If you want to modify the program you must follow the following instructions.
 If you just want to rebuild it from the original sources, you can skip to
 <<step2>>.
 
-=== Step 1: Make the TAP file
+// Step 1: Make the TAP file {{{3
+==== Step 1: Make the TAP file
 
-In order to convert the sources (of code and graphics) to a TAP file
+In order to convert the sources (code or graphics) to a TAP file
 suitable for Abersoft Forth, several programs have to be installed
 (see the link:Makefile[Makefile] for more details):
 
@@ -71,13 +90,15 @@ suitable for Abersoft Forth, several programs have to be installed
 - http://programandala.net/en.program.pbm2scr.html[pbm2scr]
 
 Then enter the Tron 0xF's directory and execute the command `make`.
-That will create the file <tron_0xf_compiling.tap>.
+That will create the file <target/tron_0xf_{program_version}_compilable.tap>
+(with the current version number).
 
 [id=step2]
-=== Step 2: Interpret the sources
+==== Step 2: Interpret the sources
 
-Open <tron_0xf_compiling.tap> normally with your emulator. It contains
-Abersoft Forth, followed by the Afera library and the program sources.
+Open <target/tron_0xf_{program_version}_compilable.tap> normally with
+your emulator. It contains Abersoft Forth, followed by the Afera
+library and the program sources.
 
 Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
 menu of the ZX Spectrum 128).  You will see the start screen of
@@ -86,14 +107,16 @@ interpretation will take about 13 minutes at the original speed of ZX
 Spectrum. The program will run at the end.  Then you can use your
 emulator to save a snapshot in any format, e.g. SZX, Z80, SNA.
 
-== Screen saver
+// Screen saver {{{2
+=== Screen saver
 
 As a side effect, the game can be used as screen saver: Configure it
 with three robot raiders, set the desired speed on your ZX Spectrum
 emulator, turn whole screen mode on, and start the game. It will not
 stop.
 
-== Known issues
+// Known issues {{{2
+=== Known issues
 
 The robots are pretty stupid. I tried several approaches to make them
 smarter without slowing the game but didn't get clear results.
@@ -111,3 +134,322 @@ Spectrum 128, which has a dedicated sound chip, and
 http://programandala.net/en.program.solo_forth.html[Solo Forth], which
 is much faster and powerful than Abersoft Forth.
 
+// Esperanto (eo) {{{1
+== Esperanto (eo)
+
+// Priskribo {{{2
+=== Priskribo
+
+Tron 0xF estas Tron-stila ludo por ZX Spectrum (modelo de 48 KiB aŭ
+posta), de jenaj ecoj:
+
+. 1, 2 aŭ 3 veturantoj, laŭ ajna kombino de homoj kaj robotoj.
+. Konfigureblaj koloroj kaj klavoj de la veturantoj.
+. La ludo neniam finiĝas. Se poentaro iĝas 999, ĝi rekomencas de nulo.
+  Homaj veturantoj devas interkonsenti pri fin-kondiĉoj.
+. Kiam estas unu homa veturanto, la veturado ekas post ajna klavpremo;
+  kiam ĉiuj veturantoj robotas, la veturadoj ekas aŭtomate.
+
+Lud-instrukcioj estas inkluditaj en la programo.
+
+// Pri la kodo {{{2
+=== Pri la kodo
+
+Tron 0xF estas verkita en Abersoft Forth (sistemo fig-Forth 1.1
+adaptita al ZX Spectrum far John Jones Steele kaj eldonita de
+Melbourne House en 1983), uzante la
+http://programandala.net/eo.programo.afera.html[bibliotekon Afera]
+(Marcos Cruz, 2015). Pliaj detaloj estas en la
+http://programandala.net/eo.programo.tron_0xf.html[retpaĝo de Tron
+0xF].
+
+// Kiel funkciigi {{{2
+=== Kiel funkciigi
+
+Malfermu iun ajn el la sekvantaj dosieroj per via plej ŝatata emulilo
+de ZX Spectrum:
+
+- <target/tron_0xf_{program_version}.szx>
+- <target/tron_0xf_{program_version}.z80>
+- <target/tron_0xf_{program_version}.sna>
+
+Estas multaj emuliloj de ZX Spectrum, por preskaŭ ĉia operaciumo
+(mastruma programo).  Mi povas rekomendi la sekvantajn, kiuj funkcias
+en sistemoj GNU/Linukso, Vindozo kaj aliaj:
+
+- http://fuse-emulator.sourceforge.net[Fuse]
+- https://github.com/chernandezba/zesarux[ZEsarUX]
+
+// Kiel konstrui la programon el la fonto {{{2
+=== Kiel konstrui la programon el la fonto
+
+Se vi volas modifi la programon, vi devas sekvi jenajn instrukciojn.
+Se vi volas nur provi, rekonstrui ĝin el la nuna fonto,
+vi povas iri rekte al <<pasxo2,paŝo 2>>.
+
+// Paŝo 1: Krei la TAP-dosieron {{{3
+==== Paŝo 1: Krei la TAP-dosieron
+
+Por traduki la font-dosierojn (kodajn aŭ bildajn) en TAP-dosieron
+uzeblan de Abersoft Forth, pluraj programoj devas esti instalitaj
+(vidu pliajn detalojn en la dosiero link:Makefile[Makefile]):
+
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/eo.programo.fsb.html[fsb]
+- head (ero de _GNU core utilities_)
+- http://programandala.net/eo.programo.pbm2scr.html[pbm2scr]
+
+Poste eniru la dosierujon de Tron 0xF kaj ordonu `make`. Tio kreos la
+dosieron <target/tron_0xf_{program_version}_compilable.tap> (kun la
+nuna versio-numero).
+
+[id=pasxo2]
+==== Paŝo 2: Interpreti la fonton
+
+Malfermu normale la dosieron
+<target/tron_0xf_{program_version}_compilable.tap> per via emulilo.
+Ĝi enhavas unue Abersoft Forth, kaj poste la fontojn de la biblioteko
+Afera kaj de la programo.
+
+Enlegu Abersoft Forth per la BASIC-komando `LOAD ""` (aŭ per la menuo
+de ZX Spectrum 128).  Ĉe la salutekrano de Abersoft Forth tajpu la
+ordonon `LOADT 1 LOAD`.  La interpretado daŭros pli malpi 13 minutojn
+je la originala rapido de ZX Spectrum.  La programo ekfunkcios je la
+fino.  Tiam vi povos registri ĝin kiel sistem-kaptaĵon en ajna
+formato, ekzemple SZX, SNA, Z80.
+
+// Konataj misoj {{{2
+=== Konataj misoj
+
+La robotoj estas iom stultaj. Mi klopodis plurajn metodojn
+pliinteligentigi ilin sen malrapidigi la ludon, sed ne atingis klaran
+rezulton.
+
+Sono estas rudimenta, kaj influas la ludo-rapidon: Dum sono aktivas,
+du veturiloj pli rapidas ol tri. Por atingi decan sonon el ZX Spectrum
+48 necesas verki interrompo-traktilon por ĝi.
+
+La link:./TO-DO.adoc[listo de farendaĵoj] enhavas aliajn malgravajn
+aferojn, kaj provojn pri la robotoj.
+
+La precipaj misoj estas riparotaj en onta plibonigita versio por ZX
+Spectrum 128, kiu enhavas son-dediĉitan blaton, kaj
+http://programandala.net/eo.programo.solo_forth.html[Solo Forth], kiu
+pli rapidas ol Abersoft Forth.
+
+// Español (es) {{{1
+== Español (es)
+
+// Descripción {{{2
+=== Descripción
+
+Tron 0xF es un juego de tipo Tron para ZX Spectrum (modelo de 48 KiB o
+posterior), con las siguientes características:
+
+. 1, 2 o 3 pilotos, en cualquier combinación de humanos y robots.
+. El color y las teclas de los pilotos son configurables.
+. El juego nunca termina. Cuando un marcador llega a 999, vuelve a
+  empezar desde cero. Los jugadores humanos deben acordar las
+  condiciones de finalización.
+. Cuando hay un piloto humano, la carrera empieza con la primera
+  pulsación de una tecla; cuando todos los pilotos son robots, las
+  carreras empiezan automáticamente.
+
+Las instrucciones de juego están incluidas en el programa.
+
+// Acerca del código {{{2
+=== Acerca del código
+
+Tron 0xF está escrito en Abersoft Forth (un sistema fig-Forth 1.1
+llevado a ZX Spectrum por John Jones Steele y publicado por Melbourne
+House en 1983), con módulos de la
+http://programandala.net/es.programa.afera.html[biblioteca Afera]
+(Marcos Cruz, 2015). Puedes encontrar más detalles en la
+http://programandala.net/es.programa.tron_0xf.html[página de Tron
+0xF].
+
+// Cómo ejecutarlo {{{2
+=== Cómo ejecutarlo
+
+Abre cualquiera de los siguientes ficheros con tu emulador de ZX
+Spectrum favorito:
+
+- <target/tron_0xf_{program_version}.szx>
+- <target/tron_0xf_{program_version}.z80>
+- <target/tron_0xf_{program_version}.sna>
+
+Hay muchos emuladores de ZX Spectrum, casi para todo tipo de sistema
+operativo. Puedo recomendar los siguientes, que funcionan en sistemas
+GNU/Linux, Windows y otros:
+
+- http://fuse-emulator.sourceforge.net[Fuse]
+- https://github.com/chernandezba/zesarux[ZEsarUX]
+
+// Cómo crear el programa a partir de las fuentes {{{2
+=== Cómo crear el programa a partir de las fuentes
+
+Si quieres modificar el programa debes seguir las siguientes instrucciones.
+Si solo quieres probar a reconstruirlo a partir de las fuentes originales,
+puedes ir directamente al <<paso2, paso2 >>.
+
+// Paso 1: Crear el fichero TAP {{{3
+==== Paso 1: Crear el fichero TAP
+
+Para convertir los ficheros fuente (de código o gráficos) en un
+fichero TAP utilizable por Abersoft Forth, es preciso tener instalados
+varios programas (véanse más detalles en el fichero
+link:Makefile[Makefile]):
+
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/es.programa.fsb.html[fsb]
+- head (componente de _GNU core utilities_)
+- http://programandala.net/es.programa.pbm2scr.html[pbm2scr]
+
+Después entra en el directorio de Tron 0xF y ejecuta el comando
+`make`.  Esto creará el fichero
+<target/tron_0xf_{program_version}_compilable.tap> (con el número de
+versión actual).
+
+[id=paso2]
+==== Paso 2: Interpretar las fuentes
+
+Abre el fichero <target/tron_0xf_{program_version}_compilable.tap> con
+tu emulador de la forma habitual. Contiene Abersoft Forth, seguido de
+las fuentes de la biblioteca Afera y del programa.
+
+Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú
+de ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.  A
+continuación teclea el comando `LOADT 1 LOAD`. La interpretación
+durará unos 13 minutos, a la velocidad original de ZX Spectrum. El
+programa se pondrá en marcha al final.  Entonces podrás usar tu
+emulador para guardar una instantánea del sistema en cualquier
+formato, por ejemplo SZX, SNA, Z80.
+
+// Fallos conocidos {{{2
+=== Fallos conocidos
+
+Los robots son bastante tontos. He intentado varios métodos para
+hacerlos algo más listos sin ralentizar el juego pero no he obtenido
+resultados claros.
+
+El sonido es rudimentario, y afecta a la velocidad del juego: cuando
+está activado, dos corredores van más rápido que tres.  Para lograr un
+sonido decente en ZX Spectrum 48 habría que implementarlo con una
+rutina activada por interrupciones.
+
+La link:./TO-DO.adoc[lista de tareas pendientes] contiene algunas
+otras cosas menores, y algunas pruebas hechas con los robots.
+
+Los principales fallos serán corregidos en una futura versión mejorada
+para ZX Spectrum 128, que tiene un chip específico de sonido, y
+http://programandala.net/es.programa.solo_forth.html[Solo Forth], que
+es más rápido y potente que Abersoft Forth.
+
+// Interlingue (ie) {{{1
+== Interlingue (ie)
+
+// Descrition {{{2
+=== Descrition
+
+Tron 0xF es un lude de tipe Tron por ZX Spectrum (modelle con 48 KiB o
+posteriori), con li sequent trates:
+
+. 1, 2 o 3 pilotes, in alqual combination de homes e robotes.
+. Li color e li tastes del pilotes es configurabil.
+. Li lude nequande fini. Quande li punctus de alquí es 999, ili
+  recomensa de null. Li homal lusores deve consentir li conditiones de
+  finition.
+. Quande hay un pilote homal, li currida comensa per li unesim pression
+  de un taste; quande omni pilotes es robotes, li curridas comensa
+  automaticmen.
+
+Li instructiones del lude es includet in li programma.
+
+// Pri li code {{{2
+=== Pri li code
+
+Tron 0xF es scrit in Abersoft Forth (un sistema fig-Forth 1.1 adaptat
+a ZX Spectrum de John Jones Steele e publicat de Melbourne House in
+1983), con partes del
+http://programandala.net/en.program.afera.html[biblioteca Afera]
+(Marcos Cruz, 2015). Vu posse trovar plu detallies en li
+http://programandala.net/es.programa.tron_0xf.html[web-págine de Tron
+0xF].
+
+// Qualmen far functionar it {{{2
+=== Qualmen far functionar it
+
+Aperte quelcunc de li sequent documentes per vor favorit emulator de
+ZX Spectrum:
+
+- <target/tron_0xf_{program_version}.szx>
+- <target/tron_0xf_{program_version}.z80>
+- <target/tron_0xf_{program_version}.sna>
+
+Hay mult emulatores de ZX Spectrum, presc por qualcunc tip de sistema
+operativ. Yo posse recomandar li sequentes, queles functiona in sistemas
+GNU/Linux, Windows e altris:
+
+- http://fuse-emulator.sourceforge.net[Fuse]
+- https://github.com/chernandezba/zesarux[ZEsarUX]
+
+// Qualmen crear li programma ex li font-documentes {{{2
+=== Qualmen crear li programma ex li font-documentes
+
+Si vu vole modificar li programma, vu deve sequer li sequent
+instructiones.
+Si vu solmen vole provar recrear it ex li original font-documentes,
+vu posse ear directmen al <<passu2, passu2 >>.
+
+// Passu 1: Crear li document TAP {{{3
+==== Passu 1: Crear li document TAP
+
+Por converter li font-documentes (codal o pictural) in un document TAP
+usabil por Abersoft Forth, on deve haver pluri programmas installat
+(on posse vider plu detallies in li document link:Makefile[Makefile]):
+
+- http://gnu.org/software/gforth/[Gforth]
+- http://metalbrain.speccy.org/link-eng.htm[bin2code]
+- http://programandala.net/es.programa.fsb.html[fsb]
+- head (parte de _GNU core utilities_)
+- http://programandala.net/es.programa.pbm2scr.html[pbm2scr]
+
+Tande inea li documentiere de Tron 0xF e usa li comande `make`.  Ti va
+crear crear li document
+<target/tron_0xf_{program_version}_compilable.tap> (con li númere de
+version actual).
+
+[id=passu2]
+==== Passu 2: Interpreter li font-documentes
+
+Aperte li document <tron_0xf_{program_version}_compilable.tap> per vor
+emulator secun li metode ordinari.  It contene Abersoft Forth, sequet
+del font-documentes del biblioteca Afera e del programma.
+
+Carga Abersoft Forth per li comande de BASIC `LOAD ""` (o per li menú
+de ZX Spectrum 128). Li ecran initial de Abersoft Forth va aparir.
+Tande usu li comande `LOADT 1 LOAD`. Li interpretation va durar circa
+13 minutes, secún li rapiditá original del ZX Spectrum. Finalment li
+programma va comensar.  Tande vu va posser usar vor emulator por
+conservar un copie del sistema in qualcunc formate, por exemple SZX,
+SNA, Z80.
+
+// Defectes conosset {{{2
+=== Defectes conosset
+
+Li robotes es sat stult. Yo provat pluri metodes por far les un poc plu
+habil sin lentisar li lude, ma yo ne ha atinget clar resultates.
+
+Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
+du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
+on vell dever programmar it per un rutine activat per interruptiones.
+
+Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene
+quelc altri coses minori, e alcun provas fat pri li robotes.
+
+Li defectes principal va esser corectet in un futur version ameliorat
+por ZX Spectrum 128, quel have un chip specific por li son, e
+http://programandala.net/es.programa.solo_forth.html[Solo Forth], quel
+es plu rapid e potent quam Abersoft Forth.
