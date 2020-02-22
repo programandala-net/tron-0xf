@@ -108,7 +108,7 @@
   ." precise." cr
   ."   The survivor gets one point." cr
   ." Duels repeat forever. There are" cr
-  ." no extra lifes or final score." cr
+  ." no extra lifes or score limit." cr
   ." You decide the conditions to" cr
   ." quit." cr
   ."   To abort the game, press" cr

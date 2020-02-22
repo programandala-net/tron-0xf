@@ -185,8 +185,8 @@ localized option-7$ ( -- ca len ) -->
   ."   Li supervivente del duelle ga-"
   ." nia un punctu. Li duelles repeti"
   ." se sin fine. Ne hay extra vives" cr
-  ." ni límite de punctuation. Vu de-"
-  ." cide li conditiones por finir." cr
+  ." ni límite de pointes. Vu decide" cr
+  ." li conditiones por finir." cr
   ."   Por surtir del lude presse li" cr
   ." taste <Break> (<Majuscules>+" cr
   ." <Spacie>) e confirma." cr ;
@@ -255,9 +255,9 @@ localized option-7$ ( -- ca len ) -->
   ." gente, sed ja tre precize." cr
   ."   La pluvivanto ricevas unu po-" cr
   ." enton. La dueloj pluas senĉese." cr
-  ." Ne estas kromvivoj aŭ finiga po-"
-  ." ento. Vi decidas la finigajn" cr
-  ." kondiĉojn." cr
+  ." Ne estas kromvivoj aŭ lim-poen-" cr
+  ." taro. Vi decidas la kondiĉojn" cr
+  ." por fini." cr
   ."   Por eliri el la ludo premu la" cr
   ." klavon <Break> (<Majuskligo>+" cr
   ." <Spaco>) kaj konfirmu." cr ;
