@@ -1,10 +1,10 @@
 = About Tron 0xF
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-21
+:revdate: 2020-02-25
 :toc:
 :toc-title: Contents/Enhavo/Contenido/Contenete
 
-:program_version: v0.2.0+20200221
+:program_version: v0.2.0+20200225
 
 // This file is part of
 // Tron 0xF
@@ -69,8 +69,8 @@ following ones, which work on GNU/Linux, Windows and other systems:
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
 
-If you prefer not to install a program, you can use this on-line
-emulator just visiting its address with a modern browser:
+If you prefer not to install a program, you can use this on-line ZX
+Spectrum emulator just visiting its address with a modern browser:
 
 - http://torinak.com/qaop[Qaop/JS]
 
@@ -108,8 +108,8 @@ library and the program sources.
 Then load Abersoft Forth with the BASIC command `LOAD ""` (or with the
 menu of the ZX Spectrum 128).  You will see the start screen of
 Abersoft Forth.  Then type the command `LOADT 1 LOAD`. The
-interpretation will take about 13 minutes at the original speed of ZX
-Spectrum. The program will run at the end.  Then you can use your
+interpretation will take about 13 minutes at the original speed of the
+ZX Spectrum. The program will run at the end.  Then you can use your
 emulator to save a snapshot in any format, e.g. SZX, Z80, SNA.
 
 // Screen saver {{{2
@@ -123,8 +123,9 @@ stop.
 // Known issues {{{2
 === Known issues
 
-The robots are pretty stupid. I tried several approaches to make them
-smarter without slowing the game but didn't get clear results.
+The robots are pretty stupid. Several approaches have been tried in
+order to make them smarter without slowing the game, but no clear
+result has been achieved yet.
 
 Sound is rudimentary, and it affects the game speed: two riders run
 faster than three when sound is enabled.  In order to get a decent
@@ -187,7 +188,8 @@ Vindozo kaj aliaj:
 - https://github.com/chernandezba/zesarux[ZEsarUX]
 
 Se vi preferas ne instali programon, vi povas uzi tiun ĉi retan
-emulilon nur vizitante ĝian retadreson per moderna retpaĝumilo:
+emulilon de ZX Spectrum nur vizitante ĝian retadreson per moderna
+retpaĝumilo:
 
 - http://torinak.com/qaop[Qaop/JS]
 
@@ -233,9 +235,9 @@ formato, ekzemple SZX, SNA, Z80.
 // Konataj misoj {{{2
 === Konataj misoj
 
-La robotoj estas iom stultaj. Mi klopodis plurajn metodojn
-pliinteligentigi ilin sen malrapidigi la ludon, sed ne atingis klaran
-rezulton.
+La robotoj estas iom stultaj. Pluraj metodoj estis provitaj por
+pliinteligentigi ilin sen malrapidigi la ludon, sed ankoraŭ nenia
+klara rezulto estis atingita.
 
 Sono estas rudimenta, kaj influas la ludo-rapidon: Dum sono aktivas,
 du veturiloj pli rapidas ol tri. Por atingi decan sonon el ZX Spectrum
@@ -298,8 +300,9 @@ Windows y otros:
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
 
-Si prefieres no instalar un programa, puedes usar un emulador en línea
-tan solo entrando en su página con un navegador moderno:
+Si prefieres no instalar un programa, puedes usar un emulador de ZX
+Spectrum en línea tan solo entrando en su página con un navegador
+moderno:
 
 - http://torinak.com/qaop[Qaop/JS]
 
@@ -339,7 +342,7 @@ las fuentes de la biblioteca Afera y del programa.
 Carga Abersoft Forth con el comando de BASIC `LOAD ""` (o con el menú
 de ZX Spectrum 128). Saldrá la pantalla inicial de Abersoft Forth.  A
 continuación teclea el comando `LOADT 1 LOAD`. La interpretación
-durará unos 13 minutos, a la velocidad original de ZX Spectrum. El
+durará unos 13 minutos a la velocidad original de ZX Spectrum. El
 programa se pondrá en marcha al final.  Entonces podrás usar tu
 emulador para guardar una instantánea del sistema en cualquier
 formato, por ejemplo SZX, SNA, Z80.
@@ -347,9 +350,9 @@ formato, por ejemplo SZX, SNA, Z80.
 // Fallos conocidos {{{2
 === Fallos conocidos
 
-Los robots son bastante tontos. He intentado varios métodos para
-hacerlos algo más listos sin ralentizar el juego pero no he obtenido
-resultados claros.
+Los robots son bastante tontos. Varios métodos han sido probados para
+hacerlos algo más listos sin ralentizar el juego, pero aún no se ha
+obtenido resultado claro alguno.
 
 El sonido es rudimentario, y afecta a la velocidad del juego: cuando
 está activado, dos corredores van más rápido que tres.  Para lograr un
@@ -412,8 +415,8 @@ sequentes, queles functiona in sistemas GNU/Linux, Windows e altris:
 - http://fuse-emulator.sourceforge.net[Fuse]
 - https://github.com/chernandezba/zesarux[ZEsarUX]
 
-Si vu prefere ne instalar un programa, vu posse usar un emulator web,
-solmen visitante su adresse per un navigator modern:
+Si vu prefere ne instalar un programa, vu posse usar un emulator web
+de ZX Spectrum, solmen visitante su adresse per un navigator modern:
 
 - http://torinak.com/qaop[Qaop/JS]
 
@@ -461,8 +464,9 @@ SNA, Z80.
 // Defectes conosset {{{2
 === Defectes conosset
 
-Li robotes es sat stult. Yo provat pluri metodes por far les un poc plu
-habil sin lentisar li lude, ma yo ne ha atinget clar resultates.
+Li robotes es sat stult. Pluri metodes ha esset provat por far les un
+poc plu habil sin lentisar li lude, ma ancor nequel clar resultate
+esset atinget.
 
 Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
 du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
