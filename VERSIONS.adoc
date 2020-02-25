@@ -21,7 +21,7 @@
 // This file is written in AsciiDoc/Asciidoctor format
 // (http://asciidoctor.org).
 
-== Version 0.2.0
+== Version 0.2.0+20200225
 
 Started on 2020-02-11. Released on 2020-02-25.
 
@@ -31,14 +31,14 @@ Started on 2020-02-11. Released on 2020-02-25.
 - Improved documentation.
 - Improved instructions.
 
-== Version 0.1.1
+== Version 0.1.1+20160303
 
-Released on 2016-03-03.
+Written and released on 2016-03-03.
 
 - Fixed/improved texts.
 - Improved documentation.
 
-== Version 0.1.0
+== Version 0.1+20151125
 
 Started on 2015-03-21. Released on 2016-03-02.
 

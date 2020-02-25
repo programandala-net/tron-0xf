@@ -1,6 +1,6 @@
 = Tron 0xF To-Do
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-20
+:revdate: 2020-02-25
 
 .2015-07-05
 
@@ -106,3 +106,7 @@ of the previous one.
 - Calculate the position of menu options at compile-time, in
   <tron_0xf.file_03.localization.fsb>.
 - Improve `status`.
+
+.2020-02-25:
+
+Enlarge the arena.
