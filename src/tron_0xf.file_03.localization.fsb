@@ -165,8 +165,8 @@ localized option-7$ ( -- ca len ) -->
   ." Chascun lusor chofera un vehicul"
   ." con un controlator quel torna it" cr
   ." ninant gradus sin frenar. Li" cr
-  ." vehicules lassa pos ili self" cr
-  ." un mur solid de luce." cr
+  ." vehicules lassa pos se un mur" cr
+  ." solid de luce." cr
   ."   Li scope del lude es far li" cr
   ." concurrentes colider." cr
   ."   Un, du o tri vehicules posse" cr
