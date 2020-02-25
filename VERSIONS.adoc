@@ -1,6 +1,6 @@
 = Tron 0xF versions
 :author: Marcos Cruz (programandala.net)
-:revdate: 2020-02-19
+:revdate: 2020-02-25
 
 // This file is part of
 // Tron 0xF
@@ -21,10 +21,9 @@
 // This file is written in AsciiDoc/Asciidoctor format
 // (http://asciidoctor.org).
 
-
 == Version 0.2.0
 
-Under development. Started on 2020-02-11.
+Started on 2020-02-11. Released on 2020-02-25.
 
 - Interlingue translation.
 - The start coordinates are random in a 4-pixel range.
@@ -41,6 +40,6 @@ Released on 2016-03-03.
 
 == Version 0.1.0
 
-Released on 2016-03-02.
+Started on 2015-03-21. Released on 2016-03-02.
 
 First public release.
