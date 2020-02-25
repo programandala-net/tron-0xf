@@ -146,7 +146,7 @@ localized option-5$ ( -- ca len )
 
 :noname ( -- ca len ) s" Pri" ;
 :noname ( -- ca len ) s" Acerca de" ;
-:noname ( -- ca len ) s" Prio" ;
+over \ Esperanto=Interlingue
 :noname ( -- ca len ) s" About" ;
 localized option-6$ ( -- ca len ) -->
 
