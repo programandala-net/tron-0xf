@@ -127,10 +127,10 @@ The robots are pretty stupid. Several approaches have been tried in
 order to make them smarter without slowing the game, but no clear
 result has been achieved yet.
 
-Sound is rudimentary, and it affects the game speed: two riders run
-faster than three when sound is enabled.  In order to get a decent
-result from the beeper of the ZX Spectrum 48, sound should be
-implemented by an interrupt driven routine.
+The sound effects are rudimentary, and they affect the game speed:
+when the sound is enabled, two riders run faster than three.  In order
+to get a decent result from the beeper of the ZX Spectrum 48, sound
+should be implemented by an interrupt-driven routine.
 
 The link:./TO-DO.adoc[to-do list] contains other minor issues and some
 testings about the robots.
@@ -239,9 +239,10 @@ La robotoj estas iom stultaj. Pluraj metodoj estis provitaj por
 pliinteligentigi ilin sen malrapidigi la ludon, sed ankoraŭ nenia
 klara rezulto estis atingita.
 
-Sono estas rudimenta, kaj influas la ludo-rapidon: Dum sono aktivas,
-du veturiloj pli rapidas ol tri. Por atingi decan sonon el ZX Spectrum
-48 necesas verki interrompo-traktilon por ĝi.
+La son-efektoj estas rudimentaj, kaj influas la ludo-rapidon: kiam la
+sono estas aktiva, du veturiloj pli rapidas ol tri. Por atingi decan
+sonon el ZX Spectrum 48 necesas verki por ĝi interrompo-vokitan
+subprogramon.
 
 La link:./TO-DO.adoc[listo de farendaĵoj (en la angla)] enhavas aliajn malgravajn
 aferojn, kaj provojn pri la robotoj.
@@ -354,10 +355,10 @@ Los robots son bastante tontos. Varios métodos han sido probados para
 hacerlos algo más listos sin ralentizar el juego, pero aún no se ha
 obtenido resultado claro alguno.
 
-El sonido es rudimentario, y afecta a la velocidad del juego: cuando
-está activado, dos corredores van más rápido que tres.  Para lograr un
-sonido decente en ZX Spectrum 48 habría que implementarlo con una
-rutina activada por interrupciones.
+Los efectos de sonido son rudimentarios, y afectan a la velocidad del
+juego: cuando está activado, dos corredores van más rápido que tres.
+Para lograr un sonido decente en ZX Spectrum 48 habría que
+implementarlo con una rutina activada por interrupciones.
 
 La link:./TO-DO.adoc[lista de tareas pendientes (en inglés)] contiene
 algunas otras cosas menores, y algunas pruebas hechas con los robots.
@@ -468,9 +469,10 @@ Li robotes es sat stult. Pluri metodes ha esset provat por far les un
 poc plu habil sin lentisar li lude, ma ancor nequel clar resultate
 esset atinget.
 
-Li son es rudimental, e it afecte li rapiditá del lude: quande it es activat,
-du lusores curre plu rapid quam tri. Por atinger un bon son in ZX Spectrum 48,
-on vell dever programar it per un rutine activat per interruptiones.
+Li son-efectes es rudimental, e ili afecte li rapiditá del lude:
+quande li son es activat, du lusores curre plu rapid quam tri. Por
+atinger un bon son in un ZX Spectrum 48, on vell dever programar it
+per un rutine activat per interruptiones.
 
 Li link:./TO-DO.adoc[liste de taches a far (in anglesi)] contene
 quelc altri coses minori, e alcun provas fat pri li robotes.
