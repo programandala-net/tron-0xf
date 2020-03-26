@@ -37,7 +37,7 @@
 
 forth definitions
 
-: version#$ ( -- ca len ) s" 0.2.0+20200225" ;
+: version#$ ( -- ca len ) s" 0.3.0-dev.0.0+202002260100" ;
   \ Version number.
 
   \ Color constants:
@@ -113,7 +113,6 @@ here: player#-data player0-data , player1-data , player2-data ,
   \ ordinary variable, but the player data can be manipulated
   \ also as a whole (e.g. store and fetch the coordinates with
   \ double numbers, for speed; erase the whole zone, etc.).
-
 
 ( Player 0 data fields)
 

@@ -38,7 +38,7 @@ Written and released on 2016-03-03.
 - Fixed/improved texts.
 - Improved documentation.
 
-== Version 0.1+20151125
+== Version 0.1.20151125 (=0.1.0+20151125)
 
 Started on 2015-03-21. Released on 2016-03-02.
 
