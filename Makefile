@@ -13,7 +13,7 @@
 # this notice are preserved.  This file is offered as-is, without any
 # warranty.
 
-# Last modified 202002160118.
+# Last modified 202003261628.
 # See change log at the end of the file.
 
 # ==============================================================
@@ -35,7 +35,7 @@
 VPATH = ./:src:lib
 MAKEFLAGS = --no-print-directory
 
-VERSION = $(shell grep version\# src/tron_0xf.file_01.data.fsb | sed -e 's@.\+s" \(.\+\)".\+@\1@')
+VERSION = $(shell grep version\# src/tron_0xf.file_00.version.fsb | sed -e 's@.\+s" \(.\+\)".\+@\1@')
 TARGET = target/tron_0xf_v$(VERSION)_compilable.tap
 
 .ONESHELL:
@@ -44,8 +44,9 @@ TARGET = target/tron_0xf_v$(VERSION)_compilable.tap
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) ; \
-	rm -f tmp/*
+	rm -f \
+		$(TARGET) \
+		f tmp/*
 
 # ==============================================================
 # Make TAP files from the graphics
@@ -238,3 +239,5 @@ zipball:
 # date string.
 #
 # 2020-02-16: Add Afera's random module.
+#
+# 2020-03-26: Update to get the version number from the new file 00.

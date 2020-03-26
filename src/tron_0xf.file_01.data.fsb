@@ -35,11 +35,6 @@
 
   \ -----------------------------------------------------------
 
-forth definitions
-
-: version#$ ( -- ca len ) s" 0.3.0-dev.0.1+202003261604" ;
-  \ Version number.
-
   \ Color constants:
 0 constant black  2 constant red     4 constant green
 5 constant cyan   6 constant yellow  7 constant white
