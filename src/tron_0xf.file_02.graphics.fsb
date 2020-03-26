@@ -150,7 +150,7 @@ cols 2 - constant arena-cols
 rows 4 - constant arena-rows
   \ Size of the game arena (inside its frame).
 
-                   attributes constant top-frame-attributes
+                  attributes constant top-frame-attributes
 attributes cols rows 3 - * + constant bottom-frame-attributes
   \ Attributes addresses of the arena frame.
 
@@ -254,8 +254,7 @@ attributes cols rows 3 - * + constant bottom-frame-attributes
 
 : status ( -- )
   last-one? ?exit
-  max-players 0 do    i player!  someone? if  .score  then
-                loop ;
+  max-players 0 do i player! someone? if .score then loop ;
   \ Show the status bar.
   \ XXX TODO improve (now it shows only the scores)
 
@@ -283,17 +282,17 @@ frame-color black papery + constant frame-attribute
 
 ( draw-frame frame )
 
-: draw-frame ( -- )
+: (frame) ( -- )
   0  0 at 145 emit   0 31 at 146 emit
   21 0 at 144 emit  21 31 at 147 emit \ corners
   31 1 do  0 i at 149 emit
           21 i at 151 emit loop \ horizontal sides
   21 1 do i  0 at 148 emit
           i 31 at 150 emit loop ; \ vertical sides
-  \ Draw the arena frame.
+  \ Type the characters that form the arena frame.
 
 : frame ( -- )
-  graph-udg black ink draw-frame color-frame lang-udg ;
+  graph-udg black ink (frame) color-frame lang-udg ;
   \ Draw the arena frame.
 
 ( Arena -- save, restore, clear, draw; and .initial )
@@ -315,7 +314,6 @@ bottom-frame-attributes over - 2dup ( a len a len )
   \ `!csp` is needed at the end, because the compilation
   \ consumes values from the stack, else error 20 ("Definition
   \ not finished") will happen.
-
 
 : restore-arena ( -- ) ( Compiling: a len -- )
   \ Restore the attributes of the central zone of the arena

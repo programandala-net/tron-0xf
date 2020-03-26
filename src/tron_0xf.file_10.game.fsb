@@ -110,7 +110,6 @@ here: score-columns ( cfa2 cfa1 cfa0 ) , , ,
 
 ( Start positions execution table )
 
-
  \ X  Y
    0  1 2constant up-incs
    0 -1 2constant down-incs
